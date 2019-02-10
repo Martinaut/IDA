@@ -1,8 +1,6 @@
 package at.jku.dke.inga.shared.display;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Locale;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -54,5 +52,36 @@ public class ListDisplay extends Display {
      */
     public Collection<? extends Displayable> getData() {
         return data;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String toString() {
+        return new StringJoiner(", ", ListDisplay.class.getSimpleName() + "[", "]")
+                .add("displayMessage='" + getDisplayMessage() + "'")
+                .add("data=" + data)
+                .toString();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof ListDisplay)) return false;
+        if (!super.equals(o)) return false;
+        ListDisplay that = (ListDisplay) o;
+        return Objects.equals(data, that.data);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), data);
     }
 }

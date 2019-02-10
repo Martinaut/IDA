@@ -3,6 +3,8 @@ package at.jku.dke.inga.shared.display;
 import at.jku.dke.inga.shared.ResourceBundleHelper;
 
 import java.util.Locale;
+import java.util.Objects;
+import java.util.StringJoiner;
 
 /**
  * Base-class for all display data.
@@ -39,4 +41,32 @@ public abstract class Display {
         return displayMessage;
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String toString() {
+        return new StringJoiner(", ", Display.class.getSimpleName() + "[", "]")
+                .add("displayMessage='" + displayMessage + "'")
+                .toString();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Display)) return false;
+        Display display = (Display) o;
+        return Objects.equals(displayMessage, display.displayMessage);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int hashCode() {
+        return Objects.hash(displayMessage);
+    }
 }

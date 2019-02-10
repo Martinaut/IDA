@@ -3,6 +3,7 @@ package at.jku.dke.inga.data.repositories;
 import at.jku.dke.inga.data.models.CubeElementLabel;
 import org.springframework.data.repository.CrudRepository;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -34,4 +35,13 @@ public interface CubeElementLabelRepository extends CrudRepository<CubeElementLa
      * @return List with found labels of the language
      */
     List<CubeElementLabel> findByLang(String lang);
+
+    /**
+     * Returns all labels of the specified language for the specified elements.
+     *
+     * @param lang            The requested language.
+     * @param cubeElementUris The requested elements.
+     * @return List with labels for the requested elements in the specified language.
+     */
+    List<CubeElementLabel> findByLangAndCubeElementUriIn(String lang, Collection<String> cubeElementUris);
 }

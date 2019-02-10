@@ -1,8 +1,7 @@
 package at.jku.dke.inga.rules
 
 // ------------------------------------ GLOBAL --------------------------------------
-global at.jku.dke.inga.data.repositories.CubeLabelRepository cubeRepository;
-global at.jku.dke.inga.data.repositories.CubeElementLabelRepository cubeElementRepository;
+global at.jku.dke.inga.data.repositories.CubeLabelRepository cubeLabelRepository;
 
 // ------------------------------------ IMPORT --------------------------------------
 import java.util.Locale
@@ -17,5 +16,5 @@ rule "Select cubes"
 when
     $model : ResolveValuesDataModel(operation == EventNames.NAVIGATE_CUBE_SELECT)
 then
-    insert(new ListDisplay("selectCube", $model.getLocale(), cubeRepository.findByLang($model.getLanguage())));
+    insert(new ListDisplay("selectCube", $model.getLocale(), cubeLabelRepository.findByLang($model.getLanguage())));
 end

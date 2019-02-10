@@ -1,0 +1,59 @@
+package at.jku.dke.inga.rules
+
+// ------------------------------------ GLOBAL --------------------------------------
+global at.jku.dke.inga.data.repositories.CubeElementRepository cubeElementRepository;
+global at.jku.dke.inga.data.repositories.CubeElementLabelRepository cubeElementLabelRepository;
+
+// ------------------------------------ IMPORT --------------------------------------
+import java.util.Locale
+import at.jku.dke.inga.shared.EventNames
+import at.jku.dke.inga.shared.models.NonComparativeAnalysisSituation
+import at.jku.dke.inga.shared.display.ListDisplay
+import at.jku.dke.inga.shared.display.TwoListDisplay
+import at.jku.dke.inga.rules.models.ResolveValuesDataModel
+
+// ------------------------------------ RULES ---------------------------------------
+rule "Add Measure - Select all measures, except the already selected ones"
+    agenda-group "value-determination"
+when
+    $as : NonComparativeAnalysisSituation()
+    $model : ResolveValuesDataModel(operation == EventNames.NAVIGATE_MEASURE_ADD, analysisSituation == $as)
+then
+    insert(new ListDisplay(
+        "addMeasure",
+        $model.getLocale(),
+        cubeElementLabelRepository.findByLangAndCubeElementUriIn(
+            $model.getLanguage(),
+            cubeElementRepository.findByCubeUriAndTypeUriAndUriNotInAndSelectUri($as.getCube(), "http://purl.org/linked-data/cube#MeasureProperty", $as.getMeasures()))));
+end
+
+rule "Drop Measure - Select all selected Measures"
+    agenda-group "value-determination"
+when
+    $as : NonComparativeAnalysisSituation()
+    $model : ResolveValuesDataModel(operation == EventNames.NAVIGATE_MEASURE_DROP, analysisSituation == $as)
+then
+    insert(new ListDisplay(
+        "dropMeasure",
+        $model.getLocale(),
+        cubeElementLabelRepository.findByLangAndCubeElementUriIn(
+            $model.getLanguage(),
+            $as.getMeasures())));
+end
+
+rule "Refocus Measure - Select all selected Measures and all not selected measures"
+    agenda-group "value-determination"
+when
+    $as : NonComparativeAnalysisSituation()
+    $model : ResolveValuesDataModel(operation == EventNames.NAVIGATE_MEASURE_REFOCUS, analysisSituation == $as)
+then
+    insert(new TwoListDisplay(
+        "refocusMeasure",
+        $model.getLocale(),
+        cubeElementLabelRepository.findByLangAndCubeElementUriIn(
+            $model.getLanguage(),
+            $as.getMeasures()),
+        cubeElementLabelRepository.findByLangAndCubeElementUriIn(
+                    $model.getLanguage(),
+                    cubeElementRepository.findByCubeUriAndTypeUriAndUriNotInAndSelectUri($as.getCube(), "http://purl.org/linked-data/cube#MeasureProperty", $as.getMeasures()))));
+end

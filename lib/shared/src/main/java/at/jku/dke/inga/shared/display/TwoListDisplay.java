@@ -1,16 +1,14 @@
 package at.jku.dke.inga.shared.display;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Locale;
+import java.util.*;
 
 /**
  * Displays the contents in a simple list.
  */
 public class TwoListDisplay extends Display {
 
-    private final Collection<Displayable> dataLeft;
-    private final Collection<Displayable> dataRight;
+    private final Collection<? extends Displayable> dataLeft;
+    private final Collection<? extends Displayable> dataRight;
 
     /**
      * Instantiates a new instance of class {@linkplain TwoListDisplay}.
@@ -19,7 +17,7 @@ public class TwoListDisplay extends Display {
      * @param dataLeft       The data to display in the left list.
      * @param dataRight      The data to display in the right list.
      */
-    public TwoListDisplay(String displayMessage, Collection<Displayable> dataLeft, Collection<Displayable> dataRight) {
+    public TwoListDisplay(String displayMessage, Collection<? extends Displayable> dataLeft, Collection<? extends Displayable> dataRight) {
         super(displayMessage);
         this.dataLeft = Collections.unmodifiableCollection(dataLeft);
         this.dataRight = Collections.unmodifiableCollection(dataRight);
@@ -32,7 +30,7 @@ public class TwoListDisplay extends Display {
      * @param dataLeft       The data to display in the left list.
      * @param dataRight      The data to display in the right list.
      */
-    public TwoListDisplay(String displayMessage, Locale locale, Collection<Displayable> dataLeft, Collection<Displayable> dataRight) {
+    public TwoListDisplay(String displayMessage, Locale locale, Collection<? extends Displayable> dataLeft, Collection<? extends Displayable> dataRight) {
         super(displayMessage, locale);
         this.dataLeft = dataLeft;
         this.dataRight = dataRight;
@@ -43,7 +41,7 @@ public class TwoListDisplay extends Display {
      *
      * @return The data that should be displayed in the left list.
      */
-    public Collection<Displayable> getDataLeft() {
+    public Collection<? extends Displayable> getDataLeft() {
         return dataLeft;
     }
 
@@ -52,7 +50,40 @@ public class TwoListDisplay extends Display {
      *
      * @return The data that should be displayed in the right list.
      */
-    public Collection<Displayable> getDataRight() {
+    public Collection<? extends Displayable> getDataRight() {
         return dataRight;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String toString() {
+        return new StringJoiner(", ", TwoListDisplay.class.getSimpleName() + "[", "]")
+                .add("displayMessage='" + getDisplayMessage() + "'")
+                .add("dataLeft=" + dataLeft)
+                .add("dataRight=" + dataRight)
+                .toString();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof TwoListDisplay)) return false;
+        if (!super.equals(o)) return false;
+        TwoListDisplay that = (TwoListDisplay) o;
+        return Objects.equals(dataLeft, that.dataLeft) &&
+                Objects.equals(dataRight, that.dataRight);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), dataLeft, dataRight);
     }
 }
