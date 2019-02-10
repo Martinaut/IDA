@@ -1,0 +1,28 @@
+package at.jku.dke.inga.rules
+
+// ------------------------------------ IMPORT --------------------------------------
+import at.jku.dke.inga.shared.EventNames
+import at.jku.dke.inga.shared.models.NonComparativeAnalysisSituation
+import at.jku.dke.inga.shared.operations.Operation
+import at.jku.dke.inga.rules.models.ResolveOperationsDataModel
+
+// ------------------------- GRANULARITY LEVEL OPERATIONS ----------------------------
+rule "'Drill Down' - if "
+    agenda-group "operation-determination"
+    enabled false
+when
+    //$as : NonComparativeAnalysisSituation(measures.isEmpty() == false)
+    //$model : ResolveOperationsDataModel(notSelectedMeasures.isEmpty() == false)
+then
+    insert(new Operation(EventNames.NAVIGATE_GL_DRILL_DOWN, 20));
+end
+
+rule "'Roll Up' - if "
+    agenda-group "operation-determination"
+    enabled false
+when
+    //$as : NonComparativeAnalysisSituation(measures.isEmpty() == false)
+    //$model : ResolveOperationsDataModel(notSelectedMeasures.isEmpty() == false)
+then
+    insert(new Operation(EventNames.NAVIGATE_GL_ROLL_UP, 21));
+end

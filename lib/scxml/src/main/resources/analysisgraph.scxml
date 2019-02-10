@@ -1,0 +1,94 @@
+<scxml xmlns="http://www.w3.org/2005/07/scxml"
+       version="1.0" datamodel="jexl" initial="AnalysisSituation"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:inga="http://dke.jku.at/2019/inga"
+       xsi:schemaLocation="http://www.w3.org/2005/07/scxml https://www.w3.org/2011/04/SCXML/scxml.xsd">
+    <!-- Datamodel -->
+    <datamodel>
+        <data id="contextId" expr=""/>
+    </datamodel>
+
+    <!--
+    in ResolvingParameter und ResolvingAction wird immer ermittelt, was der Benutzer ausgewählt hat.
+    in ResolvingInput wird der Intent ermittelt (z.B. will user ein navigate machen oder will er mehr informationen)
+    -->
+
+    <!-- Global State -->
+    <state id="AnalysisSituation" initial="Changing">
+        <!-- Changing -->
+        <state id="Changing" initial="DisplayingValues">
+            <!-- DisplayingValues -->
+            <state id="DisplayingValues">
+                <onentry>
+                    <inga:DisplayValues/>
+                </onentry>
+                <transition event="userInput" target="ResolvingInput"/>
+            </state>
+
+            <!-- ResolvingInput -->
+            <state id="ResolvingInput">
+                <onentry>
+                    <inga:ResolveInput/>
+                </onentry>
+                <transition event="moreInformation" target="DisplayingValues"/>
+                <transition event="navigate" target="ResolvingParameter"/>
+            </state>
+        </state>
+
+        <!-- Resolving Parameter -->
+        <state id="ResolvingParameter">
+            <onentry>
+                <inga:ResolveParameter/>
+            </onentry>
+            <transition event="resolved" target="Executable"/>
+            <transition event="invalidInput" target="Changing"/>
+        </state>
+
+        <!-- Executable -->
+        <state id="Executable" initial="DisplayingOperations">
+            <!-- DisplayingValues -->
+            <state id="DisplayingOperations">
+                <onentry>
+                    <inga:DisplayOperations/>
+                </onentry>
+                <transition event="userInput" target="ResolvingOperationInput"/>
+            </state>
+
+            <!-- ResolvingInput -->
+            <state id="ResolvingOperationInput">
+                <onentry>
+                    <inga:ResolveOperationInput/>
+                </onentry>
+                <transition event="moreInformation" target="DisplayingOperations"/>
+                <transition event="navigate" target="ResolvingAction"/>
+                <transition event="executeQuery" target="Executed"/>
+            </state>
+        </state>
+
+        <!-- Executed -->
+        <state id="Executed">
+            <onentry>
+                <inga:DisplayResult/>
+            </onentry>
+            <transition event="userInput" target="Executable"/>
+        </state>
+
+        <!-- Resolving Action -->
+        <state id="ResolvingAction">
+            <onentry>
+                <inga:ResolveAction/>
+            </onentry>
+            <transition event="resolved" target="Changing"/>
+        </state>
+
+        <!-- Global State Transitions -->
+        <transition event="exit" target="Finished"/>
+    </state>
+
+    <!-- Finished -->
+    <final id="Finished">
+        <onentry>
+            <inga:ExitApplication/>
+        </onentry>
+    </final>
+</scxml>

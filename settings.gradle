@@ -1,0 +1,10 @@
+rootProject.name = 'inga'
+
+include 'lib:shared'
+include 'lib:scxml'
+include 'lib:rules'
+include 'lib:nlp'
+include 'lib:data'
+include 'app:web'
+include 'app:shell'
+include 'app:jfx-ui'
