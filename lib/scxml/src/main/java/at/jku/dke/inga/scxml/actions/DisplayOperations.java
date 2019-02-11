@@ -6,6 +6,8 @@ import at.jku.dke.inga.data.repositories.CubeElementRepository;
 import at.jku.dke.inga.data.repositories.CubeRepository;
 import at.jku.dke.inga.rules.models.ResolveOperationsDataModel;
 import at.jku.dke.inga.rules.services.OperationsResolver;
+import at.jku.dke.inga.scxml.context.ContextModel;
+import at.jku.dke.inga.shared.display.ListDisplay;
 import at.jku.dke.inga.shared.models.NonComparativeAnalysisSituation;
 import at.jku.dke.inga.shared.operations.Operation;
 import org.apache.commons.scxml2.ActionExecutionContext;
@@ -19,19 +21,21 @@ import java.util.List;
 /**
  * Action that determines the possible operations and sends them to the "display".
  */
+@SuppressWarnings("unused")
 public class DisplayOperations extends BaseAction {
 
     /**
      * Executes the action.
      *
      * @param ctx The action execution context.
+     * @param ctxModel The context data.
      */
     @Override
-    public void execute(ActionExecutionContext ctx) throws ModelException, SCXMLExpressionException {
+    public void execute(final ActionExecutionContext ctx, final ContextModel ctxModel) throws ModelException, SCXMLExpressionException {
         logger.info("Executing action 'DisplayOperations'.");
 
         // Get Data
-        NonComparativeAnalysisSituation as = (NonComparativeAnalysisSituation) getContext(ctx).getAnalysisSituation(); // TODO: make usable with comparative AS
+        NonComparativeAnalysisSituation as = (NonComparativeAnalysisSituation) ctxModel.getAnalysisSituation(); // TODO: make usable with comparative AS
         Cube cube = null;
         List<CubeElement> elements = new ArrayList<>();
 
@@ -44,12 +48,14 @@ public class DisplayOperations extends BaseAction {
         ResolveOperationsDataModel model = new ResolveOperationsDataModel(
                 getCurrentState(),
                 as,
-                getContext(ctx).getLocale(),
+                ctxModel.getLocale(),
                 cube,
                 elements);
         List<Operation> operations = new OperationsResolver().resolveOperations(model);
 
         // Send to display
+        ctxModel.setDisplayData(new ListDisplay("selectOption", ctxModel.getLocale(), operations));
+        ctxModel.setOperation(null);
         // TODO
     }
 

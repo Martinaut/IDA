@@ -4,6 +4,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+/**
+ * This class holds all current active contexts.
+ * A context is identified by an ID.
+ */
 public final class ContextManager {
 
     private static Map<String, ContextModel> contextMap = new HashMap<>();

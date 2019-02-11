@@ -1,5 +1,6 @@
 package at.jku.dke.inga.scxml.actions;
 
+import at.jku.dke.inga.scxml.context.ContextModel;
 import org.apache.commons.scxml2.ActionExecutionContext;
 import org.apache.commons.scxml2.SCXMLExpressionException;
 import org.apache.commons.scxml2.model.ModelException;
@@ -7,13 +8,13 @@ import org.apache.commons.scxml2.model.ModelException;
 public class DisplayResult extends BaseAction {
 
     /**
-     * Executes the action.
+     * Executes the action operations.
      *
-     * @param ctx The action execution context.
+     * @param ctx      The application execution context.
+     * @param ctxModel The context data.
      */
     @Override
-    public void execute(ActionExecutionContext ctx) throws ModelException, SCXMLExpressionException {
+    protected void execute(ActionExecutionContext ctx, ContextModel ctxModel) throws ModelException, SCXMLExpressionException {
 
     }
-
 }

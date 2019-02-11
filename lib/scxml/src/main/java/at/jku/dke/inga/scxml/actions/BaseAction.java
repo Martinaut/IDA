@@ -4,6 +4,7 @@ import at.jku.dke.inga.scxml.context.ContextManager;
 import at.jku.dke.inga.scxml.context.ContextModel;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.scxml2.ActionExecutionContext;
+import org.apache.commons.scxml2.SCXMLExpressionException;
 import org.apache.commons.scxml2.model.Action;
 import org.apache.commons.scxml2.model.Data;
 import org.apache.commons.scxml2.model.Datamodel;
@@ -28,12 +29,40 @@ public abstract class BaseAction extends Action {
     }
 
     /**
+     * Executes the action operations.
+     *
+     * @param actionExecutionContext The application execution context.
+     */
+    @Override
+    public final void execute(ActionExecutionContext actionExecutionContext) throws ModelException, SCXMLExpressionException {
+        execute(actionExecutionContext, getContext(actionExecutionContext));
+    }
+
+    /**
+     * Executes the action operations.
+     *
+     * @param ctx      The application execution context.
+     * @param ctxModel The context data.
+     */
+    protected abstract void execute(final ActionExecutionContext ctx, final ContextModel ctxModel) throws ModelException, SCXMLExpressionException;
+
+    /**
+     * Returns the context ID.
+     *
+     * @param ctx The action execution context.
+     * @return The context ID.
+     */
+    protected final String getContextId(ActionExecutionContext ctx) {
+        return getFromDataModel(ctx.getStateMachine().getDatamodel(), "contextId");
+    }
+
+    /**
      * Returns the current context-ID or creates a new one if it does not exist.
      *
      * @param ctx The action execution context.
      * @return The context-ID.
      */
-    protected final String getOrCreateContextId(ActionExecutionContext ctx) {
+    private String getOrCreateContextId(ActionExecutionContext ctx) {
         String id = getFromDataModel(ctx.getStateMachine().getDatamodel(), "contextId");
         if (StringUtils.isBlank(id)) {
             id = ContextManager.createNewContext();
@@ -48,7 +77,7 @@ public abstract class BaseAction extends Action {
      * @param ctx The action execution context.
      * @return The context model. If it does not exist an empty context model will be returned.
      */
-    protected final ContextModel getContext(ActionExecutionContext ctx) {
+    private ContextModel getContext(ActionExecutionContext ctx) {
         ContextModel model = ContextManager.getContext(getOrCreateContextId(ctx));
         return model == null ? new ContextModel() : model;
     }

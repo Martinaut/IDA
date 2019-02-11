@@ -1,6 +1,7 @@
 package at.jku.dke.inga.shared.operations;
 
 import at.jku.dke.inga.shared.ResourceBundleHelper;
+import at.jku.dke.inga.shared.display.Displayable;
 
 import java.util.Locale;
 import java.util.Objects;
@@ -9,7 +10,7 @@ import java.util.StringJoiner;
 /**
  * A class representing an operation to execute a user can opt for.
  */
-public class Operation implements Comparable<Operation> {
+public class Operation implements Comparable<Operation>, Displayable {
 
     private final String eventName;
     private final String displayName;
@@ -133,5 +134,36 @@ public class Operation implements Comparable<Operation> {
     @Override
     public int compareTo(Operation other) {
         return getPosition() - other.getPosition();
+    }
+
+    /**
+     * Returns the identifier of the item.
+     *
+     * @return The unique identifier.
+     */
+    @Override
+    public String getDisplayableId() {
+        return eventName;
+    }
+
+    /**
+     * Returns the title of the item.
+     *
+     * @return The title.
+     */
+    @Override
+    public String getTitle() {
+        return displayName;
+    }
+
+    /**
+     * Returns the details of the item.
+     * Details can be for example a description of the item.
+     *
+     * @return The details.
+     */
+    @Override
+    public String getDetails() {
+        return null;
     }
 }
