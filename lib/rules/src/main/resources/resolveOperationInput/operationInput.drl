@@ -20,14 +20,6 @@ function boolean isNumber(String s){
    }
 }
 
-function int toNumber(String s){
-   try {
-       return Integer.valueOf(s);
-   } catch(Exception e){
-       return -1;
-   }
-}
-
 // ------------------------------------ RULES ---------------------------------------
 rule "ExitApplication Intent - 'exit' keyword"
     agenda-group "resolve-operation-input"
@@ -59,8 +51,8 @@ end
 rule "ExecuteOperation Intent"
     agenda-group "resolve-operation-input"
 when
-    $model : ResolveOperationInputModel(isNumber(userInput), possibleOperations.containsKey(toNumber(userInput)))
+    $model : ResolveOperationInputModel(isNumber(userInput))
 then
-    LOGGER.debug("ExecuteOperation Intent resolved");
+    LOGGER.debug("ExecuteOperation Intent resolved"); // TODO check if execute query option, then trigger it already here
     insert(EventNames.NAVIGATE);
 end
