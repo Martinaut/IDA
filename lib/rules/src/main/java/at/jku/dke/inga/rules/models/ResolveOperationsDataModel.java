@@ -2,6 +2,7 @@ package at.jku.dke.inga.rules.models;
 
 import at.jku.dke.inga.data.models.Cube;
 import at.jku.dke.inga.data.models.CubeElement;
+import at.jku.dke.inga.shared.DefaultTypes;
 import at.jku.dke.inga.shared.models.NonComparativeAnalysisSituation;
 
 import java.util.*;
@@ -74,7 +75,7 @@ public class ResolveOperationsDataModel extends DataModel<NonComparativeAnalysis
     public Collection<CubeElement> getNotSelectedMeasures() {
         if (cubeElements == null) return Collections.emptyList();
         return cubeElements.stream()
-                .filter(x -> x.getTypeUri().equals("http://purl.org/linked-data/cube#MeasureProperty"))
+                .filter(x -> x.getTypeUri().equals(DefaultTypes.TYPE_MEASURE))
                 .filter(x -> !getAnalysisSituation().getMeasures().contains(x.getUri()))
                 .collect(Collectors.toList());
     }

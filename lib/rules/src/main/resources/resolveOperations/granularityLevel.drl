@@ -10,6 +10,7 @@ import at.jku.dke.inga.rules.models.ResolveOperationsDataModel
 rule "'Drill Down' - if "
     agenda-group "operation-determination"
     enabled false
+    // appropriate roll up relationship available
 when
     //$as : NonComparativeAnalysisSituation(measures.isEmpty() == false)
     //$model : ResolveOperationsDataModel(notSelectedMeasures.isEmpty() == false)
@@ -20,6 +21,7 @@ end
 rule "'Roll Up' - if "
     agenda-group "operation-determination"
     enabled false
+    // appropriate roll up relationship available
 when
     //$as : NonComparativeAnalysisSituation(measures.isEmpty() == false)
     //$model : ResolveOperationsDataModel(notSelectedMeasures.isEmpty() == false)

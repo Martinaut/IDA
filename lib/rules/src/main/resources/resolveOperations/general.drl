@@ -28,7 +28,7 @@ then
     drools.halt();
 end
 
-rule "'Execute Query' - if there is not already a selected cube"
+rule "'Execute Query' - if there is already a selected cube"
     agenda-group "operation-determination"
 when
     $as : AnalysisSituation(isExecutable() == true)
