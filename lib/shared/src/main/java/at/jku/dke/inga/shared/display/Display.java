@@ -16,20 +16,20 @@ public abstract class Display {
     /**
      * Instantiates a new instance of class {@linkplain Display}.
      *
-     * @param displayMessage The resource name in the {@code DisplayMessages}-resource for the message to display.
+     * @param displayMessage The display message.
      */
     protected Display(String displayMessage) {
-        this.displayMessage = ResourceBundleHelper.getResourceString("DisplayMessages", displayMessage);
+        this.displayMessage = displayMessage;
     }
 
     /**
      * Instantiates a new instance of class {@linkplain Display}.
      *
-     * @param displayMessage The resource name in the {@code DisplayMessages}-resource for the message to display.
-     * @param locale         The locale for the resource name.
+     * @param displayMessageResourceName The resource name in the {@code DisplayMessages}-resource for the message to display.
+     * @param locale                     The locale for the resource name.
      */
-    protected Display(String displayMessage, Locale locale) {
-        this.displayMessage = ResourceBundleHelper.getResourceString("DisplayMessages", locale, displayMessage);
+    protected Display(String displayMessageResourceName, Locale locale) {
+        this.displayMessage = ResourceBundleHelper.getResourceString("DisplayMessages", locale, displayMessageResourceName);
     }
 
     /**

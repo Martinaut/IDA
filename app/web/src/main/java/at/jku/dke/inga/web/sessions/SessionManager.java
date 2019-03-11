@@ -1,23 +1,21 @@
 package at.jku.dke.inga.web.sessions;
 
-import at.jku.dke.inga.scxml.DialogueStateMachineFactory;
+import at.jku.dke.inga.scxml.context.ContextManager;
 import at.jku.dke.inga.scxml.context.ContextModel;
+import at.jku.dke.inga.scxml.events.DisplayListener;
 import at.jku.dke.inga.scxml.exceptions.SessionExpiredException;
 import at.jku.dke.inga.scxml.exceptions.StateMachineExecutionException;
 import at.jku.dke.inga.scxml.exceptions.StateMachineInstantiationException;
-import at.jku.dke.inga.scxml.context.ContextManager;
-import at.jku.dke.inga.scxml.events.DisplayListener;
-import at.jku.dke.inga.shared.EventNames;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.scxml2.SCInstance;
-import org.apache.commons.scxml2.SCXMLExecutor;
-import org.apache.commons.scxml2.TriggerEvent;
 import org.apache.commons.scxml2.model.ModelException;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
+/**
+ * The session manager holds a thread-instance per session and provides methods for creating threads,
+ * stopping them and triggering input events.
+ */
 public class SessionManager {
 
     // region --- STATIC ---
@@ -33,7 +31,7 @@ public class SessionManager {
     }
     // endregion
 
-    private final Map<String, SCInstance> sessions;
+    private final Map<String, SessionThread> sessions;
 
     /**
      * Instantiates a new instance of class {@linkplain SessionManager}.
@@ -43,35 +41,39 @@ public class SessionManager {
     }
 
     /**
-     * Creates a new session.
+     * Creates a new session and starts the state chart thread.
      *
-     * @param locale The locale (must be de or en).
-     * @return The session ID.
-     * @throws IllegalArgumentException           If the locale is invalid.
+     * @param sessionId The session identifier.
+     * @param locale    The locale (must be de or en).
+     * @param listener  The listener for listening for available display data.
+     * @throws IllegalArgumentException           If the locale is invalid or if the {@code sessionId} is {@code null} or empty or blank or if the listener is {@code null}.
      * @throws StateMachineInstantiationException If the state machine could not be instantiated.
      */
-    public String createSession(String locale) throws StateMachineInstantiationException {
+    @SuppressWarnings("Duplicates")
+    public void createSession(String sessionId, String locale, DisplayListener listener) throws StateMachineInstantiationException {
         // Validate Input
+        if (StringUtils.isBlank(sessionId))
+            throw new IllegalArgumentException("sessionId must not be empty");
         if (locale == null)
             throw new IllegalArgumentException("locale must not be null");
+        if (listener == null)
+            throw new IllegalArgumentException("listener must not be null");
         if (!locale.equals("en") && !locale.equals("de"))
             throw new IllegalArgumentException("locale must be 'en' or 'de'");
 
-        // Compute Session ID
-        String id;
         synchronized (sessions) {
-            do {
-                id = UUID.randomUUID().toString();
-            } while (sessions.containsKey(id));
+            // Does ID already exist?
+            if (sessions.containsKey(sessionId))
+                throw new StateMachineInstantiationException("There exists already a session with the specified session id " + sessionId, null);
 
             // Create Context model
-            ContextManager.createNewContext(id, locale);
+            ContextManager.createNewContext(sessionId, locale, listener);
 
             // Create state chart
-            SCInstance instance = DialogueStateMachineFactory.create(id).detachInstance();
-            sessions.put(id, instance);
+            SessionThread thread = new SessionThread(sessionId);
+            sessions.put(sessionId, thread);
+            thread.start();
         }
-        return id;
     }
 
     /**
@@ -84,12 +86,26 @@ public class SessionManager {
         if (StringUtils.isBlank(sessionId)) throw new IllegalArgumentException("sessionId must not be empty");
         synchronized (sessions) {
             if (!sessions.containsKey(sessionId)) return;
+            try {
+                sessions.get(sessionId).triggerExitEvent();
+            } catch (ModelException ignored) {
+            }
+            sessions.get(sessionId).interrupt();
             sessions.remove(sessionId);
         }
         ContextManager.deleteContext(sessionId);
     }
 
-    public void triggerUserInput(String sessionId, String userInput, DisplayListener listener) throws StateMachineInstantiationException, StateMachineExecutionException, SessionExpiredException {
+    /**
+     * Triggers a user-input event.
+     *
+     * @param sessionId The session identifier.
+     * @param userInput The user input.
+     * @throws StateMachineExecutionException If an error occurred while executing a state machine.
+     * @throws SessionExpiredException        If the state chart session does not exist or is already expired (or state chart has finished).
+     * @see at.jku.dke.inga.shared.EventNames#USER_INPUT
+     */
+    public void triggerUserInput(String sessionId, String userInput) throws StateMachineExecutionException, SessionExpiredException {
         if (StringUtils.isBlank(sessionId)) throw new IllegalArgumentException("sessionId must not be empty");
         if (userInput == null) throw new IllegalArgumentException("userInput must not be null");
 
@@ -99,12 +115,12 @@ public class SessionManager {
                 throw new SessionExpiredException("There exists no session with id " + sessionId);
             }
 
-            // Create state chart instance
-            SCXMLExecutor executor = DialogueStateMachineFactory.attach(sessions.get(sessionId));
+            // Get Thread
+            SessionThread thread = sessions.get(sessionId);
 
             // Is state chart finished?
-            if (executor.getCurrentStatus().isFinal()) {
-                sessions.remove(sessionId);
+            if (!thread.isAlive() || thread.isInFinalState()) {
+                stopSession(sessionId);
                 throw new SessionExpiredException("Session with id " + sessionId + " already expired.");
             }
 
@@ -114,10 +130,8 @@ public class SessionManager {
                 if (ctx == null)
                     throw new SessionExpiredException("There exists no context with id " + sessionId);
 
-                ctx.setListener(listener);
                 ctx.setUserInput(userInput);
-
-                executor.triggerEvent(new TriggerEvent(EventNames.USER_INPUT, TriggerEvent.SIGNAL_EVENT));
+                thread.triggerUserInputEvent();
             } catch (ModelException ex) {
                 throw new StateMachineExecutionException("The triggered event left the engine in inconsistent state.", ex);
             }

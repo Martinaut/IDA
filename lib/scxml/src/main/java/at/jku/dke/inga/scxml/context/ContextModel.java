@@ -15,29 +15,37 @@ import java.util.Locale;
  */
 public class ContextModel {
 
+    private final String sessionId;
+    private final Locale locale;
+    private final DisplayListener listener;
+
+    private AnalysisSituation analysisSituation;
+    private Display displayData;
+
     private String userInput;
     private Integer page;
     private String operation;
 
-    private AnalysisSituation analysisSituation;
-    private final Locale locale;
-
-    private Display displayData;
-    private DisplayListener listener;
 
     /**
      * Instantiates a new instance of class {@link ContextModel}.
      *
-     * @param locale The locale of the context.
+     * @param sessionId The session id.
+     * @param locale    The locale of the context.
+     * @param listener  The listener for listening for available display data.
      */
-    public ContextModel(String locale) {
+    public ContextModel(String sessionId, String locale, DisplayListener listener) {
+        this.sessionId = sessionId;
+        this.locale = new Locale(locale);
+        this.listener = listener;
+
+        this.analysisSituation = new NonComparativeAnalysisSituation();
+        this.displayData = null;
+
         this.userInput = null;
         this.page = null;
-        this.listener = null;
-        this.displayData = null;
         this.operation = EventNames.NAVIGATE_CUBE_SELECT;
-        this.locale = new Locale(locale);
-        this.analysisSituation = new NonComparativeAnalysisSituation();
+
     }
 
     /**
@@ -138,15 +146,6 @@ public class ContextModel {
     public void setDisplayData(Display displayData) {
         this.displayData = displayData;
         if (listener != null)
-            listener.displayDataAvailable(new DisplayEventData(this, displayData));
-    }
-
-    /**
-     * Sets the listener.
-     *
-     * @param listener the listener
-     */
-    public void setListener(DisplayListener listener) {
-        this.listener = listener;
+            listener.displayDataAvailable(sessionId, new DisplayEventData(this, displayData));
     }
 }

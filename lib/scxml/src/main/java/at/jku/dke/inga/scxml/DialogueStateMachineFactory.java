@@ -29,7 +29,6 @@ import java.util.stream.Collectors;
 public class DialogueStateMachineFactory {
 
     private static final Logger LOG = LogManager.getLogger(DialogueStateMachineFactory.class);
-    private static SCXML scxml;
 
     /**
      * Create a new SCXML executor.
@@ -60,23 +59,6 @@ public class DialogueStateMachineFactory {
     }
 
     /**
-     * Creates a new SCXML executor and attaches the existing state chart instance.
-     *
-     * @param stateChartInstance The instance.
-     * @return The SCXML executor
-     * @throws IllegalArgumentException           If {@code stateChartInstance} is {@code null}.
-     * @throws StateMachineInstantiationException If an error occurred while instantiating a new state machine.
-     */
-    public static SCXMLExecutor attach(SCInstance stateChartInstance) throws StateMachineInstantiationException {
-        if (stateChartInstance == null) throw new IllegalArgumentException("stateChartInstance must not be null");
-
-        LOG.info("Creating a new SCXML-Executor for existing instance.");
-        SCXMLExecutor executor = createExecutor();
-        executor.attachInstance(stateChartInstance);
-        return executor;
-    }
-
-    /**
      * Creates a new SCXML-executor.
      *
      * @return The executor.
@@ -84,12 +66,11 @@ public class DialogueStateMachineFactory {
      */
     private static SCXMLExecutor createExecutor() throws StateMachineInstantiationException {
         try {
-            if (scxml == null)
-                loadSCXML();
+            SCXML scxml = loadSCXML();
 
             Tracer tracer = new Tracer();
             SCXMLExecutor executor = new SCXMLExecutor(new JexlEvaluator(), new SimpleDispatcher(), tracer);
-            executor.setStateMachine(scxml); // TODO: scxml klonen?? wegen datenmodell
+            executor.setStateMachine(scxml);
             executor.addListener(scxml, tracer);
             return executor;
         } catch (FileNotFoundException ex) {
@@ -114,14 +95,13 @@ public class DialogueStateMachineFactory {
      * @throws IOException           If the SCXML-File could not be loaded.
      * @throws ModelException        If an error occurred while loading the state chart model.
      */
-    private static void loadSCXML() throws FileNotFoundException, IOException, XMLStreamException, ModelException {
-        LOG.info("Loading resource analysisgraph.scxml from classpath");
+    private static SCXML loadSCXML() throws FileNotFoundException, IOException, XMLStreamException, ModelException {
+        LOG.debug("Loading resource analysisgraph.scxml from classpath");
         URL url = DialogueStateMachineFactory.class.getClassLoader().getResource("analysisgraph.scxml");
         if (url == null) {
-            scxml = null;
             throw new FileNotFoundException("SCXML-file 'analysisgraph.scxml' not found");
         }
-        scxml = SCXMLReader.read(url, new SCXMLReader.Configuration(null, null, getCustomActions()));
+        return SCXMLReader.read(url, new SCXMLReader.Configuration(null, null, getCustomActions()));
     }
 
     /**

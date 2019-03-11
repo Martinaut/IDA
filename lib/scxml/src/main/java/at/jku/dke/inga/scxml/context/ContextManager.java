@@ -1,5 +1,6 @@
 package at.jku.dke.inga.scxml.context;
 
+import at.jku.dke.inga.scxml.events.DisplayListener;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.HashMap;
@@ -16,19 +17,23 @@ public final class ContextManager {
     /**
      * Creates a new context model.
      *
-     * @param id     The context identifier (should be equal to the session id).
-     * @param locale The locale.
-     * @throws IllegalArgumentException If the locale is invalid or if the session id is {@code null} or empty or blank.
+     * @param id       The context identifier (should be equal to the session id).
+     * @param locale   The locale.
+     * @param listener The listener for listening for available display data.
+     * @throws IllegalArgumentException If the locale is invalid or if the session id is {@code null} or empty or blank or if the listener is {@code null}.
      */
-    public static void createNewContext(String id, String locale) {
+    @SuppressWarnings("Duplicates")
+    public static void createNewContext(String id, String locale, DisplayListener listener) {
         if (StringUtils.isBlank(id))
             throw new IllegalArgumentException("sessionId must not be empty");
         if (locale == null)
             throw new IllegalArgumentException("locale must not be null");
+        if (listener == null)
+            throw new IllegalArgumentException("listener must not be null");
         if (!locale.equals("en") && !locale.equals("de"))
             throw new IllegalArgumentException("locale must be 'en' or 'de'");
 
-        contextMap.put(id, new ContextModel(locale));
+        contextMap.put(id, new ContextModel(id, locale, listener));
     }
 
     /**

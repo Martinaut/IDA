@@ -14,7 +14,7 @@ public class ListDisplay extends Display {
     /**
      * Instantiates a new instance of class {@linkplain ListDisplay}.
      *
-     * @param displayMessage The resource name in the {@code DisplayMessages}-resource for the message to display.
+     * @param displayMessage The display message.
      * @param data           The data to display in a list.
      */
     public ListDisplay(String displayMessage, Collection<? extends Displayable> data) {
@@ -25,7 +25,7 @@ public class ListDisplay extends Display {
     /**
      * Instantiates a new instance of class {@linkplain ListDisplay}.
      *
-     * @param displayMessage The resource name in the {@code DisplayMessages}-resource for the message to display.
+     * @param displayMessage The display message.
      * @param data           The data to display in a list.
      */
     public ListDisplay(String displayMessage, Iterable<? extends Displayable> data) {
@@ -36,12 +36,12 @@ public class ListDisplay extends Display {
     /**
      * Instantiates a new instance of class {@linkplain Display}.
      *
-     * @param displayMessage The resource name in the {@code DisplayMessages}-resource for the message to display.
-     * @param locale         The locale for the resource name.
-     * @param data           The data to display in a list.
+     * @param displayMessageResourceName The resource name in the {@code DisplayMessages}-resource for the message to display.
+     * @param locale                     The locale for the resource name.
+     * @param data                       The data to display in a list.
      */
-    public ListDisplay(String displayMessage, Locale locale, Collection<? extends Displayable> data) {
-        super(displayMessage, locale);
+    public ListDisplay(String displayMessageResourceName, Locale locale, Collection<? extends Displayable> data) {
+        super(displayMessageResourceName, locale);
         this.data = data;
     }
 

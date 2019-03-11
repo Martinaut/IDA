@@ -13,7 +13,7 @@ public class TwoListDisplay extends Display {
     /**
      * Instantiates a new instance of class {@linkplain TwoListDisplay}.
      *
-     * @param displayMessage The resource name in the {@code DisplayMessages}-resource for the message to display.
+     * @param displayMessage The display message.
      * @param dataLeft       The data to display in the left list.
      * @param dataRight      The data to display in the right list.
      */
@@ -26,12 +26,12 @@ public class TwoListDisplay extends Display {
     /**
      * Instantiates a new instance of class {@linkplain Display}.
      *
-     * @param displayMessage The resource name in the {@code DisplayMessages}-resource for the message to display.
-     * @param dataLeft       The data to display in the left list.
-     * @param dataRight      The data to display in the right list.
+     * @param displayMessageResourceName The resource name in the {@code DisplayMessages}-resource for the message to display.
+     * @param dataLeft                   The data to display in the left list.
+     * @param dataRight                  The data to display in the right list.
      */
-    public TwoListDisplay(String displayMessage, Locale locale, Collection<? extends Displayable> dataLeft, Collection<? extends Displayable> dataRight) {
-        super(displayMessage, locale);
+    public TwoListDisplay(String displayMessageResourceName, Locale locale, Collection<? extends Displayable> dataLeft, Collection<? extends Displayable> dataRight) {
+        super(displayMessageResourceName, locale);
         this.dataLeft = dataLeft;
         this.dataRight = dataRight;
     }
