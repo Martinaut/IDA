@@ -41,7 +41,6 @@ public class DisplayValues extends BaseAction {
 
         // Send to display
         ctxModel.setDisplayData(display);
-        // TODO
     }
 
 }

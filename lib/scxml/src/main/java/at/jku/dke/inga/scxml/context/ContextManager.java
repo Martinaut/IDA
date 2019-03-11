@@ -1,8 +1,9 @@
 package at.jku.dke.inga.scxml.context;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 /**
  * This class holds all current active contexts.
@@ -13,14 +14,21 @@ public final class ContextManager {
     private static Map<String, ContextModel> contextMap = new HashMap<>();
 
     /**
-     * Creates a new context model and returns the context ID.
+     * Creates a new context model.
      *
-     * @return The ID of the new context.
+     * @param id     The context identifier (should be equal to the session id).
+     * @param locale The locale.
+     * @throws IllegalArgumentException If the locale is invalid or if the session id is {@code null} or empty or blank.
      */
-    public static String createNewContext() {
-        String id = UUID.randomUUID().toString();
-        contextMap.put(id, new ContextModel());
-        return id;
+    public static void createNewContext(String id, String locale) {
+        if (StringUtils.isBlank(id))
+            throw new IllegalArgumentException("sessionId must not be empty");
+        if (locale == null)
+            throw new IllegalArgumentException("locale must not be null");
+        if (!locale.equals("en") && !locale.equals("de"))
+            throw new IllegalArgumentException("locale must be 'en' or 'de'");
+
+        contextMap.put(id, new ContextModel(locale));
     }
 
     /**

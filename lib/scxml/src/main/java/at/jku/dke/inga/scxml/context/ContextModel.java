@@ -1,5 +1,7 @@
 package at.jku.dke.inga.scxml.context;
 
+import at.jku.dke.inga.scxml.events.DisplayEventData;
+import at.jku.dke.inga.scxml.events.DisplayListener;
 import at.jku.dke.inga.shared.EventNames;
 import at.jku.dke.inga.shared.display.Display;
 import at.jku.dke.inga.shared.models.AnalysisSituation;
@@ -16,19 +18,25 @@ public class ContextModel {
     private String userInput;
     private Integer page;
     private String operation;
+
     private AnalysisSituation analysisSituation;
-    private Locale locale;
+    private final Locale locale;
+
     private Display displayData;
+    private DisplayListener listener;
 
     /**
      * Instantiates a new instance of class {@link ContextModel}.
+     *
+     * @param locale The locale of the context.
      */
-    public ContextModel() {
+    public ContextModel(String locale) {
         this.userInput = null;
         this.page = null;
+        this.listener = null;
         this.displayData = null;
         this.operation = EventNames.NAVIGATE_CUBE_SELECT;
-        this.locale = Locale.getDefault();
+        this.locale = new Locale(locale);
         this.analysisSituation = new NonComparativeAnalysisSituation();
     }
 
@@ -114,15 +122,6 @@ public class ContextModel {
     }
 
     /**
-     * Sets the locale.
-     *
-     * @param locale the locale
-     */
-    public void setLocale(Locale locale) {
-        this.locale = locale;
-    }
-
-    /**
      * Gets the display data.
      *
      * @return the display data
@@ -132,11 +131,22 @@ public class ContextModel {
     }
 
     /**
-     * Sets the display data.
+     * Sets the display data and triggers an event if a listener is registered.
      *
      * @param displayData the display data
      */
     public void setDisplayData(Display displayData) {
         this.displayData = displayData;
+        if (listener != null)
+            listener.displayDataAvailable(new DisplayEventData(this, displayData));
+    }
+
+    /**
+     * Sets the listener.
+     *
+     * @param listener the listener
+     */
+    public void setListener(DisplayListener listener) {
+        this.listener = listener;
     }
 }

@@ -7,6 +7,7 @@ import at.jku.dke.inga.data.repositories.CubeRepository;
 import at.jku.dke.inga.rules.models.ResolveOperationsDataModel;
 import at.jku.dke.inga.rules.services.OperationsResolver;
 import at.jku.dke.inga.scxml.context.ContextModel;
+import at.jku.dke.inga.scxml.events.DisplayEventData;
 import at.jku.dke.inga.shared.display.ListDisplay;
 import at.jku.dke.inga.shared.models.NonComparativeAnalysisSituation;
 import at.jku.dke.inga.shared.operations.Operation;
@@ -27,7 +28,7 @@ public class DisplayOperations extends BaseAction {
     /**
      * Executes the action.
      *
-     * @param ctx The action execution context.
+     * @param ctx      The action execution context.
      * @param ctxModel The context data.
      */
     @Override
@@ -54,9 +55,8 @@ public class DisplayOperations extends BaseAction {
         List<Operation> operations = new OperationsResolver().resolveOperations(model);
 
         // Send to display
-        ctxModel.setDisplayData(new ListDisplay("selectOption", ctxModel.getLocale(), operations));
         ctxModel.setOperation(null);
-        // TODO
+        ctxModel.setDisplayData(new ListDisplay("selectOption", ctxModel.getLocale(), operations));
     }
 
 }

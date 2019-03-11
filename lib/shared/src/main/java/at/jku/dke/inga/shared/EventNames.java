@@ -10,6 +10,11 @@ public final class EventNames {
      */
     public static final String EXIT = "exit";
 
+    /**
+     * Used when the user gave an input.
+     */
+    public static final String USER_INPUT = "userInput";
+
     // region --- NAVIGATE ---
     /**
      * Used to trigger a navigation-step. This event can have multiple sub-events.
@@ -74,7 +79,6 @@ public final class EventNames {
 
 
 
-
     /**
      * Used to request more information within a step.
      */
@@ -85,10 +89,7 @@ public final class EventNames {
      */
     public static final String INVALID_INPUT = "invalidInput";
 
-    /**
-     * Used when the user gave an input.
-     */
-    public static final String USER_INPUT = "userInput";
+
 
     /**
      * Used for transitions from "Resolving*" to the next state.

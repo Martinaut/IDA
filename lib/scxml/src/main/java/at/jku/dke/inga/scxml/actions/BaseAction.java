@@ -57,29 +57,13 @@ public abstract class BaseAction extends Action {
     }
 
     /**
-     * Returns the current context-ID or creates a new one if it does not exist.
-     *
-     * @param ctx The action execution context.
-     * @return The context-ID.
-     */
-    private String getOrCreateContextId(ActionExecutionContext ctx) {
-        String id = getFromDataModel(ctx.getStateMachine().getDatamodel(), "contextId");
-        if (StringUtils.isBlank(id)) {
-            id = ContextManager.createNewContext();
-            setData(ctx.getStateMachine().getDatamodel(), "contextId", id);
-        }
-        return id;
-    }
-
-    /**
      * Returns the context model.
      *
      * @param ctx The action execution context.
      * @return The context model. If it does not exist an empty context model will be returned.
      */
     private ContextModel getContext(ActionExecutionContext ctx) {
-        ContextModel model = ContextManager.getContext(getOrCreateContextId(ctx));
-        return model == null ? new ContextModel() : model;
+        return ContextManager.getContext(getContextId(ctx));
     }
 
     /**
