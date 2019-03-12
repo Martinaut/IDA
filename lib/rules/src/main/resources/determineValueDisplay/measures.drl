@@ -5,19 +5,18 @@ global at.jku.dke.inga.data.repositories.CubeRepository cubeRepository;
 global at.jku.dke.inga.data.repositories.MeasureRepository measureRepository;
 
 // ------------------------------------ IMPORT --------------------------------------
-import java.util.Locale
 import at.jku.dke.inga.shared.EventNames
 import at.jku.dke.inga.shared.models.NonComparativeAnalysisSituation
 import at.jku.dke.inga.shared.display.ListDisplay
 import at.jku.dke.inga.shared.display.TwoListDisplay
-import at.jku.dke.inga.rules.models.ResolveValuesDataModel
+import at.jku.dke.inga.rules.models.ValuesDisplayDeterminationServiceModel
 
 // ------------------------------------ RULES ---------------------------------------
 rule "Add Measure - Select all measures, except the already selected ones"
-    agenda-group "value-determination"
+    agenda-group "values-display-determination"
 when
     $as : NonComparativeAnalysisSituation()
-    $model : ResolveValuesDataModel(operation == EventNames.NAVIGATE_MEASURE_ADD, analysisSituation == $as)
+    $model : ValuesDisplayDeterminationServiceModel(operation == EventNames.NAVIGATE_MEASURE_ADD, analysisSituation == $as)
 then
     insert(new ListDisplay(
         "addMeasure",
@@ -26,10 +25,10 @@ then
 end
 
 rule "Drop Measure - Select all selected Measures"
-    agenda-group "value-determination"
+    agenda-group "values-display-determination"
 when
     $as : NonComparativeAnalysisSituation()
-    $model : ResolveValuesDataModel(operation == EventNames.NAVIGATE_MEASURE_DROP, analysisSituation == $as)
+    $model : ValuesDisplayDeterminationServiceModel(operation == EventNames.NAVIGATE_MEASURE_DROP, analysisSituation == $as)
 then
     insert(new ListDisplay(
         "dropMeasure",
@@ -38,10 +37,10 @@ then
 end
 
 rule "Refocus Measure - Select all selected Measures and all not selected measures"
-    agenda-group "value-determination"
+    agenda-group "values-display-determination"
 when
     $as : NonComparativeAnalysisSituation()
-    $model : ResolveValuesDataModel(operation == EventNames.NAVIGATE_MEASURE_REFOCUS, analysisSituation == $as)
+    $model : ValuesDisplayDeterminationServiceModel(operation == EventNames.NAVIGATE_MEASURE_REFOCUS, analysisSituation == $as)
 then
     insert(new TwoListDisplay(
         "refocusMeasure",

@@ -11,7 +11,8 @@ import at.jku.dke.inga.shared.operations.Operation;
 import org.apache.commons.scxml2.ActionExecutionContext;
 import org.apache.commons.scxml2.model.ModelException;
 
-import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -29,7 +30,7 @@ public class DisplayOperations extends BaseAction {
     @Override
     protected void execute(ActionExecutionContext ctx, ContextModel ctxModel) throws ModelException {
         // Get data
-        Set<String> measures = null;
+        Set<String> measures = Collections.emptySet();
         if (ctxModel.getAnalysisSituation() instanceof NonComparativeAnalysisSituation && ctxModel.getAnalysisSituation().isCubeDefined()) {
             measures = BeanUtil.getBean(MeasureRepository.class).findByCube(((NonComparativeAnalysisSituation) ctxModel.getAnalysisSituation()).getCube());
         }
@@ -42,10 +43,9 @@ public class DisplayOperations extends BaseAction {
         );
 
         // Determine possible operations
-        Collection<Operation> operations = new OperationDisplayDeterminationService().executeRules(model);
+        List<Operation> operations = new OperationDisplayDeterminationService().executeRules(model);
 
         // Send to display
-        ctxModel.setOperation(null);
         ctxModel.setDisplayData(new ListDisplay("selectOperation", ctxModel.getLocale(), operations));
     }
 

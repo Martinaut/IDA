@@ -1,6 +1,8 @@
 package at.jku.dke.inga.rules.services;
 
+import at.jku.dke.inga.rules.helpers.ConfidenceResult;
 import at.jku.dke.inga.rules.models.ValueIntentDeterminationServiceModel;
+import at.jku.dke.inga.shared.EventNames;
 
 import java.util.Collection;
 
@@ -13,7 +15,7 @@ public class ValueIntentDeterminationService extends DroolsService<ValueIntentDe
      * Instantiates a new instance of class {@linkplain ValueIntentDeterminationService}.
      */
     public ValueIntentDeterminationService() {
-        super(new String[]{"value-intent-determination"});
+        super(new String[]{"value-intent-determination", "intent-determination"});
     }
 
     /**
@@ -23,6 +25,7 @@ public class ValueIntentDeterminationService extends DroolsService<ValueIntentDe
      * @return Result of the query execution
      * @throws IllegalArgumentException If the {@code model} is {@code null}.
      */
+    @SuppressWarnings("Duplicates")
     @Override
     public String executeRules(ValueIntentDeterminationServiceModel model) {
         if (model == null) throw new IllegalArgumentException("model must not be null.");
@@ -37,9 +40,12 @@ public class ValueIntentDeterminationService extends DroolsService<ValueIntentDe
         session.fireAllRules();
 
         // Get result and close session
-        Collection<?> objs = getSession().getObjects(obj -> obj instanceof String);
+        Collection<?> objs = getSession().getObjects(obj -> obj instanceof ConfidenceResult);
         closeSession();
 
-        return (String) objs.stream().findFirst().orElse(null);
+        return objs.stream()
+                .map(x -> (ConfidenceResult) x)
+                .sorted()
+                .findFirst().orElse(new ConfidenceResult(EventNames.INVALID_INPUT)).getValue();
     }
 }

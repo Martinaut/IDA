@@ -74,6 +74,7 @@ function display(d) {
 
 function send() {
     const content = $("#query").val().trim();
+    cancelSay();
     if (content && stompClient) {
         const message = {
             userInput: content

@@ -6,33 +6,25 @@ import at.jku.dke.inga.shared.models.NonComparativeAnalysisSituation
 import at.jku.dke.inga.shared.operations.Operation
 import at.jku.dke.inga.rules.models.OperationDisplayDeterminationServiceModel
 
-// ------------------------------ FILTER OPERATIONS --------------------------------
-rule "'Narrow Filter' - if "
-    agenda-group "possible-operations-determination"
+// ------------------------- GRANULARITY LEVEL OPERATIONS ----------------------------
+rule "'Drill Down' - if "
+    agenda-group "operations-display-determination"
     enabled false
+    // appropriate roll up relationship available
 when
     //$as : NonComparativeAnalysisSituation(measures.isEmpty() == false)
     //$model : ResolveOperationsDataModel(notSelectedMeasures.isEmpty() == false)
 then
-    //insert(new Operation(EventNames., 60));
+    insert(new Operation(EventNames.NAVIGATE_GL_DRILL_DOWN, 20));
 end
 
-rule "'Broaden Filter' - if "
-    agenda-group "possible-operations-determination"
+rule "'Roll Up' - if "
+    agenda-group "operations-display-determination"
     enabled false
+    // appropriate roll up relationship available
 when
     //$as : NonComparativeAnalysisSituation(measures.isEmpty() == false)
     //$model : ResolveOperationsDataModel(notSelectedMeasures.isEmpty() == false)
 then
-    //insert(new Operation(EventNames., 61));
-end
-
-rule "'Refocus Filter' - if "
-    agenda-group "possible-operations-determination"
-    enabled false
-when
-    //$as : NonComparativeAnalysisSituation(measures.isEmpty() == false)
-    //$model : ResolveOperationsDataModel(notSelectedMeasures.isEmpty() == false)
-then
-    //insert(new Operation(EventNames., 62));
+    insert(new Operation(EventNames.NAVIGATE_GL_ROLL_UP, 21));
 end

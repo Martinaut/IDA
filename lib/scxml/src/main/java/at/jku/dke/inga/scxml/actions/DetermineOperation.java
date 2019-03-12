@@ -3,6 +3,7 @@ package at.jku.dke.inga.scxml.actions;
 import at.jku.dke.inga.rules.models.OperationDeterminationServiceModel;
 import at.jku.dke.inga.rules.services.OperationDeterminationService;
 import at.jku.dke.inga.scxml.context.ContextModel;
+import at.jku.dke.inga.shared.EventNames;
 import at.jku.dke.inga.shared.display.Display;
 import at.jku.dke.inga.shared.display.ListDisplay;
 import at.jku.dke.inga.shared.operations.Operation;
@@ -40,9 +41,10 @@ public class DetermineOperation extends BaseAction {
 
         // Determine event
         String event = new OperationDeterminationService().executeRules(model);
+        ctxModel.setOperation(event);
 
         // Trigger event
-        ctx.getInternalIOProcessor().addEvent(new TriggerEvent(event, TriggerEvent.SIGNAL_EVENT));
+        ctx.getInternalIOProcessor().addEvent(new TriggerEvent(event.equals(EventNames.INVALID_INPUT) ? event : EventNames.DETERMINED, TriggerEvent.SIGNAL_EVENT));
     }
 
     @SuppressWarnings("Duplicates")

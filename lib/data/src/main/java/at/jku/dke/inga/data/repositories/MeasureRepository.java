@@ -60,6 +60,6 @@ public class MeasureRepository extends BaseRepository {
      * @return A set with all measure-URIs of the specified cube.
      */
     public Set<String> findByCube(String cubeUri) {
-        return getAll(DefaultTypes.TYPE_MEASURE, "/queries/repo_measures/findByCube.sparql", s -> s.replace("###CUBE###", cubeUri));
+        return getAll(DefaultTypes.TYPE_MEASURE, "/queries/repo_measure/findByCube.sparql", s -> s.replace("###CUBE###", cubeUri));
     }
 }

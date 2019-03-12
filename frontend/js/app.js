@@ -80,6 +80,7 @@ function display(d) {
 
 function send() {
   var content = $("#query").val().trim();
+  cancelSay();
 
   if (content && stompClient) {
     var message = {

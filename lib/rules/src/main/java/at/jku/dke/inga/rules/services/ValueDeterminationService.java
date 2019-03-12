@@ -1,6 +1,8 @@
 package at.jku.dke.inga.rules.services;
 
+import at.jku.dke.inga.rules.helpers.ConfidenceResult;
 import at.jku.dke.inga.rules.models.ValueDeterminationServiceModel;
+import at.jku.dke.inga.shared.EventNames;
 
 import java.util.Collection;
 
@@ -23,6 +25,7 @@ public class ValueDeterminationService extends DroolsService<ValueDeterminationS
      * @return Result of the query execution
      * @throws IllegalArgumentException If the {@code model} is {@code null}.
      */
+    @SuppressWarnings("Duplicates")
     @Override
     public String executeRules(ValueDeterminationServiceModel model) {
         if (model == null) throw new IllegalArgumentException("model must not be null.");
@@ -33,15 +36,19 @@ public class ValueDeterminationService extends DroolsService<ValueDeterminationS
         // Add data
         session.insert(model);
         session.insert(model.getAnalysisSituation());
+        session.insert(model.getDisplayData());
 
         // Execute rules
         session.fireAllRules();
 
         // Get result and close session
-        Collection<?> objs = getSession().getObjects(obj -> obj instanceof String);
+        Collection<?> objs = getSession().getObjects(obj -> obj instanceof ConfidenceResult);
         closeSession();
 
-        return (String) objs.stream().findFirst().orElse(null);
+        return objs.stream()
+                .map(x -> (ConfidenceResult) x)
+                .sorted()
+                .findFirst().orElse(new ConfidenceResult(EventNames.INVALID_INPUT)).getValue();
     }
 
 }

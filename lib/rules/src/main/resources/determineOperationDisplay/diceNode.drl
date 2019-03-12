@@ -6,33 +6,43 @@ import at.jku.dke.inga.shared.models.NonComparativeAnalysisSituation
 import at.jku.dke.inga.shared.operations.Operation
 import at.jku.dke.inga.rules.models.OperationDisplayDeterminationServiceModel
 
-// -------------------------- SLICE CONDITION OPERATIONS ----------------------------
-rule "'Narrow Slice Condition' - if "
-    agenda-group "possible-operations-determination"
+// ----------------------------- DICE NODE OPERATIONS -------------------------------
+rule "'Move Down To Node' - if "
+    agenda-group "operations-display-determination"
     enabled false
 when
     //$as : NonComparativeAnalysisSituation(measures.isEmpty() == false)
     //$model : ResolveOperationsDataModel(notSelectedMeasures.isEmpty() == false)
 then
-    //insert(new Operation(EventNames., 40));
+    //insert(new Operation(EventNames., 30));
 end
 
-rule "'Broaden Slice Condition' - if "
-    agenda-group "possible-operations-determination"
+rule "'Move Up To Node' - if "
+    agenda-group "operations-display-determination"
     enabled false
 when
     //$as : NonComparativeAnalysisSituation(measures.isEmpty() == false)
     //$model : ResolveOperationsDataModel(notSelectedMeasures.isEmpty() == false)
 then
-    //insert(new Operation(EventNames., 41));
+    //insert(new Operation(EventNames., 31));
 end
 
-rule "'Refocus Slice Condition' - if "
-    agenda-group "possible-operations-determination"
+rule "'Move Aside To Node' - if "
+    agenda-group "operations-display-determination"
     enabled false
 when
     //$as : NonComparativeAnalysisSituation(measures.isEmpty() == false)
     //$model : ResolveOperationsDataModel(notSelectedMeasures.isEmpty() == false)
 then
-    //insert(new Operation(EventNames., 42));
+    //insert(new Operation(EventNames., 32));
+end
+
+rule "'Move To Node' - if "
+    agenda-group "operations-display-determination"
+    enabled false
+when
+    //$as : NonComparativeAnalysisSituation(measures.isEmpty() == false)
+    //$model : ResolveOperationsDataModel(notSelectedMeasures.isEmpty() == false)
+then
+    //insert(new Operation(EventNames., 33));
 end

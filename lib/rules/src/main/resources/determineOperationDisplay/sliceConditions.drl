@@ -6,43 +6,33 @@ import at.jku.dke.inga.shared.models.NonComparativeAnalysisSituation
 import at.jku.dke.inga.shared.operations.Operation
 import at.jku.dke.inga.rules.models.OperationDisplayDeterminationServiceModel
 
-// ----------------------------- DICE NODE OPERATIONS -------------------------------
-rule "'Move Down To Node' - if "
-    agenda-group "possible-operations-determination"
+// -------------------------- SLICE CONDITION OPERATIONS ----------------------------
+rule "'Narrow Slice Condition' - if "
+    agenda-group "operations-display-determination"
     enabled false
 when
     //$as : NonComparativeAnalysisSituation(measures.isEmpty() == false)
     //$model : ResolveOperationsDataModel(notSelectedMeasures.isEmpty() == false)
 then
-    //insert(new Operation(EventNames., 30));
+    //insert(new Operation(EventNames., 40));
 end
 
-rule "'Move Up To Node' - if "
-    agenda-group "possible-operations-determination"
+rule "'Broaden Slice Condition' - if "
+    agenda-group "operations-display-determination"
     enabled false
 when
     //$as : NonComparativeAnalysisSituation(measures.isEmpty() == false)
     //$model : ResolveOperationsDataModel(notSelectedMeasures.isEmpty() == false)
 then
-    //insert(new Operation(EventNames., 31));
+    //insert(new Operation(EventNames., 41));
 end
 
-rule "'Move Aside To Node' - if "
-    agenda-group "possible-operations-determination"
+rule "'Refocus Slice Condition' - if "
+    agenda-group "operations-display-determination"
     enabled false
 when
     //$as : NonComparativeAnalysisSituation(measures.isEmpty() == false)
     //$model : ResolveOperationsDataModel(notSelectedMeasures.isEmpty() == false)
 then
-    //insert(new Operation(EventNames., 32));
-end
-
-rule "'Move To Node' - if "
-    agenda-group "possible-operations-determination"
-    enabled false
-when
-    //$as : NonComparativeAnalysisSituation(measures.isEmpty() == false)
-    //$model : ResolveOperationsDataModel(notSelectedMeasures.isEmpty() == false)
-then
-    //insert(new Operation(EventNames., 33));
+    //insert(new Operation(EventNames., 42));
 end

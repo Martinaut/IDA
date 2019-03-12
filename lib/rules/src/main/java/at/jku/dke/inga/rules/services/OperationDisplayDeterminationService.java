@@ -4,6 +4,7 @@ import at.jku.dke.inga.rules.models.OperationDisplayDeterminationServiceModel;
 import at.jku.dke.inga.shared.operations.Operation;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.stream.Collectors;
 
 /**
@@ -27,7 +28,7 @@ public class OperationDisplayDeterminationService extends DroolsService<Operatio
      * @throws IllegalArgumentException If the {@code model} is {@code null}.
      */
     @Override
-    public Collection<Operation> executeRules(OperationDisplayDeterminationServiceModel model) {
+    public List<Operation> executeRules(OperationDisplayDeterminationServiceModel model) {
         if (model == null) throw new IllegalArgumentException("model must not be null.");
 
         logger.info("Determining possible actions a user can execute based on current analysis situation");

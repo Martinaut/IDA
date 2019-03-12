@@ -1,0 +1,25 @@
+package at.jku.dke.inga.rules
+
+// ------------------------------------ IMPORT --------------------------------------
+import at.jku.dke.inga.shared.models.NonComparativeAnalysisSituation
+import at.jku.dke.inga.shared.EventNames
+import at.jku.dke.inga.rules.models.SetValueServiceModel
+
+// ------------------------------------ RULES ---------------------------------------
+rule "Add measure"
+    agenda-group "set-value"
+when
+    $as : NonComparativeAnalysisSituation()
+    $model : SetValueServiceModel(operation == EventNames.NAVIGATE_MEASURE_ADD, analysisSituation == $as)
+then
+    $as.addMeasure($model.getValue());
+end
+
+rule "Drop measure"
+    agenda-group "set-value"
+when
+    $as : NonComparativeAnalysisSituation()
+    $model : SetValueServiceModel(operation == EventNames.NAVIGATE_MEASURE_DROP, analysisSituation == $as)
+then
+    $as.removeMeasure($model.getValue());
+end

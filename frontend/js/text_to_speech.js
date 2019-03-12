@@ -19,3 +19,7 @@ function say(text) {
   utterance.rate = 1;
   synth.speak(utterance);
 }
+
+function cancelSay() {
+  synth.cancel();
+}

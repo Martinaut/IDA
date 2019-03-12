@@ -33,7 +33,6 @@ public class DisplayValues extends BaseAction {
         Display display = new ValuesDisplayDeterminationService().executeRules(model);
 
         // Send to display
-        ctxModel.setOperation(null);
         ctxModel.setDisplayData(display);
     }
 

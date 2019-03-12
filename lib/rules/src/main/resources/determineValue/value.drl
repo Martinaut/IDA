@@ -1,0 +1,29 @@
+package at.jku.dke.inga.rules
+
+// ------------------------------------ IMPORT --------------------------------------
+import at.jku.dke.inga.rules.models.ValueDeterminationServiceModel
+import at.jku.dke.inga.shared.display.ListDisplay
+import at.jku.dke.inga.shared.EventNames
+import at.jku.dke.inga.rules.helpers.ConfidenceResult
+import org.apache.commons.lang3.math.NumberUtils
+
+// ------------------------------------ RULES ---------------------------------------
+rule "Resolve Value - ListDisplay"
+    agenda-group "value-determination"
+    salience 1
+when
+    $display : ListDisplay()
+    $model : ValueDeterminationServiceModel(NumberUtils.isParsable(userInput), displayData == $display)
+then
+    insert(new ConfidenceResult($display.getData().get(NumberUtils.createInteger($model.getUserInput())-1).getDisplayableId(), 1.0));
+end
+
+rule "Invalid Operation Number - ListDisplay"
+    agenda-group "value-determination"
+    salience 2
+when
+    $display : ListDisplay()
+    $model : ValueDeterminationServiceModel(!NumberUtils.isParsable(userInput) || NumberUtils.createInteger($model.getUserInput()) < 0 || NumberUtils.createInteger($model.getUserInput()) > $display.data.size(), displayData == $display)
+then
+    insert(new ConfidenceResult(EventNames.INVALID_INPUT, 1.0));
+end

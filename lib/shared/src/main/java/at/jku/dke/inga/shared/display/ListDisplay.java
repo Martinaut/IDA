@@ -9,7 +9,7 @@ import java.util.stream.StreamSupport;
  */
 public class ListDisplay extends Display {
 
-    private final Collection<? extends Displayable> data;
+    private final List<? extends Displayable> data;
 
     /**
      * Instantiates a new instance of class {@linkplain ListDisplay}.
@@ -17,9 +17,9 @@ public class ListDisplay extends Display {
      * @param displayMessage The display message.
      * @param data           The data to display in a list.
      */
-    public ListDisplay(String displayMessage, Collection<? extends Displayable> data) {
+    public ListDisplay(String displayMessage, List<? extends Displayable> data) {
         super(displayMessage);
-        this.data = Collections.unmodifiableCollection(data);
+        this.data = Collections.unmodifiableList(data);
     }
 
     /**
@@ -40,7 +40,7 @@ public class ListDisplay extends Display {
      * @param locale                     The locale for the resource name.
      * @param data                       The data to display in a list.
      */
-    public ListDisplay(String displayMessageResourceName, Locale locale, Collection<? extends Displayable> data) {
+    public ListDisplay(String displayMessageResourceName, Locale locale, List<? extends Displayable> data) {
         super(displayMessageResourceName, locale);
         this.data = data;
     }
@@ -50,7 +50,7 @@ public class ListDisplay extends Display {
      *
      * @return The data that should be displayed in a list.
      */
-    public Collection<? extends Displayable> getData() {
+    public List<? extends Displayable> getData() {
         return data;
     }
 
