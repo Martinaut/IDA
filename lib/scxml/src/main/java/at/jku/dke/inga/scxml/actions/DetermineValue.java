@@ -26,9 +26,9 @@ public class DetermineValue extends BaseAction {
         // Execute
         String value = determineValue(ctxModel);
         setValue(ctxModel, value);
-
+// TODO: add inavlidInputTransition
         // Trigger event
-        ctx.getInternalIOProcessor().addEvent(new TriggerEvent(EventNames.RESOLVED, TriggerEvent.SIGNAL_EVENT));
+        ctx.getInternalIOProcessor().addEvent(new TriggerEvent(EventNames.DETERMINED, TriggerEvent.SIGNAL_EVENT));
     }
 
     private String determineValue(ContextModel ctxModel) throws ModelException {

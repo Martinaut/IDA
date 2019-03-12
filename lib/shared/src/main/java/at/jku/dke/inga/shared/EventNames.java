@@ -76,9 +76,6 @@ public final class EventNames {
     public static final String REVISE_QUERY = "reviseQuery";
     // endregion
 
-
-
-
     /**
      * Used to request more information within a step.
      */
@@ -89,12 +86,10 @@ public final class EventNames {
      */
     public static final String INVALID_INPUT = "invalidInput";
 
-
-
     /**
-     * Used for transitions from "Resolving*" to the next state.
+     * Used for transitions from "Determining*" to the next state.
      */
-    public static final String RESOLVED = "resolved";
+    public static final String DETERMINED = "determined";
 
     /**
      * Prevents generating a instance of this class.
