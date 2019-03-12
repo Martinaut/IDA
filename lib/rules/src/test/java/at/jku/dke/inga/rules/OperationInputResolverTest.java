@@ -1,10 +1,7 @@
 package at.jku.dke.inga.rules;
 
-import at.jku.dke.inga.rules.models.ResolveOperationInputModel;
-import at.jku.dke.inga.rules.services.OperationInputResolver;
 import at.jku.dke.inga.shared.EventNames;
 import at.jku.dke.inga.shared.SharedSpringConfiguration;
-import at.jku.dke.inga.shared.display.Display;
 import at.jku.dke.inga.shared.models.NonComparativeAnalysisSituation;
 import at.jku.dke.inga.shared.operations.Operation;
 import org.junit.jupiter.api.BeforeAll;

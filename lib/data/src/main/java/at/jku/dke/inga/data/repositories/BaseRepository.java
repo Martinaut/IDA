@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -72,5 +73,37 @@ public class BaseRepository {
         } catch (QueryException ex) {
             return Collections.emptyList();
         }
+    }
+
+    /**
+     * Returns all resources of the specified type.
+     * <p>
+     * Following binding has to be returned by the query: element
+     * </p>
+     *
+     * @param type The requested type (full uri).
+     * @param queryFile                        The path to the query file.
+     * @param additionalQueryStringManipulator Additional query string manipulator to manipulate the query text before executing
+     * @return A set with all resource-URIs of the specified type.
+     */
+    protected Set<String> getAll(String type, String queryFile, Function<String, String> additionalQueryStringManipulator) {
+        try {
+            var result = graphDbHelper.getQueryResult(
+                    queryFile,
+                    s -> additionalQueryStringManipulator.apply(s.replace("###TYPE###", type)));
+            return result.stream().map(x -> x.getValue("element").stringValue()).collect(Collectors.toSet());
+        } catch (QueryException ex) {
+            return Collections.emptySet();
+        }
+    }
+
+    /**
+     * Returns all resources of the specified type.
+     *
+     * @param type The requested type (full uri).
+     * @return A set with all resource-URIs of the specified type.
+     */
+    protected Set<String> getAll(String type) {
+        return getAll(type, "/queries/getAll.sparql", Function.identity());
     }
 }

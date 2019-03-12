@@ -1,6 +1,7 @@
 package at.jku.dke.inga.data.repositories;
 
 import at.jku.dke.inga.data.models.Label;
+import at.jku.dke.inga.shared.DefaultTypes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -50,5 +51,15 @@ public class MeasureRepository extends BaseRepository {
         return findLabelsByLang(lang,
                 "/queries/repo_measure/findLabelsByUrisAndLang.sparql",
                 s -> s.replace("###IN###", measureUris.stream().map(x -> '<' + x + '>').collect(Collectors.joining(", "))));
+    }
+
+    /**
+     * Returns all measures for the specified cube.
+     *
+     * @param cubeUri The full URI of the cube.
+     * @return A set with all measure-URIs of the specified cube.
+     */
+    public Set<String> findByCube(String cubeUri) {
+        return getAll(DefaultTypes.TYPE_MEASURE, "/queries/repo_measures/findByCube.sparql", s -> s.replace("###CUBE###", cubeUri));
     }
 }

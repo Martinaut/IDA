@@ -35,13 +35,14 @@ public abstract class BaseAction extends Action {
      */
     @Override
     public final void execute(ActionExecutionContext actionExecutionContext) throws ModelException, SCXMLExpressionException {
+        logger.info("Executing action '{}'.", getClass().getSimpleName());
         execute(actionExecutionContext, getContext(actionExecutionContext));
     }
 
     /**
      * Executes the action operations.
      *
-     * @param ctx      The application execution context.
+     * @param ctx      The state chart application execution context.
      * @param ctxModel The context data.
      */
     protected abstract void execute(final ActionExecutionContext ctx, final ContextModel ctxModel) throws ModelException, SCXMLExpressionException;

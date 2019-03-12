@@ -1,45 +1,39 @@
 package at.jku.dke.inga.scxml.actions;
 
-import at.jku.dke.inga.rules.models.ResolveValuesDataModel;
-import at.jku.dke.inga.rules.services.ValuesResolver;
+import at.jku.dke.inga.rules.models.ValuesDisplayDeterminationServiceModel;
+import at.jku.dke.inga.rules.services.ValuesDisplayDeterminationService;
 import at.jku.dke.inga.scxml.context.ContextModel;
 import at.jku.dke.inga.shared.display.Display;
-import at.jku.dke.inga.shared.models.NonComparativeAnalysisSituation;
 import org.apache.commons.scxml2.ActionExecutionContext;
-import org.apache.commons.scxml2.SCXMLExpressionException;
 import org.apache.commons.scxml2.model.ModelException;
 
 /**
- * Action that determines the values to display.
+ * This action identifies values from which the user can select a value.
+ * Values can be cubes, measures, ...
  */
-@SuppressWarnings("unused")
 public class DisplayValues extends BaseAction {
 
     /**
-     * Executes the action.
+     * Executes the action operations.
      *
-     * @param ctx The action execution context.
+     * @param ctx      The state chart application execution context.
      * @param ctxModel The context data.
      */
     @Override
-    public void execute(final ActionExecutionContext ctx, final ContextModel ctxModel) throws ModelException, SCXMLExpressionException {
-        logger.info("Executing action 'DisplayValues'.");
-
-        // Get Data
-        // TODO: make usable with comparative AS
-        String operation = ctxModel.getOperation();
-        NonComparativeAnalysisSituation as = (NonComparativeAnalysisSituation) ctxModel.getAnalysisSituation();
-
-        // Resolve Data
-        ResolveValuesDataModel model = new ResolveValuesDataModel(
+    protected void execute(ActionExecutionContext ctx, ContextModel ctxModel) throws ModelException {
+        // Get data
+        var model = new ValuesDisplayDeterminationServiceModel(
                 getCurrentState(),
-                as,
+                ctxModel.getAnalysisSituation(),
                 ctxModel.getLocale(),
-                operation
+                ctxModel.getOperation()
         );
-        Display display = new ValuesResolver().resolveValues(model);
+
+        // Determine display data
+        Display display = new ValuesDisplayDeterminationService().executeRules(model);
 
         // Send to display
+        ctxModel.setOperation(null);
         ctxModel.setDisplayData(display);
     }
 

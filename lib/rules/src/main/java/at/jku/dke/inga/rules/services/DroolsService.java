@@ -12,7 +12,7 @@ import org.kie.api.runtime.rule.Agenda;
 /**
  * Base-class for all drools-services. This class provides a KieSession.
  */
-public abstract class DroolsService {
+public abstract class DroolsService<TModel, TResult> implements AutoCloseable {
 
     protected final Logger logger;
     private final String[] agendaGroups;
@@ -36,6 +36,15 @@ public abstract class DroolsService {
         this.agendaGroups = agendaGroups;
         this.logger = LogManager.getLogger(getClass());
     }
+
+    /**
+     * Executes the rules using the given model.
+     *
+     * @param model The model required by the rules.
+     * @return Result of the query execution
+     * @throws IllegalArgumentException If the {@code model} is {@code null}.
+     */
+    public abstract TResult executeRules(TModel model);
 
     /**
      * Closes the current session.
@@ -85,5 +94,16 @@ public abstract class DroolsService {
         });
 
         return kieSession;
+    }
+
+
+    /**
+     * Closes this resource, relinquishing any underlying resources.
+     * This method is invoked automatically on objects managed by the
+     * {@code try}-with-resources statement.
+     */
+    @Override
+    public void close() {
+        closeSession();
     }
 }

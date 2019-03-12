@@ -4,11 +4,11 @@ package at.jku.dke.inga.rules
 import at.jku.dke.inga.shared.EventNames
 import at.jku.dke.inga.shared.models.NonComparativeAnalysisSituation
 import at.jku.dke.inga.shared.operations.Operation
-import at.jku.dke.inga.rules.models.ResolveOperationsDataModel
+import at.jku.dke.inga.rules.models.OperationDisplayDeterminationServiceModel
 
 // ----------------------------- DICE NODE OPERATIONS -------------------------------
 rule "'Move Down To Node' - if "
-    agenda-group "operation-determination"
+    agenda-group "possible-operations-determination"
     enabled false
 when
     //$as : NonComparativeAnalysisSituation(measures.isEmpty() == false)
@@ -18,7 +18,7 @@ then
 end
 
 rule "'Move Up To Node' - if "
-    agenda-group "operation-determination"
+    agenda-group "possible-operations-determination"
     enabled false
 when
     //$as : NonComparativeAnalysisSituation(measures.isEmpty() == false)
@@ -28,7 +28,7 @@ then
 end
 
 rule "'Move Aside To Node' - if "
-    agenda-group "operation-determination"
+    agenda-group "possible-operations-determination"
     enabled false
 when
     //$as : NonComparativeAnalysisSituation(measures.isEmpty() == false)
@@ -38,7 +38,7 @@ then
 end
 
 rule "'Move To Node' - if "
-    agenda-group "operation-determination"
+    agenda-group "possible-operations-determination"
     enabled false
 when
     //$as : NonComparativeAnalysisSituation(measures.isEmpty() == false)

@@ -2,8 +2,6 @@ package at.jku.dke.inga.rules;
 
 import at.jku.dke.inga.data.models.Cube;
 import at.jku.dke.inga.data.models.CubeElement;
-import at.jku.dke.inga.rules.models.ResolveOperationsDataModel;
-import at.jku.dke.inga.rules.services.OperationsResolver;
 import at.jku.dke.inga.shared.DefaultTypes;
 import at.jku.dke.inga.shared.EventNames;
 import at.jku.dke.inga.shared.models.NonComparativeAnalysisSituation;

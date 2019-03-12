@@ -1,8 +1,5 @@
 package at.jku.dke.inga.rules;
 
-import at.jku.dke.inga.rules.models.ResolveActionModel;
-import at.jku.dke.inga.rules.models.ResolveOperationInputModel;
-import at.jku.dke.inga.rules.services.ActionResolver;
 import at.jku.dke.inga.shared.EventNames;
 import at.jku.dke.inga.shared.SharedSpringConfiguration;
 import at.jku.dke.inga.shared.models.NonComparativeAnalysisSituation;

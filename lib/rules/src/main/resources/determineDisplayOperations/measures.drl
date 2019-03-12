@@ -4,28 +4,28 @@ package at.jku.dke.inga.rules
 import at.jku.dke.inga.shared.EventNames
 import at.jku.dke.inga.shared.models.NonComparativeAnalysisSituation
 import at.jku.dke.inga.shared.operations.Operation
-import at.jku.dke.inga.rules.models.ResolveOperationsDataModel
+import at.jku.dke.inga.rules.models.OperationDisplayDeterminationServiceModel
 
 // ------------------------------ MEASURE OPERATIONS --------------------------------
 rule "'Add Measure' - if at least one measure is available in the cube for selection"
-    agenda-group "operation-determination"
+    agenda-group "possible-operations-determination"
 when
-    $model : ResolveOperationsDataModel(notSelectedMeasures.isEmpty() == false)
+    $model : OperationDisplayDeterminationServiceModel(notSelectedMeasures.isEmpty() == false)
 then
     insert(new Operation(EventNames.NAVIGATE_MEASURE_ADD, $model.getLocale(), 10));
 end
 
 rule "'Refocus Measure' - if at least one measure is available"
-    agenda-group "operation-determination"
+    agenda-group "possible-operations-determination"
 when
     $as : NonComparativeAnalysisSituation(measures.isEmpty() == false)
-    $model : ResolveOperationsDataModel(notSelectedMeasures.isEmpty() == false, analysisSituation == $as)
+    $model : OperationDisplayDeterminationServiceModel(notSelectedMeasures.isEmpty() == false, analysisSituation == $as)
 then
     insert(new Operation(EventNames.NAVIGATE_MEASURE_REFOCUS, $model.getLocale(), 11));
 end
 
 //rule "'Move Down To Measure' - if at least one measure selected which has children"
-//    agenda-group "operation-determination"
+//    agenda-group "possible-operations-determination"
 //when
 //    // TODO
 //then
@@ -33,7 +33,7 @@ end
 //end
 //
 //rule "'Move Up To Measure' - if at least one measure selected which has parents"
-//    agenda-group "operation-determination"
+//    agenda-group "possible-operations-determination"
 //when
 //    // TODO
 //then
@@ -41,10 +41,10 @@ end
 //end
 
 rule "'Drop Measure' - if at least one measure is selected"
-    agenda-group "operation-determination"
+    agenda-group "possible-operations-determination"
 when
     $as : NonComparativeAnalysisSituation(measures.isEmpty() == false)
-    $model : ResolveOperationsDataModel(analysisSituation == $as)
+    $model : OperationDisplayDeterminationServiceModel(analysisSituation == $as)
 then
     insert(new Operation(EventNames.NAVIGATE_MEASURE_DROP, $model.getLocale(), 14));
 end

@@ -1,16 +1,19 @@
 package at.jku.dke.inga.rules.models;
 
-import at.jku.dke.inga.shared.models.NonComparativeAnalysisSituation;
+import at.jku.dke.inga.shared.models.AnalysisSituation;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Locale;
 
-public class ResolveValuesDataModel extends DataModel<NonComparativeAnalysisSituation> {
+/**
+ * Model required by {@link at.jku.dke.inga.rules.services.ValuesDisplayDeterminationService}.
+ */
+public class ValuesDisplayDeterminationServiceModel extends DroolsServiceModel {
 
     private final String operation;
 
     /**
-     * Instantiates a new instance of class {@link ResolveValuesDataModel}.
+     * Instantiates a new instance of class {@link ValuesDisplayDeterminationServiceModel}.
      *
      * @param currentState      The current state of the state machine.
      * @param analysisSituation The analysis situation.
@@ -18,7 +21,7 @@ public class ResolveValuesDataModel extends DataModel<NonComparativeAnalysisSitu
      * @param locale            The display locale.
      * @throws IllegalArgumentException If any of the parameters is {@code null} (or empty).
      */
-    public ResolveValuesDataModel(String currentState, NonComparativeAnalysisSituation analysisSituation, Locale locale, String operation) {
+    public ValuesDisplayDeterminationServiceModel(String currentState, AnalysisSituation analysisSituation, Locale locale, String operation) {
         super(currentState, analysisSituation, locale);
 
         if (StringUtils.isBlank(operation)) throw new IllegalArgumentException("operation must not be empty or null");

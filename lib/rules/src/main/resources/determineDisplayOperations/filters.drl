@@ -4,35 +4,35 @@ package at.jku.dke.inga.rules
 import at.jku.dke.inga.shared.EventNames
 import at.jku.dke.inga.shared.models.NonComparativeAnalysisSituation
 import at.jku.dke.inga.shared.operations.Operation
-import at.jku.dke.inga.rules.models.ResolveOperationsDataModel
+import at.jku.dke.inga.rules.models.OperationDisplayDeterminationServiceModel
 
-// ---------------------- BASE MEASURE CONDITION OPERATIONS -------------------------
-rule "'Narrow Base Measure Condition' - if "
-    agenda-group "operation-determination"
+// ------------------------------ FILTER OPERATIONS --------------------------------
+rule "'Narrow Filter' - if "
+    agenda-group "possible-operations-determination"
     enabled false
 when
     //$as : NonComparativeAnalysisSituation(measures.isEmpty() == false)
     //$model : ResolveOperationsDataModel(notSelectedMeasures.isEmpty() == false)
 then
-    //insert(new Operation(EventNames., 50));
+    //insert(new Operation(EventNames., 60));
 end
 
-rule "'Broaden Base Measure Condition' - if "
-    agenda-group "operation-determination"
+rule "'Broaden Filter' - if "
+    agenda-group "possible-operations-determination"
     enabled false
 when
     //$as : NonComparativeAnalysisSituation(measures.isEmpty() == false)
     //$model : ResolveOperationsDataModel(notSelectedMeasures.isEmpty() == false)
 then
-    //insert(new Operation(EventNames., 51));
+    //insert(new Operation(EventNames., 61));
 end
 
-rule "'Refocus Base Measure Condition' - if "
-    agenda-group "operation-determination"
+rule "'Refocus Filter' - if "
+    agenda-group "possible-operations-determination"
     enabled false
 when
     //$as : NonComparativeAnalysisSituation(measures.isEmpty() == false)
     //$model : ResolveOperationsDataModel(notSelectedMeasures.isEmpty() == false)
 then
-    //insert(new Operation(EventNames., 52));
+    //insert(new Operation(EventNames., 62));
 end

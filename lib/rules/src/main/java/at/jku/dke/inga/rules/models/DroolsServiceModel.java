@@ -10,21 +10,21 @@ import java.util.StringJoiner;
 /**
  * Base-class for all rule-service data models containing data needed for all actions.
  */
-public abstract class DataModel<T extends AnalysisSituation> {
+public abstract class DroolsServiceModel {
 
     private final String currentState;
-    private final T analysisSituation;
+    private final AnalysisSituation analysisSituation;
     private final Locale locale;
 
     /**
-     * Instantiates a new instance of class {@link DataModel}.
+     * Instantiates a new instance of class {@link DroolsServiceModel}.
      *
      * @param currentState      The current state of the state machine.
      * @param analysisSituation The analysis situation.
      * @param locale            The display locale.
      * @throws IllegalArgumentException If {@code currentState} or {@code analysisSituation} are {@code null} (or empty).
      */
-    protected DataModel(String currentState, T analysisSituation, Locale locale) {
+    protected DroolsServiceModel(String currentState, AnalysisSituation analysisSituation, Locale locale) {
         if (StringUtils.isBlank(currentState))
             throw new IllegalArgumentException("currentState must not be null or empty.");
         if (analysisSituation == null)
@@ -52,7 +52,7 @@ public abstract class DataModel<T extends AnalysisSituation> {
      *
      * @return the analysis situation
      */
-    public T getAnalysisSituation() {
+    public AnalysisSituation getAnalysisSituation() {
         return analysisSituation;
     }
 
@@ -80,11 +80,11 @@ public abstract class DataModel<T extends AnalysisSituation> {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof DataModel)) return false;
-        DataModel dataModel = (DataModel) o;
-        return Objects.equals(currentState, dataModel.currentState) &&
-                Objects.equals(analysisSituation, dataModel.analysisSituation) &&
-                Objects.equals(locale, dataModel.locale);
+        if (!(o instanceof DroolsServiceModel)) return false;
+        DroolsServiceModel droolsServiceModel = (DroolsServiceModel) o;
+        return Objects.equals(currentState, droolsServiceModel.currentState) &&
+                Objects.equals(analysisSituation, droolsServiceModel.analysisSituation) &&
+                Objects.equals(locale, droolsServiceModel.locale);
     }
 
     /**
@@ -100,7 +100,7 @@ public abstract class DataModel<T extends AnalysisSituation> {
      */
     @Override
     public String toString() {
-        return new StringJoiner(", ", DataModel.class.getSimpleName() + "[", "]")
+        return new StringJoiner(", ", DroolsServiceModel.class.getSimpleName() + "[", "]")
                 .add("currentState='" + currentState + "'")
                 .add("analysisSituation=" + analysisSituation)
                 .add("locale=" + locale)

@@ -4,35 +4,35 @@ package at.jku.dke.inga.rules
 import at.jku.dke.inga.shared.EventNames
 import at.jku.dke.inga.shared.models.NonComparativeAnalysisSituation
 import at.jku.dke.inga.shared.operations.Operation
-import at.jku.dke.inga.rules.models.ResolveOperationsDataModel
+import at.jku.dke.inga.rules.models.OperationDisplayDeterminationServiceModel
 
-// ------------------------------ FILTER OPERATIONS --------------------------------
-rule "'Narrow Filter' - if "
-    agenda-group "operation-determination"
+// -------------------------- SLICE CONDITION OPERATIONS ----------------------------
+rule "'Narrow Slice Condition' - if "
+    agenda-group "possible-operations-determination"
     enabled false
 when
     //$as : NonComparativeAnalysisSituation(measures.isEmpty() == false)
     //$model : ResolveOperationsDataModel(notSelectedMeasures.isEmpty() == false)
 then
-    //insert(new Operation(EventNames., 60));
+    //insert(new Operation(EventNames., 40));
 end
 
-rule "'Broaden Filter' - if "
-    agenda-group "operation-determination"
+rule "'Broaden Slice Condition' - if "
+    agenda-group "possible-operations-determination"
     enabled false
 when
     //$as : NonComparativeAnalysisSituation(measures.isEmpty() == false)
     //$model : ResolveOperationsDataModel(notSelectedMeasures.isEmpty() == false)
 then
-    //insert(new Operation(EventNames., 61));
+    //insert(new Operation(EventNames., 41));
 end
 
-rule "'Refocus Filter' - if "
-    agenda-group "operation-determination"
+rule "'Refocus Slice Condition' - if "
+    agenda-group "possible-operations-determination"
     enabled false
 when
     //$as : NonComparativeAnalysisSituation(measures.isEmpty() == false)
     //$model : ResolveOperationsDataModel(notSelectedMeasures.isEmpty() == false)
 then
-    //insert(new Operation(EventNames., 62));
+    //insert(new Operation(EventNames., 42));
 end
