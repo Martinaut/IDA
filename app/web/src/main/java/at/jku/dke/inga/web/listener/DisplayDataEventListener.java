@@ -2,9 +2,12 @@ package at.jku.dke.inga.web.listener;
 
 import at.jku.dke.inga.scxml.events.DisplayEventData;
 import at.jku.dke.inga.scxml.events.DisplayListener;
+import at.jku.dke.inga.web.models.DisplayResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
+import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
+import org.springframework.messaging.simp.SimpMessageType;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Component;
 
@@ -35,6 +38,14 @@ public class DisplayDataEventListener implements DisplayListener {
      */
     @Override
     public void displayDataAvailable(String sessionId, DisplayEventData evt) {
-        template.convertAndSendToUser(sessionId, "/queue/inga", evt.getDisplay()); // TODO: check if with sessionId works
+        var headerAccessor = SimpMessageHeaderAccessor.create(SimpMessageType.MESSAGE);
+        headerAccessor.setSessionId(sessionId);
+        headerAccessor.setLeaveMutable(true);
+
+        template.convertAndSendToUser(
+                sessionId,
+                "/queue/inga",
+                new DisplayResult(evt.getDisplay()),
+                headerAccessor.getMessageHeaders());
     }
 }

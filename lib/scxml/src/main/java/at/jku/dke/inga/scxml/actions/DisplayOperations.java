@@ -2,12 +2,10 @@ package at.jku.dke.inga.scxml.actions;
 
 import at.jku.dke.inga.data.models.Cube;
 import at.jku.dke.inga.data.models.CubeElement;
-import at.jku.dke.inga.data.repositories.CubeElementRepository;
-import at.jku.dke.inga.data.repositories.CubeRepository;
 import at.jku.dke.inga.rules.models.ResolveOperationsDataModel;
 import at.jku.dke.inga.rules.services.OperationsResolver;
 import at.jku.dke.inga.scxml.context.ContextModel;
-import at.jku.dke.inga.scxml.events.DisplayEventData;
+import at.jku.dke.inga.shared.DefaultTypes;
 import at.jku.dke.inga.shared.display.ListDisplay;
 import at.jku.dke.inga.shared.models.NonComparativeAnalysisSituation;
 import at.jku.dke.inga.shared.operations.Operation;
@@ -17,6 +15,7 @@ import org.apache.commons.scxml2.model.ModelException;
 import org.springframework.beans.BeanUtils;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -41,8 +40,8 @@ public class DisplayOperations extends BaseAction {
         List<CubeElement> elements = new ArrayList<>();
 
         if (as.isCubeDefined()) {
-            cube = BeanUtils.instantiateClass(CubeRepository.class).findById(as.getCube()).orElse(new Cube(""));
-            elements = BeanUtils.instantiateClass(CubeElementRepository.class).findByCubeUri(as.getCube());
+            cube = new Cube(as.getCube());
+            elements = Arrays.asList(new CubeElement("http://www.example.org/drugs#DrugPrescriptionCube", "http://www.example.org/drugs#QuantityMeasure", DefaultTypes.TYPE_MEASURE));
         }
 
         // Resolve Operations
@@ -56,7 +55,7 @@ public class DisplayOperations extends BaseAction {
 
         // Send to display
         ctxModel.setOperation(null);
-        ctxModel.setDisplayData(new ListDisplay("selectOption", ctxModel.getLocale(), operations));
+        ctxModel.setDisplayData(new ListDisplay("selectOperation", ctxModel.getLocale(), operations));
     }
 
 }

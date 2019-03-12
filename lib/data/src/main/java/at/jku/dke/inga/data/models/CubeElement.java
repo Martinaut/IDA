@@ -1,25 +1,16 @@
 package at.jku.dke.inga.data.models;
 
-import javax.persistence.*;
 import java.util.StringJoiner;
 
 /**
  * The type Cube element.
  */
-@Entity(name = "cube_elements")
+@Deprecated
 public class CubeElement {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
-
-    @Column(nullable = false, length = 255)
     private String cubeUri;
-
-    @Column(nullable = false, length = 255)
     private String uri;
-
-    @Column(nullable = false, length = 255)
     private String typeUri;
 
     /**

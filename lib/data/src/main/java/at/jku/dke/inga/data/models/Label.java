@@ -5,64 +5,63 @@ import at.jku.dke.inga.shared.display.Displayable;
 import java.util.StringJoiner;
 
 /**
- * Represents the database-table containing labels and descriptions of cube elements.
+ * Represents an element with a label and description of a specific language.
  */
-@Deprecated
-public class CubeElementLabel implements Displayable {
+public class Label implements Displayable {
 
-    private String cubeElementUri;
+    private String uri;
     private String lang;
     private String label;
     private String description;
 
     /**
-     * Instantiates a new instance of class {@linkplain CubeElementLabel}.
+     * Instantiates a new instance of class {@linkplain Label}.
      */
-    CubeElementLabel() {
+    Label() {
     }
 
     /**
-     * Instantiates a new instance of class {@linkplain CubeElementLabel}.
+     * Instantiates a new instance of class {@linkplain Label}.
      *
-     * @param cubeElementUri The cube element this label belongs to.
-     * @param lang           The language of this label.
-     * @param label          The label of the cube element.
+     * @param uri   The uri this label belongs to.
+     * @param lang  The language of this label.
+     * @param label The label of the element.
      */
-    public CubeElementLabel(String cubeElementUri, String lang, String label) {
-        this.cubeElementUri = cubeElementUri;
+    public Label(String uri, String lang, String label) {
+        this.uri = uri;
         this.lang = lang;
         this.label = label;
     }
 
     /**
-     * Instantiates a new instance of class {@linkplain CubeElementLabel}.
+     * Instantiates a new instance of class {@linkplain Label}.
      *
-     * @param cubeElementUri The cube element this label belongs to.
-     * @param lang           The language of this label and description.
-     * @param label          The label of the cube element.
-     * @param description    The description of the cube element.
+     * @param uri         The uri this label belongs to.
+     * @param lang        The language of this label and description.
+     * @param label       The label of the element.
+     * @param description The description of the element.
      */
-    public CubeElementLabel(String cubeElementUri, String lang, String label, String description) {
-        this(cubeElementUri, lang, label);
+    public Label(String uri, String lang, String label, String description) {
+        this(uri, lang, label);
         this.description = description;
     }
 
     /**
-     * Gets the cube element uri.
+     * Gets the uri.
      *
-     * @return the cube element uri
+     * @return the uri
      */
-    public String getCubeElementUri() {
-        return cubeElementUri;
+    public String getUri() {
+        return uri;
     }
 
     /**
-     * Sets the cube element uri.
+     * Sets the uri.
      *
-     * @param cubeElementUri the cube element uri
+     * @param uri the uri
      */
-    public void setCubeElementUri(String cubeElementUri) {
-        this.cubeElementUri = cubeElementUri;
+    public void setUri(String uri) {
+        this.uri = uri;
     }
 
     /**
@@ -124,8 +123,8 @@ public class CubeElementLabel implements Displayable {
      */
     @Override
     public String toString() {
-        return new StringJoiner(", ", CubeElementLabel.class.getSimpleName() + "[", "]")
-                .add("cubeElementUri='" + cubeElementUri + "'")
+        return new StringJoiner(", ", Label.class.getSimpleName() + "[", "]")
+                .add("uri='" + uri + "'")
                 .add("lang='" + lang + "'")
                 .add("label='" + label + "'")
                 .add("description='" + description + "'")
@@ -139,7 +138,7 @@ public class CubeElementLabel implements Displayable {
      */
     @Override
     public String getDisplayableId() {
-        return cubeElementUri;
+        return uri;
     }
 
     /**

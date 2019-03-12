@@ -1,8 +1,8 @@
 package at.jku.dke.inga.rules
 
 // ------------------------------------ GLOBAL --------------------------------------
-global at.jku.dke.inga.data.repositories.CubeElementRepository cubeElementRepository;
-global at.jku.dke.inga.data.repositories.CubeElementLabelRepository cubeElementLabelRepository;
+global at.jku.dke.inga.data.repositories.CubeRepository cubeRepository;
+global at.jku.dke.inga.data.repositories.MeasureRepository measureRepository;
 
 // ------------------------------------ IMPORT --------------------------------------
 import java.util.Locale
@@ -22,9 +22,7 @@ then
     insert(new ListDisplay(
         "addMeasure",
         $model.getLocale(),
-        cubeElementLabelRepository.findByLangAndCubeElementUriIn(
-            $model.getLanguage(),
-            cubeElementRepository.findByCubeUriAndTypeUriAndUriNotInAndSelectUri($as.getCube(), "http://purl.org/linked-data/cube#MeasureProperty", $as.getMeasures()))));
+        measureRepository.findLabelsByCubeAndLangWithExclusions($as.getCube(), $model.getLanguage(), $as.getMeasures())));
 end
 
 rule "Drop Measure - Select all selected Measures"
@@ -36,9 +34,7 @@ then
     insert(new ListDisplay(
         "dropMeasure",
         $model.getLocale(),
-        cubeElementLabelRepository.findByLangAndCubeElementUriIn(
-            $model.getLanguage(),
-            $as.getMeasures())));
+        measureRepository.findLabelsByUrisAndLang($as.getMeasures(), $model.getLanguage())));
 end
 
 rule "Refocus Measure - Select all selected Measures and all not selected measures"
@@ -50,10 +46,6 @@ then
     insert(new TwoListDisplay(
         "refocusMeasure",
         $model.getLocale(),
-        cubeElementLabelRepository.findByLangAndCubeElementUriIn(
-            $model.getLanguage(),
-            $as.getMeasures()),
-        cubeElementLabelRepository.findByLangAndCubeElementUriIn(
-                    $model.getLanguage(),
-                    cubeElementRepository.findByCubeUriAndTypeUriAndUriNotInAndSelectUri($as.getCube(), "http://purl.org/linked-data/cube#MeasureProperty", $as.getMeasures()))));
+        measureRepository.findLabelsByUrisAndLang($as.getMeasures(), $model.getLanguage()),
+        measureRepository.findLabelsByCubeAndLangWithExclusions($as.getCube(), $model.getLanguage(), $as.getMeasures())));
 end

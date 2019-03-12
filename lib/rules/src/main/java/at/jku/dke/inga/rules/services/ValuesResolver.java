@@ -1,8 +1,7 @@
 package at.jku.dke.inga.rules.services;
 
-import at.jku.dke.inga.data.repositories.CubeElementLabelRepository;
-import at.jku.dke.inga.data.repositories.CubeElementRepository;
-import at.jku.dke.inga.data.repositories.CubeLabelRepository;
+import at.jku.dke.inga.data.repositories.CubeRepository;
+import at.jku.dke.inga.data.repositories.MeasureRepository;
 import at.jku.dke.inga.rules.models.ResolveValuesDataModel;
 import at.jku.dke.inga.shared.BeanUtil;
 import at.jku.dke.inga.shared.display.Display;
@@ -43,9 +42,8 @@ public class ValuesResolver extends DroolsService {
         getSession().insert(dataModel);
         getSession().insert(dataModel.getAnalysisSituation());
 
-        getSession().setGlobal("cubeLabelRepository", BeanUtil.getBean(CubeLabelRepository.class));
-        getSession().setGlobal("cubeElementLabelRepository", BeanUtil.getBean(CubeElementLabelRepository.class));
-        getSession().setGlobal("cubeElementRepository", BeanUtil.getBean(CubeElementRepository.class));
+        getSession().setGlobal("cubeRepository", BeanUtil.getBean(CubeRepository.class));
+        getSession().setGlobal("measureRepository", BeanUtil.getBean(MeasureRepository.class));
 
         // Execute
         getSession().fireAllRules();

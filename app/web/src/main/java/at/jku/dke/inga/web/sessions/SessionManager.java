@@ -119,7 +119,7 @@ public class SessionManager {
             SessionThread thread = sessions.get(sessionId);
 
             // Is state chart finished?
-            if (!thread.isAlive() || thread.isInFinalState()) {
+            if (/*TODO: !thread.isAlive() ||*/ thread.isInFinalState()) {
                 stopSession(sessionId);
                 throw new SessionExpiredException("Session with id " + sessionId + " already expired.");
             }

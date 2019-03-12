@@ -32,6 +32,7 @@ public class BeanUtil implements ApplicationContextAware {
      * @return Instantiated bean
      */
     public static <T> T getBean(Class<T> beanClass) {
+        if (ctx == null) throw new IllegalStateException("Application Context not available");
         return ctx.getBean(beanClass);
     }
 }

@@ -1,16 +1,13 @@
 package at.jku.dke.inga.data.models;
 
-import javax.persistence.*;
 import java.util.StringJoiner;
 
 /**
  * Represents the database-table containing Cubes.
  */
-@Entity(name = "cubes")
+@Deprecated
 public class Cube {
 
-    @Id
-    @Column(length = 255)
     private String uri;
 
     /**

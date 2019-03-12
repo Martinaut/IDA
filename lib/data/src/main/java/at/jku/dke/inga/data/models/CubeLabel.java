@@ -2,30 +2,17 @@ package at.jku.dke.inga.data.models;
 
 import at.jku.dke.inga.shared.display.Displayable;
 
-import javax.persistence.*;
 import java.util.StringJoiner;
 
 /**
  * Represents the database-table containing labels and descriptions of cubes.
  */
-@Entity(name = "cube_labels")
-@Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"cubeUri", "lang"})})
+@Deprecated
 public class CubeLabel implements Displayable {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private int id;
-
-    @Column(nullable = false, length = 255)
     private String cubeUri;
-
-    @Column(nullable = false, length = 5)
     private String lang;
-
-    @Column(nullable = false)
     private String label;
-
-    @Column
     private String description;
 
     /**
@@ -58,24 +45,6 @@ public class CubeLabel implements Displayable {
     public CubeLabel(String cubeUri, String lang, String label, String description) {
         this(cubeUri, lang, label);
         this.description = description;
-    }
-
-    /**
-     * Gets the id.
-     *
-     * @return the id
-     */
-    public int getId() {
-        return id;
-    }
-
-    /**
-     * Sets the id.
-     *
-     * @param id the id
-     */
-    public void setId(int id) {
-        this.id = id;
     }
 
     /**
@@ -156,7 +125,6 @@ public class CubeLabel implements Displayable {
     @Override
     public String toString() {
         return new StringJoiner(", ", CubeLabel.class.getSimpleName() + "[", "]")
-                .add("id=" + id)
                 .add("cubeUri='" + cubeUri + "'")
                 .add("lang='" + lang + "'")
                 .add("label='" + label + "'")

@@ -5,8 +5,9 @@ plugins {
 version '1.0.0-SNAPSHOT'
 
 dependencies {
-    implementation 'org.xerial:sqlite-jdbc:3.25.2'
-    api 'org.springframework.boot:spring-boot-starter-data-jpa'
-
+    implementation 'com.ontotext.graphdb:graphdb-free-runtime:8.8.1'
+    implementation 'org.hibernate:hibernate-validator:6.0.15.Final'
+    implementation 'org.springframework.boot:spring-boot-configuration-processor'
+    
     implementation project(':lib:shared')
 }
