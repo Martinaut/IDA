@@ -1,0 +1,44 @@
+<div class="card shadow mb-4" *ngIf="ttsSupported">
+  <div class="card-header py-3">
+    <a class="h6 m-0 font-weight-bold text-primary" (click)="isCollapsed = !isCollapsed" href="#"
+       [attr.aria-expanded]="!isCollapsed" aria-controls="voice-settings-panel-body">Voice Settings</a>
+  </div>
+  <div class="card-body" id="voice-settings-panel-body" [ngbCollapse]="isCollapsed">
+    <div class="form-row">
+      <div class="form-group col-md-6">
+        <label for="voiceControl">Voice</label>
+        <select id="voiceControl" class="form-control" [(ngModel)]="tts.voiceUri">
+          <option value="">Use standard voice</option>
+          <option *ngFor="let v of voices" [value]="v.voiceURI">{{ v.name }} (Local: {{ v.localService }})</option>
+        </select>
+      </div>
+
+      <div class="form-group col-md-6">
+        <label for="rateControl" class="voice-range">
+          <span>Rate</span>
+          <span class="text-dark">{{ tts.rate }}</span>
+        </label>
+        <input type="range" id="rateControl" class="mt-2 custom-range"
+               min="0" max="10" step="0.1" [(ngModel)]="tts.rate"/>
+      </div>
+
+      <div class="form-group col-md-6">
+        <label for="volControl" class="voice-range">
+          <span>Volume</span>
+          <span class="text-dark">{{ tts.volume }}</span>
+        </label>
+        <input type="range" id="volControl" class="mt-2 custom-range"
+               min="0" max="1" step="0.1" [(ngModel)]="tts.volume"/>
+      </div>
+
+      <div class="form-group col-md-6">
+        <label for="pitchControl" class="voice-range">
+          <span>Pitch</span>
+          <span class="text-dark">{{ tts.pitch }}</span>
+        </label>
+        <input type="range" id="pitchControl" class="mt-2 custom-range"
+               min="0" max="2" step="0.1" [(ngModel)]="tts.pitch"/>
+      </div>
+    </div>
+  </div>
+</div>

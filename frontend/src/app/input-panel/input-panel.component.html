@@ -1,0 +1,22 @@
+<div class="card shadow mb-4" *ngIf="connected">
+  <div class="card-header py-3">
+    <h6 class="m-0 font-weight-bold text-primary">Your Input</h6>
+  </div>
+  <div class="card-body">
+    <div class="input-group">
+      <input type="text" placeholder="Ask me something ..." class="form-control" name="ingaInput"
+             [ngClass]="{'is-invalid': inputError}"
+             [(ngModel)]="userInput" (keyup.enter)="inputFieldEnterPressed()" [disabled]="waitingForResult">
+      <div class="input-group-append">
+        <button class="btn" [disabled]="waitingForResult || !sttSupported"
+                [ngClass]="{'btn-secondary': !sttSupported, 'btn-primary': sttSupported && !recording, 'btn-danger': sttSupported && recording}"
+                [title]="sttSupported ? '' : 'Not supported'" (click)="toggleSpeechRecognition()">
+          <i class="fas fa-microphone fa-sm"></i>
+        </button>
+      </div>
+    </div>
+    <span class="text-danger" *ngIf="inputError">Please enter a text before sending the message.</span>
+
+    <button class="btn btn-primary btn-block mt-3" (click)="sendMessage()" [disabled]="waitingForResult">SEND</button>
+  </div>
+</div>

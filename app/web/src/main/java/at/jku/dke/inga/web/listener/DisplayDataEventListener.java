@@ -44,7 +44,7 @@ public class DisplayDataEventListener implements DisplayListener {
 
         template.convertAndSendToUser(
                 sessionId,
-                "/queue/inga",
+                "/queue/result",
                 new DisplayResult(evt.getDisplay()),
                 headerAccessor.getMessageHeaders());
     }

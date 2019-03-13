@@ -1,0 +1,29 @@
+<div class="card shadow mb-4">
+  <div class="card-header py-3">
+    <a class="h6 m-0 font-weight-bold text-primary" (click)="isCollapsed = !isCollapsed" href="#"
+       [attr.aria-expanded]="!isCollapsed" aria-controls="connection-panel-body">InGA Connection</a>
+  </div>
+  <div class="card-body" id="connection-panel-body" [ngbCollapse]="isCollapsed">
+    <div class="row">
+      <div class="col-auto">
+        <div class="btn-group btn-group-toggle" ngbRadioGroup
+             [ngModel]="selectedLanguage" [disabled]="isConnected" (ngModelChange)="setLanguage($event)">
+          <label ngbButtonLabel class="btn-secondary">
+            <input ngbButton type="radio" value="en"> EN
+          </label>
+          <label ngbButtonLabel class="btn-secondary">
+            <input ngbButton type="radio" value="de"> DE
+          </label>
+        </div>
+      </div>
+      <div class="col">
+        <input type="text" placeholder="Server URL" class="form-control" [(ngModel)]="serverUrl"
+               [disabled]="isConnected">
+      </div>
+      <div class="col-auto">
+        <button type="button" class="btn btn-primary" (click)="connect()" [hidden]="isConnected">Connect</button>
+        <button type="button" class="btn btn-primary" (click)="disconnect()" [hidden]="!isConnected">Disconnect</button>
+      </div>
+    </div>
+  </div>
+</div>
