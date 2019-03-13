@@ -63,7 +63,12 @@ export class InputPanelComponent implements OnInit, OnDestroy {
     this.resSub = this.connectionService.resultMessageReceived.subscribe(value => {
       this.waitingForResult = false;
       this.userInput = null;
-      setTimeout(() => this.inputField.nativeElement.focus(), 100);
+
+      if (JSON.parse(value).type === 'ExitDisplay') {
+        this.connectionService.disconnect();
+      } else {
+        setTimeout(() => this.inputField.nativeElement.focus(), 100);
+      }
     });
     this.speechStartSub = this.stt.started.subscribe(value => {
       this.recording = true;

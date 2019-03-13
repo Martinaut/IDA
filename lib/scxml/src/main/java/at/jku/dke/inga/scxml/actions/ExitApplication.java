@@ -2,6 +2,7 @@ package at.jku.dke.inga.scxml.actions;
 
 import at.jku.dke.inga.scxml.context.ContextManager;
 import at.jku.dke.inga.scxml.context.ContextModel;
+import at.jku.dke.inga.shared.display.ExitDisplay;
 import org.apache.commons.scxml2.ActionExecutionContext;
 import org.apache.commons.scxml2.SCXMLExpressionException;
 import org.apache.commons.scxml2.model.ModelException;
@@ -18,6 +19,7 @@ public class ExitApplication extends BaseAction {
      */
     @Override
     protected void execute(ActionExecutionContext ctx, ContextModel ctxModel) throws ModelException, SCXMLExpressionException {
+        ctxModel.setDisplayData(new ExitDisplay());
         ContextManager.deleteContext(getContextId(ctx));
         // TODO: other cleanup? evtl. mittels events?
     }

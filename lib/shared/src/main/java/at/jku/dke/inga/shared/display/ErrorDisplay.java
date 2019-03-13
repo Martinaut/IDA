@@ -5,7 +5,7 @@ package at.jku.dke.inga.shared.display;
  */
 public class ErrorDisplay extends Display {
     /**
-     * Instantiates a new instance of class {@linkplain Display}.
+     * Instantiates a new instance of class {@linkplain ErrorDisplay}.
      *
      * @param displayMessage The display message.
      */
