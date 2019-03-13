@@ -26,7 +26,12 @@ export class AnalysisSituationPanelComponent implements OnInit, OnDestroy {
    * A lifecycle hook that is called after Angular has initialized  all data-bound properties of a directive.
    */
   ngOnInit(): void {
-    this.sub = this.connectionService.asMessageReceived.subscribe(value => this.analysisSituation = JSON.parse(value));
+    this.sub = this.connectionService.asMessageReceived.subscribe(value => {
+      const tmp = JSON.parse(value);
+      if ('cube' in tmp) {
+        this.analysisSituation = tmp;
+      }
+    });
   }
 
   /**

@@ -12,5 +12,5 @@ public interface DisplayListener extends EventListener {
      * @param sessionId The session identifier.
      * @param evt       The event to be processed.
      */
-    void displayDataAvailable(String sessionId, DisplayEventData evt);
+    void displayDataAvailable(String sessionId, DisplayEvent evt);
 }

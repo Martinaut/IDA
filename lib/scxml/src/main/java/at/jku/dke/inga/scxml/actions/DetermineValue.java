@@ -5,6 +5,7 @@ import at.jku.dke.inga.rules.models.ValueDeterminationServiceModel;
 import at.jku.dke.inga.rules.services.SetValueService;
 import at.jku.dke.inga.rules.services.ValueDeterminationService;
 import at.jku.dke.inga.scxml.context.ContextModel;
+import at.jku.dke.inga.scxml.events.AnalysisSituationEvent;
 import at.jku.dke.inga.shared.EventNames;
 import org.apache.commons.scxml2.ActionExecutionContext;
 import org.apache.commons.scxml2.TriggerEvent;
@@ -25,7 +26,7 @@ public class DetermineValue extends BaseAction {
     protected void execute(ActionExecutionContext ctx, ContextModel ctxModel) throws ModelException {
         // Execute
         String value = determineValue(ctxModel);
-        setValue(ctxModel, value);
+        setValue(getContextId(ctx), ctxModel, value);
 
         ctxModel.setOperation(null);
 
@@ -48,7 +49,7 @@ public class DetermineValue extends BaseAction {
         return new ValueDeterminationService().executeRules(model);
     }
 
-    private void setValue(ContextModel ctxModel, String value) throws ModelException {
+    private void setValue(String contextId, ContextModel ctxModel, String value) throws ModelException {
         // Get data
         var model = new SetValueServiceModel(
                 getCurrentState(),
@@ -60,5 +61,9 @@ public class DetermineValue extends BaseAction {
 
         // Execute
         new SetValueService().executeRules(model);
+
+        // Notify
+        if (ctxModel.getAnalysisSituationListener() != null)
+            ctxModel.getAnalysisSituationListener().changed(contextId, new AnalysisSituationEvent(this, ctxModel.getAnalysisSituation()));
     }
 }

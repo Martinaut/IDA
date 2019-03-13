@@ -1,6 +1,8 @@
 package at.jku.dke.inga.scxml.context;
 
-import at.jku.dke.inga.scxml.events.DisplayEventData;
+import at.jku.dke.inga.scxml.events.AnalysisSituationEvent;
+import at.jku.dke.inga.scxml.events.AnalysisSituationListener;
+import at.jku.dke.inga.scxml.events.DisplayEvent;
 import at.jku.dke.inga.scxml.events.DisplayListener;
 import at.jku.dke.inga.shared.EventNames;
 import at.jku.dke.inga.shared.display.Display;
@@ -18,6 +20,7 @@ public class ContextModel {
     private final String sessionId;
     private final Locale locale;
     private final DisplayListener listener;
+    private final AnalysisSituationListener asListener;
 
     private AnalysisSituation analysisSituation;
     private Display displayData;
@@ -26,18 +29,19 @@ public class ContextModel {
     private Integer page;
     private String operation;
 
-
     /**
      * Instantiates a new instance of class {@link ContextModel}.
      *
-     * @param sessionId The session id.
-     * @param locale    The locale of the context.
-     * @param listener  The listener for listening for available display data.
+     * @param sessionId  The session id.
+     * @param locale     The locale of the context.
+     * @param listener   The listener for listening for available display data.
+     * @param asListener The listener for listening for changes of the analysis situation.
      */
-    public ContextModel(String sessionId, String locale, DisplayListener listener) {
+    public ContextModel(String sessionId, String locale, DisplayListener listener, AnalysisSituationListener asListener) {
         this.sessionId = sessionId;
         this.locale = new Locale(locale);
         this.listener = listener;
+        this.asListener = asListener;
 
         this.analysisSituation = new NonComparativeAnalysisSituation();
         this.displayData = null;
@@ -100,6 +104,8 @@ public class ContextModel {
      */
     public void setAnalysisSituation(AnalysisSituation analysisSituation) {
         this.analysisSituation = analysisSituation;
+        if (asListener != null)
+            asListener.changed(sessionId, new AnalysisSituationEvent(this, analysisSituation));
     }
 
     /**
@@ -146,6 +152,15 @@ public class ContextModel {
     public void setDisplayData(Display displayData) {
         this.displayData = displayData;
         if (listener != null)
-            listener.displayDataAvailable(sessionId, new DisplayEventData(this, displayData));
+            listener.displayDataAvailable(sessionId, new DisplayEvent(this, displayData));
+    }
+
+    /**
+     * Gets the analysis situation listener.
+     *
+     * @return the analysis situation listener
+     */
+    public AnalysisSituationListener getAnalysisSituationListener() {
+        return asListener;
     }
 }

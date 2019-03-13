@@ -3,5 +3,21 @@
     <h6 class="m-0 font-weight-bold text-primary">Current Analysis Situation</h6>
   </div>
   <div class="card-body">
+    <table class="table table-bordered">
+      <tbody>
+      <tr>
+        <th scope="row">Cube</th>
+        <td>{{ analysisSituation.cube }}</td>
+      </tr>
+      <tr *ngIf="analysisSituation.measures && analysisSituation.measures.length > 0">
+        <th scope="row">Measures</th>
+        <td>
+          <ul class="list-unstyled mb-0">
+            <li *ngFor="let m of analysisSituation.measures">{{ m }}</li>
+          </ul>
+        </td>
+      </tr>
+      </tbody>
+    </table>
   </div>
 </div>

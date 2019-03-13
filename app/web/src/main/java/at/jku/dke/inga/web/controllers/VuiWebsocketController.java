@@ -1,5 +1,6 @@
 package at.jku.dke.inga.web.controllers;
 
+import at.jku.dke.inga.scxml.events.AnalysisSituationListener;
 import at.jku.dke.inga.scxml.exceptions.SessionExpiredException;
 import at.jku.dke.inga.scxml.exceptions.StateMachineExecutionException;
 import at.jku.dke.inga.scxml.exceptions.StateMachineInstantiationException;
@@ -26,15 +27,18 @@ public class VuiWebsocketController {
     private static final Logger LOGGER = LogManager.getLogger(VuiWebsocketController.class);
 
     private final DisplayDataEventListener eventListener;
+    private final AnalysisSituationListener analysisSituationListener;
 
     /**
      * Instantiates a new instance of class {@linkplain VuiWebsocketController}.
      *
-     * @param eventListener The data listener.
+     * @param eventListener             The data listener.
+     * @param analysisSituationListener The analysis situation listener.
      */
     @Autowired
-    public VuiWebsocketController(DisplayDataEventListener eventListener) {
+    public VuiWebsocketController(DisplayDataEventListener eventListener, AnalysisSituationListener analysisSituationListener) {
         this.eventListener = eventListener;
+        this.analysisSituationListener = analysisSituationListener;
     }
 
     /**
@@ -46,7 +50,7 @@ public class VuiWebsocketController {
      */
     @MessageMapping("/start")
     public void start(@Payload StartDialogueMessage message, SimpMessageHeaderAccessor headerAccessor) throws StateMachineInstantiationException {
-        SessionManager.getInstance().createSession(headerAccessor.getSessionId(), message.getLocale(), eventListener);
+        SessionManager.getInstance().createSession(headerAccessor.getSessionId(), message.getLocale(), eventListener, analysisSituationListener);
     }
 
     /**

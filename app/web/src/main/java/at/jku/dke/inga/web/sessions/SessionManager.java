@@ -2,6 +2,7 @@ package at.jku.dke.inga.web.sessions;
 
 import at.jku.dke.inga.scxml.context.ContextManager;
 import at.jku.dke.inga.scxml.context.ContextModel;
+import at.jku.dke.inga.scxml.events.AnalysisSituationListener;
 import at.jku.dke.inga.scxml.events.DisplayListener;
 import at.jku.dke.inga.scxml.exceptions.SessionExpiredException;
 import at.jku.dke.inga.scxml.exceptions.StateMachineExecutionException;
@@ -46,11 +47,12 @@ public class SessionManager {
      * @param sessionId The session identifier.
      * @param locale    The locale (must be de or en).
      * @param listener  The listener for listening for available display data.
+     * @param asListener The listener for listening for changes of the analysis situation.
      * @throws IllegalArgumentException           If the locale is invalid or if the {@code sessionId} is {@code null} or empty or blank or if the listener is {@code null}.
      * @throws StateMachineInstantiationException If the state machine could not be instantiated.
      */
     @SuppressWarnings("Duplicates")
-    public void createSession(String sessionId, String locale, DisplayListener listener) throws StateMachineInstantiationException {
+    public void createSession(String sessionId, String locale, DisplayListener listener, AnalysisSituationListener asListener) throws StateMachineInstantiationException {
         // Validate Input
         if (StringUtils.isBlank(sessionId))
             throw new IllegalArgumentException("sessionId must not be empty");
@@ -58,6 +60,8 @@ public class SessionManager {
             throw new IllegalArgumentException("locale must not be null");
         if (listener == null)
             throw new IllegalArgumentException("listener must not be null");
+        if (asListener == null)
+            throw new IllegalArgumentException("asListener must not be null");
         if (!locale.equals("en") && !locale.equals("de"))
             throw new IllegalArgumentException("locale must be 'en' or 'de'");
 
@@ -67,7 +71,7 @@ public class SessionManager {
                 throw new StateMachineInstantiationException("There exists already a session with the specified session id " + sessionId, null);
 
             // Create Context model
-            ContextManager.createNewContext(sessionId, locale, listener);
+            ContextManager.createNewContext(sessionId, locale, listener, asListener);
 
             // Create state chart
             SessionThread thread = new SessionThread(sessionId);

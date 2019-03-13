@@ -7,17 +7,17 @@ import java.util.EventObject;
 /**
  * The event object with display data.
  */
-public class DisplayEventData extends EventObject {
+public class DisplayEvent extends EventObject {
 
     private final Display display;
 
     /**
-     * Instantiates a new instance of class {@linkplain DisplayEventData}.
+     * Instantiates a new instance of class {@linkplain DisplayEvent}.
      *
      * @param source  The source of the event.
      * @param display The display data.
      */
-    public DisplayEventData(Object source, Display display) {
+    public DisplayEvent(Object source, Display display) {
         super(source);
         this.display = display;
     }
