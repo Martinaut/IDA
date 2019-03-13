@@ -1,0 +1,27 @@
+<div class="card shadow mb-4" id="results">
+  <div class="card-body" id="results-body">
+    <h4 class="p-3 text-white bg-dark text-center">{{ display.displayMessage }}</h4>
+    <div class="row">
+      <div class="col-md-6">
+        <table class="table table-striped">
+          <tbody>
+          <tr *ngFor="let d of display.dataLeft; let i = index" data-id="{{ d.displayableId }}">
+            <th scope="row" style="width: 2em;">{{ i + 1 }}</th>
+            <td title="{{ d.details }}">{{ d.title }}</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="col-md-6">
+        <table class="table table-striped">
+          <tbody>
+          <tr *ngFor="let d of display.dataRight; let i = index" data-id="{{ d.displayableId }}">
+            <th scope="row" style="width: 2em;">{{ i + 1 }}</th>
+            <td title="{{ d.details }}">{{ d.title }}</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

@@ -10,6 +10,7 @@ import { InputPanelComponent } from './input-panel/input-panel.component';
 import { ResultPanelComponent } from './result/result-panel/result-panel.component';
 import { ListDisplayComponent } from './result/list-display/list-display.component';
 import { VoiceSettingsPanelComponent } from './voice-settings-panel/voice-settings-panel.component';
+import { TwoListDisplayComponent } from './result/two-list-display/two-list-display.component';
 
 /**
  * The application module with all components.
@@ -22,7 +23,8 @@ import { VoiceSettingsPanelComponent } from './voice-settings-panel/voice-settin
     InputPanelComponent,
     ResultPanelComponent,
     ListDisplayComponent,
-    VoiceSettingsPanelComponent
+    VoiceSettingsPanelComponent,
+    TwoListDisplayComponent
   ],
   imports: [
     BrowserModule,

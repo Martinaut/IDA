@@ -5,7 +5,7 @@
   <div class="card-body">
     <div class="input-group">
       <input type="text" placeholder="Ask me something ..." class="form-control" name="ingaInput"
-             [ngClass]="{'is-invalid': inputError}"
+             [ngClass]="{'is-invalid': inputError}" #input
              [(ngModel)]="userInput" (keyup.enter)="inputFieldEnterPressed()" [disabled]="waitingForResult">
       <div class="input-group-append">
         <button class="btn" [disabled]="waitingForResult || !sttSupported"

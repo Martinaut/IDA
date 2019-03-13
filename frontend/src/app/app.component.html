@@ -1,4 +1,4 @@
-<div id="wrapper">
+<div id="wrapper" *ngIf="supportsWebsockets">
   <div id="content-wrapper" class="d-flex flex-column">
     <div id="content">
       <!-- Begin Heading -->
@@ -28,4 +28,9 @@
     </footer>
     <!-- End of Footer -->
   </div>
+</div>
+
+<div class="alert alert-danger" *ngIf="!supportsWebsockets">
+  We're sorry but InGA doesn't work without Websockets and TextEncoder. Your browser does not support Websockets.
+  Please use an up-to-date browser.
 </div>

@@ -1,4 +1,4 @@
-import {ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
+import {ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Subscription} from 'rxjs';
 import {ConnectionService, SpeechToTextService} from '../services';
 
@@ -26,6 +26,7 @@ export class InputPanelComponent implements OnInit, OnDestroy {
   recording: boolean;
 
   userInput: string;
+  @ViewChild('input') inputField: ElementRef;
 
   /**
    * Initializes a new instance of class InputPanelComponent.
@@ -59,7 +60,11 @@ export class InputPanelComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.sttSupported = SpeechToTextService.isSupported();
     this.connSub = this.connectionService.connectionStateChanged.subscribe(value => this.connected = value);
-    this.resSub = this.connectionService.resultMessageReceived.subscribe(value => this.waitingForResult = false); // TODO: focus input
+    this.resSub = this.connectionService.resultMessageReceived.subscribe(value => {
+      this.waitingForResult = false;
+      this.userInput = null;
+      setTimeout(() => this.inputField.nativeElement.focus(), 100);
+    });
     this.speechStartSub = this.stt.started.subscribe(value => {
       this.recording = true;
       this.changeDetector.detectChanges();
