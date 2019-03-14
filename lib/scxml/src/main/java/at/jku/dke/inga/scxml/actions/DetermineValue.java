@@ -64,6 +64,6 @@ public class DetermineValue extends BaseAction {
 
         // Notify
         if (ctxModel.getAnalysisSituationListener() != null)
-            ctxModel.getAnalysisSituationListener().changed(contextId, new AnalysisSituationEvent(this, ctxModel.getAnalysisSituation()));
+            ctxModel.getAnalysisSituationListener().changed(contextId, new AnalysisSituationEvent(this, ctxModel.getAnalysisSituation(), ctxModel.getLocale().getLanguage()));
     }
 }

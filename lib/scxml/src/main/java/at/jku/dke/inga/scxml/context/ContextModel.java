@@ -105,7 +105,7 @@ public class ContextModel {
     public void setAnalysisSituation(AnalysisSituation analysisSituation) {
         this.analysisSituation = analysisSituation;
         if (asListener != null)
-            asListener.changed(sessionId, new AnalysisSituationEvent(this, analysisSituation));
+            asListener.changed(sessionId, new AnalysisSituationEvent(this, analysisSituation, getLocale().getLanguage()));
     }
 
     /**

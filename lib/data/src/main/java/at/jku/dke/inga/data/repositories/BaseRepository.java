@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 /**
  * Base class for repositories with some helper methods.
  */
-public class BaseRepository {
+public abstract class BaseRepository {
 
     /**
      * A helper class for accessing the graph db.

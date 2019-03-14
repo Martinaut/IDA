@@ -76,8 +76,10 @@ public class GraphDbHelper {
                 return list;
             }
         } catch (IOException ex) {
+            LOGGER.error("Could not load the query file.", ex);
             throw new QueryException("Could not load query file.", ex);
         } catch (QueryEvaluationException ex) {
+            LOGGER.error("An error occurred while executing the query " + queryFile, ex);
             throw new QueryException("An error occurred while executing the query " + queryFile, ex);
         }
     }
