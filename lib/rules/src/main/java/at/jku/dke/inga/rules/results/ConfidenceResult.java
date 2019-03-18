@@ -1,30 +1,32 @@
-package at.jku.dke.inga.rules.helpers;
+package at.jku.dke.inga.rules.results;
 
 /**
  * The value result contains the value and its calculated confidence.
+ *
+ * @param <TValue> The type of the value.
  */
-public class ConfidenceResult implements Comparable<ConfidenceResult> {
+public class ConfidenceResult<TValue> implements Comparable<ConfidenceResult> {
 
-    private String value;
+    private TValue value;
     private double confidence;
 
     /**
-     * Instantiates a new Intent result.
+     * Instantiates a new instance of class {@link ConfidenceResult}.
      *
      * @param value the value
      */
-    public ConfidenceResult(String value) {
+    public ConfidenceResult(TValue value) {
         this.value = value;
         this.confidence = 1;
     }
 
     /**
-     * Instantiates a new Intent result.
+     * Instantiates a new instance of class {@link ConfidenceResult}.
      *
-     * @param value     the value
+     * @param value      the value
      * @param confidence the confidence
      */
-    public ConfidenceResult(String value, double confidence) {
+    public ConfidenceResult(TValue value, double confidence) {
         this.value = value;
         this.confidence = confidence;
     }
@@ -34,7 +36,7 @@ public class ConfidenceResult implements Comparable<ConfidenceResult> {
      *
      * @return the value
      */
-    public String getValue() {
+    public TValue getValue() {
         return value;
     }
 
@@ -43,7 +45,7 @@ public class ConfidenceResult implements Comparable<ConfidenceResult> {
      *
      * @param value the value
      */
-    public void setValue(String value) {
+    public void setValue(TValue value) {
         this.value = value;
     }
 

@@ -44,7 +44,11 @@ public class DetermineOperation extends BaseAction {
         ctxModel.setOperation(event);
 
         // Trigger event
-        ctx.getInternalIOProcessor().addEvent(new TriggerEvent(event.equals(EventNames.INVALID_INPUT) ? event : EventNames.DETERMINED, TriggerEvent.SIGNAL_EVENT));
+        if(event.equals(EventNames.INVALID_INPUT) || event.equals(EventNames.EXIT)){
+            ctx.getInternalIOProcessor().addEvent(new TriggerEvent(event, TriggerEvent.SIGNAL_EVENT));
+        } else {
+            ctx.getInternalIOProcessor().addEvent(new TriggerEvent(EventNames.DETERMINED, TriggerEvent.SIGNAL_EVENT));
+        }
     }
 
     @SuppressWarnings("Duplicates")

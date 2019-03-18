@@ -24,22 +24,6 @@ then
     insert(new Operation(EventNames.NAVIGATE_MEASURE_REFOCUS, $model.getLocale(), 11));
 end
 
-//rule "'Move Down To Measure' - if at least one measure selected which has children"
-//    agenda-group "operations-display-determination"
-//when
-//    // TODO
-//then
-//    insert(new Operation(EventNames.NAVIGATE_MEASURE_MOVE_DOWN, $model.getLocale(), 12));
-//end
-//
-//rule "'Move Up To Measure' - if at least one measure selected which has parents"
-//    agenda-group "operations-display-determination"
-//when
-//    // TODO
-//then
-//    insert(new Operation(EventNames.NAVIGATE_MEASURE_MOVE_UP, $model.getLocale(), 13));
-//end
-
 rule "'Drop Measure' - if at least one measure is selected"
     agenda-group "operations-display-determination"
 when

@@ -1,7 +1,11 @@
 package at.jku.dke.inga.scxml.actions;
 
+import at.jku.dke.inga.rules.models.SetStringValueServiceModel;
+import at.jku.dke.inga.rules.models.SetTwoStringValueServiceModel;
 import at.jku.dke.inga.rules.models.SetValueServiceModel;
 import at.jku.dke.inga.rules.models.ValueDeterminationServiceModel;
+import at.jku.dke.inga.rules.results.ConfidenceResult;
+import at.jku.dke.inga.rules.results.TwoStringValueConfidenceResult;
 import at.jku.dke.inga.rules.services.SetValueService;
 import at.jku.dke.inga.rules.services.ValueDeterminationService;
 import at.jku.dke.inga.scxml.context.ContextModel;
@@ -25,7 +29,7 @@ public class DetermineValue extends BaseAction {
     @Override
     protected void execute(ActionExecutionContext ctx, ContextModel ctxModel) throws ModelException {
         // Execute
-        String value = determineValue(ctxModel);
+        ConfidenceResult value = determineValue(ctxModel);
         setValue(getContextId(ctx), ctxModel, value);
 
         ctxModel.setOperation(null);
@@ -35,7 +39,7 @@ public class DetermineValue extends BaseAction {
         ctx.getInternalIOProcessor().addEvent(new TriggerEvent(EventNames.DETERMINED, TriggerEvent.SIGNAL_EVENT));
     }
 
-    private String determineValue(ContextModel ctxModel) throws ModelException {
+    private ConfidenceResult determineValue(ContextModel ctxModel) throws ModelException {
         // Get data
         var model = new ValueDeterminationServiceModel(
                 getCurrentState(),
@@ -49,15 +53,26 @@ public class DetermineValue extends BaseAction {
         return new ValueDeterminationService().executeRules(model);
     }
 
-    private void setValue(String contextId, ContextModel ctxModel, String value) throws ModelException {
+    private void setValue(String contextId, ContextModel ctxModel, ConfidenceResult value) throws ModelException {
         // Get data
-        var model = new SetValueServiceModel(
-                getCurrentState(),
-                ctxModel.getAnalysisSituation(),
-                ctxModel.getLocale(),
-                value,
-                ctxModel.getOperation()
-        );
+        SetValueServiceModel model;
+        if (value instanceof TwoStringValueConfidenceResult) {
+            model = new SetTwoStringValueServiceModel(
+                    getCurrentState(),
+                    ctxModel.getAnalysisSituation(),
+                    ctxModel.getLocale(),
+                    ((TwoStringValueConfidenceResult) value).getValue(),
+                    ctxModel.getOperation()
+            );
+        } else {
+            model = new SetStringValueServiceModel(
+                    getCurrentState(),
+                    ctxModel.getAnalysisSituation(),
+                    ctxModel.getLocale(),
+                    value.getValue().toString(),
+                    ctxModel.getOperation()
+            );
+        }
 
         // Execute
         new SetValueService().executeRules(model);

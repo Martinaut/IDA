@@ -2,7 +2,7 @@ package at.jku.dke.inga.rules
 
 // ------------------------------------ IMPORT --------------------------------------
 import at.jku.dke.inga.rules.models.OperationIntentDeterminationServiceModel
-import at.jku.dke.inga.rules.helpers.ConfidenceResult
+import at.jku.dke.inga.rules.results.StringValueConfidenceResult
 import at.jku.dke.inga.shared.EventNames
 
 // ------------------------------------ RULES ---------------------------------------
@@ -11,5 +11,5 @@ rule "ExitApplication Intent - 'exit' keyword"
 when
     $model : OperationIntentDeterminationServiceModel(userInput.toLowerCase() contains "exit")
 then
-    insert(new ConfidenceResult(EventNames.EXIT, 0.5));
+    insert(new StringValueConfidenceResult(EventNames.EXIT, 0.5));
 end

@@ -76,21 +76,20 @@ public abstract class BaseRepository {
     }
 
     /**
-     * Returns all resources of the specified type.
+     * Returns all resources returned by the query.
      * <p>
      * Following binding has to be returned by the query: element
      * </p>
      *
-     * @param type The requested type (full uri).
-     * @param queryFile                        The path to the query file.
-     * @param additionalQueryStringManipulator Additional query string manipulator to manipulate the query text before executing
+     * @param queryFile              The path to the query file.
+     * @param queryStringManipulator Query string manipulator to manipulate the query text before executing
      * @return A set with all resource-URIs of the specified type.
      */
-    protected Set<String> getAll(String type, String queryFile, Function<String, String> additionalQueryStringManipulator) {
+    protected Set<String> getAll(String queryFile, Function<String, String> queryStringManipulator) {
         try {
             var result = graphDbHelper.getQueryResult(
                     queryFile,
-                    s -> additionalQueryStringManipulator.apply(s.replace("###TYPE###", type)));
+                    queryStringManipulator);
             return result.stream().map(x -> x.getValue("element").stringValue()).collect(Collectors.toSet());
         } catch (QueryException ex) {
             return Collections.emptySet();
@@ -104,6 +103,6 @@ public abstract class BaseRepository {
      * @return A set with all resource-URIs of the specified type.
      */
     protected Set<String> getAll(String type) {
-        return getAll(type, "/queries/getAll.sparql", Function.identity());
+        return getAll("/queries/getAll.sparql", s -> s.replaceAll("###TYPE###", type));
     }
 }

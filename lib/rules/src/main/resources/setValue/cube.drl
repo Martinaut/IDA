@@ -3,14 +3,14 @@ package at.jku.dke.inga.rules
 // ------------------------------------ IMPORT --------------------------------------
 import at.jku.dke.inga.shared.models.NonComparativeAnalysisSituation
 import at.jku.dke.inga.shared.EventNames
-import at.jku.dke.inga.rules.models.SetValueServiceModel
+import at.jku.dke.inga.rules.models.SetStringValueServiceModel
 
 // ------------------------------------ RULES ---------------------------------------
 rule "Set cube"
     agenda-group "set-value"
 when
     $as : NonComparativeAnalysisSituation()
-    $model : SetValueServiceModel(operation == EventNames.NAVIGATE_CUBE_SELECT, analysisSituation == $as)
+    $model : SetStringValueServiceModel(operation == EventNames.NAVIGATE_CUBE_SELECT, analysisSituation == $as)
 then
     $as.setCube($model.getValue());
 end

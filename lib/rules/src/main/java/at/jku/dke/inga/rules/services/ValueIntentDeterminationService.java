@@ -1,6 +1,6 @@
 package at.jku.dke.inga.rules.services;
 
-import at.jku.dke.inga.rules.helpers.ConfidenceResult;
+import at.jku.dke.inga.rules.results.StringValueConfidenceResult;
 import at.jku.dke.inga.rules.models.ValueIntentDeterminationServiceModel;
 import at.jku.dke.inga.shared.EventNames;
 
@@ -40,12 +40,12 @@ public class ValueIntentDeterminationService extends DroolsService<ValueIntentDe
         session.fireAllRules();
 
         // Get result and close session
-        Collection<?> objs = getSession().getObjects(obj -> obj instanceof ConfidenceResult);
+        Collection<?> objs = getSession().getObjects(obj -> obj instanceof StringValueConfidenceResult);
         closeSession();
 
         return objs.stream()
-                .map(x -> (ConfidenceResult) x)
+                .map(x -> (StringValueConfidenceResult) x)
                 .sorted()
-                .findFirst().orElse(new ConfidenceResult(EventNames.INVALID_INPUT)).getValue();
+                .findFirst().orElse(new StringValueConfidenceResult(EventNames.INVALID_INPUT)).getValue();
     }
 }

@@ -17,6 +17,7 @@ export class ResultPanelComponent implements OnInit, OnDestroy {
    */
   constructor(private connectionService: ConnectionService) {
     this.type = null;
+    this.display = null;
   }
 
   /**
@@ -24,9 +25,14 @@ export class ResultPanelComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     this.resSub = this.connectionService.resultMessageReceived.subscribe(value => {
-      const obj = JSON.parse(value);
-      this.type = obj.type;
-      this.display = obj.display;
+      if (value == null) {
+        this.type = null;
+        this.display = null;
+      } else {
+        const obj = JSON.parse(value);
+        this.type = obj.type;
+        this.display = obj.display;
+      }
     });
   }
 

@@ -1,2 +1,7 @@
-<app-list-display *ngIf="type === 'ListDisplay'" [display]="display"></app-list-display>
-<app-two-list-display *ngIf="type === 'TwoListDisplay'" [display]="display"></app-two-list-display>
+<div [ngSwitch]="type">
+  <app-list-display *ngSwitchCase="'ListDisplay'" [display]="display"></app-list-display>
+  <app-two-list-display *ngSwitchCase="'TwoListDisplay'" [display]="display"></app-two-list-display>
+  <div *ngSwitchDefault></div>
+</div>
+
+

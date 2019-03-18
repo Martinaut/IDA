@@ -3,6 +3,8 @@ PREFIX qbx: <http://dke.jku.at/inga/cubes#>
 
 SELECT ?element
 WHERE {
-    <###CUBE###> qbx:measure ?element .
-	?element rdf:type <###TYPE###> .
+    <###CUBE###> qbx:measure ?baseM .
+    ?baseM rdf:type qbx:BaseMeasure .
+	?element rdf:type qbx:AggregateMeasure ;
+	         qbx:derivedFrom ?baseM .
 } 

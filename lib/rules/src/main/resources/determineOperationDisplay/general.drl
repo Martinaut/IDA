@@ -34,5 +34,5 @@ when
     $as : AnalysisSituation(isExecutable() == true)
     $model : OperationDisplayDeterminationServiceModel(analysisSituation == $as)
 then
-    insert(new Operation(EventNames.EXECUTE_QUERY, $model.getLocale(), Integer.MIN_VALUE + 1));
+    // TODO insert(new Operation(EventNames.EXECUTE_QUERY, $model.getLocale(), Integer.MIN_VALUE + 1));
 end

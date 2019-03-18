@@ -1,6 +1,6 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Subscription} from 'rxjs';
-import {ConnectionService} from '../services/connection.service';
+import {ConnectionService} from '../services';
 
 /**
  * Panel used to display the current analysis situation.

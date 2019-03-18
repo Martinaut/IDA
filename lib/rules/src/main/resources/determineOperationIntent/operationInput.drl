@@ -2,7 +2,7 @@ package at.jku.dke.inga.rules
 // ------------------------------------ IMPORT --------------------------------------
 
 import at.jku.dke.inga.rules.models.OperationIntentDeterminationServiceModel
-import at.jku.dke.inga.rules.helpers.ConfidenceResult
+import at.jku.dke.inga.rules.results.StringValueConfidenceResult
 import at.jku.dke.inga.shared.EventNames
 import org.apache.commons.lang3.math.NumberUtils
 
@@ -12,5 +12,5 @@ rule "ExecuteOperation Intent"
 when
     $model : OperationIntentDeterminationServiceModel(NumberUtils.isParsable(userInput))
 then
-    insert(new ConfidenceResult(EventNames.NAVIGATE, 0.5));
+    insert(new StringValueConfidenceResult(EventNames.NAVIGATE, 0.5));
 end

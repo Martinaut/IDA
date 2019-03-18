@@ -4,16 +4,18 @@ PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
 SELECT ?element ?label ?description
 WHERE {
-    <###CUBE###> qbx:measure ?element .
-	?element rdf:type <http://dke.jku.at/inga/cubes#BaseMeasure> ;
-        rdfs:label ?label .
+    <###CUBE###> qbx:measure ?baseM .
+    ?baseM rdf:type qbx:BaseMeasure .
+	?element qbx:derivedFrom ?baseM ;
+             rdf:type qbx:AggregateMeasure ;
+             rdfs:label ?label .
     FILTER (lang(?label) = "###LANG###") .
-    
+
     OPTIONAL {
         ?element rdfs:comment ?description .
     	FILTER (lang(?description) = "###LANG###") .
-    }  
-    
+    }
+
     FILTER (?element NOT IN (###NOTIN###)) .
 }
 ORDER BY ?label

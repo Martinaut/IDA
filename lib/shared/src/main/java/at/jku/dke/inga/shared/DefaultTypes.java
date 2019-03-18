@@ -8,7 +8,7 @@ public final class DefaultTypes {
     /**
      * The type-uri of a measure property.
      */
-    public static final String TYPE_MEASURE = "http://dke.jku.at/inga/cubes#BaseMeasure";
+    public static final String TYPE_MEASURE = "http://dke.jku.at/inga/cubes#AggregateMeasure";
 
     /**
      * Prevents generating a instance of this class.

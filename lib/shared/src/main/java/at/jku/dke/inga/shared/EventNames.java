@@ -37,16 +37,6 @@ public final class EventNames {
     public static final String NAVIGATE_MEASURE_REFOCUS = "navigate.refocusMeasure";
 
     /**
-     * Triggers moving up to a measure.
-     */
-    public static final String NAVIGATE_MEASURE_MOVE_UP = "navigate.moveUpToMeasure";
-
-    /**
-     * Triggers moving down to a measure.
-     */
-    public static final String NAVIGATE_MEASURE_MOVE_DOWN = "navigate.moveDownToMeasure";
-
-    /**
      * Triggers dropping a measure.
      */
     public static final String NAVIGATE_MEASURE_DROP = "navigate.dropMeasure";

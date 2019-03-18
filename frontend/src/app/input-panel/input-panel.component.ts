@@ -64,7 +64,7 @@ export class InputPanelComponent implements OnInit, OnDestroy {
       this.waitingForResult = false;
       this.userInput = null;
 
-      if (JSON.parse(value).type === 'ExitDisplay') {
+      if (value != null && JSON.parse(value).type === 'ExitDisplay') {
         this.connectionService.disconnect();
       } else {
         setTimeout(() => this.inputField.nativeElement.focus(), 100);
