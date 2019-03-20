@@ -26,23 +26,3 @@ when
 then
     //insert(new Operation(EventNames., 31));
 end
-
-rule "'Move Aside To Node' - if "
-    agenda-group "operations-display-determination"
-    enabled false
-when
-    //$as : NonComparativeAnalysisSituation(measures.isEmpty() == false)
-    //$model : ResolveOperationsDataModel(notSelectedMeasures.isEmpty() == false)
-then
-    //insert(new Operation(EventNames., 32));
-end
-
-rule "'Move To Node' - if "
-    agenda-group "operations-display-determination"
-    enabled false
-when
-    //$as : NonComparativeAnalysisSituation(measures.isEmpty() == false)
-    //$model : ResolveOperationsDataModel(notSelectedMeasures.isEmpty() == false)
-then
-    //insert(new Operation(EventNames., 33));
-end

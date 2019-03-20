@@ -7,7 +7,7 @@ import at.jku.dke.inga.shared.operations.Operation
 import at.jku.dke.inga.rules.models.OperationDisplayDeterminationServiceModel
 
 // ------------------------- GRANULARITY LEVEL OPERATIONS ----------------------------
-rule "'Drill Down' - if "
+rule "'Drill Down To Level' - if "
     agenda-group "operations-display-determination"
     enabled false
     // appropriate roll up relationship available
@@ -18,7 +18,7 @@ then
     insert(new Operation(EventNames.NAVIGATE_GL_DRILL_DOWN, 20));
 end
 
-rule "'Roll Up' - if "
+rule "'Roll Up To Level' - if "
     agenda-group "operations-display-determination"
     enabled false
     // appropriate roll up relationship available

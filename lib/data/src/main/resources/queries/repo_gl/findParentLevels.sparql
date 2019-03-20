@@ -1,0 +1,22 @@
+PREFIX drugs: <http://www.example.org/drugs#>
+PREFIX qbx: <http://dke.jku.at/inga/cubes#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT DISTINCT ?dimension ?dimensionLabel ?level ?label ?description
+WHERE {
+	drugs:DrugPrescriptionCube qbx:dimension ?dimension .
+    ?dimension qbx:hasHierarchy ?hier .
+    ?hierStep qbx:inHierarchy ?hier ;
+              qbx:childLevel drugs:DrugDimensionDrugLevel ;
+              qbx:parentLevel ?level .
+
+    ?level rdfs:label ?label .
+    FILTER (lang(?label) = "en") .
+    OPTIONAL {
+        ?level rdfs:comment ?description .
+    	FILTER (lang(?description) = "en") .
+    }
+
+    ?dimension rdfs:label ?dimensionLabel .
+}
