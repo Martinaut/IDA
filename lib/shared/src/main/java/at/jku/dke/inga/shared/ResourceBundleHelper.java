@@ -19,7 +19,7 @@ public final class ResourceBundleHelper {
      *
      * @param bundleName   The name of the bundle.
      * @param resourceName The name of the resource.
-     * @return The String or <code>null</code>, if the resource could not be found.
+     * @return The String or <code>resourceName</code>, if the resource could not be found.
      * @throws NullPointerException if <code>resourceName</code> is <code>null</code>
      */
     public static String getResourceString(String bundleName, String resourceName) {
@@ -28,7 +28,7 @@ public final class ResourceBundleHelper {
             return bundle.getString(resourceName);
         } catch (MissingResourceException ex) {
             LOG.fatal("Could not load resource-bundle " + bundleName, ex);
-            return null;
+            return resourceName;
         }
     }
 
@@ -38,7 +38,7 @@ public final class ResourceBundleHelper {
      * @param bundleName   The name of the bundle.
      * @param locale       The requested resource.
      * @param resourceName The name of the resource.
-     * @return The String or <code>null</code>, if the resource could not be found.
+     * @return The String or <code>resourceName</code>, if the resource could not be found.
      * @throws NullPointerException if <code>resourceName</code> is <code>null</code>
      */
     public static String getResourceString(String bundleName, Locale locale, String resourceName) {
@@ -47,7 +47,7 @@ public final class ResourceBundleHelper {
             return bundle.getString(resourceName);
         } catch (MissingResourceException ex) {
             LOG.fatal("Could not load resource-bundle " + bundleName, ex);
-            return null;
+            return resourceName;
         }
     }
 

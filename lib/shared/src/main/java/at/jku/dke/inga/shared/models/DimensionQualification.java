@@ -27,6 +27,16 @@ public class DimensionQualification {
     }
 
     /**
+     * Instantiates a new instance of class {@linkplain DimensionQualification}.
+     *
+     * @param dimension The URI of the dimension.
+     */
+    public DimensionQualification(String dimension) {
+        this();
+        this.dimension = dimension;
+    }
+
+    /**
      * Gets the dimension.
      *
      * @return the dimension

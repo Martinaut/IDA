@@ -25,6 +25,7 @@ public final class EventNames {
      * Triggers cube selection.
      */
     public static final String NAVIGATE_CUBE_SELECT = "navigate.selectCube";
+
     // region --- MEASURE ---
     /**
      * Triggers adding a measure.
@@ -51,6 +52,25 @@ public final class EventNames {
      * Triggers a roll-up operation
      */
     public static final String NAVIGATE_GL_ROLL_UP = "navigate.rollUp";
+    // endregion
+    // region --- DICE NODE ---
+    public static final String NAVIGATE_DICE_NODE_MOVE_UP = "navigate.moveUpDiceNode";
+    public static final String NAVIGATE_DICE_NODE_MOVE_DOWN = "navigate.moveDownDiceNode";
+    // endregion
+    // region --- SLICE CONDITION ---
+    public static final String NAVIGATE_SLICE_CONDITION_NARROW = "navigate.narrowSliceCondition";
+    public static final String NAVIGATE_SLICE_CONDITION_BROADEN = "navigate.broadenSliceCondition";
+    public static final String NAVIGATE_SLICE_CONDITION_REFOCUS = "navigate.refocusSliceCondition";
+    // endregion
+    // region --- FILTER ---
+    public static final String NAVIGATE_FILTER_NARROW = "navigate.narrowFilter";
+    public static final String NAVIGATE_FILTER_BROADEN = "navigate.broadenFilter";
+    public static final String NAVIGATE_FILTER_REFOCUS = "navigate.refocusFilter";
+    // endregion
+    // region --- BASE MEASURE CONDITION ---
+    public static final String NAVIGATE_BMC_NARROW = "navigate.narrowBaseMeasureCondition";
+    public static final String NAVIGATE_BMC_BROADEN = "navigate.broadenBaseMeasureCondition";
+    public static final String NAVIGATE_BMC_REFOCUS = "navigate.refocusBaseMeasureCondition";
     // endregion
     // endregion
 

@@ -8,6 +8,6 @@ public class ExitDisplay extends Display {
      * Instantiates a new instance of class {@linkplain ExitDisplay}.
      */
     public ExitDisplay() {
-        super("Goodby.");
+        super("Goodbye.");
     }
 }

@@ -3,6 +3,8 @@ package at.jku.dke.inga.shared.models;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * Non-comparative analysis situations represent multi-dimensional queries on cube instances.
@@ -12,7 +14,7 @@ public class NonComparativeAnalysisSituation extends AnalysisSituation {
     private String cube; // 1. a cube instance of cube schema
     private Set<String> baseMeasureConditions; // 2. a possibly empty set of bae measure conditions
     private Set<String> measures; // 3. a non-empty set of measures
-    private Set<DimensionQualification> dimensionQualifications; // 4. a set of dimension qualifications
+    private Map<String, DimensionQualification> dimensionQualifications; // 4. a set of dimension qualifications
     private Set<String> filterConditions; // 5. a possibly empty set of filter conditions
 
     /**
@@ -21,7 +23,7 @@ public class NonComparativeAnalysisSituation extends AnalysisSituation {
     public NonComparativeAnalysisSituation() {
         this.baseMeasureConditions = new HashSet<>();
         this.measures = new HashSet<>();
-        this.dimensionQualifications = new HashSet<>();
+        this.dimensionQualifications = new HashMap<>();
         this.filterConditions = new HashSet<>();
     }
 
@@ -137,8 +139,8 @@ public class NonComparativeAnalysisSituation extends AnalysisSituation {
      *
      * @return the dimension qualifications
      */
-    public Set<DimensionQualification> getDimensionQualifications() {
-        return Collections.unmodifiableSet(dimensionQualifications);
+    public Collection<DimensionQualification> getDimensionQualifications() {
+        return Collections.unmodifiableCollection(dimensionQualifications.values());
     }
 
     /**
@@ -147,29 +149,38 @@ public class NonComparativeAnalysisSituation extends AnalysisSituation {
      * @param dimensionQualifications the dimension qualifications
      */
     public void setDimensionQualifications(Set<DimensionQualification> dimensionQualifications) {
-        this.dimensionQualifications = Objects.requireNonNullElseGet(dimensionQualifications, HashSet::new);
+        Set<DimensionQualification> temp = Objects.requireNonNullElseGet(dimensionQualifications, HashSet::new);
+        this.dimensionQualifications = temp.stream()
+                .collect(Collectors.toMap(DimensionQualification::getDimension, Function.identity()));
+    }
+
+    /**
+     * Returns the dimension qualification for the specified dimension URI.
+     * Use this method if you want to modify a property of a dimension qualification.
+     *
+     * @param dimensionUri The dimension URI.
+     * @return The dimension qualification instance, if present.
+     */
+    public DimensionQualification getDimensionQualification(String dimensionUri) {
+        return this.dimensionQualifications.get(dimensionUri);
     }
 
     /**
      * Adds the specified dimension qualification if it is not already present.
      *
      * @param qualification The dimension qualification to be added to the set.
-     * @return {@code true} if this set did not already contain the specified qualification
-     * @see Set#add(Object)
      */
-    public boolean addDimensionQualification(DimensionQualification qualification) {
-        return dimensionQualifications.add(qualification);
+    public void addDimensionQualification(DimensionQualification qualification) {
+        dimensionQualifications.put(qualification.getDimension(), qualification);
     }
 
     /**
      * Removes the specified dimension qualification if it is present.
      *
      * @param qualification The dimension qualification to be removed from the set, if present.
-     * @return {@code true} if the set contained the specified qualification
-     * @see Set#remove(Object)
      */
-    public boolean removeDimensionQualification(DimensionQualification qualification) {
-        return dimensionQualifications.remove(qualification);
+    public void removeDimensionQualification(DimensionQualification qualification) {
+        dimensionQualifications.remove(qualification.getDimension());
     }
 
     // endregion
@@ -224,7 +235,7 @@ public class NonComparativeAnalysisSituation extends AnalysisSituation {
     public boolean isExecutable() {
         return StringUtils.isNotBlank(cube) &&
                 !measures.isEmpty() &&
-                dimensionQualifications.stream().allMatch(DimensionQualification::isFilled);
+                dimensionQualifications.values().stream().allMatch(DimensionQualification::isFilled);
     }
 
     /**
