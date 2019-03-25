@@ -1,7 +1,6 @@
 package at.jku.dke.inga.data.repositories;
 
 import at.jku.dke.inga.data.models.Label;
-import at.jku.dke.inga.shared.DefaultTypes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

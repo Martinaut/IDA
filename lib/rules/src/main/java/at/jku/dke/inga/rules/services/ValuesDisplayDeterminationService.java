@@ -1,6 +1,7 @@
 package at.jku.dke.inga.rules.services;
 
 import at.jku.dke.inga.data.repositories.CubeRepository;
+import at.jku.dke.inga.data.repositories.GranularityLevelRepository;
 import at.jku.dke.inga.data.repositories.MeasureRepository;
 import at.jku.dke.inga.rules.models.ValuesDisplayDeterminationServiceModel;
 import at.jku.dke.inga.shared.BeanUtil;
@@ -40,6 +41,7 @@ public class ValuesDisplayDeterminationService extends DroolsService<ValuesDispl
         session.insert(model.getAnalysisSituation());
         session.setGlobal("cubeRepository", BeanUtil.getBean(CubeRepository.class));
         session.setGlobal("measureRepository", BeanUtil.getBean(MeasureRepository.class));
+        session.setGlobal("granularityLevelRepository", BeanUtil.getBean(GranularityLevelRepository.class));
 
         // Execute rules
         session.fireAllRules();

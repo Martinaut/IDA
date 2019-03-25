@@ -16,8 +16,10 @@ public class DisplayResult {
      * @param display The display data.
      */
     public DisplayResult(Display display) {
-        this.type = display.getClass().getSimpleName();
-        this.display = display;
+        if (display != null) {
+            this.type = display.getClass().getSimpleName();
+            this.display = display;
+        }
     }
 
     /**

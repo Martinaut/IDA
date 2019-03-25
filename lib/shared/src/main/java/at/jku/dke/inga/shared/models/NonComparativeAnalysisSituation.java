@@ -139,8 +139,8 @@ public class NonComparativeAnalysisSituation extends AnalysisSituation {
      *
      * @return the dimension qualifications
      */
-    public Collection<DimensionQualification> getDimensionQualifications() {
-        return Collections.unmodifiableCollection(dimensionQualifications.values());
+    public Set<DimensionQualification> getDimensionQualifications() {
+        return Set.copyOf(dimensionQualifications.values());
     }
 
     /**

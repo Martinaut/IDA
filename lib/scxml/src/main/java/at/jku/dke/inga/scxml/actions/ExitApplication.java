@@ -18,7 +18,7 @@ public class ExitApplication extends BaseAction {
      * @param ctxModel The context data.
      */
     @Override
-    protected void execute(ActionExecutionContext ctx, ContextModel ctxModel) throws ModelException, SCXMLExpressionException {
+    protected void execute(ActionExecutionContext ctx, ContextModel ctxModel) {
         ctxModel.setDisplayData(new ExitDisplay());
         ContextManager.deleteContext(getContextId(ctx));
         // TODO: other cleanup? evtl. mittels events?

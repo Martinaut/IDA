@@ -78,6 +78,7 @@ public class AnalysisSituationEventListener implements AnalysisSituationListener
         NonComparativeAnalysisSituation newAs = new NonComparativeAnalysisSituation();
         newAs.setCube(simpleRepository.findLabelByUriAndLang(evtAs.getCube(), lang).getLabel());
         newAs.setBaseMeasureConditions(evtAs.getBaseMeasureConditions().stream().map(x -> simpleRepository.findLabelByUriAndLang(x, lang).getTitle()).collect(Collectors.toSet()));
+        newAs.setDimensionQualifications(evtAs.getDimensionQualifications());
         // TODO newAs.setDimensionQualifications(evtAs.getDimensionQualifications().stream().map(x -> simpleRepository.findLabelByUriAndLang(x, lang).getTitle()).collect(Collectors.toSet()));
         newAs.setFilterConditions(evtAs.getFilterConditions().stream().map(x -> simpleRepository.findLabelByUriAndLang(x, lang).getTitle()).collect(Collectors.toSet()));
         newAs.setMeasures(evtAs.getMeasures().stream().map(x -> simpleRepository.findLabelByUriAndLang(x, lang).getTitle()).collect(Collectors.toSet()));

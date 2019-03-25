@@ -1,0 +1,18 @@
+package at.jku.dke.inga.rules
+
+// ------------------------------------ IMPORT --------------------------------------
+import at.jku.dke.inga.shared.models.NonComparativeAnalysisSituation
+import at.jku.dke.inga.shared.EventNames
+import at.jku.dke.inga.rules.models.SetValueServiceModel
+import at.jku.dke.inga.rules.models.SetStringValueServiceModel
+import at.jku.dke.inga.rules.models.SetTwoStringValueServiceModel
+
+// ------------------------------------ RULES ---------------------------------------
+//rule "Roll Up"
+//    agenda-group "set-value"
+//when
+//    $as : NonComparativeAnalysisSituation()
+//    $model : SetStringValueServiceModel(operation == EventNames.NAVIGATE_GL_ROLL_UP, analysisSituation == $as)
+//then
+//    // $as.getDimensionQualification($model.get)
+//end

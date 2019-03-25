@@ -7,24 +7,20 @@ import at.jku.dke.inga.shared.operations.Operation
 import at.jku.dke.inga.rules.models.OperationDisplayDeterminationServiceModel
 
 // ------------------------- GRANULARITY LEVEL OPERATIONS ----------------------------
-rule "'Drill Down To Level' - if "
+rule "'Drill Down To Level' - if drill down relationships available"
     agenda-group "operations-display-determination"
-    enabled false
-    // appropriate roll up relationship available
 when
-    //$as : NonComparativeAnalysisSituation(measures.isEmpty() == false)
-    //$model : ResolveOperationsDataModel(notSelectedMeasures.isEmpty() == false)
+    $as : NonComparativeAnalysisSituation()
+    $model : OperationDisplayDeterminationServiceModel(nextDrillDownLevels.isEmpty() == false)
 then
-    insert(new Operation(EventNames.NAVIGATE_GL_DRILL_DOWN, 20));
+    insert(new Operation(EventNames.NAVIGATE_GL_DRILL_DOWN, $model.getLocale(), 20));
 end
 
-rule "'Roll Up To Level' - if "
+rule "'Roll Up To Level' - if roll up relationships available"
     agenda-group "operations-display-determination"
-    enabled false
-    // appropriate roll up relationship available
 when
-    //$as : NonComparativeAnalysisSituation(measures.isEmpty() == false)
-    //$model : ResolveOperationsDataModel(notSelectedMeasures.isEmpty() == false)
+    $as : NonComparativeAnalysisSituation()
+    $model : OperationDisplayDeterminationServiceModel(nextRollUpLevels.isEmpty() == false)
 then
     insert(new Operation(EventNames.NAVIGATE_GL_ROLL_UP, 21));
 end

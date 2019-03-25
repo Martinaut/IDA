@@ -1,7 +1,6 @@
 package at.jku.dke.inga.rules
 
 // ------------------------------------ GLOBAL --------------------------------------
-global at.jku.dke.inga.data.repositories.CubeRepository cubeRepository;
 global at.jku.dke.inga.data.repositories.MeasureRepository measureRepository;
 
 // ------------------------------------ IMPORT --------------------------------------

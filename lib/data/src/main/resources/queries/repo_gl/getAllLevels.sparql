@@ -1,0 +1,10 @@
+PREFIX drugs: <http://www.example.org/drugs#>
+PREFIX qbx: <http://dke.jku.at/inga/cubes#>
+select ?child ?parent
+where {
+	<###CUBE###> qbx:dimension ?dimension .
+    ?dimension qbx:hasHierarchy ?hier .
+    ?hierStep qbx:inHierarchy ?hier ;
+              qbx:childLevel ?child ;
+              qbx:parentLevel ?parent .
+}
