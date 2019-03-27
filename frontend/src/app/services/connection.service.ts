@@ -118,7 +118,7 @@ export class ConnectionService {
     });
 
     this.client.activate();
-    // TODO this.asMessageReceivedSource.next(null); // reset AS panel
+    this.asMessageReceivedSource.next(null); // reset AS panel
     this.resultMessageReceivedSource.next(null); // reset result panel
   }
 

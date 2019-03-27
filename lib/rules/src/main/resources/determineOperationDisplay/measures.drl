@@ -24,7 +24,7 @@ then
     insert(new Operation(EventNames.NAVIGATE_MEASURE_REFOCUS, $model.getLocale(), 11));
 end
 
-rule "'Drop Measure' - if at least one measure is selected"
+rule "'Drop Measure' - if at least one measure is selected and one available"
     agenda-group "operations-display-determination"
 when
     $as : NonComparativeAnalysisSituation(measures.isEmpty() == false)

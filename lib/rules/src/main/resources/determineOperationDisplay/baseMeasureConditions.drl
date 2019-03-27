@@ -27,7 +27,7 @@ then
     //insert(new Operation(EventNames., 51));
 end
 
-rule "'Refocus Base Measure Condition' - if "
+rule "'Refocus Base Measure Condition' - if at least one bmc is selected and one available"
     agenda-group "operations-display-determination"
     enabled false
 when

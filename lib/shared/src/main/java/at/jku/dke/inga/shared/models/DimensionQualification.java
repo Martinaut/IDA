@@ -21,9 +21,9 @@ public class DimensionQualification {
      */
     public DimensionQualification() {
         this.sliceConditions = new HashSet<>();
-        this.granularityLevel = "top"; // TODO: is this the right value for top, or does it have an URI?
-        this.diceLevel = "top";  // TODO: is this the right value for top, or does it have an URI?
-        this.diceNode = "all";  // TODO: is this the right value for all, or does it have an URI?
+        this.granularityLevel = null;//"top"; // TODO: is this the right value for top, or does it have an URI?
+        this.diceLevel = null;//"top";  // TODO: is this the right value for top, or does it have an URI?
+        this.diceNode = null;//"all";  // TODO: is this the right value for all, or does it have an URI?
     }
 
     /**

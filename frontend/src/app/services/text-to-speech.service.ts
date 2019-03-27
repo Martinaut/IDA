@@ -78,6 +78,16 @@ export class TextToSpeechService {
   }
 
   /**
+   * Cancel the voice output.
+   */
+  stop(): void {
+    if (!TextToSpeechService.isSupported()) {
+      return;
+    }
+    this.synth.cancel();
+  }
+
+  /**
    * Returns all available voices for the configured language.
    */
   getVoices(): SpeechSynthesisVoice[] {

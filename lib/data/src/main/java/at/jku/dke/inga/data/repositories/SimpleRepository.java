@@ -64,10 +64,11 @@ public class SimpleRepository extends BaseRepository {
                     "/queries/getLabels.sparql",
                     s -> s.replaceAll("###LANG###", lang)
                             .replaceAll("###IN###", uris.stream()
-                                    .filter(x -> x.contains("://")) // TODO: improve IRI validation
+                                    .distinct()
+                                    .filter(x -> x != null && x.contains("://")) // TODO: improve IRI validation
                                     .map(x -> '<' + x + '>')
                                     .collect(Collectors.joining(", "))));
-            return result.stream().map(bindings -> new Label(
+            return result.stream().distinct().map(bindings -> new Label(
                     bindings.getValue("element").stringValue(),
                     lang,
                     bindings.getValue("label").stringValue(),

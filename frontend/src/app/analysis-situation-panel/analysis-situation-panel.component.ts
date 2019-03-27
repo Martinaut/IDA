@@ -27,6 +27,11 @@ export class AnalysisSituationPanelComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     this.sub = this.connectionService.asMessageReceived.subscribe(value => {
+      if (value == null) {
+        this.analysisSituation = null;
+        return;
+      }
+      
       const tmp = JSON.parse(value);
       if ('cube' in tmp) {
         this.analysisSituation = tmp;

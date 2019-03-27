@@ -62,6 +62,7 @@ export class ConnectionPanelComponent implements OnInit, OnDestroy {
    */
   disconnect(): void {
     this.connectionService.disconnect();
+    this.tts.stop();
   }
 
   setLanguage(lang): void {
