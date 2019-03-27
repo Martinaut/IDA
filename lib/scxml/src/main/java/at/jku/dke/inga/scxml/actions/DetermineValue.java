@@ -1,11 +1,8 @@
 package at.jku.dke.inga.scxml.actions;
 
-import at.jku.dke.inga.rules.models.SetStringValueServiceModel;
-import at.jku.dke.inga.rules.models.SetTwoStringValueServiceModel;
 import at.jku.dke.inga.rules.models.SetValueServiceModel;
 import at.jku.dke.inga.rules.models.ValueDeterminationServiceModel;
 import at.jku.dke.inga.rules.results.ConfidenceResult;
-import at.jku.dke.inga.rules.results.TwoStringValueConfidenceResult;
 import at.jku.dke.inga.rules.services.SetValueService;
 import at.jku.dke.inga.rules.services.ValueDeterminationService;
 import at.jku.dke.inga.scxml.context.ContextModel;
@@ -55,30 +52,19 @@ public class DetermineValue extends BaseAction {
 
     private void setValue(String contextId, ContextModel ctxModel, ConfidenceResult value) throws ModelException {
         // Get data
-        SetValueServiceModel model;
-        if (value instanceof TwoStringValueConfidenceResult) {
-            model = new SetTwoStringValueServiceModel(
-                    getCurrentState(),
-                    ctxModel.getAnalysisSituation(),
-                    ctxModel.getLocale(),
-                    ((TwoStringValueConfidenceResult) value).getValue(),
-                    ctxModel.getOperation()
-            );
-        } else {
-            model = new SetStringValueServiceModel(
-                    getCurrentState(),
-                    ctxModel.getAnalysisSituation(),
-                    ctxModel.getLocale(),
-                    value.getValue().toString(),
-                    ctxModel.getOperation()
-            );
-        }
+        SetValueServiceModel model = new SetValueServiceModel(
+                getCurrentState(),
+                ctxModel.getAnalysisSituation(),
+                ctxModel.getLocale(),
+                value.getValue(),
+                ctxModel.getOperation()
+        );
 
         // Execute
         new SetValueService().executeRules(model);
 
         // Notify
-        if (ctxModel.getAnalysisSituationListener() != null)
+        if (ctxModel.getAnalysisSituationListener() != null && ctxModel.getAnalysisSituation().isCubeDefined())
             ctxModel.getAnalysisSituationListener().changed(contextId, new AnalysisSituationEvent(this, ctxModel.getAnalysisSituation(), ctxModel.getLocale().getLanguage()));
     }
 }

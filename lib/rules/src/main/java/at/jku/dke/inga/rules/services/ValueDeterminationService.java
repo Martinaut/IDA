@@ -1,8 +1,8 @@
 package at.jku.dke.inga.rules.services;
 
 import at.jku.dke.inga.rules.results.ConfidenceResult;
-import at.jku.dke.inga.rules.results.StringValueConfidenceResult;
 import at.jku.dke.inga.rules.models.ValueDeterminationServiceModel;
+import at.jku.dke.inga.rules.results.StringValueConfidenceResult;
 import at.jku.dke.inga.shared.EventNames;
 
 import java.util.Collection;

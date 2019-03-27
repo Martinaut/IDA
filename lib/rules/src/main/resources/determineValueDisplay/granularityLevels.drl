@@ -11,7 +11,7 @@ import at.jku.dke.inga.shared.display.TwoListDisplay
 import at.jku.dke.inga.rules.models.ValuesDisplayDeterminationServiceModel
 
 // ------------------------------------ RULES ---------------------------------------
-rule "Roll Up"
+rule "Roll Up - All parent levels"
     agenda-group "values-display-determination"
 when
     $as : NonComparativeAnalysisSituation()
@@ -23,7 +23,7 @@ then
         granularityLevelRepository.findParentLevels($as.getCube(), $model.getLanguage(), $as.getDimensionQualifications())));
 end
 
-rule "Drill Down"
+rule "Drill Down - All child levels"
     agenda-group "values-display-determination"
 when
     $as : NonComparativeAnalysisSituation()

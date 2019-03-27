@@ -69,6 +69,15 @@ public class GranularityLevelRepository {
         }
     }
 
+    /**
+     * Returns all direct and transitive parents for all current selected granularity levels together with the labels
+     * in the requested language.
+     *
+     * @param cubeUri                 The full cube URI.
+     * @param lang                    The requested language.
+     * @param dimensionQualifications The dimension qualifications.
+     * @return List with all levels to which the user can roll up to based on the current situation
+     */
     public List<DimensionLabel> findParentLevels(String cubeUri, String lang, Collection<DimensionQualification> dimensionQualifications) {
         try {
             List<DimensionLabel> list = new ArrayList<>(dimensionQualifications.size());
@@ -76,7 +85,7 @@ public class GranularityLevelRepository {
             for (DimensionQualification dq : dimensionQualifications) {
                 //noinspection Duplicates
                 graphDbHelper.getQueryResult(
-                        "/queries/repo_gl/findParentLevel.sparql",
+                        "/queries/repo_gl/findParentLevels.sparql",
                         s -> s.replaceAll("###LANG###", lang).replaceAll("###CUBE###", cubeUri).replaceAll("###LEVEL###", dq.getGranularityLevel()))
                         .stream().map(x ->
                         new DimensionLabel(
@@ -87,7 +96,7 @@ public class GranularityLevelRepository {
                                 x.getValue("label").stringValue(),
                                 x.hasBinding("description") ? x.getValue("description").stringValue() : null
                         )
-                ).findFirst().ifPresent(list::add);
+                ).forEach(list::add);
             }
 
             return list;
@@ -96,6 +105,16 @@ public class GranularityLevelRepository {
         }
     }
 
+
+    /**
+     * Returns all direct and transitive children for all current selected granularity levels together with the labels
+     * in the requested language.
+     *
+     * @param cubeUri                 The full cube URI.
+     * @param lang                    The requested language.
+     * @param dimensionQualifications The dimension qualifications.
+     * @return List with all levels to which the user can drill down to based on the current situation
+     */
     public List<DimensionLabel> findChildLevels(String cubeUri, String lang, Collection<DimensionQualification> dimensionQualifications) {
         try {
             List<DimensionLabel> list = new ArrayList<>(dimensionQualifications.size());
@@ -103,7 +122,7 @@ public class GranularityLevelRepository {
             for (DimensionQualification dq : dimensionQualifications) {
                 //noinspection Duplicates
                 graphDbHelper.getQueryResult(
-                        "/queries/repo_gl/findChildLevel.sparql",
+                        "/queries/repo_gl/findChildLevels.sparql",
                         s -> s.replaceAll("###LANG###", lang).replaceAll("###CUBE###", cubeUri).replaceAll("###LEVEL###", dq.getGranularityLevel()))
                         .stream().map(x ->
                         new DimensionLabel(
@@ -114,7 +133,7 @@ public class GranularityLevelRepository {
                                 x.getValue("label").stringValue(),
                                 x.hasBinding("description") ? x.getValue("description").stringValue() : null
                         )
-                ).findFirst().ifPresent(list::add);
+                ).forEach(list::add);
             }
 
             return list;

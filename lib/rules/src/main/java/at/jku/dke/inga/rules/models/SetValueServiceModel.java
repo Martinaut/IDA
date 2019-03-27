@@ -6,12 +6,10 @@ import java.util.Locale;
 
 /**
  * Model required by {@link at.jku.dke.inga.rules.services.SetValueService}.
- *
- * @param <TValue> The type of the value.
  */
-public class SetValueServiceModel<TValue> extends DroolsServiceModel {
+public class SetValueServiceModel extends DroolsServiceModel {
 
-    private final TValue value;
+    private final Object value;
     private final String operation;
 
     /**
@@ -24,7 +22,7 @@ public class SetValueServiceModel<TValue> extends DroolsServiceModel {
      * @param operation         The operation to execute.
      * @throws IllegalArgumentException If {@code currentState} or {@code analysisSituation} are {@code null} (or empty).
      */
-    public SetValueServiceModel(String currentState, AnalysisSituation analysisSituation, Locale locale, TValue value, String operation) {
+    public SetValueServiceModel(String currentState, AnalysisSituation analysisSituation, Locale locale, Object value, String operation) {
         super(currentState, analysisSituation, locale);
         this.value = value;
         this.operation = operation;
@@ -35,7 +33,7 @@ public class SetValueServiceModel<TValue> extends DroolsServiceModel {
      *
      * @return the value
      */
-    public TValue getValue() {
+    public Object getValue() {
         return value;
     }
 

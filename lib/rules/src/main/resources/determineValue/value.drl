@@ -5,7 +5,8 @@ import at.jku.dke.inga.rules.models.ValueDeterminationServiceModel
 import at.jku.dke.inga.rules.helpers.UserInput
 import at.jku.dke.inga.rules.results.ConfidenceResult
 import at.jku.dke.inga.rules.results.StringValueConfidenceResult
-import at.jku.dke.inga.rules.results.TwoStringValueConfidenceResult
+import at.jku.dke.inga.rules.results.SingleValueConfidenceResult
+import at.jku.dke.inga.rules.results.DualValueConfidenceResult
 import at.jku.dke.inga.shared.display.Display
 import at.jku.dke.inga.shared.display.ListDisplay
 import at.jku.dke.inga.shared.display.TwoListDisplay
@@ -21,7 +22,7 @@ when
                                             UserInput.toInteger($model.getUserInput()) > 0 &&
                                             UserInput.toInteger($model.getUserInput()) <= $display.data.size(), displayData == $display)
 then
-    insert(new StringValueConfidenceResult($display.getData().get(UserInput.toInteger($model.getUserInput()) - 1).getDisplayableId(), 1.0));
+    insert(new SingleValueConfidenceResult($display.getData().get(UserInput.toInteger($model.getUserInput()) - 1), 1.0));
 end
 
 rule "Resolve Value - TwoListDisplay"
@@ -35,9 +36,9 @@ when
                                             UserInput.toTwoNumberSelectionInteger($model.getUserInput()).getLeft() <= $display.dataLeft.size() &&
                                             UserInput.toTwoNumberSelectionInteger($model.getUserInput()).getRight() <= $display.dataRight.size(), displayData == $display)
 then
-    insert(new TwoStringValueConfidenceResult(
-                    $display.getDataLeft().get(UserInput.toTwoNumberSelectionInteger($model.getUserInput()).getLeft() - 1).getDisplayableId(),
-                    $display.getDataRight().get(UserInput.toTwoNumberSelectionInteger($model.getUserInput()).getRight() - 1).getDisplayableId(),
+    insert(new DualValueConfidenceResult(
+                    $display.getDataLeft().get(UserInput.toTwoNumberSelectionInteger($model.getUserInput()).getLeft() - 1),
+                    $display.getDataRight().get(UserInput.toTwoNumberSelectionInteger($model.getUserInput()).getRight() - 1),
                      1.0));
 end
 

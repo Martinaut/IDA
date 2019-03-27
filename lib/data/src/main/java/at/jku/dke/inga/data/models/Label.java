@@ -2,6 +2,7 @@ package at.jku.dke.inga.data.models;
 
 import at.jku.dke.inga.shared.display.Displayable;
 
+import java.util.Objects;
 import java.util.StringJoiner;
 
 /**
@@ -44,6 +45,15 @@ public class Label implements Displayable {
     public Label(String uri, String lang, String label, String description) {
         this(uri, lang, label);
         this.description = description;
+    }
+
+    /**
+     * Instantiates a new instance of class {@linkplain Label}.
+     *
+     * @param label       The label of the element.
+     */
+    public Label(String label) {
+        this.label = label;
     }
 
     /**
@@ -160,5 +170,27 @@ public class Label implements Displayable {
     @Override
     public String getDetails() {
         return description;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Label label1 = (Label) o;
+        return Objects.equals(uri, label1.uri) &&
+                Objects.equals(lang, label1.lang) &&
+                Objects.equals(label, label1.label) &&
+                Objects.equals(description, label1.description);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int hashCode() {
+        return Objects.hash(uri, lang, label, description);
     }
 }

@@ -1,10 +1,12 @@
 package at.jku.dke.inga.web.listener;
 
+import at.jku.dke.inga.data.models.Label;
 import at.jku.dke.inga.data.repositories.SimpleRepository;
 import at.jku.dke.inga.scxml.events.AnalysisSituationEvent;
 import at.jku.dke.inga.scxml.events.AnalysisSituationListener;
 import at.jku.dke.inga.shared.models.AnalysisSituation;
 import at.jku.dke.inga.shared.models.ComparativeAnalysisSituation;
+import at.jku.dke.inga.shared.models.DimensionQualification;
 import at.jku.dke.inga.shared.models.NonComparativeAnalysisSituation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -14,6 +16,9 @@ import org.springframework.messaging.simp.SimpMessageType;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Component;
 
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -75,15 +80,38 @@ public class AnalysisSituationEventListener implements AnalysisSituationListener
     }
 
     private NonComparativeAnalysisSituation translate(NonComparativeAnalysisSituation evtAs, String lang) {
+        // Get Labels
+        Set<String> uris = new HashSet<>();
+        uris.add(evtAs.getCube());
+        uris.addAll(evtAs.getMeasures());
+        uris.addAll(evtAs.getBaseMeasureConditions());
+        uris.addAll(evtAs.getFilterConditions());
+        evtAs.getDimensionQualifications().forEach(dq -> {
+            uris.add(dq.getDimension());
+            uris.add(dq.getGranularityLevel());
+            uris.add(dq.getDiceNode());
+            uris.add(dq.getDiceLevel());
+            uris.addAll(dq.getSliceConditions());
+        });
+        Map<String, Label> lbls = simpleRepository.findLabelsByUriAndLang(uris, lang);
+
+        // Set labels
         NonComparativeAnalysisSituation newAs = new NonComparativeAnalysisSituation();
-        newAs.setCube(simpleRepository.findLabelByUriAndLang(evtAs.getCube(), lang).getLabel());
-        newAs.setBaseMeasureConditions(evtAs.getBaseMeasureConditions().stream().map(x -> simpleRepository.findLabelByUriAndLang(x, lang).getTitle()).collect(Collectors.toSet()));
-        newAs.setDimensionQualifications(evtAs.getDimensionQualifications());
-        // TODO newAs.setDimensionQualifications(evtAs.getDimensionQualifications().stream().map(x -> simpleRepository.findLabelByUriAndLang(x, lang).getTitle()).collect(Collectors.toSet()));
-        newAs.setFilterConditions(evtAs.getFilterConditions().stream().map(x -> simpleRepository.findLabelByUriAndLang(x, lang).getTitle()).collect(Collectors.toSet()));
-        newAs.setMeasures(evtAs.getMeasures().stream().map(x -> simpleRepository.findLabelByUriAndLang(x, lang).getTitle()).collect(Collectors.toSet()));
         newAs.setName(evtAs.getName());
         newAs.setDescription(evtAs.getDescription());
+        newAs.setCube(lbls.getOrDefault(evtAs.getCube(), new Label(evtAs.getCube())).getLabel());
+        evtAs.getMeasures().forEach(m -> newAs.addMeasure(lbls.getOrDefault(m, new Label(m)).getLabel()));
+        evtAs.getBaseMeasureConditions().forEach(bm -> newAs.addMeasure(lbls.getOrDefault(bm, new Label(bm)).getLabel()));
+        evtAs.getFilterConditions().forEach(f -> newAs.addMeasure(lbls.getOrDefault(f, new Label(f)).getLabel()));
+        evtAs.getDimensionQualifications().forEach(dq -> {
+            DimensionQualification mapped = new DimensionQualification();
+            mapped.setDimension(lbls.getOrDefault(dq.getDimension(), new Label(dq.getDimension())).getLabel());
+            mapped.setGranularityLevel(lbls.getOrDefault(dq.getGranularityLevel(), new Label(dq.getGranularityLevel())).getLabel());
+            mapped.setDiceNode(lbls.getOrDefault(dq.getDiceNode(), new Label(dq.getDiceNode())).getLabel());
+            mapped.setDiceLevel(lbls.getOrDefault(dq.getDiceLevel(), new Label(dq.getDiceLevel())).getLabel());
+            dq.getSliceConditions().forEach(sc -> mapped.getSliceConditions().add(lbls.getOrDefault(sc, new Label(sc)).getLabel()));
+            newAs.addDimensionQualification(mapped);
+        });
         return newAs;
     }
 }
