@@ -1,6 +1,7 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {ConnectionService, SpeechToTextService, TextToSpeechService} from '../services';
-import {Subscription} from 'rxjs';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
+import { ConnectionService, SpeechToTextService, TextToSpeechService } from '../services';
+import { Subscription } from 'rxjs';
 
 /**
  * Panel used to connect to the websocket.
@@ -23,7 +24,8 @@ export class ConnectionPanelComponent implements OnInit, OnDestroy {
    */
   constructor(private connectionService: ConnectionService,
               private tts: TextToSpeechService,
-              private stt: SpeechToTextService) {
+              private stt: SpeechToTextService,
+              private translateService: TranslateService) {
   }
 
   /**
@@ -69,6 +71,7 @@ export class ConnectionPanelComponent implements OnInit, OnDestroy {
     this.selectedLanguage = lang;
     this.tts.language = this.selectedLanguage;
     this.stt.setLanguage(this.selectedLanguage);
+    this.translateService.use(lang);
   }
 
   // region --- SETTINGS ---

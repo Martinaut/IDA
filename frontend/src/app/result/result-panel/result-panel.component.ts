@@ -1,6 +1,6 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {Subscription} from 'rxjs';
-import {ConnectionService} from '../../services';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Subscription } from 'rxjs';
+import { ConnectionService } from '../../services';
 
 @Component({
   selector: 'app-result-panel',

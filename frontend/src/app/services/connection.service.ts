@@ -128,7 +128,7 @@ export class ConnectionService {
     this.connectionStateChangedSource.next(true);
     this.client.publish({
       destination: '/app/start',
-      body: JSON.stringify({locale: 'en'})
+      body: JSON.stringify({locale: this.language})
     });
   }
 

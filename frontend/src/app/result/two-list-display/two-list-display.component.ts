@@ -1,5 +1,6 @@
-import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
-import {TextToSpeechService} from '../../services';
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
+import { TextToSpeechService } from '../../services';
 
 interface TwoListDisplay {
   displayMessage: string;
@@ -19,7 +20,8 @@ export class TwoListDisplayComponent implements OnChanges {
   /**
    * Initializes a new instance of class TwoListDisplayComponent.
    */
-  constructor(private tts: TextToSpeechService) {
+  constructor(private tts: TextToSpeechService,
+              private translateService: TranslateService) {
   }
 
   /**
@@ -36,18 +38,18 @@ export class TwoListDisplayComponent implements OnChanges {
   private voiceOutput(display: TwoListDisplay) {
     let text = display.displayMessage + '\r\n';
 
-    text += 'On the left side: \r\n';
+    text += this.translateService.instant('result.leftSide') + ': \r\n'; // on the left side
     let i = 1;
     for (const d of display.dataLeft) {
-      text += 'Left Option ' + i + ': ';
+      text += this.translateService.instant('result.leftOption') + ' ' + i + ': '; // Left Option
       text += d.title + '\r\n';
       i++;
     }
 
-    text += 'On the right side: \r\n';
+    text += this.translateService.instant('result.rightSide') + ': \r\n'; // on the right side
     i = 1;
     for (const d of display.dataRight) {
-      text += 'Right Option ' + i + ': ';
+      text += this.translateService.instant('result.rightOption') + ' ' + i + ': '; // Right Option
       text += d.title + '\r\n';
       i++;
     }

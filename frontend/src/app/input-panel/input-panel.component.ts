@@ -1,6 +1,6 @@
-import {ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {Subscription} from 'rxjs';
-import {ConnectionService, SpeechToTextService} from '../services';
+import { ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Subscription } from 'rxjs';
+import { ConnectionService, SpeechToTextService } from '../services';
 
 /**
  * Displays an input field for the user query.

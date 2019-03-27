@@ -1,21 +1,25 @@
 <div class="card shadow mb-4" *ngIf="ttsSupported">
   <div class="card-header py-3">
     <a class="h6 m-0 font-weight-bold text-primary" (click)="isCollapsed = !isCollapsed" href="#"
-       [attr.aria-expanded]="!isCollapsed" aria-controls="voice-settings-panel-body">Voice Settings</a>
+       [attr.aria-expanded]="!isCollapsed" aria-controls="voice-settings-panel-body" [translate]="'tts.title'">
+      Voice Settings
+    </a>
   </div>
   <div class="card-body" id="voice-settings-panel-body" [ngbCollapse]="isCollapsed">
     <div class="form-row">
       <div class="form-group col-md-6">
-        <label for="voiceControl">Voice</label>
+        <label for="voiceControl" [translate]="'tts.voice'">Voice</label>
         <select id="voiceControl" class="form-control" [(ngModel)]="tts.voiceUri">
-          <option value="">Use standard voice</option>
-          <option *ngFor="let v of voices" [value]="v.voiceURI">{{ v.name }} (Local: {{ v.localService }})</option>
+          <option value="" [translate]="'tts.standardVoice'">Use standard voice</option>
+          <option *ngFor="let v of voices" [value]="v.voiceURI">
+            {{ v.name }} ({{ 'tts.local' | translate }} : {{ v.localService }}) <!-- Local -->
+          </option>
         </select>
       </div>
 
       <div class="form-group col-md-6">
         <label for="rateControl" class="voice-range">
-          <span>Rate</span>
+          <span [translate]="'tts.rate'">Rate</span>
           <span class="text-dark">{{ tts.rate }}</span>
         </label>
         <input type="range" id="rateControl" class="mt-2 custom-range"
@@ -24,7 +28,7 @@
 
       <div class="form-group col-md-6">
         <label for="volControl" class="voice-range">
-          <span>Volume</span>
+          <span [translate]="'tts.volume'">Volume</span>
           <span class="text-dark">{{ tts.volume }}</span>
         </label>
         <input type="range" id="volControl" class="mt-2 custom-range"
@@ -33,7 +37,7 @@
 
       <div class="form-group col-md-6">
         <label for="pitchControl" class="voice-range">
-          <span>Pitch</span>
+          <span [translate]="'tts.pitch'">Pitch</span>
           <span class="text-dark">{{ tts.pitch }}</span>
         </label>
         <input type="range" id="pitchControl" class="mt-2 custom-range"

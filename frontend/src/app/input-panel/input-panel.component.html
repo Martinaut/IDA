@@ -1,10 +1,10 @@
 <div class="card shadow mb-4" *ngIf="connected">
   <div class="card-header py-3">
-    <h6 class="m-0 font-weight-bold text-primary">Your Input</h6>
+    <h6 class="m-0 font-weight-bold text-primary" [translate]="'input.title'">Your Input</h6>
   </div>
   <div class="card-body">
     <div class="input-group">
-      <input type="text" placeholder="Ask me something ..." class="form-control" name="ingaInput"
+      <input type="text" placeholder="{{ 'input.placeholder' | translate }}" class="form-control" name="ingaInput"
              [ngClass]="{'is-invalid': inputError}" #input
              [(ngModel)]="userInput" (keyup.enter)="inputFieldEnterPressed()" [disabled]="waitingForResult">
       <div class="input-group-append">
@@ -15,8 +15,11 @@
         </button>
       </div>
     </div>
-    <span class="text-danger" *ngIf="inputError">Please enter a text before sending the message.</span>
+    <span class="text-danger" *ngIf="inputError" [translate]="'input.validation'">Please enter a text before sending the message.</span>
 
-    <button class="btn btn-primary btn-block mt-3" (click)="sendMessage()" [disabled]="waitingForResult">SEND</button>
+    <button class="btn btn-primary text-uppercase btn-block mt-3" (click)="sendMessage()" [disabled]="waitingForResult"
+            [translate]="'input.send'">
+      SEND
+    </button>
   </div>
 </div>

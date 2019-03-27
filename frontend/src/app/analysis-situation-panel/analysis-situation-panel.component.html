@@ -1,6 +1,6 @@
 <div class="card shadow mb-4" *ngIf="analysisSituation != null">
   <div class="card-header py-3">
-    <h6 class="m-0 font-weight-bold text-primary">Current Analysis Situation</h6>
+    <h6 class="m-0 font-weight-bold text-primary" [translate]="'as.title'">Current Analysis Situation</h6>
   </div>
   <div class="card-body">
     <table class="table table-bordered">
@@ -8,13 +8,13 @@
 
       <!-- Cube -->
       <tr class="d-flex">
-        <th scope="row" class="col-3">Cube</th>
+        <th scope="row" class="col-3" [translate]="'as.cube'">Cube</th>
         <td class="col-9">{{ analysisSituation.cube }}</td>
       </tr>
 
       <!-- Base Measure Conditions -->
       <tr class="d-flex" *ngIf="analysisSituation.baseMeasureConditions && analysisSituation.baseMeasureConditions.length > 0">
-        <th scope="row" class="col-3">Base Measure Conditions</th>
+        <th scope="row" class="col-3" [translate]="'as.baseMeasureConds'">Base Measure Conditions</th>
         <td class="col-9">
           <ul class="list-unstyled mb-0">
             <li *ngFor="let m of analysisSituation.baseMeasureConditions">{{ m }}</li>
@@ -24,7 +24,7 @@
 
       <!-- Measures -->
       <tr class="d-flex" *ngIf="analysisSituation.measures && analysisSituation.measures.length > 0">
-        <th scope="row" class="col-3">Measures</th>
+        <th scope="row" class="col-3" [translate]="'as.measures'">Measures</th>
         <td class="col-9">
           <ul class="list-unstyled mb-0">
             <li *ngFor="let m of analysisSituation.measures">{{ m }}</li>
@@ -34,24 +34,24 @@
 
       <!-- Dimension Qualification -->
       <tr class="d-flex" *ngIf="analysisSituation.dimensionQualifications && analysisSituation.dimensionQualifications.length > 0">
-        <th scope="row" class="col-3">Dimension Qualification</th>
+        <th scope="row" class="col-3" [translate]="'as.dimQualis'">Dimension Qualifications</th>
         <td class="col-9">
           <div class="row">
             <div class="col-12 col-md-6" *ngFor="let m of analysisSituation.dimensionQualifications">
               <h5>{{ m.dimension }}</h5>
               <table class="table table-sm">
                 <tr class="d-flex">
-                  <th scope="row" class="col-5">Dice Level</th>
+                  <th scope="row" class="col-5" [translate]="'as.diceLevel'">Dice Level</th>
                   <td class="col-7">{{ m.diceLevel }}</td>
                 </tr>
 
                 <tr class="d-flex">
-                  <th scope="row" class="col-5">Dice Node</th>
+                  <th scope="row" class="col-5" [translate]="'as.diceNode'">Dice Node</th>
                   <td class="col-7">{{ m.diceNode }}</td>
                 </tr>
 
                 <tr class="d-flex">
-                  <th scope="row" class="col-5">Slice Conditions</th>
+                  <th scope="row" class="col-5" [translate]="'as.sliceConds'">Slice Conditions</th>
                   <td class="col-7">
                     <ul class="list-unstyled">
                       <li *ngFor="let sc of m.sliceConditions">{{ sc }}</li>
@@ -60,7 +60,7 @@
                 </tr>
 
                 <tr class="d-flex">
-                  <th scope="row" class="col-5">Granularity level</th>
+                  <th scope="row" class="col-5" [translate]="'as.granLevel'">Granularity level</th>
                   <td class="col-7">{{ m.granularityLevel }}</td>
                 </tr>
               </table>
@@ -71,7 +71,7 @@
 
       <!-- Filter Conditions -->
       <tr class="d-flex" *ngIf="analysisSituation.filterConditions && analysisSituation.filterConditions.length > 0">
-        <th scope="row" class="col-3">Filter Conditions</th>
+        <th scope="row" class="col-3" [translate]="'as.filterConds'">Filter Conditions</th>
         <td class="col-9">
           <ul class="list-unstyled mb-0">
             <li *ngFor="let m of analysisSituation.filterConditions">{{ m }}</li>

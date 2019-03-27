@@ -1,7 +1,7 @@
 <div class="card shadow mb-4">
   <div class="card-header py-3">
     <a class="h6 m-0 font-weight-bold text-primary" (click)="isCollapsed = !isCollapsed" href="#"
-       [attr.aria-expanded]="!isCollapsed" aria-controls="connection-panel-body">InGA Connection</a>
+       [attr.aria-expanded]="!isCollapsed" aria-controls="connection-panel-body" [translate]="'conn.title'">InGA Connection</a>
   </div>
   <div class="card-body" id="connection-panel-body" [ngbCollapse]="isCollapsed">
     <div class="row">
@@ -17,12 +17,18 @@
         </div>
       </div>
       <div class="col">
-        <input type="text" placeholder="Server URL" class="form-control" [(ngModel)]="serverUrl"
+        <input type="text" placeholder="{{ 'conn.url' | translate }}" class="form-control" [(ngModel)]="serverUrl"
                [disabled]="isConnected">
       </div>
       <div class="col-auto">
-        <button type="button" class="btn btn-primary" (click)="connect()" [hidden]="isConnected">Connect</button>
-        <button type="button" class="btn btn-primary" (click)="disconnect()" [hidden]="!isConnected">Disconnect</button>
+        <button type="button" class="btn btn-primary" (click)="connect()" [hidden]="isConnected"
+                [translate]="'conn.connect'">
+          Connect
+        </button>
+        <button type="button" class="btn btn-primary" (click)="disconnect()" [hidden]="!isConnected"
+                [translate]="'conn.disconnect'">
+          Disconnect
+        </button>
       </div>
     </div>
   </div>

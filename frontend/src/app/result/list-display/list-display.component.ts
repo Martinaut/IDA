@@ -1,5 +1,6 @@
-import {Component, Input, OnChanges, SimpleChanges} from '@angular/core';
-import {TextToSpeechService} from '../../services';
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
+import { TextToSpeechService } from '../../services';
 
 interface ListDisplay {
   displayMessage: string;
@@ -17,7 +18,8 @@ export class ListDisplayComponent implements OnChanges {
   /**
    * Initializes a new instance of class ListDisplayComponent.
    */
-  constructor(private tts: TextToSpeechService) {
+  constructor(private tts: TextToSpeechService,
+              private translateService: TranslateService) {
   }
 
   /**
@@ -36,7 +38,7 @@ export class ListDisplayComponent implements OnChanges {
 
     let i = 1;
     for (const d of display.data) {
-      text += 'Option ' + i + ': ';
+      text += this.translateService.instant('result.option') + i + ': '; // option
       text += d.title + '\r\n';
       i++;
     }

@@ -1,6 +1,6 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {Subscription} from 'rxjs';
-import {ConnectionService} from '../services';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Subscription } from 'rxjs';
+import { ConnectionService } from '../services';
 
 /**
  * Panel used to display the current analysis situation.
@@ -31,7 +31,7 @@ export class AnalysisSituationPanelComponent implements OnInit, OnDestroy {
         this.analysisSituation = null;
         return;
       }
-      
+
       const tmp = JSON.parse(value);
       if ('cube' in tmp) {
         this.analysisSituation = tmp;

@@ -1,6 +1,6 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {Subscription} from 'rxjs';
-import {TextToSpeechService} from '../services';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Subscription } from 'rxjs';
+import { TextToSpeechService } from '../services';
 
 @Component({
   selector: 'app-voice-settings-panel',
