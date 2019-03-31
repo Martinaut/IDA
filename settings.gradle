@@ -1,8 +1,11 @@
 rootProject.name = 'inga'
 
-include 'lib:shared'
-include 'lib:scxml'
-include 'lib:rules'
-include 'lib:nlp'
-include 'lib:data'
-include 'app:web'
+include 'engine:shared'
+include 'engine:data'
+include 'engine:scxml'
+include 'engine:rules'
+include 'engine:web'
+
+include 'app:server'
+include 'app:nlp'
+include 'app:ruleset_default'

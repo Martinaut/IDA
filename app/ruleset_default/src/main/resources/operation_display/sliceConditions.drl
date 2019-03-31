@@ -1,0 +1,38 @@
+package operation_display
+
+// ------------------------------------ IMPORT --------------------------------------
+import at.jku.dke.inga.shared.EventNames
+import at.jku.dke.inga.shared.models.NonComparativeAnalysisSituation
+import at.jku.dke.inga.shared.operations.Operation
+import at.jku.dke.inga.rules.models.OperationDisplayServiceModel
+
+// -------------------------- SLICE CONDITION OPERATIONS ----------------------------
+rule "'Narrow Slice Condition' - if "
+    agenda-group "operation-display-determination"
+    enabled false
+when
+    //$as : NonComparativeAnalysisSituation(measures.isEmpty() == false)
+    //$model : OperationDisplayServiceModel(notSelectedMeasures.isEmpty() == false)
+then
+    //insert(new Operation(EventNames., 40));
+end
+
+rule "'Broaden Slice Condition' - if "
+    agenda-group "operation-display-determination"
+    enabled false
+when
+    //$as : NonComparativeAnalysisSituation(measures.isEmpty() == false)
+    //$model : OperationDisplayServiceModel(notSelectedMeasures.isEmpty() == false)
+then
+    //insert(new Operation(EventNames., 41));
+end
+
+rule "'Refocus Slice Condition' - if "
+    agenda-group "operation-display-determination"
+    enabled false
+when
+    //$as : NonComparativeAnalysisSituation(measures.isEmpty() == false)
+    //$model : OperationDisplayServiceModel(notSelectedMeasures.isEmpty() == false)
+then
+    //insert(new Operation(EventNames., 42));
+end

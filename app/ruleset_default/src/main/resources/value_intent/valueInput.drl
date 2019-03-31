@@ -1,0 +1,24 @@
+package value_intent
+
+// ------------------------------------ IMPORT --------------------------------------
+import at.jku.dke.inga.rules.models.ValueIntentServiceModel
+import at.jku.dke.inga.rules.results.StringConfidenceResult
+import at.jku.dke.inga.app.ruleset.helpers.UserInput
+import at.jku.dke.inga.shared.EventNames
+
+// ------------------------------------ RULES ---------------------------------------
+rule "SelectValue Intent"
+    agenda-group "value-intent-determination"
+when
+    $model : ValueIntentServiceModel(UserInput.isNumber(userInput))
+then
+    insert(new StringConfidenceResult(EventNames.NAVIGATE, 0.5));
+end
+
+rule "SelectValue Two values Intent"
+    agenda-group "value-intent-determination"
+when
+    $model : ValueIntentServiceModel(UserInput.isTwoNumberSelection(userInput))
+then
+    insert(new StringConfidenceResult(EventNames.NAVIGATE, 0.5));
+end

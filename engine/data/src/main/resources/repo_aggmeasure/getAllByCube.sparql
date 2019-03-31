@@ -1,0 +1,10 @@
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX qbx: <http://dke.jku.at/inga/cubes#>
+
+SELECT ?element
+WHERE {
+    <###CUBE###> qbx:measure ?measure .
+    ?measure rdf:type qbx:BaseMeasure .
+	?element rdf:type qbx:AggregateMeasure ;
+	         qbx:derivedFrom ?measure .
+} 

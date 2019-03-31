@@ -94,5 +94,4 @@ nbdist/
 
 
 ### CUSTOM
-app_test.db
 \.idea/dataSources\.xml

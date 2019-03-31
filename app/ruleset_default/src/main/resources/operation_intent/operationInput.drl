@@ -1,0 +1,16 @@
+package operation_intent
+
+// ------------------------------------ IMPORT --------------------------------------
+import at.jku.dke.inga.rules.models.OperationIntentServiceModel
+import at.jku.dke.inga.rules.results.StringConfidenceResult
+import at.jku.dke.inga.shared.EventNames
+import org.apache.commons.lang3.math.NumberUtils
+
+// ------------------------------------ RULES ---------------------------------------
+rule "ExecuteOperation Intent"
+    agenda-group "operation-intent-determination"
+when
+    $model : OperationIntentServiceModel(NumberUtils.isParsable(userInput))
+then
+    insert(new StringConfidenceResult(EventNames.NAVIGATE, 0.5));
+end

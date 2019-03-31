@@ -1,0 +1,54 @@
+package value
+
+// ------------------------------------ IMPORT --------------------------------------
+import at.jku.dke.inga.rules.models.ValueServiceModel
+import at.jku.dke.inga.rules.results.ConfidenceResult
+import at.jku.dke.inga.rules.results.StringConfidenceResult
+import at.jku.dke.inga.rules.results.DisplayableConfidenceResult
+import at.jku.dke.inga.rules.results.DualDisplayableConfidenceResult
+import at.jku.dke.inga.shared.display.Display
+import at.jku.dke.inga.shared.display.ListDisplay
+import at.jku.dke.inga.shared.display.TwoListDisplay
+import at.jku.dke.inga.shared.EventNames
+import at.jku.dke.inga.app.ruleset.helpers.UserInput
+
+// ------------------------------------ RULES ---------------------------------------
+rule "Resolve Value - ListDisplay"
+    agenda-group "value-determination"
+    salience 100
+when
+    $display : ListDisplay()
+    $model : ValueServiceModel(UserInput.isNumber(userInput) &&
+                                UserInput.toInteger($model.getUserInput()) > 0 &&
+                                UserInput.toInteger($model.getUserInput()) <= $display.data.size(), displayData == $display)
+then
+    insert(new DisplayableConfidenceResult($display.getData().get(UserInput.toInteger($model.getUserInput()) - 1), 1.0));
+end
+
+rule "Resolve Value - TwoListDisplay"
+    agenda-group "value-determination"
+    salience 100
+when
+    $display : TwoListDisplay()
+    $model : ValueServiceModel(UserInput.isTwoNumberSelection(userInput) &&
+                                UserInput.toTwoNumberSelectionInteger($model.getUserInput()).getLeft() > 0 &&
+                                UserInput.toTwoNumberSelectionInteger($model.getUserInput()).getRight() > 0 &&
+                                UserInput.toTwoNumberSelectionInteger($model.getUserInput()).getLeft() <= $display.dataLeft.size() &&
+                                UserInput.toTwoNumberSelectionInteger($model.getUserInput()).getRight() <= $display.dataRight.size(), displayData == $display)
+then
+    insert(new DualDisplayableConfidenceResult(
+                    $display.getDataLeft().get(UserInput.toTwoNumberSelectionInteger($model.getUserInput()).getLeft() - 1),
+                    $display.getDataRight().get(UserInput.toTwoNumberSelectionInteger($model.getUserInput()).getRight() - 1),
+                     1.0));
+end
+
+rule "Invalid Operation Number - ListDisplay"
+    agenda-group "value-determination"
+    salience 2
+when
+    $display : Display()
+    $model : ValueServiceModel(displayData == $display)
+    not ConfidenceResult()
+then
+    insert(new StringConfidenceResult(EventNames.INVALID_INPUT, 1.0));
+end
