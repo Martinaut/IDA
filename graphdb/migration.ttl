@@ -1,0 +1,191 @@
+@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+
+@prefix qb:   <http://purl.org/linked-data/cube#> .
+@prefix qb4o: <http://purl.org/qb4olap/cubes#> .
+@prefix qbx:  <http://dke.jku.at/inga/cubes#> .
+
+@prefix migr: <http://www.example.org/migration#> .
+
+# Source: http://appsso.eurostat.ec.europa.eu/nui/show.do?dataset=migr_asyappctzm, https://github.com/lorenae/qb4olap/blob/master/examples/eurostat_schema_QB4OLAP_v1.3.ttl
+#-----------------------------------------------------------------------------------------------------
+# Cube
+migr:AsylumCube a qbx:BaseCube ;
+    rdfs:label "Asylum Applications"@en ;
+    rdfs:label "Asylanträge"@de ;
+    rdfs:comment "Asylum and first time asylum applicants to European countries by citizenship, age and sex Monthly data"@en ;
+    rdfs:comment "Erstmalige Asylbewerber in der Europäischen Union nach Staatsangehörigkeit, Alter und Geschlecht. Monatliche Daten"@de ;
+    qbx:measure migr:NumberOfApplications ;
+    qbx:dimension migr:AgeDimension ;
+    qbx:dimension migr:TimeDimension ;
+    qbx:dimension migr:SexDimension ;
+    qbx:dimension migr:DestinationDimension ;
+    qbx:dimension migr:CitizenshipDimension ;
+    qbx:dimension migr:TypeDimension .
+
+#-----------------------------------------------------------------------------------------------------
+# Measure: BASE
+migr:NumberOfApplications a qbx:BaseMeasure ;
+    rdfs:label "Number of applications"@en ;
+    rdfs:label "Anzahl an Anträgen"@de ;
+    rdfs:comment "The absolute number of persons."@en .
+
+#-----------------------------------------------------------------------------------------------------
+# Measure: AGGREGATE
+migr:SumNumberOfApplications a qbx:AggregateMeasure ;
+    rdfs:label "Sum of applications"@en ;
+    rdfs:label "Summe an Anträgen"@de ;
+    qbx:aggregationFunction qbx:Sum ;
+    qbx:derivedFrom migr:NumberOfApplications .
+
+migr:AvgNumberOfApplications a qbx:AggregateMeasure ;
+    rdfs:label "Average of applications"@en ;
+    rdfs:label "Durchschnittliche Anzahl an Anträgen"@de ;
+    qbx:aggregationFunction qbx:Avg ;
+    qbx:derivedFrom migr:NumberOfApplications .
+
+#-----------------------------------------------------------------------------------------------------
+# Dimension AGE
+migr:AgeDimension a qbx:Dimension ;
+    rdfs:label "Age"@en ;
+    rdfs:label "Alter"@de ;
+    qbx:hasHierarchy migr:AgeDimensionMainHierarchy .
+
+migr:AgeDimensionMainHierarchy a qbx:Hierarchy ;
+    rdfs:label "Age"@en ;
+    rdfs:label "Alter"@de .
+
+migr:AgeDimensionAgeLevel a qbx:Level ;
+    rdfs:label "Age class"@en ;
+    rdfs:label "Altersklasse"@de .
+
+# TODO: HierarchyStep
+
+#-----------------------------------------------------------------------------------------------------
+# Dimension TIME
+migr:TimeDimension a qbx:Dimension ;
+    rdfs:label "Time"@en ;
+    rdfs:label "Zeit"@de ;
+    qbx:hasHierarchy migr:TimeDimensionMainHierarchy .
+
+migr:TimeDimensionMainHierarchy a qbx:Hierarchy ;
+    rdfs:label "Time"@en ;
+    rdfs:label "Zeit"@de .
+
+migr:TimeDimensionMonthLevel a qbx:Level ;
+    rdfs:label "Month"@en ;
+    rdfs:label "Monat"@de .
+
+migr:TimeDimensionYearLevel a qbx:Level ;
+    rdfs:label "Year"@en ;
+    rdfs:label "Jahr"@de .
+
+migr:TimeDimensionMonthToDate a qbx:HierarchyStep ;
+    qbx:inHierarchy migr:TimeDimensionMainHierarchy ;
+    qbx:childLevel migr:TimeDimensionMonthLevel ;
+    qbx:parentLevel migr:TimeDimensionYearLevel .
+
+#-----------------------------------------------------------------------------------------------------
+# Dimension SEX
+migr:SexDimension a qbx:Dimension ;
+    rdfs:label "Sex"@en ;
+    rdfs:label "Geschlecht"@de ;
+    qbx:hasHierarchy migr:SexDimensionMainHierarchy .
+
+migr:SexDimensionMainHierarchy a qbx:Hierarchy ;
+    rdfs:label "Sex"@en ;
+    rdfs:label "Geschlecht"@de .
+
+migr:SexDimensionSexLevel a qbx:Level ;
+    rdfs:label "Sex"@en ;
+    rdfs:label "Geschlecht"@de .
+
+# TODO: HierarchyStep
+
+#-----------------------------------------------------------------------------------------------------
+# Dimension DESTINATION
+migr:DestinationDimension a qbx:Dimension ;
+    rdfs:label "Destination"@en ;
+    rdfs:label "Ziel"@de ;
+    qbx:hasHierarchy migr:DestinationDimensionGeoHierarchy ;
+    qbx:hasHierarchy migr:DestinationDimensionGovHierarchy .
+
+migr:DestinationDimensionGeoHierarchy a qbx:Hierarchy ;
+    rdfs:label "Destination Geographical"@en ;
+    rdfs:label "Ziel Geografisch"@de .
+
+migr:DestinationDimensionGovHierarchy a qbx:Hierarchy ;
+    rdfs:label "Destination Government"@en ;
+    rdfs:label "Ziel Regierung"@de .
+
+migr:DestinationDimensionCountryLevel a qbx:Level ;
+    rdfs:label "Country"@en ;
+    rdfs:label "Land"@de ;
+    rdfs:comment "Country of asylum application"@en .
+
+migr:DestinationDimensionContinentLevel a qbx:Level ;
+    rdfs:label "Continent"@en ;
+    rdfs:label "Kontinent"@de .
+
+migr:DestinationDimensionGovernmentLevel a qbx:Level ;
+    rdfs:label "Government Type"@en ;
+    rdfs:label "Regierungsart"@de .
+
+migr:DestinationDimensionCountryToContinent a qbx:HierarchyStep ;
+    qbx:inHierarchy migr:DestinationDimensionGeoHierarchy ;
+    qbx:childLevel migr:DestinationDimensionCountryLevel ;
+    qbx:parentLevel migr:DestinationDimensionContinentLevel .
+
+migr:DestinationDimensionCountryToContinent a qbx:HierarchyStep ;
+    qbx:inHierarchy migr:DestinationDimensionGovHierarchy ;
+    qbx:childLevel migr:DestinationDimensionCountryLevel ;
+    qbx:parentLevel migr:DestinationDimensionGovernmentLevel .
+
+#-----------------------------------------------------------------------------------------------------
+# Dimension CITIZENSHIP
+migr:CitizenshipDimension a qbx:Dimension ;
+    rdfs:label "Citizenship"@en ;
+    rdfs:label "Staatsangehörigkeit"@de ;
+    qbx:hasHierarchy migr:DestinationDimensionGeoHierarchy ;
+    qbx:hasHierarchy migr:DestinationDimensionGovHierarchy .
+
+migr:CitizenshipDimensionGeoHierarchy a qbx:Hierarchy ;
+    rdfs:label "Citizenship Geography"@en ;
+    rdfs:label "Staatsangehörigkeit Geografisch"@de .
+
+migr:CitizenshipDimensionGovHierarchy a qbx:Hierarchy ;
+    rdfs:label "Citizenship Government"@en ;
+    rdfs:label "Staatsangehörigkeit Regierung"@de .
+
+migr:CitizenshipDimensionCountryLevel a qbx:Level ;
+    rdfs:label "Country"@en ;
+    rdfs:label "Land"@de ;
+    rdfs:comment "Country of citizenship"@en .
+
+migr:CitizenshipDimensionCountryToContinent a qbx:HierarchyStep ;
+    qbx:inHierarchy migr:CitizenshipDimensionGeoHierarchy ;
+    qbx:childLevel migr:CitizenshipDimensionCountryLevel ;
+    qbx:parentLevel migr:DestinationDimensionContinentLevel .
+
+migr:CitizenshipDimensionCountryToContinent a qbx:HierarchyStep ;
+    qbx:inHierarchy migr:DestinationDimensionGovHierarchy ;
+    qbx:childLevel migr:CitizenshipDimensionCountryLevel ;
+    qbx:parentLevel migr:DestinationDimensionGovernmentLevel .
+
+#-----------------------------------------------------------------------------------------------------
+# Dimension TYPE
+migr:TypeDimension a qbx:Dimension ;
+    rdfs:label "Type of applicant"@en ;
+    rdfs:label "Art des Antragstellers"@de ;
+    qbx:hasHierarchy migr:SexDimensionMainHierarchy .
+
+migr:SexDimensionMainHierarchy a qbx:Hierarchy ;
+    rdfs:label "Type of applicant"@en ;
+    rdfs:label "Art des Antragstellers"@de .
+
+migr:SexDimensionSexLevel a qbx:Level ;
+    rdfs:label "Type of applicant"@en ;
+    rdfs:label "Art des Antragstellers"@de .
+
+# TODO: HierarchyStep

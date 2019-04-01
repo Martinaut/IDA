@@ -48,6 +48,8 @@
 		"standardVoice": "Use standard voice",
 		"title": "Voice Settings",
 		"voice": "Voice",
-		"volume": "Volume"
+		"volume": "Volume",
+    "true": "yes",
+    "false": "no"
 	}
 }

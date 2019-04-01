@@ -48,6 +48,8 @@
 		"standardVoice": "Standardstimme verwenden",
 		"title": "Sprachausgabe Einstellungen",
 		"voice": "Stimme",
-		"volume": "Lautstärke"
+		"volume": "Lautstärke",
+    "true": "ja",
+    "false": "nein"
 	}
 }

@@ -12,7 +12,7 @@
         <select id="voiceControl" class="form-control" [(ngModel)]="tts.voiceUri">
           <option value="" [translate]="'tts.standardVoice'">Use standard voice</option>
           <option *ngFor="let v of voices" [value]="v.voiceURI">
-            {{ v.name }} ({{ 'tts.local' | translate }} : {{ v.localService }}) <!-- Local -->
+            {{ v.name }} ({{ 'tts.local' | translate }} : {{ 'tts.' + v.localService | translate }}) <!-- Local -->
           </option>
         </select>
       </div>
