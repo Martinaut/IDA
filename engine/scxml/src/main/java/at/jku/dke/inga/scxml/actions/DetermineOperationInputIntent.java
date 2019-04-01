@@ -38,8 +38,10 @@ public class DetermineOperationInputIntent extends BaseAction {
         // Get data
         var model = new OperationIntentServiceModel(
                 getCurrentState(),
-                ctxModel.getAnalysisSituation(),
                 ctxModel.getLocale(),
+                ctxModel.getAnalysisSituation(),
+                ctxModel.getOperation(),
+                ctxModel.getAdditionalData(),
                 ctxModel.getUserInput(),
                 convertDisplayToOperationsMap(ctxModel.getDisplayData())
         );

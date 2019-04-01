@@ -6,10 +6,7 @@ import at.jku.dke.inga.shared.models.NonComparativeAnalysisSituation;
 import com.google.common.graph.Graph;
 import com.google.common.graph.ImmutableGraph;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Locale;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -24,15 +21,17 @@ public class OperationDisplayServiceModel extends DroolsServiceModel {
      * Instantiates a new instance of class {@link OperationDisplayServiceModel}.
      *
      * @param currentState              The current state of the state machine.
-     * @param analysisSituation         The analysis situation.
      * @param locale                    The display locale.
+     * @param analysisSituation         The analysis situation.
+     * @param operation                 The operation the user wants to perform.
+     * @param additionalData            Additional data.
      * @param measures                  The measures of the selected cube.
      * @param granularityLevelHierarchy The granularity level hierarchy.
-     * @throws IllegalArgumentException If any of the parameters is {@code null} (except {@code locale}).
+     * @throws IllegalArgumentException If any of the parameters is {@code null} (except {@code locale} and {@code additionalData}).
      */
-    public OperationDisplayServiceModel(String currentState, AnalysisSituation analysisSituation, Locale locale,
+    public OperationDisplayServiceModel(String currentState, Locale locale, AnalysisSituation analysisSituation, String operation, Map<String, Object> additionalData,
                                         Collection<String> measures, Graph<String> granularityLevelHierarchy) {
-        super(currentState, analysisSituation, locale);
+        super(currentState, locale, analysisSituation, operation, additionalData);
 
         if (measures == null) throw new IllegalArgumentException("measures must not be null");
         if (granularityLevelHierarchy == null)
@@ -87,7 +86,7 @@ public class OperationDisplayServiceModel extends DroolsServiceModel {
      * @return Collection with more specific levels
      */
     @SuppressWarnings("Duplicates")
-    public Collection<String> getNextDrillDownLevels() {
+    public Collection<String> getNextDrillDownLevels() { // TODO:
         if (granularityLevelHierarchy.nodes().isEmpty())
             return Collections.emptySet();
         if (!(getAnalysisSituation() instanceof NonComparativeAnalysisSituation)) return Collections.emptySet();

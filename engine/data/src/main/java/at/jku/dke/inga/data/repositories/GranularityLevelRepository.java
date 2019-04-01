@@ -4,6 +4,7 @@ import at.jku.dke.inga.data.IRIValidator;
 import at.jku.dke.inga.data.QueryException;
 import at.jku.dke.inga.data.configuration.GraphDbConnection;
 import at.jku.dke.inga.data.models.DimensionLabel;
+import at.jku.dke.inga.data.models.Label;
 import at.jku.dke.inga.shared.models.DimensionQualification;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.ImmutablePair;
@@ -107,59 +108,78 @@ public class GranularityLevelRepository extends BaseRepository {
     }
 
     /**
-     * Returns the labels of all direct and transitive parents for all current selected granularity levels of the specified cube.
+     * Returns the labels of all direct and transitive parents for the selected granularity level of the specified dimension.
      * <p>
-     * Dimension Qualifications which have an invalid granularity level IRI will be skipped.
+     * If the dimension qualification has an invalid granularity level IRI or dimension IRI, an empty list will be returned.
      *
-     * @param lang                    The requested language.
-     * @param cubeIri                 The absolute IRI of the cube.
-     * @param dimensionQualifications The dimensions qualifications of the analysis situation.
-     * @return List with parent level labels of the cube in the requested language
-     * @throws IllegalArgumentException If {@code lang} or {@code cubeIri} is {@code null} or blank or {@code dimensionQualifications} is {@code null}.
+     * @param lang      The requested language.
+     * @param dimension The dimension qualification.
+     * @return List with parent level labels of the dimension in the requested language
+     * @throws IllegalArgumentException If {@code lang} or {@code dimension} is {@code null} or empty.
      * @throws QueryException           If an exception occurred while executing the query.
      */
-    @SuppressWarnings("Duplicates")
-    public List<DimensionLabel> getParentLevelLabelsByLangAndCube(String lang, String cubeIri, Collection<DimensionQualification> dimensionQualifications) throws QueryException {
+    public List<DimensionLabel> getParentLevelLabelsByLangAndDimension(String lang, DimensionQualification dimension) throws QueryException {
         if (StringUtils.isBlank(lang)) throw new IllegalArgumentException("lang must not be null or empty");
-        if (StringUtils.isBlank(cubeIri)) throw new IllegalArgumentException("cubeIri must not be null or empty");
-        if (!IRIValidator.isValidAbsoluteIRI(cubeIri))
-            throw new IllegalArgumentException("cubeIri must be an absolute IRI");
-        if (dimensionQualifications == null)
-            throw new IllegalArgumentException("dimensionQualifications must not be null");
+        if (dimension == null) throw new IllegalArgumentException("dimensionQualification must not be null");
+        logger.debug("Querying labels of parent granularity levels in language {} for dimension {}.", lang, dimension.getDimension());
 
-        logger.debug("Querying labels of parent granularity levels of cube {} in language {} for dimensions {}.", cubeIri, lang, dimensionQualifications);
+        if (!IRIValidator.isValidAbsoluteIRI(dimension.getGranularityLevel())) return Collections.emptyList();
+        if (!IRIValidator.isValidAbsoluteIRI(dimension.getDimension())) return Collections.emptyList();
 
-        List<DimensionLabel> list = new ArrayList<>(dimensionQualifications.size());
-
-        for (DimensionQualification dq : dimensionQualifications) {
-            if (!IRIValidator.isValidAbsoluteIRI(dq.getGranularityLevel())) continue;
-
-            connection.getQueryResult(
-                    "/repo_gl/getParentLabelsByLangAndCube.sparql",
-                    s -> s.replaceAll("###LANG###", lang).replaceAll("###CUBE###", cubeIri).replaceAll("###LEVEL###", dq.getGranularityLevel())
-            )
-                    .stream()
-                    .map(x -> convert(lang, x))
-                    .forEach(list::add);
-        }
-
-        return list;
+        return connection.getQueryResult(
+                "/repo_gl/getParentLevelLabelsByLangAndDimension.sparql",
+                s -> s.replaceAll("###LANG###", lang)
+                        .replaceAll("###DIMENSION###", dimension.getDimension())
+                        .replaceAll("###LEVEL###", dimension.getGranularityLevel())
+        )
+                .stream()
+                .map(x -> convert(lang, x))
+                .collect(Collectors.toList());
     }
 
     /**
-     * Returns the labels of all direct and transitive children for all current selected granularity levels of the specified cube.
+     * Returns the labels of all direct and transitive children for the selected granularity level of the specified dimension.
      * <p>
-     * Dimension Qualifications which have an invalid granularity level IRI will be skipped.
+     * If the dimension qualification has an invalid granularity level IRI or dimension IRI, an empty list will be returned.
+     *
+     * @param lang      The requested language.
+     * @param dimension The dimension qualification.
+     * @return List with child level labels of the dimension in the requested language
+     * @throws IllegalArgumentException If {@code lang} or {@code dimension} is {@code null} or empty.
+     * @throws QueryException           If an exception occurred while executing the query.
+     */
+    public List<DimensionLabel> getChildLevelLabelsByLangAndDimension(String lang, DimensionQualification dimension) throws QueryException {
+        if (StringUtils.isBlank(lang)) throw new IllegalArgumentException("lang must not be null or empty");
+        if (dimension == null) throw new IllegalArgumentException("dimensionQualification must not be null");
+        logger.debug("Querying labels of child granularity levels in language {} for dimension {}.", lang, dimension.getDimension());
+
+        if (!IRIValidator.isValidAbsoluteIRI(dimension.getGranularityLevel())) return Collections.emptyList();
+        if (!IRIValidator.isValidAbsoluteIRI(dimension.getDimension())) return Collections.emptyList();
+
+        return connection.getQueryResult(
+                "/repo_gl/getChildLevelLabelsByLangAndDimension.sparql",
+                s -> s.replaceAll("###LANG###", lang)
+                        .replaceAll("###DIMENSION###", dimension.getDimension())
+                        .replaceAll("###LEVEL###", dimension.getGranularityLevel())
+        )
+                .stream()
+                .map(x -> convert(lang, x))
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * Returns the labels of the dimensions of the specified cube where a roll up operation can be performed.
+     * <p>
+     * This is the case when the granularity level is not set to the top most granularity level.
      *
      * @param lang                    The requested language.
      * @param cubeIri                 The absolute IRI of the cube.
      * @param dimensionQualifications The dimensions qualifications of the analysis situation.
-     * @return List with child level labels of the cube in the requested language
+     * @return List with dimension labels in the requested language
      * @throws IllegalArgumentException If {@code lang} or {@code cubeIri} is {@code null} or blank or {@code dimensionQualifications} is {@code null}.
      * @throws QueryException           If an exception occurred while executing the query.
      */
-    @SuppressWarnings("Duplicates")
-    public List<DimensionLabel> getChildLevelLabelsByLangAndCube(String lang, String cubeIri, Collection<DimensionQualification> dimensionQualifications) throws QueryException {
+    public List<Label> getDimensionsWhereRollUpPossible(String lang, String cubeIri, Collection<DimensionQualification> dimensionQualifications) throws QueryException {
         if (StringUtils.isBlank(lang)) throw new IllegalArgumentException("lang must not be null or empty");
         if (StringUtils.isBlank(cubeIri)) throw new IllegalArgumentException("cubeIri must not be null or empty");
         if (!IRIValidator.isValidAbsoluteIRI(cubeIri))
@@ -167,26 +187,51 @@ public class GranularityLevelRepository extends BaseRepository {
         if (dimensionQualifications == null)
             throw new IllegalArgumentException("dimensionQualifications must not be null");
 
-        logger.debug("Querying labels of child granularity levels of cube {} in language {} for dimensions {}.", cubeIri, lang, dimensionQualifications);
-
-        List<DimensionLabel> list = new ArrayList<>(dimensionQualifications.size());
-
-        for (DimensionQualification dq : dimensionQualifications) {
-            if (!IRIValidator.isValidAbsoluteIRI(dq.getGranularityLevel())) continue;
-
-            connection.getQueryResult(
-                    "/repo_gl/getChildLabelsByLangAndCube.sparql",
-                    s -> s.replaceAll("###LANG###", lang).replaceAll("###CUBE###", cubeIri).replaceAll("###LEVEL###", dq.getGranularityLevel())
-            )
-                    .stream()
-                    .map(x -> convert(lang, x))
-                    .forEach(list::add);
-        }
-
-        return list;
+        logger.debug("Querying labels of dimension of cube {} in language {} for dimensions {} where rollup is possible.", cubeIri, lang, dimensionQualifications);
+        return getLabelsByLang(
+                "/repo_gl/getDimensionsWhereRollUpPossible.sparql",
+                lang,
+                s -> s
+                        .replaceAll("###CUBE###", cubeIri)
+                        .replace("###LEVELS###", dimensionQualifications.stream()
+                                .map(x -> '(' + convertToFullIriString(x.getGranularityLevel()) + ')')
+                                .collect(Collectors.joining(" "))
+                        ));
     }
 
-    private DimensionLabel convert(String lang, BindingSet bindingSet) {
+    /**
+     * Returns the labels of the dimensions of the specified cube where a drill down operation can be performed.
+     * <p>
+     * This is the case when the granularity level is not set to the base granularity level.
+     *
+     * @param lang                    The requested language.
+     * @param cubeIri                 The absolute IRI of the cube.
+     * @param dimensionQualifications The dimensions qualifications of the analysis situation.
+     * @return List with dimension labels in the requested language
+     * @throws IllegalArgumentException If {@code lang} or {@code cubeIri} is {@code null} or blank or {@code dimensionQualifications} is {@code null}.
+     * @throws QueryException           If an exception occurred while executing the query.
+     */
+    public List<Label> getDimensionsWhereDrillDownPossible(String lang, String cubeIri, Collection<DimensionQualification> dimensionQualifications) throws QueryException {
+        if (StringUtils.isBlank(lang)) throw new IllegalArgumentException("lang must not be null or empty");
+        if (StringUtils.isBlank(cubeIri)) throw new IllegalArgumentException("cubeIri must not be null or empty");
+        if (!IRIValidator.isValidAbsoluteIRI(cubeIri))
+            throw new IllegalArgumentException("cubeIri must be an absolute IRI");
+        if (dimensionQualifications == null)
+            throw new IllegalArgumentException("dimensionQualifications must not be null");
+
+        logger.debug("Querying labels of dimension of cube {} in language {} for dimensions {} where drill-down is possible.", cubeIri, lang, dimensionQualifications);
+        return getLabelsByLang(
+                "/repo_gl/getDimensionsWhereDrillDownPossible.sparql",
+                lang,
+                s -> s
+                        .replaceAll("###CUBE###", cubeIri)
+                        .replace("###LEVELS###", dimensionQualifications.stream()
+                                .map(x -> '(' + convertToFullIriString(x.getGranularityLevel()) + ')')
+                                .collect(Collectors.joining(" "))
+                        ));
+    }
+
+    private static DimensionLabel convert(String lang, BindingSet bindingSet) {
         return new DimensionLabel(
                 lang,
                 bindingSet.getValue("dimension").stringValue(),

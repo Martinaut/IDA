@@ -4,6 +4,7 @@ import at.jku.dke.inga.shared.display.Display;
 import at.jku.dke.inga.shared.models.AnalysisSituation;
 
 import java.util.Locale;
+import java.util.Map;
 
 /**
  * Model required by {@link at.jku.dke.inga.rules.services.ValueIntentService}.
@@ -16,16 +17,21 @@ public class ValueIntentServiceModel extends DroolsServiceModel {
     /**
      * Instantiates a new instance of class {@link ValueIntentServiceModel}.
      *
-     * @param currentState       The current state of the state machine.
-     * @param analysisSituation  The analysis situation.
-     * @param locale             The display locale.
-     * @param userInput          The input of the user.
+     * @param currentState      The current state of the state machine.
+     * @param locale            The display locale.
+     * @param analysisSituation The analysis situation.
+     * @param operation         The operation the user wants to perform.
+     * @param additionalData    Additional data.
+     * @param userInput         The input of the user.
      * @param displayData       The display data.
-     * @throws IllegalArgumentException If any of the parameters is {@code null} (except {@code locale}).
+     * @throws IllegalArgumentException If any of the parameters is {@code null} (except {@code locale} and {@code additionalData}).
      */
-    public ValueIntentServiceModel(String currentState, AnalysisSituation analysisSituation, Locale locale, String userInput, Display displayData) {
-        super(currentState, analysisSituation, locale);
+    public ValueIntentServiceModel(String currentState, Locale locale, AnalysisSituation analysisSituation, String operation, Map<String, Object> additionalData,
+                                   String userInput, Display displayData) {
+        super(currentState, locale, analysisSituation, operation, additionalData);
 
+        if (operation == null)
+            throw new IllegalArgumentException("operation must not be null");
         if (displayData == null)
             throw new IllegalArgumentException("displayData must not be null");
         if (userInput == null)

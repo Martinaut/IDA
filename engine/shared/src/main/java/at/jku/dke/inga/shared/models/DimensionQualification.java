@@ -8,7 +8,7 @@ import java.util.*;
  * Represents a dimension qualification.
  * It describes the selection of dimension nodes that have to be analyzed.
  */
-public class DimensionQualification {
+public class DimensionQualification implements Comparable<DimensionQualification> {
 
     private String dimension; // 1. a dimension instance of dimension schema
     private String diceLevel; // 2. a dice level variable
@@ -188,5 +188,10 @@ public class DimensionQualification {
     @Override
     public int hashCode() {
         return Objects.hash(dimension, diceLevel, diceNode, sliceConditions, granularityLevel);
+    }
+
+    @Override
+    public int compareTo(DimensionQualification other) {
+        return StringUtils.compare(dimension, other.dimension);
     }
 }

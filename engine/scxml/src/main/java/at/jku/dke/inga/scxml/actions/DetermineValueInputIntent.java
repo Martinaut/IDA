@@ -30,8 +30,10 @@ public class DetermineValueInputIntent extends BaseAction {
         // Get data
         var model = new ValueIntentServiceModel(
                 getCurrentState(),
-                ctxModel.getAnalysisSituation(),
                 ctxModel.getLocale(),
+                ctxModel.getAnalysisSituation(),
+                ctxModel.getOperation(),
+                ctxModel.getAdditionalData(),
                 ctxModel.getUserInput(),
                 ctxModel.getDisplayData()
         );

@@ -1,5 +1,7 @@
 package at.jku.dke.inga.rules.results;
 
+import java.util.StringJoiner;
+
 /**
  * A generic confidence result implementing {@link ConfidenceResult}.
  *
@@ -44,5 +46,13 @@ public class GenericConfidenceResult<TValue> implements ConfidenceResult<TValue>
     @Override
     public int compareTo(ConfidenceResult<TValue> other) {
         return Double.compare(other.getConfidence(), getConfidence());
+    }
+
+    @Override
+    public String toString() {
+        return new StringJoiner(", ", GenericConfidenceResult.class.getSimpleName() + "[", "]")
+                .add("value=" + value)
+                .add("confidence=" + confidence)
+                .toString();
     }
 }

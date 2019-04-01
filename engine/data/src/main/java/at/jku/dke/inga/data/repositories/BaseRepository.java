@@ -52,8 +52,20 @@ public abstract class BaseRepository {
         if (iris == null) return "";
         return iris.stream()
                 .filter(IRIValidator::isValidAbsoluteIRI)
-                .map(x -> '<' + x + '>')
+                .map(this::convertToFullIriString)
                 .collect(Collectors.joining(", "));
+    }
+
+    /**
+     * Converts IRI to a full IRI String format to be used in the queries.
+     *
+     * @param iri The IRI to convert.
+     * @return The result has the format {@code (<http://a.com/>)}. If {@code iri} is {@code null} or invalid, an empty String will be returned.
+     */
+    protected String convertToFullIriString(String iri) {
+        if (iri == null) return "";
+        if (!IRIValidator.isValidAbsoluteIRI(iri)) return "";
+        return '<' + iri + '>';
     }
 
     // region --- getLabelsByLang ---

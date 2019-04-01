@@ -54,8 +54,10 @@ public class DisplayOperations extends BaseAction {
         // Build model
         var model = new OperationDisplayServiceModel(
                 getCurrentState(),
-                ctxModel.getAnalysisSituation(),
                 ctxModel.getLocale(),
+                ctxModel.getAnalysisSituation(),
+                ctxModel.getOperation(),
+                ctxModel.getAdditionalData(),
                 measures,
                 granularityLevels
         );

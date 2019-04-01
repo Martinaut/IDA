@@ -28,9 +28,10 @@ public class DisplayValues extends BaseAction {
         // Get data
         var model = new ValueDisplayServiceModel(
                 getCurrentState(),
-                ctxModel.getAnalysisSituation(),
                 ctxModel.getLocale(),
+                ctxModel.getAnalysisSituation(),
                 ctxModel.getOperation(),
+                ctxModel.getAdditionalData(),
                 BeanUtil.getBean(CubeRepository.class),
                 BeanUtil.getBean(AggregateMeasureRepository.class),
                 BeanUtil.getBean(GranularityLevelRepository.class)

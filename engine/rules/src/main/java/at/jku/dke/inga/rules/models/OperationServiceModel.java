@@ -18,14 +18,17 @@ public class OperationServiceModel extends DroolsServiceModel {
      * Instantiates a new instance of class {@link OperationServiceModel}.
      *
      * @param currentState       The current state of the state machine.
-     * @param analysisSituation  The analysis situation.
      * @param locale             The display locale.
+     * @param analysisSituation  The analysis situation.
+     * @param operation          The operation the user wants to perform.
+     * @param additionalData     Additional data.
      * @param userInput          The input of the user.
      * @param possibleOperations Map of possible operations (the key has to be the position in the display list).
-     * @throws IllegalArgumentException If any of the parameters is {@code null} (except {@code locale}).
+     * @throws IllegalArgumentException If any of the parameters is {@code null} (except {@code locale} and {@code additionalData}).
      */
-    public OperationServiceModel(String currentState, AnalysisSituation analysisSituation, Locale locale, String userInput, Map<Integer, Operation> possibleOperations) {
-        super(currentState, analysisSituation, locale);
+    public OperationServiceModel(String currentState, Locale locale, AnalysisSituation analysisSituation, String operation, Map<String, Object> additionalData,
+                                 String userInput, Map<Integer, Operation> possibleOperations) {
+        super(currentState, locale, analysisSituation, operation, additionalData);
 
         if (possibleOperations == null)
             throw new IllegalArgumentException("possibleOperations must not be null");

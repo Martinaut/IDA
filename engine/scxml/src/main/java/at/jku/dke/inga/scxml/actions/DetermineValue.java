@@ -42,8 +42,10 @@ public class DetermineValue extends BaseAction {
         // Get data
         var model = new ValueServiceModel(
                 getCurrentState(),
-                ctxModel.getAnalysisSituation(),
                 ctxModel.getLocale(),
+                ctxModel.getAnalysisSituation(),
+                ctxModel.getOperation(),
+                ctxModel.getAdditionalData(),
                 ctxModel.getUserInput(),
                 ctxModel.getDisplayData()
         );
@@ -67,9 +69,10 @@ public class DetermineValue extends BaseAction {
         // Get data
         SetValueServiceModel model = new SetValueServiceModel(
                 getCurrentState(),
-                ctxModel.getAnalysisSituation(),
                 ctxModel.getLocale(),
+                ctxModel.getAnalysisSituation(),
                 ctxModel.getOperation(),
+                ctxModel.getAdditionalData(),
                 value.getValue()
         );
         var interceptor = BeanUtil.getOptionalBean(SetValueInterceptor.class);

@@ -4,26 +4,25 @@ PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
 SELECT DISTINCT ?dimension ?dimensionLabel ?element ?label ?description
 WHERE {
+    VALUES (?dimension) { (<###DIMENSION###>) }
     {
         SELECT ?dimension ?element
         WHERE {
-            <###CUBE###> qbx:dimension ?dimension .
-            ?dimension qbx:hasHierarchy ?hier .
+            <###DIMENSION###> qbx:hasHierarchy ?hier .
             ?hs qbx:inHierarchy ?hier ;
-                qbx:childLevel  ?element;
-                qbx:parentLevel <###LEVEL###> .
+                qbx:childLevel <###LEVEL###> ;
+                qbx:parentLevel ?element .
         }
     }
     UNION
     {
         SELECT ?dimension ?element
         WHERE {
-            <###CUBE###> qbx:dimension ?dimension .
-            ?dimension qbx:hasHierarchy ?hier .
+            <###DIMENSION###> qbx:hasHierarchy ?hier .
             ?hs qbx:inHierarchy ?hier ;
-                qbx:childLevel ?child ;
-                qbx:parentLevel <###LEVEL###> .
-            ?child (^qbx:parentLevel/qbx:childLevel)+ ?element .
+                qbx:childLevel <###LEVEL###> ;
+                qbx:parentLevel ?parent .
+            ?parent (^qbx:childLevel/qbx:parentLevel)+ ?element .
         }
     }
 
@@ -37,3 +36,4 @@ WHERE {
     ?dimension rdfs:label ?dimensionLabel .
     FILTER (lang(?dimensionLabel) = "###LANG###") .
 }
+ORDER BY ?dimensionLabel ?label

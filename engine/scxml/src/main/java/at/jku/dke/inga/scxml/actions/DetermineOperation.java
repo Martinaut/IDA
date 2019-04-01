@@ -37,8 +37,10 @@ public class DetermineOperation extends BaseAction {
         // Get data
         var model = new OperationServiceModel(
                 getCurrentState(),
-                ctxModel.getAnalysisSituation(),
                 ctxModel.getLocale(),
+                ctxModel.getAnalysisSituation(),
+                ctxModel.getOperation(),
+                ctxModel.getAdditionalData(),
                 ctxModel.getUserInput(),
                 convertDisplayToOperationsMap(ctxModel.getDisplayData())
         );

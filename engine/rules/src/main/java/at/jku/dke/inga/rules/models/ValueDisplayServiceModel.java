@@ -9,10 +9,7 @@ import at.jku.dke.inga.shared.models.NonComparativeAnalysisSituation;
 import com.google.common.graph.Graph;
 import com.google.common.graph.ImmutableGraph;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Locale;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -20,28 +17,28 @@ import java.util.stream.Collectors;
  */
 public class ValueDisplayServiceModel extends DroolsServiceModel {
 
-    private final String operation;
     private final CubeRepository cubeRepository;
     private final AggregateMeasureRepository aggregateMeasureRepository;
     private final GranularityLevelRepository granularityLevelRepository;
 
     /**
-     * Instantiates a new Value display service model.
+     * Instantiates a new instance of class {@link ValueDisplayServiceModel}.
      *
      * @param currentState               The current state of the state machine.
-     * @param analysisSituation          The analysis situation.
      * @param locale                     The display locale.
+     * @param analysisSituation          The analysis situation.
      * @param operation                  The operation the user wants to perform.
+     * @param additionalData             Additional data.
      * @param aggregateMeasureRepository The aggregate measure repository.
      * @param granularityLevelRepository The granularity level repository.
-     * @throws IllegalArgumentException If any of the parameters is {@code null} (except {@code locale}).
+     * @throws IllegalArgumentException If any of the parameters is {@code null} (except {@code locale} and {@code additionalData}).
      */
-    public ValueDisplayServiceModel(String currentState, AnalysisSituation analysisSituation, Locale locale,
-                                    String operation, CubeRepository cubeRepository,
-                                    AggregateMeasureRepository aggregateMeasureRepository, GranularityLevelRepository granularityLevelRepository) {
-        super(currentState, analysisSituation, locale);
+    public ValueDisplayServiceModel(String currentState, Locale locale, AnalysisSituation analysisSituation, String operation, Map<String, Object> additionalData,
+                                    CubeRepository cubeRepository, AggregateMeasureRepository aggregateMeasureRepository, GranularityLevelRepository granularityLevelRepository) {
+        super(currentState, locale, analysisSituation, operation, additionalData);
 
-        if (operation == null) throw new IllegalArgumentException("operation must not be null");
+        if (operation == null)
+            throw new IllegalArgumentException("operation must not be null");
         if (aggregateMeasureRepository == null)
             throw new IllegalArgumentException("aggregateMeasureRepository must not be null");
         if (granularityLevelRepository == null)
@@ -49,19 +46,9 @@ public class ValueDisplayServiceModel extends DroolsServiceModel {
         if (cubeRepository == null)
             throw new IllegalArgumentException("cubeRepository must not be null");
 
-        this.operation = operation;
         this.cubeRepository = cubeRepository;
         this.aggregateMeasureRepository = aggregateMeasureRepository;
         this.granularityLevelRepository = granularityLevelRepository;
-    }
-
-    /**
-     * Gets the operation the user wants to perform.
-     *
-     * @return the operation
-     */
-    public String getOperation() {
-        return operation;
     }
 
     /**

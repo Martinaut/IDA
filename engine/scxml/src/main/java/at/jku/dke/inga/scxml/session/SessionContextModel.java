@@ -9,7 +9,9 @@ import at.jku.dke.inga.shared.display.Display;
 import at.jku.dke.inga.shared.models.AnalysisSituation;
 import at.jku.dke.inga.shared.models.NonComparativeAnalysisSituation;
 
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 /**
  * The model of a session context.
@@ -27,6 +29,7 @@ public class SessionContextModel {
 
     private String userInput;
     private String operation;
+    private Map<String, Object> additionalData;
 
     /**
      * Instantiates a new instance of class {@link SessionContextModel}.
@@ -47,6 +50,7 @@ public class SessionContextModel {
 
         this.userInput = null;
         this.operation = EventNames.NAVIGATE_CUBE_SELECT;
+        this.additionalData = new HashMap<>();
     }
 
     /**
@@ -150,5 +154,23 @@ public class SessionContextModel {
      */
     public DisplayListener getDisplayListener() {
         return listener;
+    }
+
+    /**
+     * Gets additional data.
+     *
+     * @return the additional data
+     */
+    public Map<String, Object> getAdditionalData() {
+        return additionalData;
+    }
+
+    /**
+     * Sets additional data.
+     *
+     * @param additionalData the additional data
+     */
+    public void setAdditionalData(Map<String, Object> additionalData) {
+        this.additionalData = additionalData;
     }
 }

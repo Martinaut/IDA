@@ -7,7 +7,7 @@
           <tbody>
           <tr *ngFor="let d of display.dataLeft; let i = index" data-id="{{ d.displayableId }}">
             <th scope="row" style="width: 2em;">{{ i + 1 }}</th>
-            <td title="{{ d.details }}">{{ d.title }}</td>
+            <td title="{{ d.details }}">{{ d.title }} <span class="text-muted text-xs" *ngIf="d.details != null && d.details.trim().length > 0">({{ d.details }})</span></td>
           </tr>
           </tbody>
         </table>
@@ -17,7 +17,7 @@
           <tbody>
           <tr *ngFor="let d of display.dataRight; let i = index" data-id="{{ d.displayableId }}">
             <th scope="row" style="width: 2em;">{{ i + 1 }}</th>
-            <td title="{{ d.details }}">{{ d.title }}</td>
+            <td title="{{ d.details }}">{{ d.title }} <span class="text-muted text-xs" *ngIf="d.details != null && d.details.trim().length > 0">({{ d.details }})</span></td>
           </tr>
           </tbody>
         </table>

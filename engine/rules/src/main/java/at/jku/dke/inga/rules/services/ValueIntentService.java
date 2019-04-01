@@ -35,6 +35,7 @@ public class ValueIntentService extends DroolsService<ValueIntentServiceModel, C
         // Add data
         session.insert(model);
         session.insert(model.getAnalysisSituation());
+        session.insert(model.getDisplayData());
 
         // Execute rules
         session.fireAllRules();

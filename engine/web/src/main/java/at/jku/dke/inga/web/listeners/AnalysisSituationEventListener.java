@@ -20,14 +20,12 @@ import org.springframework.messaging.simp.SimpMessageType;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Component;
 
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Listens to analysis situation changes and sends them to the specified session.
  */
-@Component()
+@Component
 @Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON)
 public class AnalysisSituationEventListener implements AnalysisSituationListener {
 
@@ -82,7 +80,7 @@ public class AnalysisSituationEventListener implements AnalysisSituationListener
     private NonComparativeAnalysisSituation translate(NonComparativeAnalysisSituation evtAs, String lang) {
         LOGGER.debug("Translating NonComparativeAnalysisSituation with cube {}.", evtAs.getCube());
 
-        // Get Labels
+        // region Get Labels
         Set<String> uris = new HashSet<>();
         uris.add(evtAs.getCube());
         uris.addAll(evtAs.getMeasures());
@@ -95,18 +93,27 @@ public class AnalysisSituationEventListener implements AnalysisSituationListener
             uris.add(dq.getDiceLevel());
             uris.addAll(dq.getSliceConditions());
         });
+        // endregion
 
         try {
             Map<String, Label> lbls = simpleRepository.getLabelsByLangAndIris(lang, uris);
 
-            // Set labels
+            // region Create New AS
             NonComparativeAnalysisSituation newAs = new NonComparativeAnalysisSituation();
+            newAs.setMeasures(new TreeSet<>());
+            newAs.setBaseMeasureConditions(new TreeSet<>());
+            newAs.setFilterConditions(new TreeSet<>());
+            newAs.setDimensionQualifications(new TreeSet<>());
+            // endregion
+
+            // region Set Labels
             newAs.setCube(lbls.getOrDefault(evtAs.getCube(), new Label(evtAs.getCube())).getLabel());
             evtAs.getMeasures().forEach(m -> newAs.addMeasure(lbls.getOrDefault(m, new Label(m)).getLabel()));
             evtAs.getBaseMeasureConditions().forEach(bm -> newAs.addMeasure(lbls.getOrDefault(bm, new Label(bm)).getLabel()));
             evtAs.getFilterConditions().forEach(f -> newAs.addMeasure(lbls.getOrDefault(f, new Label(f)).getLabel()));
             evtAs.getDimensionQualifications().forEach(dq -> {
                 DimensionQualification mapped = new DimensionQualification();
+                mapped.setSliceConditions(new TreeSet<>());
                 mapped.setDimension(lbls.getOrDefault(dq.getDimension(), new Label(dq.getDimension())).getLabel());
                 mapped.setGranularityLevel(lbls.getOrDefault(dq.getGranularityLevel(), new Label(dq.getGranularityLevel())).getLabel());
                 mapped.setDiceNode(lbls.getOrDefault(dq.getDiceNode(), new Label(dq.getDiceNode())).getLabel());
@@ -114,6 +121,7 @@ public class AnalysisSituationEventListener implements AnalysisSituationListener
                 dq.getSliceConditions().forEach(sc -> mapped.getSliceConditions().add(lbls.getOrDefault(sc, new Label(sc)).getLabel()));
                 newAs.addDimensionQualification(mapped);
             });
+            // endregion
 
             return newAs;
         } catch (QueryException ex) {
@@ -128,7 +136,7 @@ public class AnalysisSituationEventListener implements AnalysisSituationListener
         newAs.setContextOfInterest(translate(evtAs.getContextOfInterest(), lang));
         newAs.setContextOfComparison(translate(evtAs.getContextOfComparison(), lang));
 
-        // Get Labels
+        // region Get Labels
         Set<String> uris = new HashSet<>();
         uris.addAll(evtAs.getScores());
         uris.addAll(evtAs.getScoreFilters());
@@ -136,17 +144,23 @@ public class AnalysisSituationEventListener implements AnalysisSituationListener
             uris.add(jc.getLeft());
             uris.add(jc.getRight());
         });
+        // endregion
 
         try {
             Map<String, Label> lbls = simpleRepository.getLabelsByLangAndIris(lang, uris);
 
-            // Set labels
+            newAs.setJoinConditions(new TreeSet<>());
+            newAs.setScoreFilters(new TreeSet<>());
+            newAs.setScores(new TreeSet<>());
+
+            // region Set Labels
             evtAs.getScores().forEach(s -> newAs.addScore(lbls.getOrDefault(s, new Label(s)).getLabel()));
             evtAs.getScoreFilters().forEach(sf -> newAs.addScoreFilter(lbls.getOrDefault(sf, new Label(sf)).getLabel()));
             evtAs.getJoinConditions().forEach(jc -> newAs.addJoinCondition(new ImmutablePair<>(
                     lbls.getOrDefault(jc.getLeft(), new Label(jc.getLeft())).getLabel(),
                     lbls.getOrDefault(jc.getRight(), new Label(jc.getRight())).getLabel()
             )));
+            // endregion
             return newAs;
         } catch (QueryException ex) {
             LOGGER.error("Could not load translations of ComparativeAnalysisSituation.", ex);
