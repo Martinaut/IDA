@@ -100,7 +100,7 @@ public class AnalysisSituationEventListener implements AnalysisSituationListener
 
             // region Create New AS
             NonComparativeAnalysisSituation newAs = new NonComparativeAnalysisSituation();
-            newAs.setMeasures(new TreeSet<>());
+//            newAs.setMeasures(new TreeSet<>());
             newAs.setBaseMeasureConditions(new TreeSet<>());
             newAs.setFilterConditions(new TreeSet<>());
             newAs.setDimensionQualifications(new TreeSet<>());
@@ -149,9 +149,9 @@ public class AnalysisSituationEventListener implements AnalysisSituationListener
         try {
             Map<String, Label> lbls = simpleRepository.getLabelsByLangAndIris(lang, uris);
 
-            newAs.setJoinConditions(new TreeSet<>());
+//            newAs.setJoinConditions(new TreeSet<>());
+//            newAs.setScores(new TreeSet<>());
             newAs.setScoreFilters(new TreeSet<>());
-            newAs.setScores(new TreeSet<>());
 
             // region Set Labels
             evtAs.getScores().forEach(s -> newAs.addScore(lbls.getOrDefault(s, new Label(s)).getLabel()));

@@ -12,14 +12,15 @@ import { ConnectionService } from '../services';
 export class AnalysisSituationPanelComponent implements OnInit, OnDestroy {
 
   private sub: Subscription;
-
   analysisSituation: any;
+  type: string;
 
   /**
    * Initializes a new instance of class AnalysisSituationPanelComponent.
    */
   constructor(private connectionService: ConnectionService) {
     this.analysisSituation = null;
+    this.type = null;
   }
 
   /**
@@ -29,12 +30,19 @@ export class AnalysisSituationPanelComponent implements OnInit, OnDestroy {
     this.sub = this.connectionService.asMessageReceived.subscribe(value => {
       if (value == null) {
         this.analysisSituation = null;
+        this.type = null;
         return;
       }
 
       const tmp = JSON.parse(value);
       if ('cube' in tmp) {
         this.analysisSituation = tmp;
+        this.type = 'noncomparative';
+      } else {
+        if ('contextOfInterest' in tmp) {
+          this.analysisSituation = tmp;
+          this.type = 'comparative';
+        }
       }
     });
   }

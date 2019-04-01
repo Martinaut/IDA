@@ -2,83 +2,19 @@
   <div class="card-header py-3">
     <h6 class="m-0 font-weight-bold text-primary" [translate]="'as.title'">Current Analysis Situation</h6>
   </div>
-  <div class="card-body">
-    <table class="table table-bordered">
-      <tbody>
+  <div class="card-body" [ngSwitch]="type">
+    <app-non-comparative *ngSwitchCase="'noncomparative'"
+                         [analysisSituation]="analysisSituation"></app-non-comparative>
+    <app-comparative *ngSwitchCase="'comparative'"
+                     [analysisSituation]="analysisSituation"></app-comparative>
+    <div *ngSwitchDefault class="text-center" style="margin: auto;">
+      <span class="text-muted h5" [translate]="'as.invalidData'">Invalid data.</span>
+    </div>
+  </div>
+</div>
 
-      <!-- Cube -->
-      <tr class="d-flex">
-        <th scope="row" class="col-3" [translate]="'as.cube'">Cube</th>
-        <td class="col-9">{{ analysisSituation.cube }}</td>
-      </tr>
-
-      <!-- Base Measure Conditions -->
-      <tr class="d-flex" *ngIf="analysisSituation.baseMeasureConditions && analysisSituation.baseMeasureConditions.length > 0">
-        <th scope="row" class="col-3" [translate]="'as.baseMeasureConds'">Base Measure Conditions</th>
-        <td class="col-9">
-          <ul class="list-unstyled mb-0">
-            <li *ngFor="let m of analysisSituation.baseMeasureConditions">{{ m }}</li>
-          </ul>
-        </td>
-      </tr>
-
-      <!-- Measures -->
-      <tr class="d-flex" *ngIf="analysisSituation.measures && analysisSituation.measures.length > 0">
-        <th scope="row" class="col-3" [translate]="'as.measures'">Measures</th>
-        <td class="col-9">
-          <ul class="list-unstyled mb-0">
-            <li *ngFor="let m of analysisSituation.measures">{{ m }}</li>
-          </ul>
-        </td>
-      </tr>
-
-      <!-- Dimension Qualification -->
-      <tr class="d-flex" *ngIf="analysisSituation.dimensionQualifications && analysisSituation.dimensionQualifications.length > 0">
-        <th scope="row" class="col-3" [translate]="'as.dimQualis'">Dimension Qualifications</th>
-        <td class="col-9">
-          <div class="row">
-            <div class="col-12 col-md-6" *ngFor="let m of analysisSituation.dimensionQualifications">
-              <h5>{{ m.dimension }}</h5>
-              <table class="table table-sm">
-                <tr class="d-flex">
-                  <th scope="row" class="col-5" [translate]="'as.diceLevel'">Dice Level</th>
-                  <td class="col-7">{{ m.diceLevel }}</td>
-                </tr>
-
-                <tr class="d-flex">
-                  <th scope="row" class="col-5" [translate]="'as.diceNode'">Dice Node</th>
-                  <td class="col-7">{{ m.diceNode }}</td>
-                </tr>
-
-                <tr class="d-flex">
-                  <th scope="row" class="col-5" [translate]="'as.sliceConds'">Slice Conditions</th>
-                  <td class="col-7">
-                    <ul class="list-unstyled">
-                      <li *ngFor="let sc of m.sliceConditions">{{ sc }}</li>
-                    </ul>
-                  </td>
-                </tr>
-
-                <tr class="d-flex">
-                  <th scope="row" class="col-5" [translate]="'as.granLevel'">Granularity level</th>
-                  <td class="col-7">{{ m.granularityLevel }}</td>
-                </tr>
-              </table>
-            </div>
-          </div>
-        </td>
-      </tr>
-
-      <!-- Filter Conditions -->
-      <tr class="d-flex" *ngIf="analysisSituation.filterConditions && analysisSituation.filterConditions.length > 0">
-        <th scope="row" class="col-3" [translate]="'as.filterConds'">Filter Conditions</th>
-        <td class="col-9">
-          <ul class="list-unstyled mb-0">
-            <li *ngFor="let m of analysisSituation.filterConditions">{{ m }}</li>
-          </ul>
-        </td>
-      </tr>
-      </tbody>
-    </table>
+<div style="display: flex; height: 100%;" class="text-center">
+  <div class="text-center" style="margin: auto;">
+    <span class="text-muted h5" [translate]="'as.noData'">No data available.</span>
   </div>
 </div>

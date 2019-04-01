@@ -14,6 +14,8 @@ import { ResultPanelComponent } from './result/result-panel/result-panel.compone
 import { ListDisplayComponent } from './result/list-display/list-display.component';
 import { VoiceSettingsPanelComponent } from './voice-settings-panel/voice-settings-panel.component';
 import { TwoListDisplayComponent } from './result/two-list-display/two-list-display.component';
+import { NonComparativeComponent } from './analysis-situation-panel/non-comparative/non-comparative.component';
+import { ComparativeComponent } from './analysis-situation-panel/comparative/comparative.component';
 
 /**
  * The application module with all components.
@@ -27,7 +29,9 @@ import { TwoListDisplayComponent } from './result/two-list-display/two-list-disp
     ResultPanelComponent,
     ListDisplayComponent,
     VoiceSettingsPanelComponent,
-    TwoListDisplayComponent
+    TwoListDisplayComponent,
+    NonComparativeComponent,
+    ComparativeComponent
   ],
   imports: [
     BrowserModule,

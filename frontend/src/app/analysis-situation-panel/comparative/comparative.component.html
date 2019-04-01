@@ -1,0 +1,41 @@
+<table class="table table-bordered">
+  <tbody>
+
+  <!-- Scores -->
+  <tr class="d-flex">
+    <th scope="row" class="col-3" [translate]="'as.scores'">Scores</th>
+    <td class="col-9">
+      <ul class="list-unstyled mb-0">
+        <li *ngFor="let s of analysisSituation.scores">{{ s }}</li>
+      </ul>
+    </td>
+  </tr>
+
+  <!-- ScoreFilters -->
+  <tr class="d-flex">
+    <th scope="row" class="col-3" [translate]="'as.scoreFilters'">Score Filters</th>
+    <td class="col-9">
+      <ul class="list-unstyled mb-0">
+        <li *ngFor="let sf of analysisSituation.scoreFilters">{{ sf }}</li>
+      </ul>
+    </td>
+  </tr>
+
+  <!-- JoinConditions -->
+  <tr class="d-flex">
+    <th scope="row" class="col-3" [translate]="'as.joinConditions'">Join Conditions</th>
+    <td class="col-9">
+      <ul class="list-unstyled mb-0">
+        <li *ngFor="let jc of analysisSituation.joinConditions">{{ jc }}</li>
+      </ul>
+    </td>
+  </tr>
+
+  </tbody>
+</table>
+
+<h5 [translate]="'as.ci'">Context of Interest</h5>
+<app-non-comparative [analysisSituation]="analysisSituation.contextOfInterest"></app-non-comparative>
+
+<h5 [translate]="'as.cc'">Context of Comparison</h5>
+<app-non-comparative [analysisSituation]="analysisSituation.contextOfInterest"></app-non-comparative>
