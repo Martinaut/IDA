@@ -1,4 +1,3 @@
-PREFIX drugs: <http://www.example.org/drugs#>
 PREFIX qbx: <http://dke.jku.at/inga/cubes#>
 
 SELECT ?dimension ?child ?parent

@@ -118,7 +118,7 @@ public class AnalysisSituationEventListener implements AnalysisSituationListener
                 mapped.setGranularityLevel(lbls.getOrDefault(dq.getGranularityLevel(), new Label(dq.getGranularityLevel())).getLabel());
                 mapped.setDiceNode(lbls.getOrDefault(dq.getDiceNode(), new Label(dq.getDiceNode())).getLabel());
                 mapped.setDiceLevel(lbls.getOrDefault(dq.getDiceLevel(), new Label(dq.getDiceLevel())).getLabel());
-                dq.getSliceConditions().forEach(sc -> mapped.getSliceConditions().add(lbls.getOrDefault(sc, new Label(sc)).getLabel()));
+                dq.getSliceConditions().forEach(sc -> mapped.addSliceCondition(lbls.getOrDefault(sc, new Label(sc)).getLabel()));
                 newAs.addDimensionQualification(mapped);
             });
             // endregion

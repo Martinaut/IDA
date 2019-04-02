@@ -1,8 +1,6 @@
 package at.jku.dke.inga.rules.models;
 
-import at.jku.dke.inga.data.repositories.AggregateMeasureRepository;
-import at.jku.dke.inga.data.repositories.CubeRepository;
-import at.jku.dke.inga.data.repositories.GranularityLevelRepository;
+import at.jku.dke.inga.data.repositories.*;
 import at.jku.dke.inga.shared.models.AnalysisSituation;
 import at.jku.dke.inga.shared.models.DimensionQualification;
 import at.jku.dke.inga.shared.models.NonComparativeAnalysisSituation;
@@ -17,9 +15,11 @@ import java.util.stream.Collectors;
  */
 public class ValueDisplayServiceModel extends DroolsServiceModel {
 
+    private final SimpleRepository simpleRepository;
     private final CubeRepository cubeRepository;
     private final AggregateMeasureRepository aggregateMeasureRepository;
     private final GranularityLevelRepository granularityLevelRepository;
+    private final LevelPredicateRepository levelPredicateRepository;
 
     /**
      * Instantiates a new instance of class {@link ValueDisplayServiceModel}.
@@ -29,26 +29,44 @@ public class ValueDisplayServiceModel extends DroolsServiceModel {
      * @param analysisSituation          The analysis situation.
      * @param operation                  The operation the user wants to perform.
      * @param additionalData             Additional data.
+     * @param simpleRepository The simple repository.
      * @param aggregateMeasureRepository The aggregate measure repository.
      * @param granularityLevelRepository The granularity level repository.
+     * @param levelPredicateRepository   The level predicate repository.
      * @throws IllegalArgumentException If any of the parameters is {@code null} (except {@code locale} and {@code additionalData}).
      */
     public ValueDisplayServiceModel(String currentState, Locale locale, AnalysisSituation analysisSituation, String operation, Map<String, Object> additionalData,
-                                    CubeRepository cubeRepository, AggregateMeasureRepository aggregateMeasureRepository, GranularityLevelRepository granularityLevelRepository) {
+                                    SimpleRepository simpleRepository, CubeRepository cubeRepository, AggregateMeasureRepository aggregateMeasureRepository,
+                                    GranularityLevelRepository granularityLevelRepository, LevelPredicateRepository levelPredicateRepository) {
         super(currentState, locale, analysisSituation, operation, additionalData);
 
         if (operation == null)
             throw new IllegalArgumentException("operation must not be null");
+        if (simpleRepository == null)
+            throw new IllegalArgumentException("simpleRepository must not be null");
         if (aggregateMeasureRepository == null)
             throw new IllegalArgumentException("aggregateMeasureRepository must not be null");
         if (granularityLevelRepository == null)
             throw new IllegalArgumentException("granularityLevelRepository must not be null");
         if (cubeRepository == null)
             throw new IllegalArgumentException("cubeRepository must not be null");
+        if (levelPredicateRepository == null)
+            throw new IllegalArgumentException("levelPredicateRepository must not be null");
 
+        this.simpleRepository = simpleRepository;
         this.cubeRepository = cubeRepository;
         this.aggregateMeasureRepository = aggregateMeasureRepository;
         this.granularityLevelRepository = granularityLevelRepository;
+        this.levelPredicateRepository = levelPredicateRepository;
+    }
+
+    /**
+     * Gets the simple repository.
+     *
+     * @return the simple repository
+     */
+    public SimpleRepository getSimpleRepository() {
+        return simpleRepository;
     }
 
     /**
@@ -76,5 +94,14 @@ public class ValueDisplayServiceModel extends DroolsServiceModel {
      */
     public GranularityLevelRepository getGranularityLevelRepository() {
         return granularityLevelRepository;
+    }
+
+    /**
+     * Gets the level predicate repository.
+     *
+     * @return the level predicate repository
+     */
+    public LevelPredicateRepository getLevelPredicateRepository() {
+        return levelPredicateRepository;
     }
 }

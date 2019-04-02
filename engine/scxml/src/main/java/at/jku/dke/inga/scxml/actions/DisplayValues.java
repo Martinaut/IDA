@@ -1,8 +1,6 @@
 package at.jku.dke.inga.scxml.actions;
 
-import at.jku.dke.inga.data.repositories.AggregateMeasureRepository;
-import at.jku.dke.inga.data.repositories.CubeRepository;
-import at.jku.dke.inga.data.repositories.GranularityLevelRepository;
+import at.jku.dke.inga.data.repositories.*;
 import at.jku.dke.inga.rules.models.ValueDisplayServiceModel;
 import at.jku.dke.inga.rules.services.ValueDisplayService;
 import at.jku.dke.inga.scxml.interceptors.DisplayValuesInterceptor;
@@ -32,9 +30,11 @@ public class DisplayValues extends BaseAction {
                 ctxModel.getAnalysisSituation(),
                 ctxModel.getOperation(),
                 ctxModel.getAdditionalData(),
+                BeanUtil.getBean(SimpleRepository.class),
                 BeanUtil.getBean(CubeRepository.class),
                 BeanUtil.getBean(AggregateMeasureRepository.class),
-                BeanUtil.getBean(GranularityLevelRepository.class)
+                BeanUtil.getBean(GranularityLevelRepository.class),
+                BeanUtil.getBean(LevelPredicateRepository.class)
         );
         var interceptor = BeanUtil.getOptionalBean(DisplayValuesInterceptor.class);
         if (interceptor != null)

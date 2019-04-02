@@ -7,7 +7,7 @@ import at.jku.dke.inga.shared.operations.Operation
 import at.jku.dke.inga.rules.models.OperationDisplayServiceModel
 
 // ------------------------------ MEASURE OPERATIONS --------------------------------
-rule "'Add Measure' - if at least one measure is available in the cube for selection"
+rule "'Add Measure' - if at least one measure is available"
     agenda-group "operation-display-determination"
 when
     $model : OperationDisplayServiceModel(notSelectedMeasures.isEmpty() == false)
@@ -15,7 +15,7 @@ then
     insert(new Operation(EventNames.NAVIGATE_MEASURE_ADD, $model.getLocale(), 10));
 end
 
-rule "'Refocus Measure' - if at least one measure is available"
+rule "'Refocus Measure' - if at least one measure is available and one selected"
     agenda-group "operation-display-determination"
 when
     $as : NonComparativeAnalysisSituation(measures.isEmpty() == false)
@@ -24,7 +24,7 @@ then
     insert(new Operation(EventNames.NAVIGATE_MEASURE_REFOCUS, $model.getLocale(), 11));
 end
 
-rule "'Drop Measure' - if at least one measure is selected and one available"
+rule "'Drop Measure' - if at least one measure is selected"
     agenda-group "operation-display-determination"
 when
     $as : NonComparativeAnalysisSituation(measures.isEmpty() == false)

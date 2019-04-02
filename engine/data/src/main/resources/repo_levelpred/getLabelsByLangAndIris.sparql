@@ -1,0 +1,37 @@
+PREFIX qbx: <http://dke.jku.at/inga/cubes#>
+
+SELECT DISTINCT ?dimension ?dimensionLabel ?element ?label ?description
+WHERE {
+    { ?element qbx:over ?level . }
+    UNION
+    {
+        ?pred qbx:over ?level .
+        ?element qbx:conjunct ?pred .
+    }
+    FILTER (?element IN (###IN###)) .
+
+    {
+        SELECT ?dimension ?level
+        WHERE {
+            {
+    			?dimension qbx:hasHierarchy ?hier .
+    			?hs qbx:inHierarchy ?hier ;
+    				qbx:childLevel ?level .
+            } UNION {
+    			?dimension qbx:hasHierarchy ?hier .
+    			?hs qbx:inHierarchy ?hier ;
+    				qbx:parentLevel ?level .
+            }
+        }
+    }
+
+    ?element rdfs:label ?label .
+    FILTER (lang(?label) = "###LANG###") .
+    OPTIONAL {
+        ?element rdfs:comment ?description .
+    	FILTER (lang(?description) = "###LANG###") .
+    }
+
+    ?dimension rdfs:label ?dimensionLabel .
+}
+ORDER BY ?dimensionLabel ?label

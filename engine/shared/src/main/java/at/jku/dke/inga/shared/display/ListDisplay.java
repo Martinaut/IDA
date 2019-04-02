@@ -48,6 +48,21 @@ public class ListDisplay extends Display {
     }
 
     /**
+     * Instantiates a new instance of class {@linkplain Display}.
+     *
+     * @param displayMessageResourceName The resource name in the {@code DisplayMessages}-resource for the message to display.
+     * @param locale                     The locale for the resource name.
+     * @param data                       The data to display in a list.
+     */
+    public ListDisplay(String displayMessageResourceName, Locale locale, Collection<? extends Displayable> data) {
+        super(displayMessageResourceName, locale);
+        if (data == null)
+            this.data = new ArrayList<>();
+        else
+            this.data = new ArrayList<>(data);
+    }
+
+    /**
      * Returns the data to display.
      *
      * @return The data that should be displayed in a list.

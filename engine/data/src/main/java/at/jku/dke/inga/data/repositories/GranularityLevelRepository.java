@@ -11,7 +11,6 @@ import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.ImmutableTriple;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
-import org.eclipse.rdf4j.query.BindingSet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -103,7 +102,7 @@ public class GranularityLevelRepository extends BaseRepository {
                 s -> s.replaceAll("###LANG###", lang).replaceAll("###CUBE###", cubeIri)
         )
                 .stream()
-                .map(x -> convert(lang, x))
+                .map(x -> RepositoryHelpers.convert(lang, x))
                 .collect(Collectors.toList());
     }
 
@@ -133,7 +132,7 @@ public class GranularityLevelRepository extends BaseRepository {
                         .replaceAll("###LEVEL###", dimension.getGranularityLevel())
         )
                 .stream()
-                .map(x -> convert(lang, x))
+                .map(x -> RepositoryHelpers.convert(lang, x))
                 .collect(Collectors.toList());
     }
 
@@ -163,7 +162,7 @@ public class GranularityLevelRepository extends BaseRepository {
                         .replaceAll("###LEVEL###", dimension.getGranularityLevel())
         )
                 .stream()
-                .map(x -> convert(lang, x))
+                .map(x -> RepositoryHelpers.convert(lang, x))
                 .collect(Collectors.toList());
     }
 
@@ -229,16 +228,5 @@ public class GranularityLevelRepository extends BaseRepository {
                                 .map(x -> '(' + convertToFullIriString(x.getGranularityLevel()) + ')')
                                 .collect(Collectors.joining(" "))
                         ));
-    }
-
-    private static DimensionLabel convert(String lang, BindingSet bindingSet) {
-        return new DimensionLabel(
-                lang,
-                bindingSet.getValue("dimension").stringValue(),
-                bindingSet.getValue("dimensionLabel").stringValue(),
-                bindingSet.getValue("element").stringValue(),
-                bindingSet.getValue("label").stringValue(),
-                bindingSet.hasBinding("description") ? bindingSet.getValue("description").stringValue() : null
-        );
     }
 }
