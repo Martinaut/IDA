@@ -19,6 +19,8 @@ public class OperationDisplayServiceModel extends DroolsServiceModel {
     private final Collection<String> measures;
     private final Graph<String> granularityLevelHierarchy;
     private final Collection<Pair<String, String>> sliceConditions;
+    private final Collection<String> baseMeasureConditions;
+    private final Collection<String> filters;
 
     /**
      * Instantiates a new instance of class {@link OperationDisplayServiceModel}.
@@ -30,10 +32,13 @@ public class OperationDisplayServiceModel extends DroolsServiceModel {
      * @param additionalData            Additional data.
      * @param measures                  The measures of the selected cube.
      * @param granularityLevelHierarchy The granularity level hierarchy.
+     * @param baseMeasureConditions     The base measure conditions.
+     * @param filters                   The filters.
      * @throws IllegalArgumentException If any of the parameters is {@code null} (except {@code locale} and {@code additionalData}).
      */
     public OperationDisplayServiceModel(String currentState, Locale locale, AnalysisSituation analysisSituation, String operation, Map<String, Object> additionalData,
-                                        Collection<String> measures, Graph<String> granularityLevelHierarchy, Collection<Pair<String, String>> sliceConditions) {
+                                        Collection<String> measures, Graph<String> granularityLevelHierarchy, Collection<Pair<String, String>> sliceConditions,
+                                        Collection<String> baseMeasureConditions, Collection<String> filters) {
         super(currentState, locale, analysisSituation, operation, additionalData);
 
         if (measures == null) throw new IllegalArgumentException("measures must not be null");
@@ -41,10 +46,16 @@ public class OperationDisplayServiceModel extends DroolsServiceModel {
             throw new IllegalArgumentException("granularityLevelHierarchy must not be null");
         if (sliceConditions == null)
             throw new IllegalArgumentException("sliceConditions must not be null");
+        if (baseMeasureConditions == null)
+            throw new IllegalArgumentException("baseMeasureConditions must not be null");
+        if (filters == null)
+            throw new IllegalArgumentException("filters must not be null");
 
         this.measures = Collections.unmodifiableCollection(measures);
         this.granularityLevelHierarchy = ImmutableGraph.copyOf(granularityLevelHierarchy);
         this.sliceConditions = Collections.unmodifiableCollection(sliceConditions);
+        this.baseMeasureConditions = Collections.unmodifiableCollection(baseMeasureConditions);
+        this.filters = Collections.unmodifiableCollection(filters);
     }
 
     // region --- MEASURES ---
@@ -193,9 +204,59 @@ public class OperationDisplayServiceModel extends DroolsServiceModel {
     }
     // endregion
 
-    // region --- TODO FILTERS ---
+    // region --- FILTERS ---
+
+    /**
+     * Returns all filters of the selected cube.
+     *
+     * @return All filters of the cube
+     */
+    public Collection<String> getFilters() {
+        return filters;
+    }
+
+    /**
+     * Returns all filters which are not already selected in the analysis situation.
+     *
+     * @return not already selected filters
+     */
+    public Collection<String> getNotSelectedFilters() {
+        if (filters.isEmpty()) return Collections.emptySet();
+        if (!(getAnalysisSituation() instanceof NonComparativeAnalysisSituation)) return Collections.emptySet();
+        NonComparativeAnalysisSituation as = (NonComparativeAnalysisSituation) getAnalysisSituation();
+
+        return filters.stream()
+                .filter(x -> !as.getFilterConditions().contains(x))
+                .collect(Collectors.toSet());
+
+    }
     // endregion
 
-    // region --- TODO BASE MEASURE CONDITIONS ---
+    // region --- BASE MEASURE CONDITIONS ---
+
+    /**
+     * Returns all base measure conditions of the selected cube.
+     *
+     * @return All base measure conditions of the cube
+     */
+    public Collection<String> getBaseMeasureConditions() {
+        return baseMeasureConditions;
+    }
+
+    /**
+     * Returns all base measure conditions which are not already selected in the analysis situation.
+     *
+     * @return not already selected base measure conditions
+     */
+    public Collection<String> getNotSelectedBaseMeasureConditions() {
+        if (baseMeasureConditions.isEmpty()) return Collections.emptySet();
+        if (!(getAnalysisSituation() instanceof NonComparativeAnalysisSituation)) return Collections.emptySet();
+        NonComparativeAnalysisSituation as = (NonComparativeAnalysisSituation) getAnalysisSituation();
+
+        return baseMeasureConditions.stream()
+                .filter(x -> !as.getBaseMeasureConditions().contains(x))
+                .collect(Collectors.toSet());
+
+    }
     // endregion
 }

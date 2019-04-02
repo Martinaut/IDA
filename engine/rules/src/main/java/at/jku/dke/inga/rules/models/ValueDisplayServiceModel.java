@@ -20,24 +20,30 @@ public class ValueDisplayServiceModel extends DroolsServiceModel {
     private final AggregateMeasureRepository aggregateMeasureRepository;
     private final GranularityLevelRepository granularityLevelRepository;
     private final LevelPredicateRepository levelPredicateRepository;
+    private final BaseMeasurePredicateRepository baseMeasurePredicateRepository;
+    private final AggregateMeasurePredicateRepository aggregateMeasurePredicateRepository;
 
     /**
      * Instantiates a new instance of class {@link ValueDisplayServiceModel}.
      *
-     * @param currentState               The current state of the state machine.
-     * @param locale                     The display locale.
-     * @param analysisSituation          The analysis situation.
-     * @param operation                  The operation the user wants to perform.
-     * @param additionalData             Additional data.
-     * @param simpleRepository The simple repository.
-     * @param aggregateMeasureRepository The aggregate measure repository.
-     * @param granularityLevelRepository The granularity level repository.
-     * @param levelPredicateRepository   The level predicate repository.
+     * @param currentState                        The current state of the state machine.
+     * @param locale                              The display locale.
+     * @param analysisSituation                   The analysis situation.
+     * @param operation                           The operation the user wants to perform.
+     * @param additionalData                      Additional data.
+     * @param simpleRepository                    The simple repository.
+     * @param cubeRepository                      The cube repository.
+     * @param aggregateMeasureRepository          The aggregate measure repository.
+     * @param granularityLevelRepository          The granularity level repository.
+     * @param levelPredicateRepository            The level predicate repository.
+     * @param baseMeasurePredicateRepository      The base measure predicate repository.
+     * @param aggregateMeasurePredicateRepository The aggregate measure predicate repository.
      * @throws IllegalArgumentException If any of the parameters is {@code null} (except {@code locale} and {@code additionalData}).
      */
     public ValueDisplayServiceModel(String currentState, Locale locale, AnalysisSituation analysisSituation, String operation, Map<String, Object> additionalData,
                                     SimpleRepository simpleRepository, CubeRepository cubeRepository, AggregateMeasureRepository aggregateMeasureRepository,
-                                    GranularityLevelRepository granularityLevelRepository, LevelPredicateRepository levelPredicateRepository) {
+                                    GranularityLevelRepository granularityLevelRepository, LevelPredicateRepository levelPredicateRepository,
+                                    BaseMeasurePredicateRepository baseMeasurePredicateRepository, AggregateMeasurePredicateRepository aggregateMeasurePredicateRepository) {
         super(currentState, locale, analysisSituation, operation, additionalData);
 
         if (operation == null)
@@ -52,12 +58,18 @@ public class ValueDisplayServiceModel extends DroolsServiceModel {
             throw new IllegalArgumentException("cubeRepository must not be null");
         if (levelPredicateRepository == null)
             throw new IllegalArgumentException("levelPredicateRepository must not be null");
+        if (baseMeasurePredicateRepository == null)
+            throw new IllegalArgumentException("baseMeasurePredicateRepository must not be null");
+        if (aggregateMeasurePredicateRepository == null)
+            throw new IllegalArgumentException("aggregateMeasurePredicateRepository must not be null");
 
         this.simpleRepository = simpleRepository;
         this.cubeRepository = cubeRepository;
         this.aggregateMeasureRepository = aggregateMeasureRepository;
         this.granularityLevelRepository = granularityLevelRepository;
         this.levelPredicateRepository = levelPredicateRepository;
+        this.baseMeasurePredicateRepository = baseMeasurePredicateRepository;
+        this.aggregateMeasurePredicateRepository = aggregateMeasurePredicateRepository;
     }
 
     /**
@@ -103,5 +115,23 @@ public class ValueDisplayServiceModel extends DroolsServiceModel {
      */
     public LevelPredicateRepository getLevelPredicateRepository() {
         return levelPredicateRepository;
+    }
+
+    /**
+     * Gets the base measure predicate repository.
+     *
+     * @return the base measure predicate repository
+     */
+    public BaseMeasurePredicateRepository getBaseMeasurePredicateRepository() {
+        return baseMeasurePredicateRepository;
+    }
+
+    /**
+     * Gets the aggregate measure predicate repository.
+     *
+     * @return the aggregate measure predicate repository
+     */
+    public AggregateMeasurePredicateRepository getAggregateMeasurePredicateRepository() {
+        return aggregateMeasurePredicateRepository;
     }
 }

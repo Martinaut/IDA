@@ -109,8 +109,8 @@ public class AnalysisSituationEventListener implements AnalysisSituationListener
             // region Set Labels
             newAs.setCube(lbls.getOrDefault(evtAs.getCube(), new Label(evtAs.getCube())).getLabel());
             evtAs.getMeasures().forEach(m -> newAs.addMeasure(lbls.getOrDefault(m, new Label(m)).getLabel()));
-            evtAs.getBaseMeasureConditions().forEach(bm -> newAs.addMeasure(lbls.getOrDefault(bm, new Label(bm)).getLabel()));
-            evtAs.getFilterConditions().forEach(f -> newAs.addMeasure(lbls.getOrDefault(f, new Label(f)).getLabel()));
+            evtAs.getBaseMeasureConditions().forEach(bm -> newAs.addBaseMeasureCondition(lbls.getOrDefault(bm, new Label(bm)).getLabel()));
+            evtAs.getFilterConditions().forEach(f -> newAs.addFilterCondition(lbls.getOrDefault(f, new Label(f)).getLabel()));
             evtAs.getDimensionQualifications().forEach(dq -> {
                 DimensionQualification mapped = new DimensionQualification();
                 mapped.setSliceConditions(new TreeSet<>());

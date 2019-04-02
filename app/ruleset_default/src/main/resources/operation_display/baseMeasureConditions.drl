@@ -7,32 +7,43 @@ import at.jku.dke.inga.shared.operations.Operation
 import at.jku.dke.inga.rules.models.OperationDisplayServiceModel
 
 // ---------------------- BASE MEASURE CONDITION OPERATIONS -------------------------
-rule "'Narrow Base Measure Condition' - if "
+rule "'Add Base Measure Condition' - if at least one predicate is available"
     agenda-group "operation-display-determination"
-    enabled false
 when
-    //$as : NonComparativeAnalysisSituation(measures.isEmpty() == false)
-    //$model : OperationDisplayServiceModel(notSelectedMeasures.isEmpty() == false)
+    $model : OperationDisplayServiceModel(notSelectedBaseMeasureConditions.isEmpty() == false)
 then
-    //insert(new Operation(EventNames., 50));
+    insert(new Operation(EventNames.NAVIGATE_BMC_NARROW, 50));
 end
 
-rule "'Broaden Base Measure Condition' - if "
+//rule "'Narrow Base Measure Condition' - if "
+//    agenda-group "operation-display-determination"
+//    enabled false
+//when
+//then
+//end
+
+rule "'Drop Base Measure Condition' - if at least one predicate is selected"
     agenda-group "operation-display-determination"
-    enabled false
 when
-    //$as : NonComparativeAnalysisSituation(measures.isEmpty() == false)
-    //$model : OperationDisplayServiceModel(notSelectedMeasures.isEmpty() == false)
+    $as : NonComparativeAnalysisSituation(baseMeasureConditions.isEmpty() == false)
+    $model : OperationDisplayServiceModel(analysisSituation == $as)
 then
-    //insert(new Operation(EventNames., 51));
+    insert(new Operation(EventNames.NAVIGATE_BMC_BROADEN, 52));
 end
 
-rule "'Refocus Base Measure Condition' - if at least one bmc is selected and one available"
+//rule "'Broaden Base Measure Condition' - if "
+//    agenda-group "operation-display-determination"
+//    enabled false
+//when
+//then
+//end
+
+rule "'Refocus Base Measure Condition' - if at least one predicate is selected and one available"
     agenda-group "operation-display-determination"
     enabled false
 when
-    //$as : NonComparativeAnalysisSituation(measures.isEmpty() == false)
-    //$model : OperationDisplayServiceModel(notSelectedMeasures.isEmpty() == false)
+    $as : NonComparativeAnalysisSituation(baseMeasureConditions.isEmpty() == false)
+    $model : OperationDisplayServiceModel(notSelectedBaseMeasureConditions.isEmpty() == false, analysisSituation == $as)
 then
-    //insert(new Operation(EventNames., 52));
+    insert(new Operation(EventNames.NAVIGATE_BMC_REFOCUS, 51));
 end

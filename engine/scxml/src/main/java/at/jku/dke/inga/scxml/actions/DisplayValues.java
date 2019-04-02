@@ -34,7 +34,9 @@ public class DisplayValues extends BaseAction {
                 BeanUtil.getBean(CubeRepository.class),
                 BeanUtil.getBean(AggregateMeasureRepository.class),
                 BeanUtil.getBean(GranularityLevelRepository.class),
-                BeanUtil.getBean(LevelPredicateRepository.class)
+                BeanUtil.getBean(LevelPredicateRepository.class),
+                BeanUtil.getBean(BaseMeasurePredicateRepository.class),
+                BeanUtil.getBean(AggregateMeasurePredicateRepository.class)
         );
         var interceptor = BeanUtil.getOptionalBean(DisplayValuesInterceptor.class);
         if (interceptor != null)

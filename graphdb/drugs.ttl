@@ -70,7 +70,7 @@ drugs:HighCostsPerUnitPredicate a qbx:BaseMeasurePredicate ;
 
 #-----------------------------------------------------------------------------------------------------
 # Measure Predicate: AGGREGATE
-drugs:HighDrugPrescriptionCostsPerUnitPreidicate a qbx:AggregateMeasurePredicate ;
+drugs:HighDrugPrescriptionCostsPerUnitPredicate a qbx:AggregateMeasurePredicate ;
   rdfs:label "High Drug Prescription Costs per Unit"@en ;
   rdfs:comment "High Drug Prescription Costs per Unit"@en ;
   qbx:over drugs:CostsPerUnitMeasure .

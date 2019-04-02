@@ -1,9 +1,7 @@
 package at.jku.dke.inga.scxml.actions;
 
 import at.jku.dke.inga.data.QueryException;
-import at.jku.dke.inga.data.repositories.AggregateMeasureRepository;
-import at.jku.dke.inga.data.repositories.GranularityLevelRepository;
-import at.jku.dke.inga.data.repositories.LevelPredicateRepository;
+import at.jku.dke.inga.data.repositories.*;
 import at.jku.dke.inga.rules.models.OperationDisplayServiceModel;
 import at.jku.dke.inga.rules.services.OperationDisplayService;
 import at.jku.dke.inga.scxml.interceptors.DisplayOperationsInterceptor;
@@ -42,11 +40,15 @@ public class DisplayOperations extends BaseAction {
         Set<String> measures = Collections.emptySet();
         MutableGraph<String> granularityLevels = GraphBuilder.directed().build();
         Set<Pair<String, String>> sliceConditions = Collections.emptySet();
+        Set<String> filters = Collections.emptySet();
+        Set<String> bmcs = Collections.emptySet();
         try {
             if (ctxModel.getAnalysisSituation() instanceof NonComparativeAnalysisSituation && ctxModel.getAnalysisSituation().isCubeDefined()) {
                 String cube = ((NonComparativeAnalysisSituation) ctxModel.getAnalysisSituation()).getCube();
                 measures = BeanUtil.getBean(AggregateMeasureRepository.class).getAllByCube(cube);
                 sliceConditions = BeanUtil.getBean(LevelPredicateRepository.class).getAllByCube(cube);
+                filters = BeanUtil.getBean(AggregateMeasurePredicateRepository.class).getAllByCube(cube);
+                bmcs = BeanUtil.getBean(BaseMeasurePredicateRepository.class).getAllByCube(cube);
                 buildGranularityLevelGraph(cube, granularityLevels);
             }
         } catch (QueryException ex) {
@@ -64,7 +66,9 @@ public class DisplayOperations extends BaseAction {
                 ctxModel.getAdditionalData(),
                 measures,
                 granularityLevels,
-                sliceConditions
+                sliceConditions,
+                bmcs,
+                filters
         );
 
         var interceptor = BeanUtil.getOptionalBean(DisplayOperationsInterceptor.class);

@@ -7,32 +7,43 @@ import at.jku.dke.inga.shared.operations.Operation
 import at.jku.dke.inga.rules.models.OperationDisplayServiceModel
 
 // ------------------------------ FILTER OPERATIONS --------------------------------
-rule "'Narrow Filter' - if "
+rule "'Add Filter' - if at least one filter is available"
     agenda-group "operation-display-determination"
-    enabled false
 when
-    //$as : NonComparativeAnalysisSituation(measures.isEmpty() == false)
-    //$model : OperationDisplayServiceModel(notSelectedMeasures.isEmpty() == false)
+    $model : OperationDisplayServiceModel(notSelectedFilters.isEmpty() == false)
 then
-    //insert(new Operation(EventNames., 60));
+    insert(new Operation(EventNames.NAVIGATE_FILTER_NARROW, 60));
 end
 
-rule "'Broaden Filter' - if "
+//rule "'Narrow Filter' - if "
+//    agenda-group "operation-display-determination"
+//    enabled false
+//when
+//then
+//end
+
+rule "'Drop Filter' - if at least one filter is selected"
     agenda-group "operation-display-determination"
-    enabled false
 when
-    //$as : NonComparativeAnalysisSituation(measures.isEmpty() == false)
-    //$model : OperationDisplayServiceModel(notSelectedMeasures.isEmpty() == false)
+    $as : NonComparativeAnalysisSituation(filterConditions.isEmpty() == false)
+    $model : OperationDisplayServiceModel(analysisSituation == $as)
 then
-    //insert(new Operation(EventNames., 61));
+    insert(new Operation(EventNames.NAVIGATE_FILTER_BROADEN, 62));
 end
 
-rule "'Refocus Filter' - if "
+//rule "'Broaden Filter' - if "
+//    agenda-group "operation-display-determination"
+//    enabled false
+//when
+//then
+//end
+
+rule "'Refocus Filter' - if at least one filter is selected and one available"
     agenda-group "operation-display-determination"
     enabled false
 when
-    //$as : NonComparativeAnalysisSituation(measures.isEmpty() == false)
-    //$model : OperationDisplayServiceModel(notSelectedMeasures.isEmpty() == false)
+    $as : NonComparativeAnalysisSituation(filterConditions.isEmpty() == false)
+    $model : OperationDisplayServiceModel(notSelectedFilters.isEmpty() == false, analysisSituation == $as)
 then
-    //insert(new Operation(EventNames., 62));
+    insert(new Operation(EventNames.NAVIGATE_FILTER_REFOCUS, 61));
 end
