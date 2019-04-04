@@ -110,6 +110,7 @@ public class Similarity implements Comparable<Similarity> {
     @Override
     public String toString() {
         return new StringJoiner(", ", Similarity.class.getSimpleName() + "[", "]")
+                .add("term='" + term + "'")
                 .add("cube='" + cube + "'")
                 .add("element='" + element + "'")
                 .add("score=" + score)
@@ -122,13 +123,14 @@ public class Similarity implements Comparable<Similarity> {
         if (o == null || getClass() != o.getClass()) return false;
         Similarity that = (Similarity) o;
         return Double.compare(that.score, score) == 0 &&
+                Objects.equals(term, that.term) &&
                 Objects.equals(cube, that.cube) &&
                 Objects.equals(element, that.element);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(cube, element, score);
+        return Objects.hash(term, cube, element, score);
     }
 
     @Override

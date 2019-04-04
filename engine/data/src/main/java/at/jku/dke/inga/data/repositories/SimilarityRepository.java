@@ -46,6 +46,7 @@ public class SimilarityRepository extends BaseRepository {
 
         return connection.getQueryResult(queryFile, s -> s.replaceAll("###TERM###", term))
                 .stream()
+                .filter(x -> x.hasBinding("cube") && x.hasBinding("element") && x.hasBinding("score"))
                 .map(x -> new Similarity(
                         term,
                         x.getValue("cube").stringValue(),

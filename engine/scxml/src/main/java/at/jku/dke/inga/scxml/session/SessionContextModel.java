@@ -54,6 +54,15 @@ public class SessionContextModel {
     }
 
     /**
+     * Gets session id.
+     *
+     * @return the session id
+     */
+    public String getSessionId() {
+        return sessionId;
+    }
+
+    /**
      * Gets the user input.
      *
      * @return the user input

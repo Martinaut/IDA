@@ -1,0 +1,42 @@
+package initial_sentence
+
+// ------------------------------------ IMPORT --------------------------------------
+import at.jku.dke.inga.app.ruleset.drools.InitialSentenceModel
+import at.jku.dke.inga.app.ruleset.helpers.InitialSentenceHelper
+import at.jku.dke.inga.app.ruleset.models.WordGroup
+import at.jku.dke.inga.data.models.Similarity
+import at.jku.dke.inga.app.nlp.NLPProcessor
+
+// ------------------------------------ RULES ---------------------------------------
+rule "Initial Sentence - Find Noun Compounds"
+    agenda-group "initial-sentence"
+when
+    $model : InitialSentenceModel(language == "en")
+    not WordGroup()
+then
+    for (WordGroup group : InitialSentenceHelper.convert(NLPProcessor.executeSemgrex($model.getAnnotatedText(), "{tag:/NN.*/}=B >compound {tag:/NN.*/}=A"))) {
+        insert(group);
+    }
+end
+
+rule "Initial Sentence - Find nouns with adjectival modifier"
+    agenda-group "initial-sentence"
+when
+    $model : InitialSentenceModel(language == "en")
+    not WordGroup()
+then
+    for (WordGroup group : InitialSentenceHelper.convert(NLPProcessor.executeSemgrex($model.getAnnotatedText(), "{tag:/NN.*/}=B >amod {tag:/JJ/}=A"))) {
+        insert(group);
+    }
+end
+
+rule "Initial Sentence - Wordgroup"
+    agenda-group "initial-sentence"
+when
+    $model : InitialSentenceModel(language == "en")
+    $wordGroup : WordGroup()
+then
+    for (Similarity s : InitialSentenceHelper.getSimilarities($wordGroup)) {
+        insert(s);
+    }
+end

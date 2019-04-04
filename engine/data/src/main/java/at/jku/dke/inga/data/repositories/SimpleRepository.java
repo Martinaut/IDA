@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -64,5 +65,17 @@ public class SimpleRepository extends BaseRepository {
                 .stream()
                 .distinct()
                 .collect(Collectors.toMap(Label::getUri, Function.identity()));
+    }
+
+    /**
+     * Returns the labels for all elements in the specified language.
+     *
+     * @param lang The requested language.
+     * @return Map with labels in the requested language.
+     * @throws IllegalArgumentException If {@code lang} is {@code null} or blank.
+     * @throws QueryException           If an exception occurred while executing the query (e.g. query file not found).
+     */
+    public List<Label> getLabelsByLang(String lang) throws QueryException {
+        return getLabelsByLang("/repo_simple/getLabelsByLang.sparql", lang);
     }
 }
