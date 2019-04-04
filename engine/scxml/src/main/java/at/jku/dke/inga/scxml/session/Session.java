@@ -8,6 +8,8 @@ import at.jku.dke.inga.shared.EventNames;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.scxml2.SCXMLExecutor;
 import org.apache.commons.scxml2.TriggerEvent;
+import org.apache.commons.scxml2.model.Data;
+import org.apache.commons.scxml2.model.Datamodel;
 import org.apache.commons.scxml2.model.ModelException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -78,6 +80,35 @@ public class Session {
         LOGGER.info("Triggering user-input event.");
         sessionContextModel.setUserInput(userInput);
         executor.triggerEvent(new TriggerEvent(EventNames.USER_INPUT, TriggerEvent.SIGNAL_EVENT));
+    }
+
+    /**
+     * Sets a flag whether the cube is already selected.
+     * <p>
+     * This flag is only used once on initialization of the state machine. The default value is {@code false}.
+     * Call this method before {@link #initiate()}.
+     * Additionally this method sets {@link SessionContextModel#getOperation()} to {@code null} if {@code set} is {@true};
+     * to {@link EventNames#NAVIGATE_CUBE_SELECT} otherwise.
+     *
+     * @param set {@code true} if the cube is selected; {@code false} otherwise.
+     */
+    public void setCubeSetFlag(boolean set) {
+        LOGGER.info("Setting cubeSelected flag to {}.", set);
+        Data data = executor.getStateMachine().getDatamodel().getData().stream()
+                .filter(x -> x.getId().equals("cubeSelected"))
+                .findFirst()
+                .orElse(null);
+        if (data == null) {
+            data = new Data();
+            data.setId("cubeSelected");
+            executor.getStateMachine().getDatamodel().addData(data);
+        }
+        data.setExpr(Boolean.toString(set));
+
+        if (set)
+            sessionContextModel.setOperation(null);
+        else
+            sessionContextModel.setOperation(EventNames.NAVIGATE_CUBE_SELECT);
     }
 
     /**

@@ -6,10 +6,20 @@
     <!-- Datamodel -->
     <datamodel>
         <data id="sessionId" expr=""/>
+        <data id="cubeSelected" expr="false"/>
     </datamodel>
 
+    <initial>
+        <transition target="AnalysisSituation"/>
+    </initial>
+
     <!-- Global State -->
-    <state id="AnalysisSituation" initial="Changing">
+    <state id="AnalysisSituation" initial="InitialDecision">
+        <state id="InitialDecision">
+            <transition target="Changing" cond="cubeSelected == false" />
+            <transition target="Executable" cond="cubeSelected == true" />
+        </state>
+
         <!-- Changing -->
         <state id="Changing" initial="DisplayingValues">
             <!-- DisplayingValues -->
