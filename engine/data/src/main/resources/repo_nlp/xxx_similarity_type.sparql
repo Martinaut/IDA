@@ -1,0 +1,39 @@
+PREFIX : <http://www.ontotext.com/graphdb/similarity/>
+PREFIX inst: <http://www.ontotext.com/graphdb/similarity/instance/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+
+SELECT ?element (MAX(?score) AS ?score)
+WHERE {
+    {
+        SELECT ?element ?documentID ?score1
+		WHERE {
+			?search a inst:wordnet ;
+					:searchTerm ?filterText ;
+					:searchParameters "" ;
+					:documentResult ?result .
+			?result :value ?documentID ;
+					:score ?score1 .
+			{
+				SELECT ?element ?filterText
+				WHERE {
+					?element rdf:type <###TYPE###> .
+					?element rdfs:label ?filterText .
+					FILTER(isLiteral(?filterText))
+				}
+			}
+		}
+    }
+    {
+        SELECT ?documentID ?score2 {
+            ?search a inst:wordnet ;
+                :searchTerm "###TERM###" ;
+                :searchParameters "" ;
+                :documentResult ?result .
+            ?result :value ?documentID ;
+                    :score ?score2 .
+        }
+    }
+    BIND((?score1 * ?score2) AS ?score)
+} GROUP BY ?element
+ORDER BY DESC(?score)

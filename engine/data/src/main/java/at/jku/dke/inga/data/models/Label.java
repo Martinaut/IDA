@@ -128,9 +128,6 @@ public class Label implements Displayable {
         this.description = description;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String toString() {
         return new StringJoiner(", ", Label.class.getSimpleName() + "[", "]")
@@ -141,40 +138,21 @@ public class Label implements Displayable {
                 .toString();
     }
 
-    /**
-     * Returns the identifier of the item.
-     *
-     * @return The unique identifier.
-     */
     @Override
     public String getDisplayableId() {
         return uri;
     }
 
-    /**
-     * Returns the title of the item.
-     *
-     * @return The title.
-     */
     @Override
     public String getTitle() {
         return label;
     }
 
-    /**
-     * Returns the details of the item.
-     * Details can be for example a description of the item.
-     *
-     * @return The details.
-     */
     @Override
     public String getDetails() {
         return description;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -186,9 +164,6 @@ public class Label implements Displayable {
                 Objects.equals(description, label1.description);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public int hashCode() {
         return Objects.hash(uri, lang, label, description);

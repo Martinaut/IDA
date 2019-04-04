@@ -1,0 +1,240 @@
+PREFIX : <http://www.ontotext.com/graphdb/similarity/>
+PREFIX inst: <http://www.ontotext.com/graphdb/similarity/instance/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX qbx: <http://dke.jku.at/inga/cubes#>
+PREFIX sim: <http://dke.jku.at/inga/similarity#>
+
+# -----------------------------------------------------------------------------------------
+# Aggregate Measure
+INSERT {
+    GRAPH sim:wordnet-scores-en {
+        ?mapping rdf:type sim:Mapping ;
+                 sim:inCube   ?cube ;
+                 sim:from     ?element ;
+                 sim:to       ?documentID ;
+                 sim:hasScore ?score .
+    }
+}
+WHERE
+{
+    SELECT ?mapping ?cube ?element ?documentID ?score
+    WHERE {
+        ?search a inst:wordnet ;
+                :searchTerm         ?filterText ;
+                :searchParameters   "" ;
+                :documentResult     ?result .
+        ?result :value ?documentID ;
+                :score ?score .
+        {
+            SELECT ?cube ?element ?filterText
+            WHERE {
+                ?cube qbx:measure ?measure .
+                ?measure rdf:type qbx:BaseMeasure .
+
+                ?element rdf:type        qbx:AggregateMeasure ;
+                         qbx:derivedFrom ?measure ;
+                         rdfs:label      ?filterText .
+
+                FILTER(isLiteral(?filterText)) .
+                FILTER(lang(?filterText) = "en") .
+            }
+        }
+        BIND(IRI(CONCAT("sim:mapping_", STRUUID())) AS ?mapping)
+    }
+}
+
+# -----------------------------------------------------------------------------------------
+# Aggregate Measure Predicate
+INSERT {
+    GRAPH sim:wordnet-scores-en {
+        ?mapping rdf:type sim:Mapping ;
+                 sim:inCube   ?cube ;
+                 sim:from     ?element ;
+                 sim:to       ?documentID ;
+                 sim:hasScore ?score .
+    }
+}
+WHERE
+{
+    SELECT ?mapping ?cube ?element ?documentID ?score
+    WHERE {
+        ?search a inst:wordnet ;
+                :searchTerm         ?filterText ;
+                :searchParameters   "" ;
+                :documentResult     ?result .
+        ?result :value ?documentID ;
+                :score ?score .
+        {
+            SELECT ?cube ?element ?filterText
+            WHERE {
+                ?cube qbx:measure ?measure .
+                ?measure rdf:type qbx:BaseMeasure .
+
+                ?aggMeasure rdf:type        qbx:AggregateMeasure ;
+                            qbx:derivedFrom+ ?measure .
+
+                ?element rdf:type   qbx:AggregateMeasurePredicate ;
+                         qbx:over   ?aggMeasure ;
+                         rdfs:label ?filterText.
+
+                FILTER(isLiteral(?filterText)) .
+                FILTER(lang(?filterText) = "en") .
+            }
+        }
+        BIND(IRI(CONCAT("sim:mapping_", STRUUID())) AS ?mapping)
+    }
+}
+
+# -----------------------------------------------------------------------------------------
+# Base Measure Predicate
+INSERT {
+    GRAPH sim:wordnet-scores-en {
+        ?mapping rdf:type sim:Mapping ;
+                 sim:inCube   ?cube ;
+                 sim:from     ?element ;
+                 sim:to       ?documentID ;
+                 sim:hasScore ?score .
+    }
+}
+WHERE
+{
+    SELECT ?mapping ?cube ?element ?documentID ?score
+    WHERE {
+        ?search a inst:wordnet ;
+                :searchTerm         ?filterText ;
+                :searchParameters   "" ;
+                :documentResult     ?result .
+        ?result :value ?documentID ;
+                :score ?score .
+        {
+            SELECT ?cube ?element ?filterText
+            WHERE {
+                ?cube qbx:measure ?measure .
+                ?measure rdf:type qbx:BaseMeasure .
+
+                ?element rdf:type   qbx:BaseMeasurePredicate ;
+                         qbx:over   ?measure ;
+                         rdfs:label ?filterText.
+
+                FILTER(isLiteral(?filterText)) .
+                FILTER(lang(?filterText) = "en") .
+            }
+        }
+        BIND(IRI(CONCAT("sim:mapping_", STRUUID())) AS ?mapping)
+    }
+}
+
+# -----------------------------------------------------------------------------------------
+# Level Predicate
+INSERT {
+    GRAPH sim:wordnet-scores-en {
+        ?mapping rdf:type sim:Mapping ;
+                 sim:inCube   ?cube ;
+                 sim:from     ?element ;
+                 sim:to       ?documentID ;
+                 sim:hasScore ?score .
+    }
+}
+WHERE
+{
+    SELECT ?mapping ?cube ?element ?documentID ?score
+    WHERE {
+        ?search a inst:wordnet ;
+                :searchTerm         ?filterText ;
+                :searchParameters   "" ;
+                :documentResult     ?result .
+        ?result :value ?documentID ;
+                :score ?score .
+        {
+            SELECT DISTINCT ?cube ?element ?filterText
+            WHERE {
+                {
+                    ?element rdf:type qbx:LevelPredicate ;
+                             qbx:over ?level .
+                }
+                UNION
+                {
+                    ?pred qbx:over ?level .
+                    ?element rdf:type qbx:ConjunctiveLevelPredicate ;
+                          	 qbx:conjunct ?pred .
+                }
+
+                {
+                    SELECT DISTINCT ?cube ?dimension ?level
+                    WHERE {
+                        {
+                            ?cube qbx:dimension ?dimension .
+                			?dimension qbx:hasHierarchy ?hier .
+                			?hs qbx:inHierarchy ?hier ;
+                				qbx:childLevel ?level .
+                        } UNION {
+                            ?cube qbx:dimension ?dimension .
+                			?dimension qbx:hasHierarchy ?hier .
+                			?hs qbx:inHierarchy ?hier ;
+                				qbx:parentLevel ?level .
+                        }
+                    }
+                }
+
+                ?element rdfs:label ?filterText .
+                FILTER(isLiteral(?filterText)) .
+                FILTER(lang(?filterText) = "en") .
+            }
+        }
+        BIND(IRI(CONCAT("sim:mapping_", STRUUID())) AS ?mapping)
+    }
+}
+
+# -----------------------------------------------------------------------------------------
+# Granularity Level
+INSERT {
+    GRAPH sim:wordnet-scores-en {
+        ?mapping rdf:type sim:Mapping ;
+                 sim:inCube   ?cube ;
+                 sim:from     ?element ;
+                 sim:to       ?documentID ;
+                 sim:hasScore ?score .
+    }
+}
+WHERE
+{
+    SELECT ?mapping ?cube ?element ?documentID ?score
+    WHERE {
+        ?search a inst:wordnet ;
+                :searchTerm         ?filterText ;
+                :searchParameters   "" ;
+                :documentResult     ?result .
+        ?result :value ?documentID ;
+                :score ?score .
+        {
+            SELECT DISTINCT ?cube ?element ?filterText
+            WHERE {
+            	{
+            	    SELECT ?cube ?element
+            	    WHERE {
+                        ?cube qbx:dimension ?dimension .
+                        ?dimension qbx:hasHierarchy ?hier .
+                        ?hs qbx:inHierarchy ?hier ;
+                            qbx:parentLevel ?element .
+            	    }
+            	}
+            	UNION
+            	{
+            	    SELECT ?cube ?element
+            	    WHERE {
+                        ?cube qbx:dimension ?dimension .
+                        ?dimension qbx:hasHierarchy ?hier .
+                        ?hs qbx:inHierarchy ?hier ;
+                            qbx:childLevel ?element .
+            	    }
+            	}
+
+                ?element rdfs:label ?filterText .
+                FILTER(isLiteral(?filterText)) .
+                FILTER(lang(?filterText) = "en") .
+            }
+        }
+        BIND(IRI(CONCAT("sim:mapping_", STRUUID())) AS ?mapping)
+    }
+}

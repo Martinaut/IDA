@@ -83,9 +83,6 @@ public class DimensionLabel extends Label {
         this.dimensionLabel = dimensionLabel;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String toString() {
         return new StringJoiner(", ", DimensionLabel.class.getSimpleName() + "[", "]")
@@ -98,11 +95,6 @@ public class DimensionLabel extends Label {
                 .toString();
     }
 
-    /**
-     * Returns the title of the item.
-     *
-     * @return The title.
-     */
     @Override
     public String getTitle() {
         return dimensionLabel + ": " + super.getTitle();
