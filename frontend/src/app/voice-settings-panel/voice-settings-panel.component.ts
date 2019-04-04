@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { TextToSpeechService } from '../services';
+import { SpeechToTextService, TextToSpeechService } from '../services';
 
 @Component({
   selector: 'app-voice-settings-panel',
@@ -10,6 +10,7 @@ export class VoiceSettingsPanelComponent implements OnInit, OnDestroy {
 
   isCollapsed: boolean;
   ttsSupported: boolean;
+  autoStartListening: boolean;
 
   voices: SpeechSynthesisVoice[];
   sub: Subscription;
@@ -17,7 +18,8 @@ export class VoiceSettingsPanelComponent implements OnInit, OnDestroy {
   /**
    * Initializes a new instance of class VoiceSettingsPanelComponent.
    */
-  constructor(public tts: TextToSpeechService) {
+  constructor(public tts: TextToSpeechService,
+              private stt: SpeechToTextService) {
     this.isCollapsed = true;
   }
 

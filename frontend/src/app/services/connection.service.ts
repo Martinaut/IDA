@@ -1,6 +1,6 @@
-import {Injectable} from '@angular/core';
-import {Client, IFrame, IMessage, StompSubscription} from '@stomp/stompjs';
-import {Observable, Subject} from 'rxjs';
+import { Injectable } from '@angular/core';
+import { Client, IFrame, IMessage, StompSubscription } from '@stomp/stompjs';
+import { Observable, Subject } from 'rxjs';
 
 /**
  * A service that manages the websocket connection.
@@ -10,6 +10,7 @@ import {Observable, Subject} from 'rxjs';
 })
 export class ConnectionService {
 
+  private initializedStateChangedSource = new Subject<boolean>();
   private connectionStateChangedSource = new Subject<boolean>();
   private resultMessageReceivedSource = new Subject<string>();
   private asMessageReceivedSource = new Subject<string>();
@@ -17,14 +18,17 @@ export class ConnectionService {
   private client: Client;
   private resultSub: StompSubscription;
   private asSub: StompSubscription;
-  private language: string;
+  private initialData: any;
 
   /**
    * Initializes a new instance of class ConnectionService.
    */
   constructor() {
     this.client = null;
-    this.language = 'en';
+    this.initialData = {
+      locale: 'en',
+      initialSentence: null
+    };
   }
 
   // region --- Events ---
@@ -34,6 +38,14 @@ export class ConnectionService {
    */
   get connectionStateChanged(): Observable<boolean> {
     return this.connectionStateChangedSource.asObservable();
+  }
+
+  /**
+   * This events gets emitted when the initialization status of the websocket client changed.
+   * true = initialized, false = not initialized
+   */
+  get initializedStateChanged(): Observable<boolean> {
+    return this.initializedStateChangedSource.asObservable();
   }
 
   /**
@@ -56,17 +68,33 @@ export class ConnectionService {
 
   /**
    * Sends a message to the server.
+   * If the client is initialized but not connected, the method sends the start message instead of the user input message.
    *
    * @param input The user input.
    */
   sendMessage(input: string): void {
-    const bodyData = JSON.stringify({userInput: input});
-    console.log('>>> SEND MESSAGE \r\n' + bodyData);
+    if (this.client == null) {
+      throw new Error('Client not initialized.');
+    }
+    if (!this.isConnected()) {
+      this.initialData.initialSentence = input;
+      this.client.activate();
+    } else {
+      const bodyData = JSON.stringify({userInput: input});
+      console.log('>>> SEND MESSAGE \r\n' + bodyData);
 
-    this.client.publish({
-      destination: '/app/input',
-      body: bodyData
-    });
+      this.client.publish({
+        destination: '/app/input',
+        body: bodyData
+      });
+    }
+  }
+
+  /**
+   * Returns whether the client is initialized and ready to connect.
+   */
+  isInitialized(): boolean {
+    return this.client != null;
   }
 
   /**
@@ -94,11 +122,12 @@ export class ConnectionService {
       this.client.deactivate();
       this.client = null;
       this.connectionStateChangedSource.next(false);
+      this.initializedStateChangedSource.next(false);
     }
   }
 
   /**
-   * Connects the websocket.
+   * Initializes the websocket.
    *
    * @param url The websocket url.
    * @param language The requested language.
@@ -108,7 +137,10 @@ export class ConnectionService {
       return;
     }
 
-    this.language = language;
+    this.initialData = {
+      locale: 'en',
+      initialSentence: null
+    };
     this.client = new Client({
       brokerURL: url,
       onConnect: receipt => this.onConnected(receipt),
@@ -117,9 +149,9 @@ export class ConnectionService {
       debug: msg => console.log(msg)
     });
 
-    this.client.activate();
     this.asMessageReceivedSource.next(null); // reset AS panel
     this.resultMessageReceivedSource.next(null); // reset result panel
+    this.initializedStateChangedSource.next(true);
   }
 
   private onConnected(frame: IFrame): void {
@@ -128,7 +160,7 @@ export class ConnectionService {
     this.connectionStateChangedSource.next(true);
     this.client.publish({
       destination: '/app/start',
-      body: JSON.stringify({locale: this.language})
+      body: JSON.stringify(this.initialData)
     });
   }
 

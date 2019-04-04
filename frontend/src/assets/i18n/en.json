@@ -50,6 +50,7 @@
 		"voice": "Voice",
 		"volume": "Volume",
     "true": "yes",
-    "false": "no"
+    "false": "no",
+    "autoStart": "Auto Start Listening"
 	}
 }

@@ -1,5 +1,5 @@
-import {Injectable} from '@angular/core';
-import {Observable, Subject} from 'rxjs';
+import { Injectable } from '@angular/core';
+import { Observable, Subject } from 'rxjs';
 
 // Based on https://github.com/tom-s/speak-tts/blob/master/src/speak-tts.js
 /**
@@ -246,7 +246,6 @@ export class TextToSpeechService {
       localStorage.removeItem('inga.voice.' + this.language);
     }, timeout);
   }
-
   // endregion
 
   // region --- Helper-Methods ---

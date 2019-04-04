@@ -12,7 +12,7 @@
         <select id="voiceControl" class="form-control" [(ngModel)]="tts.voiceUri">
           <option value="" [translate]="'tts.standardVoice'">Use standard voice</option>
           <option *ngFor="let v of voices" [value]="v.voiceURI">
-            {{ v.name }} ({{ 'tts.local' | translate }} : {{ 'tts.' + v.localService | translate }}) <!-- Local -->
+            {{ v.name }} ({{ 'tts.local' | translate }} : {{ 'tts.' + v.localService | translate }})
           </option>
         </select>
       </div>
@@ -42,6 +42,13 @@
         </label>
         <input type="range" id="pitchControl" class="mt-2 custom-range"
                min="0" max="2" step="0.1" [(ngModel)]="tts.pitch"/>
+      </div>
+
+      <div class="form-group col-md-6">
+        <div class="custom-control custom-checkbox">
+          <input type="checkbox" class="custom-control-input" id="autoStartControl" [(ngModel)]="stt.autoStart">
+          <label class="custom-control-label" for="autoStartControl" [translate]="'tts.autoStart'">Auto Start Listening</label>
+        </div>
       </div>
     </div>
   </div>

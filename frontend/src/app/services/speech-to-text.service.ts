@@ -1,5 +1,5 @@
-import {Injectable} from '@angular/core';
-import {Observable, Subject} from 'rxjs';
+import { Injectable } from '@angular/core';
+import { Observable, Subject } from 'rxjs';
 
 /**
  * Service providing Speech to Text functionality.
@@ -15,6 +15,8 @@ export class SpeechToTextService {
 
   private speechRecognition: SpeechRecognition;
 
+  private _autoStart: boolean;
+
   /**
    * Initializes a new instance of class TextToSpeechService.
    */
@@ -28,6 +30,7 @@ export class SpeechToTextService {
       this.speechRecognition.onend = evt => this.endedSource.next(evt);
       this.speechRecognition.onresult = evt => this.resultAvailableSource.next(evt);
       this.speechRecognition.onerror = evt => console.log('Error during speech recognition: ' + evt);
+      this.autoStart = this.getValueFromStorage('inga.voice.autoStart', 'yes') === 'yes';
       this.setLanguage(this.getValueFromStorage('inga.lang', 'en'));
     }
   }
@@ -106,6 +109,24 @@ export class SpeechToTextService {
     } else {
       throw new Error('Error setting language. Please verify the language value is a valid language.');
     }
+  }
+
+  /**
+   * Returns whether listening should start automatically.
+   * This has no effect in this class. This value can be used in other parts.
+   */
+  get autoStart(): boolean {
+    return this._autoStart;
+  }
+
+  /**
+   * Sets whether listening should start automatically.
+   *
+   * @param value True or False
+   */
+  set autoStart(value: boolean) {
+    this._autoStart = value;
+    localStorage.setItem('inga.voice.autoStart', value ? 'yes' : 'no');
   }
 
   private getValueFromStorage(key: string, fallback) {

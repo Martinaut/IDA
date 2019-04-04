@@ -1,17 +1,23 @@
 package at.jku.dke.inga.web.controllers;
 
 import at.jku.dke.inga.scxml.exceptions.*;
+import at.jku.dke.inga.scxml.session.Session;
+import at.jku.dke.inga.scxml.session.SessionContextModel;
 import at.jku.dke.inga.scxml.session.SessionManager;
 import at.jku.dke.inga.shared.display.ErrorDisplay;
 import at.jku.dke.inga.web.models.InputMessage;
 import at.jku.dke.inga.web.models.StartDialogueMessage;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageExceptionHandler;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.stereotype.Controller;
+
+import java.util.Optional;
 
 /**
  * This controller defines the websocket endpoints.
@@ -21,10 +27,16 @@ public class WebsocketController {
 
     private static final Logger LOGGER = LogManager.getLogger(WebsocketController.class);
 
+    private final InitialSentenceHandler sentenceHandler;
+
     /**
      * Instantiates a new instance of class {@linkplain WebsocketController}.
+     *
+     * @param sentenceHandler The sentence handler.
      */
-    public WebsocketController() {
+    @Autowired
+    public WebsocketController(Optional<InitialSentenceHandler> sentenceHandler) {
+        this.sentenceHandler = sentenceHandler.orElse(null);
     }
 
     /**
@@ -38,6 +50,12 @@ public class WebsocketController {
     public void start(@Payload StartDialogueMessage message, SimpMessageHeaderAccessor headerAccessor) throws StateMachineInstantiationException {
         LOGGER.info("{} - Start message received", headerAccessor.getSessionId());
         SessionManager.getInstance().createSession(headerAccessor.getSessionId(), message.getLocale());
+        if (!StringUtils.isBlank(message.getInitialSentence()) && sentenceHandler != null) {
+            Session session = SessionManager.getInstance().getSession(headerAccessor.getSessionId());
+            if (session != null) // This should be always the case
+                sentenceHandler.parseSentence(session.getSessionContextModel(), message.getInitialSentence());
+        }
+        SessionManager.getInstance().initiateStateMachine(headerAccessor.getSessionId());
     }
 
     /**

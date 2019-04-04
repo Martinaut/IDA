@@ -36,7 +36,7 @@ export class ConnectionPanelComponent implements OnInit, OnDestroy {
     this.serverUrl = this.getUrlFromStorage();
     this.isConnected = false;
     this.isCollapsed = false;
-    this.connectionService.connectionStateChanged.subscribe(value => {
+    this.connectionService.initializedStateChanged.subscribe(value => {
       this.isConnected = value;
       // this.isCollapsed = value;
     });

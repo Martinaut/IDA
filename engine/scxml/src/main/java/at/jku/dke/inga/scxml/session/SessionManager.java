@@ -69,7 +69,24 @@ public final class SessionManager {
             // Create Session
             Session session = new Session(sessionId, locale, BeanUtil.getBean(DisplayListener.class), BeanUtil.getBean(AnalysisSituationListener.class));
             sessions.put(sessionId, session);
-            session.initiate();
+        }
+    }
+
+    /**
+     * Initiates the state machine of the session.
+     * If the session id was not found, nothing will happen.
+     *
+     * @param sessionId The session id.
+     * @throws IllegalArgumentException If the {@code sessionId} is {@code null} or empty.
+     */
+    public void initiateStateMachine(String sessionId) {
+        if (StringUtils.isBlank(sessionId)) throw new IllegalArgumentException("sessionId must not be null empty");
+
+        synchronized (sessions) {
+            if (!sessions.containsKey(sessionId)) return;
+
+            LOGGER.info("Initiating session {} state machine.", sessionId);
+            sessions.get(sessionId).initiate();
         }
     }
 

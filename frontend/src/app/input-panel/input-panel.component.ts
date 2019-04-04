@@ -59,7 +59,12 @@ export class InputPanelComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     this.sttSupported = SpeechToTextService.isSupported();
-    this.connSub = this.connectionService.connectionStateChanged.subscribe(value => this.connected = value);
+    this.connSub = this.connectionService.initializedStateChanged.subscribe(value => {
+      this.connected = value;
+      if (!value) {
+        this.stt.stop();
+      }
+    });
     this.resSub = this.connectionService.resultMessageReceived.subscribe(value => {
       this.waitingForResult = false;
       this.userInput = null;
@@ -67,7 +72,14 @@ export class InputPanelComponent implements OnInit, OnDestroy {
       if (value != null && JSON.parse(value).type === 'ExitDisplay') {
         this.connectionService.disconnect();
       } else {
-        setTimeout(() => this.inputField.nativeElement.focus(), 100);
+        setTimeout(() => {
+          console.log('result received');
+          this.inputField.nativeElement.focus();
+
+          if (this.stt.autoStart) {
+            this.stt.start();
+          }
+        }, 100);
       }
     });
     this.speechStartSub = this.stt.started.subscribe(value => {
@@ -77,6 +89,10 @@ export class InputPanelComponent implements OnInit, OnDestroy {
     this.speechEndSub = this.stt.ended.subscribe(value => {
       this.recording = false;
       this.changeDetector.detectChanges();
+
+      if (this.userInput != null && this.userInput.trim().length > 0) {
+        this.sendMessage();
+      }
     });
     this.speechResultSub = this.stt.resultAvailable.subscribe(value => {
       this.userInput = value.results[value.results.length - 1][0].transcript;
