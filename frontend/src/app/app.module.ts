@@ -16,6 +16,7 @@ import { VoiceSettingsPanelComponent } from './voice-settings-panel/voice-settin
 import { TwoListDisplayComponent } from './result/two-list-display/two-list-display.component';
 import { NonComparativeComponent } from './analysis-situation-panel/non-comparative/non-comparative.component';
 import { ComparativeComponent } from './analysis-situation-panel/comparative/comparative.component';
+import { ErrorDisplayComponent } from './result/error-display/error-display.component';
 
 /**
  * The application module with all components.
@@ -31,7 +32,8 @@ import { ComparativeComponent } from './analysis-situation-panel/comparative/com
     VoiceSettingsPanelComponent,
     TwoListDisplayComponent,
     NonComparativeComponent,
-    ComparativeComponent
+    ComparativeComponent,
+    ErrorDisplayComponent
   ],
   imports: [
     BrowserModule,

@@ -45,7 +45,7 @@ export class InputPanelComponent implements OnInit, OnDestroy {
    * Sends a message with the user input to the server.
    */
   sendMessage(): void {
-    if (this.userInput == null || this.userInput.trim().length === 0) {
+    if ((this.userInput == null || this.userInput.trim().length === 0) && this.connectionService.isConnected()) {
       this.inputError = true;
       return;
     }

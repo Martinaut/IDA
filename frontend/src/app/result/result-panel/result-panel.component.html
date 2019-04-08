@@ -1,5 +1,6 @@
 <div [ngSwitch]="type">
   <app-list-display *ngSwitchCase="'ListDisplay'" [display]="display"></app-list-display>
   <app-two-list-display *ngSwitchCase="'TwoListDisplay'" [display]="display"></app-two-list-display>
+  <app-error-display *ngSwitchCase="'ErrorDisplay'" [display]="display"></app-error-display>
   <div *ngSwitchDefault></div>
 </div>
