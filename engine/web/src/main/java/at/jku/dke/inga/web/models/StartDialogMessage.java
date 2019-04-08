@@ -3,24 +3,24 @@ package at.jku.dke.inga.web.models;
 /**
  * A message containing settings to start a new dialog.
  */
-public class StartDialogueMessage {
+public class StartDialogMessage {
 
     private String locale;
     private String initialSentence;
 
     /**
-     * Instantiates a new instance of class {@linkplain StartDialogueMessage}.
+     * Instantiates a new instance of class {@linkplain StartDialogMessage}.
      */
-    public StartDialogueMessage() {
+    public StartDialogMessage() {
     }
 
     /**
-     * Instantiates a new instance of class {@linkplain StartDialogueMessage}.
+     * Instantiates a new instance of class {@linkplain StartDialogMessage}.
      *
      * @param locale          The locale.
      * @param initialSentence The initial sentence.
      */
-    public StartDialogueMessage(String locale, String initialSentence) {
+    public StartDialogMessage(String locale, String initialSentence) {
         this.locale = locale;
         this.initialSentence = initialSentence;
     }

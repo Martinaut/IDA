@@ -8,6 +8,7 @@ import at.jku.dke.inga.shared.EventNames;
 import at.jku.dke.inga.shared.display.Display;
 import at.jku.dke.inga.shared.models.AnalysisSituation;
 import at.jku.dke.inga.shared.models.NonComparativeAnalysisSituation;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.HashMap;
 import java.util.Locale;
@@ -38,8 +39,12 @@ public class SessionContextModel {
      * @param locale     The locale of the context.
      * @param listener   The listener for listening for available display data.
      * @param asListener The listener for listening for changes of the analysis situation.
+     * @throws IllegalArgumentException If the {@code sessionId} or {@code locale} is {@code null} or empty or blank.
      */
     SessionContextModel(String sessionId, String locale, DisplayListener listener, AnalysisSituationListener asListener) {
+        if (StringUtils.isBlank(sessionId)) throw new IllegalArgumentException("sessionId must not be null empty");
+        if (StringUtils.isBlank(locale)) throw new IllegalArgumentException("locale must not be null empty");
+
         this.sessionId = sessionId;
         this.locale = new Locale(locale);
         this.listener = listener;

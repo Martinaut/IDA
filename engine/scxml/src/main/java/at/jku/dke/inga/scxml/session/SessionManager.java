@@ -67,7 +67,11 @@ public final class SessionManager {
             }
 
             // Create Session
-            Session session = new Session(sessionId, locale, BeanUtil.getBean(DisplayListener.class), BeanUtil.getBean(AnalysisSituationListener.class));
+            Session session = new Session(
+                    sessionId,
+                    locale,
+                    BeanUtil.getOptionalBean(DisplayListener.class),
+                    BeanUtil.getOptionalBean(AnalysisSituationListener.class));
             sessions.put(sessionId, session);
         }
     }

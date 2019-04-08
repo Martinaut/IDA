@@ -2,11 +2,10 @@ package at.jku.dke.inga.web.controllers;
 
 import at.jku.dke.inga.scxml.exceptions.*;
 import at.jku.dke.inga.scxml.session.Session;
-import at.jku.dke.inga.scxml.session.SessionContextModel;
 import at.jku.dke.inga.scxml.session.SessionManager;
 import at.jku.dke.inga.shared.display.ErrorDisplay;
 import at.jku.dke.inga.web.models.InputMessage;
-import at.jku.dke.inga.web.models.StartDialogueMessage;
+import at.jku.dke.inga.web.models.StartDialogMessage;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -47,7 +46,7 @@ public class WebsocketController {
      * @throws StateMachineInstantiationException If the state machine could not be instantiated.
      */
     @MessageMapping("/start")
-    public void start(@Payload StartDialogueMessage message, SimpMessageHeaderAccessor headerAccessor) throws StateMachineInstantiationException {
+    public void start(@Payload StartDialogMessage message, SimpMessageHeaderAccessor headerAccessor) throws StateMachineInstantiationException {
         LOGGER.info("{} - Start message received", headerAccessor.getSessionId());
         SessionManager.getInstance().createSession(headerAccessor.getSessionId(), message.getLocale());
         if (!StringUtils.isBlank(message.getInitialSentence()) && sentenceHandler != null) {

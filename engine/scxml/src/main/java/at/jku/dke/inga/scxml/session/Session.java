@@ -30,10 +30,11 @@ public class Session {
      *
      * @param sessionId The session id.
      * @throws StateMachineInstantiationException If the state machine could not be instantiated.
-     * @throws IllegalArgumentException           If the {@code sessionId} is {@code null} or empty or blank.
+     * @throws IllegalArgumentException           If the {@code sessionId} or {@code locale} is {@code null} or empty or blank.
      */
     Session(String sessionId, String locale, DisplayListener listener, AnalysisSituationListener asListener) throws StateMachineInstantiationException {
         if (StringUtils.isBlank(sessionId)) throw new IllegalArgumentException("sessionId must not be null empty");
+        if (StringUtils.isBlank(locale)) throw new IllegalArgumentException("locale must not be null empty");
         this.sessionId = sessionId;
         this.executor = StateMachineFactory.create(sessionId);
         this.sessionContextModel = new SessionContextModel(sessionId, locale, listener, asListener);

@@ -25,7 +25,19 @@ class SimilarityRepositoryTest {
         // Prepare
 
         // Execute
-        List<Similarity> labels = repository.getSimilarity("en", "amount");
+        List<Similarity> labels = repository.getTermSimilarity("en", "amount");
+        System.out.println(labels);
+
+        // Assert
+        assertFalse(labels.isEmpty());
+    }
+
+    @Test
+    void testFindByLang2() throws QueryException {
+        // Prepare
+
+        // Execute
+        List<Similarity> labels = repository.getWordSimilarity("en", "doctor district");
         System.out.println(labels);
 
         // Assert
