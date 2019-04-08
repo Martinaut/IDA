@@ -1,0 +1,11 @@
+{
+    SELECT ?w###NO### ?score###NO###
+    WHERE {
+        ?search a inst:wordnet ;
+                :searchTerm "###TERM###" ;
+                :searchParameters "" ;
+                :documentResult ?result .
+        ?result :value ?w###NO### ;
+                :score ?score###NO### .
+    }
+}

@@ -1,0 +1,23 @@
+PREFIX : <http://www.ontotext.com/graphdb/similarity/>
+PREFIX inst: <http://www.ontotext.com/graphdb/similarity/instance/>
+PREFIX sim: <http://dke.jku.at/inga/similarity#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+
+SELECT ?cube (?from AS ?element) (MAX(?finalScore) AS ?score)
+WHERE {
+    SELECT DISTINCT (?cube0 AS ?cube) ?from (###SCORE_MAP_MULT### * ?score AS ?finalScore)
+    WHERE {
+        GRAPH sim:wordnet-scores-en {
+            ###PARTS_MAPPING###
+            ###FILTERS###
+        }
+        {
+            SELECT ###WORDNETS### (###SCORE_SIM_MULT### AS ?score)
+            WHERE {
+                ###PARTS_SIM###
+            }
+        }
+    }
+}
+GROUP BY ?cube ?from
+ORDER BY DESC(?score)

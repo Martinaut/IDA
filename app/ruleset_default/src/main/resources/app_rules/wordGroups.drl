@@ -1,0 +1,57 @@
+package app_rules
+
+// ------------------------------------ IMPORT --------------------------------------
+import at.jku.dke.inga.app.ruleset.models.WordGroupsServiceModel
+import at.jku.dke.inga.app.ruleset.helpers.WordGroupsHelper
+import at.jku.dke.inga.app.ruleset.models.WordGroup
+
+// ------------------------------------ RULES ---------------------------------------
+rule "Word Groups - Find Noun Compounds"
+    agenda-group "word-groups"
+when
+    $model : WordGroupsServiceModel(language == "en")
+then
+    for (WordGroup group : WordGroupsHelper.executeSemgrex($model.getAnnotatedText(), "{tag:/NN.*/}=B >compound {tag:/NN.*/}=A")) {
+        insert(group);
+    }
+end
+
+rule "Word Groups - Find nouns with adjectival modifier"
+    agenda-group "word-groups"
+when
+    $model : WordGroupsServiceModel(language == "en")
+then
+    for (WordGroup group : WordGroupsHelper.executeSemgrex($model.getAnnotatedText(), "{tag:/NN.*/}=B >amod {tag:/JJ/}=A")) {
+        insert(group);
+    }
+end
+
+rule "Word Groups - Find sibling nouns"
+    agenda-group "word-groups"
+when
+    $model : WordGroupsServiceModel(language == "en")
+then
+    for (WordGroup group : WordGroupsHelper.executeTregex($model.getAnnotatedText(), "/NN.?/=A $+ /NN.?/=B")) {
+        insert(group);
+    }
+end
+
+rule "Word Groups - Find single nouns"
+    agenda-group "word-groups"
+when
+    $model : WordGroupsServiceModel(language == "en")
+then
+    for (WordGroup group : WordGroupsHelper.executeTregex($model.getAnnotatedText(), "NP < /NN.?/=A")) {
+        insert(group);
+    }
+end
+
+rule "Word Groups - Find single noun phrases"
+    agenda-group "word-groups"
+when
+    $model : WordGroupsServiceModel(language == "en")
+then
+    for (WordGroup group : WordGroupsHelper.executeTregex($model.getAnnotatedText(), "NP < /NN.?/=A & !(NP < (/NN.?/ $++ /NN.?/))")) {
+        insert(group);
+    }
+end

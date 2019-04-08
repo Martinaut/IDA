@@ -1,0 +1,37 @@
+package core_rules.set_value
+
+// ------------------------------------ IMPORT --------------------------------------
+import at.jku.dke.inga.shared.models.NonComparativeAnalysisSituation
+import at.jku.dke.inga.shared.EventNames
+import at.jku.dke.inga.shared.display.Displayable
+import at.jku.dke.inga.rules.models.SetValueServiceModel
+import org.apache.commons.lang3.tuple.Pair
+
+// ------------------------------------ RULES ---------------------------------------
+rule "Add measure"
+    agenda-group "set-value"
+when
+    $as : NonComparativeAnalysisSituation()
+    $model : SetValueServiceModel(operation == EventNames.NAVIGATE_MEASURE_ADD, analysisSituation == $as, value instanceof Displayable)
+then
+    $as.addMeasure(((Displayable)$model.getValue()).getDisplayableId());
+end
+
+rule "Drop measure"
+    agenda-group "set-value"
+when
+    $as : NonComparativeAnalysisSituation()
+    $model : SetValueServiceModel(operation == EventNames.NAVIGATE_MEASURE_DROP, analysisSituation == $as, value instanceof Displayable)
+then
+    $as.removeMeasure(((Displayable)$model.getValue()).getDisplayableId());
+end
+
+rule "Refocus measure"
+    agenda-group "set-value"
+when
+    $as : NonComparativeAnalysisSituation()
+    $model : SetValueServiceModel(operation == EventNames.NAVIGATE_MEASURE_REFOCUS, analysisSituation == $as, value instanceof Pair)
+then
+    $as.removeMeasure(((Pair<Displayable, Displayable>)$model.getValue()).getLeft().getDisplayableId());
+    $as.addMeasure(((Pair<Displayable, Displayable>)$model.getValue()).getRight().getDisplayableId());
+end

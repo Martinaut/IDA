@@ -1,0 +1,27 @@
+package core_rules.operation
+
+// ------------------------------------ IMPORT --------------------------------------
+import at.jku.dke.inga.rules.models.OperationServiceModel
+import at.jku.dke.inga.shared.EventNames
+import at.jku.dke.inga.rules.results.StringConfidenceResult
+import org.apache.commons.lang3.math.NumberUtils
+
+// ------------------------------------ RULES ---------------------------------------
+rule "Resolve Operation"
+    agenda-group "operation-determination"
+    salience 100
+when
+    $model : OperationServiceModel(NumberUtils.isParsable(userInput), possibleOperations.containsKey(NumberUtils.createInteger(userInput)))
+then
+    insert(new StringConfidenceResult($model.getPossibleOperations().get(NumberUtils.createInteger($model.getUserInput())).getEventName(), 1.0));
+end
+
+rule "Invalid Operation Number"
+    agenda-group "operation-determination"
+    salience 1
+when
+    $model : OperationServiceModel(!NumberUtils.isParsable(userInput) || !possibleOperations.containsKey(NumberUtils.createInteger(userInput)))
+    not StringConfidenceResult()
+then
+    insert(new StringConfidenceResult(EventNames.INVALID_INPUT, 1.0));
+end

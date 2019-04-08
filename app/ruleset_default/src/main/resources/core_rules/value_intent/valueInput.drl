@@ -1,0 +1,66 @@
+package core_rules.value_intent
+
+// ------------------------------------ IMPORT --------------------------------------
+import at.jku.dke.inga.rules.models.ValueIntentServiceModel
+import at.jku.dke.inga.rules.results.StringConfidenceResult
+import at.jku.dke.inga.shared.EventNames
+import at.jku.dke.inga.shared.models.NonComparativeAnalysisSituation
+import at.jku.dke.inga.shared.display.ListDisplay
+import at.jku.dke.inga.app.ruleset.helpers.UserInput
+import at.jku.dke.inga.app.ruleset.helpers.Constants
+
+// ------------------------------------ RULES ---------------------------------------
+rule "SelectValue Intent"
+    agenda-group "value-intent-determination"
+when
+    $model : ValueIntentServiceModel(UserInput.isNumber(userInput))
+then
+    insert(new StringConfidenceResult(EventNames.NAVIGATE, 0.5));
+end
+
+rule "SelectValue Two values Intent"
+    agenda-group "value-intent-determination"
+when
+    $model : ValueIntentServiceModel(UserInput.isTwoNumberSelection(userInput))
+then
+    insert(new StringConfidenceResult(EventNames.NAVIGATE, 0.5));
+end
+
+rule "SelectDimension Intent"
+    agenda-group "value-intent-determination"
+    salience 1
+when
+    $as : NonComparativeAnalysisSituation()
+    $display : ListDisplay()
+    $model : ValueIntentServiceModel(UserInput.isNumber(userInput) &&
+                                     UserInput.toInteger(userInput) > 0 &&
+                                     UserInput.toInteger(userInput) <= $display.data.size(),
+                                     analysisSituation == $as,
+                                     displayData == $display,
+                                     additionalDataContainsKey(Constants.ADD_DATA_DIMENSION) == false)
+    eval($model.getOperation() == EventNames.NAVIGATE_GL_DRILL_DOWN || $model.getOperation() == EventNames.NAVIGATE_GL_ROLL_UP
+        || $model.getOperation() == EventNames.NAVIGATE_SLICE_CONDITION_BROADEN || $model.getOperation() == EventNames.NAVIGATE_SLICE_CONDITION_NARROW || $model.getOperation() == EventNames.NAVIGATE_SLICE_CONDITION_REFOCUS
+        || $model.getOperation() == EventNames.NAVIGATE_DICE_NODE_MOVE_DOWN || $model.getOperation() == EventNames.NAVIGATE_DICE_NODE_MOVE_UP)
+then
+    $model.addAdditionalData(Constants.ADD_DATA_DIMENSION, $as.getDimensionQualification($display.getData().get(UserInput.toInteger($model.getUserInput()) - 1).getDisplayableId()));
+    insert(new StringConfidenceResult(EventNames.MORE_INFORMATION, 1.0));
+end
+
+rule "SelectDimensionValue Intent"
+    agenda-group "value-intent-determination"
+    salience 0
+when
+    $as : NonComparativeAnalysisSituation()
+    $display : ListDisplay()
+    $model : ValueIntentServiceModel(UserInput.isNumber(userInput) &&
+                                     UserInput.toInteger(userInput) > 0 &&
+                                     UserInput.toInteger(userInput) <= $display.data.size(),
+                                     analysisSituation == $as,
+                                     displayData == $display,
+                                     additionalDataContainsKey(Constants.ADD_DATA_DIMENSION))
+    eval($model.getOperation() == EventNames.NAVIGATE_GL_DRILL_DOWN || $model.getOperation() == EventNames.NAVIGATE_GL_ROLL_UP
+        || $model.getOperation() == EventNames.NAVIGATE_SLICE_CONDITION_BROADEN || $model.getOperation() == EventNames.NAVIGATE_SLICE_CONDITION_NARROW || $model.getOperation() == EventNames.NAVIGATE_SLICE_CONDITION_REFOCUS
+        || $model.getOperation() == EventNames.NAVIGATE_DICE_NODE_MOVE_DOWN || $model.getOperation() == EventNames.NAVIGATE_DICE_NODE_MOVE_UP)
+then
+    $model.removeAdditionalData(Constants.ADD_DATA_DIMENSION);
+end

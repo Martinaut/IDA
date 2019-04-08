@@ -1,0 +1,82 @@
+package core_rules.value_display
+
+// ------------------------------------ IMPORT --------------------------------------
+import at.jku.dke.inga.shared.EventNames
+import at.jku.dke.inga.shared.models.NonComparativeAnalysisSituation
+import at.jku.dke.inga.shared.models.DimensionQualification
+import at.jku.dke.inga.shared.display.ListDisplay
+import at.jku.dke.inga.shared.display.TwoListDisplay
+import at.jku.dke.inga.rules.models.ValueDisplayServiceModel
+import at.jku.dke.inga.app.ruleset.helpers.Constants
+import at.jku.dke.inga.app.ruleset.helpers.QueryHelper
+
+// ------------------------------------ RULES ---------------------------------------
+rule "Add Slice Condition - Select Dimension"
+    agenda-group "value-display-determination"
+when
+    $as : NonComparativeAnalysisSituation()
+    $model : ValueDisplayServiceModel(operation == EventNames.NAVIGATE_SLICE_CONDITION_NARROW, analysisSituation == $as, additionalDataContainsKey(Constants.ADD_DATA_DIMENSION) == false)
+then
+    insert(new ListDisplay(
+        "addSCDimension",
+        $model.getLocale(),
+        QueryHelper.getDimensionsWhereAddPossible($model)));
+end
+rule "Add Slice Condition - Not selected level predicates"
+    agenda-group "value-display-determination"
+when
+    $as : NonComparativeAnalysisSituation()
+    $model : ValueDisplayServiceModel(operation == EventNames.NAVIGATE_SLICE_CONDITION_NARROW, analysisSituation == $as, additionalDataContainsKey(Constants.ADD_DATA_DIMENSION))
+then
+    insert(new ListDisplay(
+        "addSC",
+        $model.getLocale(),
+        QueryHelper.getLevelPredicatesToAddByLangAndDimension($model)));
+end
+
+rule "Drop Slice Condition - Select Dimension"
+    agenda-group "value-display-determination"
+when
+    $as : NonComparativeAnalysisSituation()
+    $model : ValueDisplayServiceModel(operation == EventNames.NAVIGATE_SLICE_CONDITION_BROADEN, analysisSituation == $as, additionalDataContainsKey(Constants.ADD_DATA_DIMENSION) == false)
+then
+    insert(new ListDisplay(
+        "dropSCDimension",
+        $model.getLocale(),
+        QueryHelper.getDimensionsWhereDropPossible($model)));
+end
+rule "Drop Slice Condition - Not selected level predicates"
+    agenda-group "value-display-determination"
+when
+    $as : NonComparativeAnalysisSituation()
+    $model : ValueDisplayServiceModel(operation == EventNames.NAVIGATE_SLICE_CONDITION_BROADEN, analysisSituation == $as, additionalDataContainsKey(Constants.ADD_DATA_DIMENSION))
+then
+    insert(new ListDisplay(
+        "dropSC",
+        $model.getLocale(),
+        QueryHelper.getLevelPredicatesToDropByLangAndDimension($model)));
+end
+
+rule "Refocus Slice Condition - Select Dimension"
+    agenda-group "value-display-determination"
+when
+    $as : NonComparativeAnalysisSituation()
+    $model : ValueDisplayServiceModel(operation == EventNames.NAVIGATE_SLICE_CONDITION_REFOCUS, analysisSituation == $as, additionalDataContainsKey(Constants.ADD_DATA_DIMENSION) == false)
+then
+    insert(new ListDisplay(
+        "dropSCDimension",
+        $model.getLocale(),
+        QueryHelper.getDimensionsWhereRefocusPossible($model)));
+end
+rule "Refocus Slice Condition - Not selected level predicates"
+    agenda-group "value-display-determination"
+when
+    $as : NonComparativeAnalysisSituation()
+    $model : ValueDisplayServiceModel(operation == EventNames.NAVIGATE_SLICE_CONDITION_REFOCUS, analysisSituation == $as, additionalDataContainsKey(Constants.ADD_DATA_DIMENSION))
+then
+    insert(new TwoListDisplay(
+        "refocusSC",
+        $model.getLocale(),
+        QueryHelper.getLevelPredicatesToDropByLangAndDimension($model),
+        QueryHelper.getLevelPredicatesToAddByLangAndDimension($model)));
+end

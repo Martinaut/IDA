@@ -1,0 +1,19 @@
+package app_rules
+
+// ------------------------------------ IMPORT --------------------------------------
+import at.jku.dke.inga.app.ruleset.models.SimilarityServiceModel
+import at.jku.dke.inga.app.ruleset.helpers.SimilarityHelper
+import at.jku.dke.inga.app.ruleset.models.WordGroup
+import at.jku.dke.inga.data.models.Similarity
+
+// ------------------------------------ RULES ---------------------------------------
+rule "Similarity EN - Word Similarity"
+    agenda-group "similarity"
+when
+    $model : SimilarityServiceModel(language == "en")
+    $wordGroup : WordGroup()
+then
+    for (Similarity s : SimilarityHelper.getWordSimilarities($wordGroup)) {
+        insert(s);
+    }
+end

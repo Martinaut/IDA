@@ -1,7 +1,5 @@
 package at.jku.dke.inga.app;
 
-import at.jku.dke.inga.app.ruleset.drools.InitialSentenceModel;
-import at.jku.dke.inga.app.ruleset.drools.InitialSentenceService;
 import at.jku.dke.inga.scxml.session.SessionContextModel;
 import at.jku.dke.inga.web.controllers.InitialSentenceHandler;
 import org.springframework.stereotype.Service;
@@ -20,6 +18,8 @@ public class NLPSentenceHandler implements InitialSentenceHandler {
      */
     @Override
     public void parseSentence(SessionContextModel sessionModel, String initialSentence) {
+        if (initialSentence == null || initialSentence.isBlank()) return;
+
         new InitialSentenceService().executeRules(new InitialSentenceModel(
                 sessionModel.getLocale(),
                 sessionModel.getAnalysisSituation(),

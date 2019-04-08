@@ -34,6 +34,7 @@ subprojects {
         implementation 'org.springframework.boot:spring-boot-starter'
 
         testImplementation 'org.springframework.boot:spring-boot-starter-test'
+        testImplementation 'com.openpojo:openpojo:0.8.12'
         testImplementation 'org.junit.jupiter:junit-jupiter-api:5.4.1'
         testRuntime 'org.junit.jupiter:junit-jupiter-engine:5.4.1'
     }
