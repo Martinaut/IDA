@@ -4,7 +4,7 @@ dependencies {
     api 'org.springframework.boot:spring-boot-starter-websocket'
     api 'org.springframework.boot:spring-boot-starter-web'
 
-    api project(':engine:scxml')
-    api project(':engine:data')
+    implementation project(':engine:scxml')
+    implementation project(':engine:data')
     api project(':engine:shared')
 }

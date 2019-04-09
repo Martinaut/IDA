@@ -38,6 +38,7 @@ end
 
 rule "Word Groups - Find single nouns"
     agenda-group "word-groups"
+    enabled false
 when
     $model : WordGroupsServiceModel(language == "en")
 then
@@ -48,6 +49,7 @@ end
 
 rule "Word Groups - Find single noun phrases"
     agenda-group "word-groups"
+    enabled false
 when
     $model : WordGroupsServiceModel(language == "en")
 then

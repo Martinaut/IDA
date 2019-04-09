@@ -56,6 +56,32 @@ public class GranularityLevelRepository extends BaseRepository {
     }
 
     /**
+     * Returns granularity levels with the specified IRIs.
+     *
+     * @param iris The absolute IRIs to query.
+     * @return Set with granularity level IRIs. The key of the pair represents the dimension, the value is the level.
+     * @throws IllegalArgumentException If {@code iris} is {@code null} or contains at least one invalid IRI.
+     * @throws QueryException           If an exception occurred while executing the query.
+     */
+    public Set<Pair<String, String>> getByIri(Set<String> iris) throws QueryException {
+        if (iris == null) throw new IllegalArgumentException("iris must not be null");
+        if (iris.stream().map(IRIValidator::isValidAbsoluteIRI).anyMatch(x -> !x))
+            throw new IllegalArgumentException("iris contains at least one invalid IRI");
+
+        logger.debug("Querying granularity levels {}.", iris);
+        return connection.getQueryResult(
+                "/repo_gl/getbyIris.sparql",
+                s -> s.replaceAll("###IN###", iris.stream()
+                        .map(x -> '(' + convertToFullIriString(x) + ')')
+                        .collect(Collectors.joining(" "))))
+                .stream()
+                .map(x -> new ImmutablePair<>(
+                        x.getValue("dimension").stringValue(),
+                        x.getValue("element").stringValue()
+                )).collect(Collectors.toSet());
+    }
+
+    /**
      * Returns all granularity level relationships for the specified cube.
      * <p>
      * The first entry of the triple is the dimension, the second one the child and the third one the parent.

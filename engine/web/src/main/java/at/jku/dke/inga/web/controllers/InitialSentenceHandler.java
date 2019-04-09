@@ -1,6 +1,6 @@
 package at.jku.dke.inga.web.controllers;
 
-import at.jku.dke.inga.scxml.session.SessionContextModel;
+import at.jku.dke.inga.shared.session.SessionModel;
 
 /**
  * The method of this interface gets called when a new session is started to parse the initial user input.
@@ -13,6 +13,6 @@ public interface InitialSentenceHandler {
      * @param sessionModel    The session model of the current session.
      * @param initialSentence The sentence to parse.
      */
-    void parseSentence(SessionContextModel sessionModel, String initialSentence);
+    void parseSentence(SessionModel sessionModel, String initialSentence);
 
 }

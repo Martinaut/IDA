@@ -6,4 +6,6 @@ dependencies {
     implementation project(':engine:rules')
     implementation project(':engine:data')
     implementation project(':engine:shared')
+
+    implementation 'org.optaplanner:optaplanner-core:7.19.0.Final'
 }

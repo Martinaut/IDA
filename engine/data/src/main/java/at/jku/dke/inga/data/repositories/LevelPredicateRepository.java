@@ -54,6 +54,32 @@ public class LevelPredicateRepository extends BaseRepository {
     }
 
     /**
+     * Returns level predicates with the specified IRIs.
+     *
+     * @param iris The absolute IRIs to query.
+     * @return Set with level predicate IRIs. The key of the pair represents the dimension, the value is the level predicate.
+     * @throws IllegalArgumentException If {@code iris} is {@code null} or contains at least one invalid IRI.
+     * @throws QueryException           If an exception occurred while executing the query.
+     */
+    public Set<Pair<String, String>> getByIri(Set<String> iris) throws QueryException {
+        if (iris == null) throw new IllegalArgumentException("iris must not be null");
+        if (iris.stream().map(IRIValidator::isValidAbsoluteIRI).anyMatch(x -> !x))
+            throw new IllegalArgumentException("iris contains at least one invalid IRI");
+
+        logger.debug("Querying level predicates {}.", iris);
+        return connection.getQueryResult(
+                "/repo_levelpred/getbyIris.sparql",
+                s -> s.replaceAll("###IN###", iris.stream()
+                        .map(x -> '(' + convertToFullIriString(x) + ')')
+                        .collect(Collectors.joining(" "))))
+                .stream()
+                .map(x -> new ImmutablePair<>(
+                        x.getValue("dimension").stringValue(),
+                        x.getValue("element").stringValue()
+                )).collect(Collectors.toSet());
+    }
+
+    /**
      * Returns the labels of all level predicates of the specified cube.
      *
      * @param lang    The requested language.

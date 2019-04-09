@@ -1,0 +1,28 @@
+PREFIX qbx: <http://dke.jku.at/inga/cubes#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT DISTINCT ?dimension ?element
+WHERE {
+    VALUES (?element) {
+        ###IN###
+    }
+
+    {
+        SELECT ?dimension ?element
+        WHERE {
+            ?dimension qbx:hasHierarchy ?hier .
+            ?hs qbx:inHierarchy ?hier ;
+                qbx:childLevel ?element .
+        }
+    }
+    UNION
+    {
+        SELECT ?dimension ?element
+        WHERE {
+            ?dimension qbx:hasHierarchy ?hier .
+            ?hs qbx:inHierarchy ?hier ;
+                qbx:parentLevel ?element .
+        }
+    }
+}

@@ -1,0 +1,30 @@
+PREFIX qbx: <http://dke.jku.at/inga/cubes#>
+
+SELECT DISTINCT ?dimension ?element
+WHERE {
+    VALUES(?element) {
+        ###IN###
+    }
+
+    { ?element qbx:over ?level . }
+    UNION
+    {
+        ?pred qbx:over ?level .
+        ?element qbx:conjunct ?pred .
+    }
+
+    {
+        SELECT ?dimension ?level
+        WHERE {
+            {
+    			?dimension qbx:hasHierarchy ?hier .
+    			?hs qbx:inHierarchy ?hier ;
+    				qbx:childLevel ?level .
+            } UNION {
+    			?dimension qbx:hasHierarchy ?hier .
+    			?hs qbx:inHierarchy ?hier ;
+    				qbx:parentLevel ?level .
+            }
+        }
+    }
+}

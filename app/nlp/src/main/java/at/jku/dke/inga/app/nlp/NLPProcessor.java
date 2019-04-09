@@ -45,7 +45,7 @@ public final class NLPProcessor {
         props.setProperty("annotators", "tokenize,ssplit,pos,parse,depparse");
 
         // build pipeline
-        StanfordCoreNLP pipeline = new StanfordCoreNLP(props);
+        StanfordCoreNLP pipeline = new StanfordCoreNLP(props); // TODO: dont build pipeline everytime again
         CoreDocument document = new CoreDocument(text);
 
         // Annotate

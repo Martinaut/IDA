@@ -1,0 +1,65 @@
+package optaplanner
+
+// ------------------------------------ IMPORT --------------------------------------
+import at.jku.dke.inga.app.ruleset.csp.domain.AnalysisSituation
+import at.jku.dke.inga.app.ruleset.csp.RuleHelpers
+import org.optaplanner.core.api.score.buildin.hardsoft.HardSoftScoreHolder
+
+// ------------------------------------ GLOBAL --------------------------------------
+global HardSoftScoreHolder scoreHolder;
+
+// ------------------------------------ RULES ---------------------------------------
+// ### EMPTY VALUES ###
+rule "No cube set"
+when
+    AnalysisSituation(cube == null || cube.isEmpty())
+then
+    scoreHolder.addHardConstraintMatch(kcontext, -1);
+end
+
+rule "No measure set"
+when
+    AnalysisSituation(measures == null)
+then
+    scoreHolder.addSoftConstraintMatch(kcontext, -1);
+end
+
+// ### SAME CUBE ###
+rule "All measures in same cube"
+when
+    AnalysisSituation(!RuleHelpers.allInSameCube(cube, measures))
+then
+    scoreHolder.addHardConstraintMatch(kcontext, -1);
+end
+
+rule "All levels in same cube"
+when
+    AnalysisSituation(!RuleHelpers.allInSameCube(cube, granularityLevels))
+then
+    scoreHolder.addHardConstraintMatch(kcontext, -1);
+end
+
+rule "All bmcs in same cube"
+when
+    AnalysisSituation(!RuleHelpers.allInSameCube(cube, baseMeasureConditions))
+then
+    scoreHolder.addHardConstraintMatch(kcontext, -1);
+end
+
+rule "All filters in same cube"
+when
+    AnalysisSituation(!RuleHelpers.allInSameCube(cube, filterConditions))
+then
+    scoreHolder.addHardConstraintMatch(kcontext, -1);
+end
+
+// TODO: check max one gl per dimension
+// TODO: check one term maximum one assignment (e.g. "doctor" cannot be used for two elements)
+
+// ### SCORE ###
+rule "Similarity Score"
+when
+    $as : AnalysisSituation()
+then
+    scoreHolder.addHardConstraintMatch(kcontext, $as.getScore());
+end
