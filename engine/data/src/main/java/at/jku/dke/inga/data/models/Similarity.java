@@ -12,6 +12,7 @@ public class Similarity implements Comparable<Similarity> {
     private String term;
     private String cube;
     private String element;
+    private String type;
     private double score;
 
     /**
@@ -26,12 +27,14 @@ public class Similarity implements Comparable<Similarity> {
      * @param term    The term.
      * @param cube    The cube IRI.
      * @param element The element IRI.
+     * @param type    The type URI.
      * @param score   The score.
      */
-    public Similarity(String term, String cube, String element, double score) {
+    public Similarity(String term, String cube, String element, String type, double score) {
         this.term = term;
         this.cube = cube;
         this.element = element;
+        this.type = type;
         this.score = score;
     }
 
@@ -90,6 +93,24 @@ public class Similarity implements Comparable<Similarity> {
     }
 
     /**
+     * Gets the type of the element.
+     *
+     * @return the type
+     */
+    public String getType() {
+        return type;
+    }
+
+    /**
+     * Sets the type of the element.
+     *
+     * @param type the type
+     */
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    /**
      * Gets the score.
      *
      * @return the score
@@ -113,6 +134,7 @@ public class Similarity implements Comparable<Similarity> {
                 .add("term='" + term + "'")
                 .add("cube='" + cube + "'")
                 .add("element='" + element + "'")
+                .add("type='" + type + "'")
                 .add("score=" + score)
                 .toString();
     }
@@ -125,12 +147,13 @@ public class Similarity implements Comparable<Similarity> {
         return Double.compare(that.score, score) == 0 &&
                 Objects.equals(term, that.term) &&
                 Objects.equals(cube, that.cube) &&
+                Objects.equals(type, that.type) &&
                 Objects.equals(element, that.element);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(term, cube, element, score);
+        return Objects.hash(term, cube, element, type, score);
     }
 
     @Override

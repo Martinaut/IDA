@@ -13,7 +13,8 @@ INSERT {
                  sim:inCube   ?cube ;
                  sim:from     ?element ;
                  sim:to       ?documentID ;
-                 sim:hasScore ?score .
+                 sim:hasScore ?score ;
+                 sim:fromType qbx:AggregateMeasure.
     }
 }
 WHERE
@@ -52,7 +53,8 @@ INSERT {
                  sim:inCube   ?cube ;
                  sim:from     ?element ;
                  sim:to       ?documentID ;
-                 sim:hasScore ?score .
+                 sim:hasScore ?score ;
+                 sim:fromType qbx:AggregateMeasurePredicate.
     }
 }
 WHERE
@@ -94,7 +96,8 @@ INSERT {
                  sim:inCube   ?cube ;
                  sim:from     ?element ;
                  sim:to       ?documentID ;
-                 sim:hasScore ?score .
+                 sim:hasScore ?score ;
+                 sim:fromType qbx:BaseMeasurePredicate.
     }
 }
 WHERE
@@ -133,7 +136,8 @@ INSERT {
                  sim:inCube   ?cube ;
                  sim:from     ?element ;
                  sim:to       ?documentID ;
-                 sim:hasScore ?score .
+                 sim:hasScore ?score ;
+                 sim:fromType qbx:LevelPredicate.
     }
 }
 WHERE
@@ -194,7 +198,8 @@ INSERT {
                  sim:inCube   ?cube ;
                  sim:from     ?element ;
                  sim:to       ?documentID ;
-                 sim:hasScore ?score .
+                 sim:hasScore ?score ;
+                 sim:fromType qbx:Level.
     }
 }
 WHERE

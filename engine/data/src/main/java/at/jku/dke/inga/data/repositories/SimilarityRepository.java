@@ -55,6 +55,7 @@ public class SimilarityRepository extends BaseRepository {
                         term,
                         x.getValue("cube").stringValue(),
                         x.getValue("element").stringValue(),
+                        x.getValue("type").stringValue(),
                         ((Literal) x.getValue("score")).doubleValue()
                 ))
                 .collect(Collectors.toList());
@@ -83,7 +84,6 @@ public class SimilarityRepository extends BaseRepository {
         final String[] splitted = term.split(" ");
         String simParts = String.join(" ", getSimilarityParts(lang, splitted));
         String mappingParts = String.join(" ", getMappingParts(splitted));
-        String filters = String.join(" ", getFilters(splitted));
         String wordnetSelect = IntStream.range(0, splitted.length).mapToObj(x -> "?w" + x).collect(Collectors.joining(" "));
         String wordnetScoreSelect = IntStream.range(0, splitted.length).mapToObj(x -> "?score" + x).collect(Collectors.joining(" * "));
         String mappingScoreSelect = IntStream.range(0, splitted.length).mapToObj(x -> "?scoreM" + x).collect(Collectors.joining(" * "));
@@ -94,7 +94,6 @@ public class SimilarityRepository extends BaseRepository {
                 .replaceAll("###SCORE_MAP_MULT###", mappingScoreSelect)
                 .replaceAll("###PARTS_SIM###", simParts)
                 .replaceAll("###PARTS_MAPPING###", mappingParts)
-                .replaceAll("###FILTERS###", filters)
         )
                 .stream()
                 .filter(x -> x.hasBinding("cube") && x.hasBinding("element") && x.hasBinding("score"))
@@ -102,6 +101,7 @@ public class SimilarityRepository extends BaseRepository {
                         term,
                         x.getValue("cube").stringValue(),
                         x.getValue("element").stringValue(),
+                        x.getValue("type").stringValue(),
                         ((Literal) x.getValue("score")).doubleValue()
                 ))
                 .collect(Collectors.toList());
@@ -134,24 +134,6 @@ public class SimilarityRepository extends BaseRepository {
             String[] queryParts = new String[splitted.length];
             for (int i = 0; i < splitted.length; i++) {
                 queryParts[i] = queryText.replaceAll("###NO###", Integer.toString(i));
-            }
-
-            return queryParts;
-        } catch (IOException ex) {
-            logger.error("Could not load the query file " + queryFile, ex);
-            throw new QueryException("Could not load query file " + queryFile, ex);
-        }
-    }
-
-    private String[] getFilters(String[] splitted) throws QueryException {
-        String queryFile = "/repo_nlp/similarity_multiple_cube_filter.sparql";
-        try {
-            final String queryText = IOUtils.toString(GraphDbConnection.class.getResourceAsStream(queryFile), StandardCharsets.UTF_8);
-
-            String[] queryParts = new String[splitted.length - 1];
-            for (int i = 1; i < splitted.length; i++) {
-                queryParts[i - 1] = queryText.replaceAll("###NO1###", Integer.toString(i - 1))
-                        .replaceAll("###NO2###", Integer.toString(i));
             }
 
             return queryParts;

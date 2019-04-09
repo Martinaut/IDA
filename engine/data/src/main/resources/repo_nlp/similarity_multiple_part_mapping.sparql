@@ -2,4 +2,5 @@
           sim:from ?from ;
           sim:to ?w###NO### ;
           sim:inCube ?cube###NO### ;
-          sim:hasScore ?scoreM###NO### .
+          sim:hasScore ?scoreM###NO### ;
+          sim:fromType ?type###NO### .

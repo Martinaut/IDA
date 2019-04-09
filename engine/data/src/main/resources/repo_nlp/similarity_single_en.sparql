@@ -3,7 +3,7 @@ PREFIX inst: <http://www.ontotext.com/graphdb/similarity/instance/>
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX sim: <http://dke.jku.at/inga/similarity#>
 
-SELECT ?cube ?element (MAX(?score) AS ?score)
+SELECT ?cube ?element ?type (MAX(?score) AS ?score)
 WHERE {
     {
         SELECT ?cube ?element ?documentID ?score1
@@ -13,7 +13,8 @@ WHERE {
                          sim:from     ?element ;
                          sim:to       ?documentID ;
                          sim:hasScore ?score1 ;
-                         sim:inCube   ?cube .
+                         sim:inCube   ?cube ;
+                         sim:fromType ?type .
 
 		    }
 		}
@@ -29,5 +30,5 @@ WHERE {
         }
     }
     BIND((?score1 * ?score2) AS ?score)
-} GROUP BY ?cube ?element
+} GROUP BY ?cube ?element ?type
 ORDER BY DESC(?score)
