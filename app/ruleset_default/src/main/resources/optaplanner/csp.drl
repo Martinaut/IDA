@@ -27,39 +27,57 @@ end
 // ### SAME CUBE ###
 rule "All measures in same cube"
 when
-    AnalysisSituation(!RuleHelpers.allInSameCube(cube, measures))
+    AnalysisSituation(!RuleHelpers.allInCube(cube, measures))
 then
     scoreHolder.addHardConstraintMatch(kcontext, -1);
 end
 
 rule "All levels in same cube"
 when
-    AnalysisSituation(!RuleHelpers.allInSameCube(cube, granularityLevels))
+    AnalysisSituation(!RuleHelpers.allInCube(cube, granularityLevels))
+then
+    scoreHolder.addHardConstraintMatch(kcontext, -1);
+end
+
+rule "All slice conditions in same cube"
+when
+    AnalysisSituation(!RuleHelpers.allInCube(cube, sliceConditions))
 then
     scoreHolder.addHardConstraintMatch(kcontext, -1);
 end
 
 rule "All bmcs in same cube"
 when
-    AnalysisSituation(!RuleHelpers.allInSameCube(cube, baseMeasureConditions))
+    AnalysisSituation(!RuleHelpers.allInCube(cube, baseMeasureConditions))
 then
     scoreHolder.addHardConstraintMatch(kcontext, -1);
 end
 
 rule "All filters in same cube"
 when
-    AnalysisSituation(!RuleHelpers.allInSameCube(cube, filterConditions))
+    AnalysisSituation(!RuleHelpers.allInCube(cube, filterConditions))
 then
     scoreHolder.addHardConstraintMatch(kcontext, -1);
 end
 
-// TODO: check max one gl per dimension
-// TODO: check one term maximum one assignment (e.g. "doctor" cannot be used for two elements)
+rule "Maximum one granularity level per dimesion"
+when
+    AnalysisSituation(!RuleHelpers.maximumOneElementPerDimension(granularityLevels))
+then
+    scoreHolder.addHardConstraintMatch(kcontext, -1);
+end
+
+//rule "Maximum one assignment for a term"
+//when
+//    // TODO: check one term maximum one assignment (e.g. "doctor" cannot be used for two elements)
+//then
+//    scoreHolder.addHardConstraintMatch(kcontext, -1);
+//end
 
 // ### SCORE ###
 rule "Similarity Score"
 when
     $as : AnalysisSituation()
 then
-    scoreHolder.addHardConstraintMatch(kcontext, $as.getScore());
+    scoreHolder.addSoftConstraintMatch(kcontext, $as.getScore());
 end
