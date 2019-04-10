@@ -1,5 +1,6 @@
 package at.jku.dke.inga.app.ruleset.csp.domain;
 
+import at.jku.dke.inga.data.models.DimensionSimilarity;
 import at.jku.dke.inga.data.models.Similarity;
 import com.google.common.collect.Sets;
 import org.optaplanner.core.api.domain.solution.PlanningEntityProperty;
@@ -9,10 +10,7 @@ import org.optaplanner.core.api.domain.solution.drools.ProblemFactCollectionProp
 import org.optaplanner.core.api.domain.valuerange.ValueRangeProvider;
 import org.optaplanner.core.api.score.buildin.hardsoft.HardSoftScore;
 
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.StringJoiner;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @PlanningSolution
@@ -42,18 +40,23 @@ public class AnalysisSituationSolution {
         this.cubes = cubes;
         this.measures = createAllPossibleCombinations(measures).stream().map(AnalysisSituationElement::new).collect(Collectors.toSet());
         this.levels = createAllPossibleCombinations(levels).stream().map(AnalysisSituationElement::new).collect(Collectors.toSet());
+        this.sliceConditions = createAllPossibleCombinations(sliceConditions).stream().map(AnalysisSituationElement::new).collect(Collectors.toSet());
         this.baseMeasureConditions = createAllPossibleCombinations(baseMeasureConditions).stream().map(AnalysisSituationElement::new).collect(Collectors.toSet());
         this.filterConditions = createAllPossibleCombinations(filterConditions).stream().map(AnalysisSituationElement::new).collect(Collectors.toSet());
-        this.sliceConditions = createAllPossibleCombinations(sliceConditions).stream().map(AnalysisSituationElement::new).collect(Collectors.toSet());
         this.analysisSituation = new AnalysisSituation();
         this.score = HardSoftScore.ZERO;
     }
 
-    private <T> Set<Set<T>> createAllPossibleCombinations(Set<T> data) {
-        Set<Set<T>> result = new HashSet<>();
+    private Set<Set<Similarity>> createAllPossibleCombinations(Set<Similarity> data) {
+        Set<Set<Similarity>> result = new HashSet<>();
         for (int i = 0; i <= data.size(); i++) {
-            result.addAll(Sets.combinations(data, i));
+            var grouped = data.stream().collect(Collectors.groupingBy(Similarity::getCube));
+            for (List<Similarity> sims : grouped.values()) {
+                result.addAll(Sets.combinations(new HashSet<>(sims), i));
+            }
         }
+
+        if (result.isEmpty()) result.add(Collections.emptySet());
         return result;
     }
 
@@ -133,19 +136,5 @@ public class AnalysisSituationSolution {
 
     public void setScore(HardSoftScore score) {
         this.score = score;
-    }
-
-    @Override
-    public String toString() {
-        return new StringJoiner(", ", AnalysisSituationSolution.class.getSimpleName() + "[", "]")
-                .add("cubes=" + cubes)
-                .add("measures=" + measures)
-                .add("levels=" + levels)
-                .add("sliceConditions=" + sliceConditions)
-                .add("baseMeasureConditions=" + baseMeasureConditions)
-                .add("filterConditions=" + filterConditions)
-                .add("analysisSituation=" + analysisSituation)
-                .add("score=" + score)
-                .toString();
     }
 }

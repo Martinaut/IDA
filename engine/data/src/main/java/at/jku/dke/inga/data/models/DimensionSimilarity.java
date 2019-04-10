@@ -54,7 +54,12 @@ public class DimensionSimilarity extends Similarity {
     @Override
     public String toString() {
         return new StringJoiner(", ", DimensionSimilarity.class.getSimpleName() + "[", "]")
+                .add("term='" + getTerm() + "'")
+                .add("cube='" + getCube() + "'")
                 .add("dimension='" + dimension + "'")
+                .add("element='" + getElement() + "'")
+                .add("type='" + getType() + "'")
+                .add("score=" + getScore())
                 .toString();
     }
 

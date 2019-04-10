@@ -4,4 +4,4 @@
           sim:inCube ?cube###NO### ;
           sim:hasScore ?scoreM###NO### ;
           sim:fromType ?type###NO### .
-OPTIONAL { ?mapping sim:inDim ?mapping###NO### }
+OPTIONAL { ?mapping sim:inDim ?dimension###NO### }

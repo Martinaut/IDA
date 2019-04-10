@@ -69,15 +69,25 @@ end
 
 //rule "Maximum one assignment for a term"
 //when
-//    // TODO: check one term maximum one assignment (e.g. "doctor" cannot be used for two elements)
+//    $as : AnalysisSituation()
+//    eval(RuleHelpers.multipleAssignmentsPerTerm($as))
 //then
-//    scoreHolder.addHardConstraintMatch(kcontext, -1);
+//    scoreHolder.addSoftConstraintMatch(kcontext, RuleHelpers.getMultipleAssignmentsPerTermScore($as));
 //end
+
+rule "No duplicates"
+when
+    $as : AnalysisSituation()
+    eval(RuleHelpers.containsDuplicates($as))
+then
+    scoreHolder.addSoftConstraintMatch(kcontext, -1);
+end
+
 
 // ### SCORE ###
 rule "Similarity Score"
 when
-    $as : AnalysisSituation()
+    $as : AnalysisSituation(cube != null)
 then
     scoreHolder.addSoftConstraintMatch(kcontext, $as.getScore());
 end

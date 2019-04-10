@@ -1,9 +1,13 @@
 package at.jku.dke.inga.app.ruleset.csp.domain;
 
+import at.jku.dke.inga.data.models.Similarity;
+import com.google.common.math.DoubleMath;
 import org.optaplanner.core.api.domain.entity.PlanningEntity;
 import org.optaplanner.core.api.domain.variable.PlanningVariable;
 
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 import java.util.StringJoiner;
 
 @PlanningEntity
@@ -76,19 +80,42 @@ public class AnalysisSituation {
     public int getScore() {
         if (cube == null) return 0;
 
-        double score = 1;
+        double score = 0;
         if (measures != null)
-            score = score * measures.getScore();
-        if (sliceConditions != null)
-            score = score * sliceConditions.getScore();
-        if (granularityLevels != null)
-            score = score * granularityLevels.getScore();
-        if (baseMeasureConditions != null)
-            score = score * baseMeasureConditions.getScore();
-        if (filterConditions != null)
-            score = score * filterConditions.getScore();
+            score = measures.getScore();
+        if (sliceConditions != null) {
+            double tmp = sliceConditions.getScore();
+            score = Double.compare(score, 0) == 0 ? tmp : score * tmp;
+        }
+        if (granularityLevels != null) {
+            double tmp = granularityLevels.getScore();
+            score = Double.compare(score, 0) == 0 ? tmp : score * tmp;
+        }
+        if (baseMeasureConditions != null) {
+            double tmp = baseMeasureConditions.getScore();
+            score = Double.compare(score, 0) == 0 ? tmp : score * tmp;
+        }
+        if (filterConditions != null) {
+            double tmp = filterConditions.getScore();
+            score = Double.compare(score, 0) == 0 ? tmp : score * tmp;
+        }
 
-        return (int) (score * 10000);
+        return (int) (score * 10_000d); // TODO: was wenn mehrere gleich in z. b. measures? --> regel
+    }
+
+    public Set<Similarity> getAllSimilarities() {
+        Set<Similarity> similarities = new HashSet<>();
+        if (getGranularityLevels() != null)
+            similarities.addAll(getGranularityLevels().getElements());
+        if (getSliceConditions() != null)
+            similarities.addAll(getSliceConditions().getElements());
+        if (getFilterConditions() != null)
+            similarities.addAll(getFilterConditions().getElements());
+        if (getBaseMeasureConditions() != null)
+            similarities.addAll(getBaseMeasureConditions().getElements());
+        if (getMeasures() != null)
+            similarities.addAll(getMeasures().getElements());
+        return similarities;
     }
 
     @Override
@@ -106,7 +133,7 @@ public class AnalysisSituation {
 
     @Override
     public int hashCode() {
-        return Objects.hash(cube, measures, granularityLevels, sliceConditions,baseMeasureConditions, filterConditions);
+        return Objects.hash(cube, measures, granularityLevels, sliceConditions, baseMeasureConditions, filterConditions);
     }
 
     @Override

@@ -3,19 +3,17 @@ package at.jku.dke.inga.app.ruleset.csp.service;
 import at.jku.dke.inga.app.ruleset.csp.domain.AnalysisSituation;
 import at.jku.dke.inga.app.ruleset.csp.domain.AnalysisSituationSolution;
 import at.jku.dke.inga.app.ruleset.helpers.ValueSetter;
-import at.jku.dke.inga.data.QueryException;
+import at.jku.dke.inga.data.models.DimensionSimilarity;
 import at.jku.dke.inga.data.models.Similarity;
-import at.jku.dke.inga.data.repositories.GranularityLevelRepository;
-import at.jku.dke.inga.data.repositories.LevelPredicateRepository;
 import at.jku.dke.inga.shared.models.NonComparativeAnalysisSituation;
-import at.jku.dke.inga.shared.spring.BeanUtil;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.optaplanner.core.api.solver.Solver;
 import org.optaplanner.core.api.solver.SolverFactory;
 
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -76,9 +74,9 @@ public class ConstraintSatisfactionService {
                 similarities.stream().map(Similarity::getCube).collect(Collectors.toSet()),
                 similarities.stream().filter(x -> x.getType().equals("http://dke.jku.at/inga/cubes#AggregateMeasure")).collect(Collectors.toSet()),
                 similarities.stream().filter(x -> x.getType().equals("http://dke.jku.at/inga/cubes#Level")).collect(Collectors.toSet()),
-                similarities.stream().filter(x -> x.getType().equals("http://dke.jku.at/inga/cubes#LevelPredicate") || x.getType().equals("http://dke.jku.at/inga/cubes#ConjunctiveLevelPredicate")).collect(Collectors.toSet()),
-                similarities.stream().filter(x -> x.getType().equals("http://dke.jku.at/inga/cubes#BaseMeasurePredicate")).collect(Collectors.toSet()),
-                similarities.stream().filter(x -> x.getType().equals("http://dke.jku.at/inga/cubes#AggregateMeasurePredicate")).collect(Collectors.toSet())
+                similarities.stream().filter(x -> x.getType().equals("http://dke.jku.at/inga/cubes#LevelPredicate")).collect(Collectors.toSet()),
+                Collections.emptySet(),//similarities.stream().filter(x -> x.getType().equals("http://dke.jku.at/inga/cubes#BaseMeasurePredicate")).collect(Collectors.toSet()),
+                Collections.emptySet()//similarities.stream().filter(x -> x.getType().equals("http://dke.jku.at/inga/cubes#AggregateMeasurePredicate")).collect(Collectors.toSet())
         );
     }
 
@@ -90,27 +88,21 @@ public class ConstraintSatisfactionService {
             ValueSetter.setCube(language, as, solution.getCube());
         } else return;
 
-        if (solution.getMeasures() != null)
+        if (solution.getMeasures() != null && !solution.getMeasures().getElements().isEmpty())
             as.setMeasures(solution.getMeasures().getElements().stream().map(Similarity::getElement).collect(Collectors.toSet()));
-        if (solution.getBaseMeasureConditions() != null)
-            as.setBaseMeasureConditions(solution.getMeasures().getElements().stream().map(Similarity::getElement).collect(Collectors.toSet()));
-        if (solution.getFilterConditions() != null)
-            as.setFilterConditions(solution.getMeasures().getElements().stream().map(Similarity::getElement).collect(Collectors.toSet()));
-        if (solution.getSliceConditions() != null && !solution.getSliceConditions().getElements().isEmpty()) {
-            try {
-                Set<Pair<String, String>> lpreds = BeanUtil.getBean(LevelPredicateRepository.class).getByIri(solution.getSliceConditions().getElements().stream().map(Similarity::getElement).collect(Collectors.toSet()));
-                lpreds.forEach(lp -> as.getDimensionQualification(lp.getLeft()).addSliceCondition(lp.getRight()));
-            } catch (QueryException ex) {
-                logger.error("Could not query level predicates.", ex);
-            }
-        }
-        if (solution.getGranularityLevels() != null && !solution.getGranularityLevels().getElements().isEmpty()) {
-            try {
-                Set<Pair<String, String>> lpreds = BeanUtil.getBean(GranularityLevelRepository.class).getByIri(solution.getGranularityLevels().getElements().stream().map(Similarity::getElement).collect(Collectors.toSet()));
-                lpreds.forEach(lp -> as.getDimensionQualification(lp.getLeft()).setGranularityLevel(lp.getRight()));
-            } catch (QueryException ex) {
-                logger.error("Could not query granularity levels.", ex);
-            }
-        }
+        if (solution.getBaseMeasureConditions() != null && !solution.getBaseMeasureConditions().getElements().isEmpty())
+            as.setBaseMeasureConditions(solution.getBaseMeasureConditions().getElements().stream().map(Similarity::getElement).collect(Collectors.toSet()));
+        if (solution.getFilterConditions() != null&& !solution.getFilterConditions().getElements().isEmpty())
+            as.setFilterConditions(solution.getFilterConditions().getElements().stream().map(Similarity::getElement).collect(Collectors.toSet()));
+        if (solution.getSliceConditions() != null && !solution.getSliceConditions().getElements().isEmpty())
+            solution.getSliceConditions().getElements().stream()
+                    .filter(x -> x instanceof DimensionSimilarity)
+                    .map(x -> (DimensionSimilarity) x)
+                    .forEach(x -> as.getDimensionQualification(x.getDimension()).addSliceCondition(x.getElement()));
+        if (solution.getGranularityLevels() != null && !solution.getGranularityLevels().getElements().isEmpty())
+            solution.getGranularityLevels().getElements().stream()
+                    .filter(x -> x instanceof DimensionSimilarity)
+                    .map(x -> (DimensionSimilarity) x)
+                    .forEach(x -> as.getDimensionQualification(x.getDimension()).setGranularityLevel(x.getElement()));
     }
 }

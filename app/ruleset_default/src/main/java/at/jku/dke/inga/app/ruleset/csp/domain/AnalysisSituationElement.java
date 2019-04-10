@@ -28,10 +28,11 @@ public class AnalysisSituationElement {
     }
 
     public double getScore() {
-        if (elements == null) return 0;
-        return elements.stream()
+        if (elements == null) return 1;
+        double score = elements.stream()
                 .mapToDouble(Similarity::getScore)
                 .reduce(0, (left, right) -> left * right);
+        return Double.compare(score, 0) == 0 ? 1 : score;
     }
 
     @Override

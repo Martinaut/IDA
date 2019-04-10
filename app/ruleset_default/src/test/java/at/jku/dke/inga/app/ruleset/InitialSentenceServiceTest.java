@@ -22,6 +22,7 @@ class InitialSentenceServiceTest {
         InitialSentenceService.fillAnalysisSituation(sessionModel, "Show me the total costs per insurant and doctor district.");
 
         // Assert
+        System.out.println(sessionModel.getAnalysisSituation());
         Assertions.assertTrue(sessionModel.getAnalysisSituation().isCubeDefined());
     }
 }
