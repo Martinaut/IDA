@@ -1,6 +1,5 @@
-package at.jku.dke.inga.app.nlp;
+package at.jku.dke.inga.app.ruleset.nlp;
 
-import edu.stanford.nlp.ling.IndexedWord;
 import edu.stanford.nlp.pipeline.CoreDocument;
 import edu.stanford.nlp.pipeline.CoreSentence;
 import edu.stanford.nlp.pipeline.StanfordCoreNLP;
@@ -11,12 +10,33 @@ import edu.stanford.nlp.trees.tregex.TregexMatcher;
 import edu.stanford.nlp.trees.tregex.TregexPattern;
 import edu.stanford.nlp.util.StringUtils;
 
-import java.util.HashSet;
-import java.util.Properties;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public final class NLPProcessor {
+
+    private static final Map<String, StanfordCoreNLP> pipelines = new HashMap<>(2);
+
+    private static StanfordCoreNLP getPipeline(String language) {
+        if (pipelines.containsKey(language)) return pipelines.get(language);
+
+        // Set up pipeline properties
+        Properties props;
+        if (language.equals("de")) {
+            props = StringUtils.argsToProperties("-props", "StanfordCoreNLP-german.properties");
+            //props.setProperty("parse.model", "edu/stanford/nlp/models/srparser/germanSR.ser.gz");
+        } else {
+            props = new Properties();
+            //props.setProperty("parse.model", "edu/stanford/nlp/models/srparser/englishSR.ser.gz");
+        }
+        props.setProperty("annotators", "tokenize,ssplit,pos,parse,depparse");
+
+        // Build pipeline
+        StanfordCoreNLP pipeline = new StanfordCoreNLP(props);
+        pipelines.put(language, pipeline);
+
+        return pipeline;
+    }
 
     /**
      * Annotates the text using StanfordNLP using the annotators: Tokenize, Sentence Split,
@@ -33,19 +53,8 @@ public final class NLPProcessor {
         if (!language.equals("en") && !language.equals("de"))
             throw new IllegalArgumentException("language must be 'en' or 'de'");
 
-        // set up pipeline properties
-        Properties props;
-        if (language.equals("de")) {
-            props = StringUtils.argsToProperties("-props", "StanfordCoreNLP-german.properties");
-            //props.setProperty("parse.model", "edu/stanford/nlp/models/srparser/germanSR.ser.gz");
-        } else {
-            props = new Properties();
-            //props.setProperty("parse.model", "edu/stanford/nlp/models/srparser/englishSR.ser.gz");
-        }
-        props.setProperty("annotators", "tokenize,ssplit,pos,parse,depparse");
-
         // build pipeline
-        StanfordCoreNLP pipeline = new StanfordCoreNLP(props); // TODO: dont build pipeline everytime again
+        StanfordCoreNLP pipeline = getPipeline(language);
         CoreDocument document = new CoreDocument(text);
 
         // Annotate

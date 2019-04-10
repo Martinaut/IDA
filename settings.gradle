@@ -7,5 +7,4 @@ include 'engine:rules'
 include 'engine:web'
 
 include 'app:server'
-include 'app:nlp'
 include 'app:ruleset_default'

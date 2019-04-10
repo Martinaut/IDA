@@ -1,8 +1,8 @@
 package at.jku.dke.inga.app.ruleset.drools;
 
-import at.jku.dke.inga.app.nlp.NLPProcessor;
 import at.jku.dke.inga.app.ruleset.models.WordGroup;
 import at.jku.dke.inga.app.ruleset.models.WordGroupsServiceModel;
+import at.jku.dke.inga.app.ruleset.nlp.NLPProcessor;
 import at.jku.dke.inga.rules.services.DroolsService;
 import org.kie.api.runtime.KieSession;
 

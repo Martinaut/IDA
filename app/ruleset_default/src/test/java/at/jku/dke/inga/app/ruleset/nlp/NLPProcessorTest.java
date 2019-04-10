@@ -1,4 +1,4 @@
-package at.jku.dke.inga.app.nlp;
+package at.jku.dke.inga.app.ruleset.nlp;
 
 import edu.stanford.nlp.pipeline.CoreDocument;
 import edu.stanford.nlp.semgraph.SemanticGraph;

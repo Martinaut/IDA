@@ -1,7 +1,7 @@
 package at.jku.dke.inga.app.ruleset.helpers;
 
-import at.jku.dke.inga.app.nlp.NLPProcessor;
 import at.jku.dke.inga.app.ruleset.models.WordGroup;
+import at.jku.dke.inga.app.ruleset.nlp.NLPProcessor;
 import edu.stanford.nlp.pipeline.CoreDocument;
 
 import java.util.Set;
