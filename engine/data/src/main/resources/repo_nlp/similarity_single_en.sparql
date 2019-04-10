@@ -6,7 +6,7 @@ PREFIX sim: <http://dke.jku.at/inga/similarity#>
 SELECT ?cube ?dimension ?element ?type (MAX(?score) AS ?score)
 WHERE {
     {
-        SELECT ?cube ?dimension ?element ?documentID ?score1
+        SELECT ?cube ?dimension ?element ?type ?documentID ?score1
 		WHERE {
 		    GRAPH sim:wordnet-scores-en {
 		        ?mapping rdf:type     sim:Mapping ;

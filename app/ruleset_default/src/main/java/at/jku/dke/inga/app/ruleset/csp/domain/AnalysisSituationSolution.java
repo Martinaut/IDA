@@ -49,15 +49,14 @@ public class AnalysisSituationSolution {
 
     private Set<Set<Similarity>> createAllPossibleCombinations(Set<Similarity> data) {
         Set<Set<Similarity>> result = new HashSet<>();
-        for (int i = 0; i <= data.size(); i++) {
-            var grouped = data.stream().collect(Collectors.groupingBy(Similarity::getCube));
-            for (List<Similarity> sims : grouped.values()) {
+        var grouped = data.stream().collect(Collectors.groupingBy(Similarity::getCube));
+        for (List<Similarity> sims : grouped.values()) {
+            for (int i = 0; i <= sims.size(); i++) {
                 result.addAll(Sets.combinations(new HashSet<>(sims), i));
             }
         }
-
         if (result.isEmpty()) result.add(Collections.emptySet());
-        return result;
+        return result; // TODO filter duplicates?
     }
 
     @ValueRangeProvider(id = "cubes")
