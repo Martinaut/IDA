@@ -2,6 +2,7 @@ package at.jku.dke.inga.rules.services;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.kie.api.KieBase;
 import org.kie.api.KieServices;
 import org.kie.api.event.rule.AfterMatchFiredEvent;
 import org.kie.api.event.rule.DefaultAgendaEventListener;
@@ -11,8 +12,12 @@ import org.kie.api.runtime.rule.Agenda;
 
 /**
  * Base-class for all drools-services. This class provides a KieSession.
+ * In the kmodule-configuration file a kbase with the name <b>statemachine</b> must be specified.
  */
 public abstract class DroolsService<TModel, TResult> implements AutoCloseable {
+
+    private static KieContainer container;
+    private static KieBase base;
 
     private final String[] agendaGroups;
     private KieSession session;
@@ -87,9 +92,12 @@ public abstract class DroolsService<TModel, TResult> implements AutoCloseable {
      */
     protected final KieSession createNewSession() {
         logger.debug("Creating new Kie Session.");
-        KieServices kieServices = KieServices.Factory.get();
-        KieContainer kieContainer = kieServices.getKieClasspathContainer();
-        KieSession kieSession = kieContainer.newKieSession();
+        if (container == null) {
+            KieServices kieServices = KieServices.Factory.get();
+            container = kieServices.getKieClasspathContainer();
+            base = container.getKieBase("statemachine");
+        }
+        KieSession kieSession = base.newKieSession();
 
         if (agendaGroups != null && agendaGroups.length > 0) {
             logger.debug("Configuring agenda groups for kie session.");
