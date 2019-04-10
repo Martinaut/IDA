@@ -1,0 +1,67 @@
+PREFIX : <http://www.ontotext.com/graphdb/similarity/>
+PREFIX inst: <http://www.ontotext.com/graphdb/similarity/instance/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX qbx: <http://dke.jku.at/inga/cubes#>
+PREFIX sim: <http://dke.jku.at/inga/similarity#>
+
+INSERT {
+    GRAPH sim:wordnet-scores-en {
+        ?mapping rdf:type sim:Mapping ;
+                 sim:inCube   ?cube ;
+                 sim:inDim    ?dimension ;
+                 sim:from     ?element ;
+                 sim:to       ?documentID ;
+                 sim:hasScore ?score ;
+                 sim:fromType qbx:LevelPredicate.
+    }
+}
+WHERE
+{
+    SELECT ?mapping ?cube ?dimension ?element ?documentID ?score
+    WHERE {
+        ?search a inst:wordnet ;
+                :searchTerm         ?filterText ;
+                :searchParameters   "" ;
+                :documentResult     ?result .
+        ?result :value ?documentID ;
+                :score ?score .
+        {
+            SELECT DISTINCT ?cube ?dimension ?element ?filterText
+            WHERE {
+                {
+                    ?element rdf:type qbx:LevelPredicate ;
+                             qbx:over ?level .
+                }
+                UNION
+                {
+                    ?pred qbx:over ?level .
+                    ?element rdf:type qbx:ConjunctiveLevelPredicate ;
+                          	 qbx:conjunct ?pred .
+                }
+
+                {
+                    SELECT DISTINCT ?cube ?dimension ?level
+                    WHERE {
+                        {
+                            ?cube qbx:dimension ?dimension .
+                			?dimension qbx:hasHierarchy ?hier .
+                			?hs qbx:inHierarchy ?hier ;
+                				qbx:childLevel ?level .
+                        } UNION {
+                            ?cube qbx:dimension ?dimension .
+                			?dimension qbx:hasHierarchy ?hier .
+                			?hs qbx:inHierarchy ?hier ;
+                				qbx:parentLevel ?level .
+                        }
+                    }
+                }
+
+                ?element rdfs:label ?filterText .
+                FILTER(isLiteral(?filterText)) .
+                FILTER(lang(?filterText) = "en") .
+            }
+        }
+        BIND(IRI(CONCAT("sim:mapping_", STRUUID())) AS ?mapping)
+    }
+}

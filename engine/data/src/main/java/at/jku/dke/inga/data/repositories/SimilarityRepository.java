@@ -2,6 +2,7 @@ package at.jku.dke.inga.data.repositories;
 
 import at.jku.dke.inga.data.QueryException;
 import at.jku.dke.inga.data.configuration.GraphDbConnection;
+import at.jku.dke.inga.data.models.DimensionSimilarity;
 import at.jku.dke.inga.data.models.Similarity;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -51,13 +52,22 @@ public class SimilarityRepository extends BaseRepository {
         return connection.getQueryResult(queryFile, s -> s.replaceAll("###TERM###", term))
                 .stream()
                 .filter(x -> x.hasBinding("cube") && x.hasBinding("element") && x.hasBinding("score"))
-                .map(x -> new Similarity(
-                        term,
-                        x.getValue("cube").stringValue(),
-                        x.getValue("element").stringValue(),
-                        x.getValue("type").stringValue(),
-                        ((Literal) x.getValue("score")).doubleValue()
-                ))
+                .map(x -> x.hasBinding("dimension") ?
+                        new DimensionSimilarity(
+                                term,
+                                x.getValue("cube").stringValue(),
+                                x.getValue("element").stringValue(),
+                                x.getValue("type").stringValue(),
+                                ((Literal) x.getValue("score")).doubleValue(),
+                                x.getValue("dimension").stringValue()
+                        ) :
+                        new Similarity(
+                                term,
+                                x.getValue("cube").stringValue(),
+                                x.getValue("element").stringValue(),
+                                x.getValue("type").stringValue(),
+                                ((Literal) x.getValue("score")).doubleValue()
+                        ))
                 .collect(Collectors.toList());
     }
 
@@ -97,13 +107,22 @@ public class SimilarityRepository extends BaseRepository {
         )
                 .stream()
                 .filter(x -> x.hasBinding("cube") && x.hasBinding("element") && x.hasBinding("score"))
-                .map(x -> new Similarity(
-                        term,
-                        x.getValue("cube").stringValue(),
-                        x.getValue("element").stringValue(),
-                        x.getValue("type").stringValue(),
-                        ((Literal) x.getValue("score")).doubleValue()
-                ))
+                .map(x -> x.hasBinding("dimension") ?
+                        new DimensionSimilarity(
+                                term,
+                                x.getValue("cube").stringValue(),
+                                x.getValue("element").stringValue(),
+                                x.getValue("type").stringValue(),
+                                ((Literal) x.getValue("score")).doubleValue(),
+                                x.getValue("dimension").stringValue()
+                        ) :
+                        new Similarity(
+                                term,
+                                x.getValue("cube").stringValue(),
+                                x.getValue("element").stringValue(),
+                                x.getValue("type").stringValue(),
+                                ((Literal) x.getValue("score")).doubleValue()
+                        ))
                 .collect(Collectors.toList());
     }
 

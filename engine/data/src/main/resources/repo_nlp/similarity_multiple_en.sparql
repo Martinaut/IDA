@@ -3,9 +3,9 @@ PREFIX inst: <http://www.ontotext.com/graphdb/similarity/instance/>
 PREFIX sim: <http://dke.jku.at/inga/similarity#>
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 
-SELECT ?cube (?from AS ?element) ?type (MAX(?finalScore) AS ?score)
+SELECT ?cube ?dimension (?from AS ?element) ?type (MAX(?finalScore) AS ?score)
 WHERE {
-    SELECT DISTINCT (?cube0 AS ?cube) ?from (?type0 AS ?type) (###SCORE_MAP_MULT### * ?score AS ?finalScore)
+    SELECT DISTINCT (?cube0 AS ?cube) (?dimension0 AS ?dimension) ?from (?type0 AS ?type) (###SCORE_MAP_MULT### * ?score AS ?finalScore)
     WHERE {
         GRAPH sim:wordnet-scores-en {
             ###PARTS_MAPPING###
@@ -18,5 +18,5 @@ WHERE {
         }
     }
 }
-GROUP BY ?cube ?from ?type
+GROUP BY ?cube ?dimension ?from ?type
 ORDER BY DESC(?score)
