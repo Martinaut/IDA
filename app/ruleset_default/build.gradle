@@ -6,7 +6,7 @@ dependencies {
     implementation project(':engine:data')
     implementation project(':engine:shared')
 
-    implementation 'org.optaplanner:optaplanner-core:7.19.0.Final'
+    implementation 'org.optaplanner:optaplanner-core:7.20.0.Final'
 
     implementation 'edu.stanford.nlp:stanford-corenlp:3.9.2'
     implementation 'edu.stanford.nlp:stanford-corenlp:3.9.2:models'
