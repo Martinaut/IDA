@@ -13,6 +13,9 @@ import edu.stanford.nlp.util.StringUtils;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * This class provides methods to annotate a user input and to query the annotated text.
+ */
 public final class NLPProcessor {
 
     private static final Map<String, StanfordCoreNLP> pipelines = new HashMap<>(2);

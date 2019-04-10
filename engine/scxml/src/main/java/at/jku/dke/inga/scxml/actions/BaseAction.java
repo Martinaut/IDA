@@ -43,6 +43,8 @@ public abstract class BaseAction extends Action {
      *
      * @param ctx      The state chart application execution context.
      * @param ctxModel The context data.
+     * @throws ModelException           If an error occurred while executing the action.
+     * @throws SCXMLExpressionException If an error occurred while executing the action.
      */
     protected abstract void execute(final ActionExecutionContext ctx, final SessionContextModel ctxModel) throws ModelException, SCXMLExpressionException;
 

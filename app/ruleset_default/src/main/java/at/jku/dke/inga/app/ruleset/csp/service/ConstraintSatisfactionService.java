@@ -44,6 +44,7 @@ public class ConstraintSatisfactionService {
      * Fills the analysis situation.
      * If the {@code similarities}-Set is {@code null} or empty, nothing will be executed.
      *
+     * @param language     The required language.
      * @param as           The analysis situation.
      * @param similarities The set with found similarities.
      * @throws IllegalArgumentException If {@code as} is {@code null} or if it is not an instance of {@link NonComparativeAnalysisSituation}.

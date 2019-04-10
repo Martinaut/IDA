@@ -79,7 +79,6 @@ public abstract class BaseRepository {
      * <li>label</li>
      * <li>description (optional)</li>
      * </ul>
-     * </p>
      *
      * @param queryFile The path and name to the query file.
      * @param lang      The requested language.
@@ -100,7 +99,6 @@ public abstract class BaseRepository {
      * <li>label</li>
      * <li>description (optional)</li>
      * </ul>
-     * </p>
      *
      * @param queryFile                        The path and name to the query file.
      * @param lang                             The requested language.
@@ -142,10 +140,9 @@ public abstract class BaseRepository {
      * <ul>
      * <li>element</li>
      * </ul>
-     * </p>
+     *
      * <p>
-     * The query should have placeholder <bold>###TYPE###</bold> for the specified type.
-     * </p>
+     * The query should have placeholder <b>###TYPE###</b> for the specified type.
      *
      * @param queryFile The path and name to the query file.
      * @param type      The absolute IRI of the requested type.
@@ -168,7 +165,6 @@ public abstract class BaseRepository {
      * <ul>
      * <li>element</li>
      * </ul>
-     * </p>
      *
      * @param queryFile                        The path and name to the query file.
      * @param additionalQueryStringManipulator Additional query string manipulator to manipulate the query

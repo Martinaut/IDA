@@ -11,7 +11,7 @@ public class WordGroup {
     private final String text;
 
     /**
-     * Instantiates a new instance of class {@link InitialSentenceModel}.
+     * Instantiates a new instance of class {@link WordGroup}.
      *
      * @param text the text
      */

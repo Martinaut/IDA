@@ -88,7 +88,7 @@ public class Session {
      * <p>
      * This flag is only used once on initialization of the state machine. The default value is {@code false}.
      * Call this method before {@link #initiate()}.
-     * Additionally this method sets {@link SessionContextModel#getOperation()} to {@code null} if {@code set} is {@true};
+     * Additionally this method sets {@link SessionContextModel#getOperation()} to {@code null} if {@code set} is {@code true};
      * to {@link EventNames#NAVIGATE_CUBE_SELECT} otherwise.
      *
      * @param set {@code true} if the cube is selected; {@code false} otherwise.

@@ -112,6 +112,7 @@ public abstract class DroolsServiceModel {
      * Returns the value to which the specified key is mapped,
      * or {@code null} if this map contains no mapping for the key.
      *
+     * @param <T>   The type of the data to return. Tries to cast the value to this type.
      * @param key   The key whose associated value is to be returned.
      * @param clazz The type of the return type.
      * @return The value to which the specified key is mapped,

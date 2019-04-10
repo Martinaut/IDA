@@ -32,6 +32,7 @@ public class OperationDisplayServiceModel extends DroolsServiceModel {
      * @param additionalData            Additional data.
      * @param measures                  The measures of the selected cube.
      * @param granularityLevelHierarchy The granularity level hierarchy.
+     * @param sliceConditions           The slice conditions.
      * @param baseMeasureConditions     The base measure conditions.
      * @param filters                   The filters.
      * @throws IllegalArgumentException If any of the parameters is {@code null} (except {@code locale} and {@code additionalData}).
