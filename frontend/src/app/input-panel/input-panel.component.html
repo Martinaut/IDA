@@ -17,9 +17,9 @@
     </div>
     <span class="text-danger" *ngIf="inputError" [translate]="'input.validation'">Please enter a text before sending the message.</span>
 
-    <button class="btn btn-primary text-uppercase btn-block mt-3" (click)="sendMessage()" [disabled]="waitingForResult"
-            [translate]="'input.send'">
-      SEND
+    <button class="btn btn-primary text-uppercase btn-block mt-3" (click)="sendMessage()" [disabled]="waitingForResult">
+      <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" [hidden]="!waitingForResult"></span>
+      {{ 'input.send' | translate }}
     </button>
   </div>
 </div>
