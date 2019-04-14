@@ -7,7 +7,7 @@ import java.util.StringJoiner;
  * Represents a similarity result between a term and the dimension elements' label.
  * The similarity is expressed by a score between 0 and 1.
  */
-public class DimensionSimilarity extends Similarity {
+public class DimensionSimilarity extends CubeSimilarity {
 
     private String dimension;
 

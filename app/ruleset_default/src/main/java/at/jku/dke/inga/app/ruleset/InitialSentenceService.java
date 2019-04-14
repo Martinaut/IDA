@@ -1,12 +1,12 @@
 package at.jku.dke.inga.app.ruleset;
 
+import at.jku.dke.inga.app.nlp.drools.GraphDBSimilarityService;
+import at.jku.dke.inga.app.nlp.drools.WordGroupsService;
+import at.jku.dke.inga.app.nlp.models.GraphDBSimilarityServiceModel;
+import at.jku.dke.inga.app.nlp.models.WordGroup;
+import at.jku.dke.inga.app.nlp.models.WordGroupsServiceModel;
 import at.jku.dke.inga.app.ruleset.csp.service.ConstraintSatisfactionService;
-import at.jku.dke.inga.app.ruleset.drools.SimilarityService;
-import at.jku.dke.inga.app.ruleset.drools.WordGroupsService;
-import at.jku.dke.inga.app.ruleset.models.SimilarityServiceModel;
-import at.jku.dke.inga.app.ruleset.models.WordGroup;
-import at.jku.dke.inga.app.ruleset.models.WordGroupsServiceModel;
-import at.jku.dke.inga.data.models.Similarity;
+import at.jku.dke.inga.data.models.CubeSimilarity;
 import at.jku.dke.inga.shared.session.SessionModel;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -30,14 +30,14 @@ public final class InitialSentenceService {
      */
     private InitialSentenceService() {
     }
-
+//TODO: javadoc
     public static void fillAnalysisSituation(SessionModel sessionModel, String initialSentence) {
         if (sessionModel == null) throw new IllegalArgumentException("sessionModel must not be null");
         if (initialSentence == null || initialSentence.isBlank()) return;
 
         LOGGER.info("Filling analysis situation");
         Set<WordGroup> wordGroups = getWordGroups(sessionModel, initialSentence);
-        Set<Similarity> similarities = getSimilarities(sessionModel, wordGroups);
+        Set<CubeSimilarity> similarities = getSimilarities(sessionModel, wordGroups);
         service.fillAnalysisSituation(sessionModel.getLocale().getLanguage(), sessionModel.getAnalysisSituation(), similarities);
     }
 
@@ -54,9 +54,9 @@ public final class InitialSentenceService {
         return new WordGroupsService().executeRules(model);
     }
 
-    private static Set<Similarity> getSimilarities(SessionModel sessionModel, Set<WordGroup> wordGroups) {
+    private static Set<CubeSimilarity> getSimilarities(SessionModel sessionModel, Set<WordGroup> wordGroups) {
         // Create model
-        SimilarityServiceModel model = new SimilarityServiceModel(
+        GraphDBSimilarityServiceModel model = new GraphDBSimilarityServiceModel(
                 sessionModel.getLocale(),
                 sessionModel.getAnalysisSituation(),
                 sessionModel.getAdditionalData(),
@@ -64,6 +64,6 @@ public final class InitialSentenceService {
         );
 
         // Run service
-        return new SimilarityService().executeRules(model);
+        return new GraphDBSimilarityService().executeRules(model);
     }
 }

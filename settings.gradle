@@ -8,3 +8,4 @@ include 'engine:web'
 
 include 'app:server'
 include 'app:ruleset_default'
+include 'app:nlp'

@@ -4,15 +4,13 @@ import java.util.Objects;
 import java.util.StringJoiner;
 
 /**
- * Represents a similarity result between a term and the elements' label.
+ * Represents a similarity result between a term and and an element.
  * The similarity is expressed by a score between 0 and 1.
  */
-public class Similarity implements Comparable<Similarity> {
+public class Similarity<TElement> implements Comparable<Similarity<?>> {
 
     private String term;
-    private String cube;
-    private String element;
-    private String type;
+    private TElement element;
     private double score;
 
     /**
@@ -25,16 +23,12 @@ public class Similarity implements Comparable<Similarity> {
      * Instantiates a new instance of class {@linkplain Similarity}.
      *
      * @param term    The term.
-     * @param cube    The cube IRI.
-     * @param element The element IRI.
-     * @param type    The type URI.
+     * @param element The element.
      * @param score   The score.
      */
-    public Similarity(String term, String cube, String element, String type, double score) {
+    public Similarity(String term, TElement element, double score) {
         this.term = term;
-        this.cube = cube;
         this.element = element;
-        this.type = type;
         this.score = score;
     }
 
@@ -57,29 +51,11 @@ public class Similarity implements Comparable<Similarity> {
     }
 
     /**
-     * Gets the cube IRI.
+     * Gets the element.
      *
-     * @return the cube IRI
+     * @return the element
      */
-    public String getCube() {
-        return cube;
-    }
-
-    /**
-     * Sets the cube IRI.
-     *
-     * @param cube the cube IRI
-     */
-    public void setCube(String cube) {
-        this.cube = cube;
-    }
-
-    /**
-     * Gets the element IRI.
-     *
-     * @return the element IRI
-     */
-    public String getElement() {
+    public TElement getElement() {
         return element;
     }
 
@@ -88,26 +64,8 @@ public class Similarity implements Comparable<Similarity> {
      *
      * @param element the element IRI
      */
-    public void setElement(String element) {
+    public void setElement(TElement element) {
         this.element = element;
-    }
-
-    /**
-     * Gets the type of the element.
-     *
-     * @return the type
-     */
-    public String getType() {
-        return type;
-    }
-
-    /**
-     * Sets the type of the element.
-     *
-     * @param type the type
-     */
-    public void setType(String type) {
-        this.type = type;
     }
 
     /**
@@ -132,9 +90,7 @@ public class Similarity implements Comparable<Similarity> {
     public String toString() {
         return new StringJoiner(", ", Similarity.class.getSimpleName() + "[", "]")
                 .add("term='" + term + "'")
-                .add("cube='" + cube + "'")
                 .add("element='" + element + "'")
-                .add("type='" + type + "'")
                 .add("score=" + score)
                 .toString();
     }
@@ -143,21 +99,19 @@ public class Similarity implements Comparable<Similarity> {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Similarity that = (Similarity) o;
+        Similarity<?> that = (Similarity<?>) o;
         return Double.compare(that.score, score) == 0 &&
                 Objects.equals(term, that.term) &&
-                Objects.equals(cube, that.cube) &&
-                Objects.equals(type, that.type) &&
                 Objects.equals(element, that.element);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(term, cube, element, type, score);
+        return Objects.hash(term, element, score);
     }
 
     @Override
-    public int compareTo(Similarity other) {
-        return Double.compare(score, other.score);
+    public int compareTo(Similarity<?> other) {
+        return Double.compare(other.score, score);
     }
 }

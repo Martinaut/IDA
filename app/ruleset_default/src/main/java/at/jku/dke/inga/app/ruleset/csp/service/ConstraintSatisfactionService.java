@@ -3,8 +3,8 @@ package at.jku.dke.inga.app.ruleset.csp.service;
 import at.jku.dke.inga.app.ruleset.csp.domain.AnalysisSituation;
 import at.jku.dke.inga.app.ruleset.csp.domain.AnalysisSituationSolution;
 import at.jku.dke.inga.app.ruleset.helpers.ValueSetter;
+import at.jku.dke.inga.data.models.CubeSimilarity;
 import at.jku.dke.inga.data.models.DimensionSimilarity;
-import at.jku.dke.inga.data.models.Similarity;
 import at.jku.dke.inga.shared.models.NonComparativeAnalysisSituation;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
@@ -13,7 +13,6 @@ import org.optaplanner.core.api.solver.Solver;
 import org.optaplanner.core.api.solver.SolverFactory;
 
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -47,7 +46,7 @@ public class ConstraintSatisfactionService {
      * @param similarities The set with found similarities.
      * @throws IllegalArgumentException If {@code as} is {@code null} or if it is not an instance of {@link NonComparativeAnalysisSituation}.
      */
-    public void fillAnalysisSituation(String language, at.jku.dke.inga.shared.models.AnalysisSituation as, Set<Similarity> similarities) {
+    public void fillAnalysisSituation(String language, at.jku.dke.inga.shared.models.AnalysisSituation as, Set<CubeSimilarity> similarities) {
         if (as == null) throw new IllegalArgumentException("as must not be null");
         if (StringUtils.isBlank(language)) throw new IllegalArgumentException("language must not be empty.");
         if (!(as instanceof NonComparativeAnalysisSituation))
@@ -68,10 +67,10 @@ public class ConstraintSatisfactionService {
         setValues(language, (NonComparativeAnalysisSituation) as, solution.getAnalysisSituation());
     }
 
-    private AnalysisSituationSolution buildProblem(Set<Similarity> similarities) {
+    private AnalysisSituationSolution buildProblem(Set<CubeSimilarity> similarities) {
         logger.debug("Building problem");
         return new AnalysisSituationSolution(
-                similarities.stream().map(Similarity::getCube).collect(Collectors.toSet()),
+                similarities.stream().map(CubeSimilarity::getCube).collect(Collectors.toSet()),
                 similarities.stream().filter(x -> x.getType().equals("http://dke.jku.at/inga/cubes#AggregateMeasure")).collect(Collectors.toSet()),
                 similarities.stream().filter(x -> x.getType().equals("http://dke.jku.at/inga/cubes#Level")).collect(Collectors.toSet()),
                 similarities.stream().filter(x -> x.getType().equals("http://dke.jku.at/inga/cubes#LevelPredicate")).collect(Collectors.toSet()),
@@ -89,11 +88,11 @@ public class ConstraintSatisfactionService {
         } else return;
 
         if (solution.getMeasures() != null && !solution.getMeasures().getElements().isEmpty())
-            as.setMeasures(solution.getMeasures().getElements().stream().map(Similarity::getElement).collect(Collectors.toSet()));
+            as.setMeasures(solution.getMeasures().getElements().stream().map(CubeSimilarity::getElement).collect(Collectors.toSet()));
         if (solution.getBaseMeasureConditions() != null && !solution.getBaseMeasureConditions().getElements().isEmpty())
-            as.setBaseMeasureConditions(solution.getBaseMeasureConditions().getElements().stream().map(Similarity::getElement).collect(Collectors.toSet()));
+            as.setBaseMeasureConditions(solution.getBaseMeasureConditions().getElements().stream().map(CubeSimilarity::getElement).collect(Collectors.toSet()));
         if (solution.getFilterConditions() != null&& !solution.getFilterConditions().getElements().isEmpty())
-            as.setFilterConditions(solution.getFilterConditions().getElements().stream().map(Similarity::getElement).collect(Collectors.toSet()));
+            as.setFilterConditions(solution.getFilterConditions().getElements().stream().map(CubeSimilarity::getElement).collect(Collectors.toSet()));
         if (solution.getSliceConditions() != null && !solution.getSliceConditions().getElements().isEmpty())
             solution.getSliceConditions().getElements().stream()
                     .filter(x -> x instanceof DimensionSimilarity)

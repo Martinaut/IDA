@@ -1,0 +1,19 @@
+package app_rules
+
+// ------------------------------------ IMPORT --------------------------------------
+import at.jku.dke.inga.app.nlp.models.GraphDBSimilarityServiceModel
+import at.jku.dke.inga.app.nlp.helpers.SimilarityHelper
+import at.jku.dke.inga.app.nlp.models.WordGroup
+import at.jku.dke.inga.data.models.CubeSimilarity
+
+// ------------------------------------ RULES ---------------------------------------
+rule "CubeSimilarity EN - Word Similarity"
+    agenda-group "graphdb-similarity"
+when
+    $model : GraphDBSimilarityServiceModel(language == "en")
+    $wordGroup : WordGroup()
+then
+    for (CubeSimilarity s : SimilarityHelper.getGraphDbEnglishWordSimilarities($wordGroup)) {
+        insert(s);
+    }
+end

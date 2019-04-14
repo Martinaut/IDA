@@ -2,7 +2,7 @@ package at.jku.dke.inga.data.repositories;
 
 import at.jku.dke.inga.data.QueryException;
 import at.jku.dke.inga.data.configuration.DataSpringConfiguration;
-import at.jku.dke.inga.data.models.Similarity;
+import at.jku.dke.inga.data.models.CubeSimilarity;
 import at.jku.dke.inga.shared.spring.SharedSpringConfiguration;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -25,7 +25,7 @@ class SimilarityRepositoryTest {
         // Prepare
 
         // Execute
-        List<Similarity> labels = repository.getTermSimilarity("en", "amount");
+        List<CubeSimilarity> labels = repository.getTermSimilarity("en", "amount");
         System.out.println(labels);
 
         // Assert
@@ -37,7 +37,7 @@ class SimilarityRepositoryTest {
         // Prepare
 
         // Execute
-        List<Similarity> labels = repository.getWordSimilarity("en", "doctor district");
+        List<CubeSimilarity> labels = repository.getWordSimilarity("en", "doctor district");
         System.out.println(labels);
 
         // Assert

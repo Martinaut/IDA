@@ -1,7 +1,6 @@
 package at.jku.dke.inga.app.ruleset.csp.domain;
 
-import at.jku.dke.inga.data.models.DimensionSimilarity;
-import at.jku.dke.inga.data.models.Similarity;
+import at.jku.dke.inga.data.models.CubeSimilarity;
 import com.google.common.collect.Sets;
 import org.optaplanner.core.api.domain.solution.PlanningEntityProperty;
 import org.optaplanner.core.api.domain.solution.PlanningScore;
@@ -35,8 +34,8 @@ public class AnalysisSituationSolution {
         this.score = HardSoftScore.ZERO;
     }
 
-    public AnalysisSituationSolution(Set<String> cubes, Set<Similarity> measures, Set<Similarity> levels, Set<Similarity> sliceConditions,
-                                     Set<Similarity> baseMeasureConditions, Set<Similarity> filterConditions) {
+    public AnalysisSituationSolution(Set<String> cubes, Set<CubeSimilarity> measures, Set<CubeSimilarity> levels, Set<CubeSimilarity> sliceConditions,
+                                     Set<CubeSimilarity> baseMeasureConditions, Set<CubeSimilarity> filterConditions) {
         this.cubes = cubes;
         this.measures = createAllPossibleCombinations(measures).stream().map(AnalysisSituationElement::new).collect(Collectors.toSet());
         this.levels = createAllPossibleCombinations(levels).stream().map(AnalysisSituationElement::new).collect(Collectors.toSet());
@@ -47,10 +46,10 @@ public class AnalysisSituationSolution {
         this.score = HardSoftScore.ZERO;
     }
 
-    private Set<Set<Similarity>> createAllPossibleCombinations(Set<Similarity> data) {
-        Set<Set<Similarity>> result = new HashSet<>();
-        var grouped = data.stream().collect(Collectors.groupingBy(Similarity::getCube));
-        for (List<Similarity> sims : grouped.values()) {
+    private Set<Set<CubeSimilarity>> createAllPossibleCombinations(Set<CubeSimilarity> data) {
+        Set<Set<CubeSimilarity>> result = new HashSet<>();
+        var grouped = data.stream().collect(Collectors.groupingBy(CubeSimilarity::getCube));
+        for (List<CubeSimilarity> sims : grouped.values()) {
             for (int i = 0; i <= sims.size(); i++) {
                 result.addAll(Sets.combinations(new HashSet<>(sims), i));
             }

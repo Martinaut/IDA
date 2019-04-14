@@ -154,7 +154,7 @@ class OperationTest {
     @Test
     void testConstructor3() {
         // Prepare
-        final Operation op = new Operation(DEFAULT_TEST_EVENT_NAME, "executeQuery", DEFAULT_TEST_POSITION);
+        final Operation op = new Operation(DEFAULT_TEST_EVENT_NAME, "execute a Query", DEFAULT_TEST_POSITION);
 
         // Execute
         int pos = op.getPosition();
@@ -164,7 +164,7 @@ class OperationTest {
         // Assert
         assertEquals(DEFAULT_TEST_POSITION, pos);
         assertEquals(DEFAULT_TEST_EVENT_NAME, evt);
-        assertEquals("Execute Query", txt);
+        assertEquals("execute a Query", txt);
     }
 
     @Test

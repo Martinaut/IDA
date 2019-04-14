@@ -31,6 +31,19 @@ public class Operation implements Comparable<Operation>, Displayable {
     /**
      * Instantiates a new instance of class {@link Operation}.
      *
+     * @param eventName   The event name.
+     * @param displayName The display name.
+     * @param position    The position of operation in the list of operations.
+     */
+    public Operation(String eventName, String displayName, int position) {
+        this.eventName = eventName;
+        this.displayName = displayName;
+        this.position = position;
+    }
+
+    /**
+     * Instantiates a new instance of class {@link Operation}.
+     *
      * @param eventName The event name and resource name in the <code>OperationNames</code> resource bundle.
      * @param locale    The locale for the resource name.
      * @param position  The position of operation in the list of operations.
@@ -38,19 +51,6 @@ public class Operation implements Comparable<Operation>, Displayable {
     public Operation(String eventName, Locale locale, int position) {
         this.eventName = eventName;
         this.displayName = ResourceBundleHelper.getResourceString("OperationNames", locale, eventName);
-        this.position = position;
-    }
-
-    /**
-     * Instantiates a new instance of class {@link Operation}.
-     *
-     * @param eventName    The event name.
-     * @param resourceName The resource name in the <code>OperationNames</code> resource bundle.
-     * @param position     The position of operation in the list of operations.
-     */
-    public Operation(String eventName, String resourceName, int position) {
-        this.eventName = eventName;
-        this.displayName = ResourceBundleHelper.getResourceString("OperationNames", resourceName);
         this.position = position;
     }
 

@@ -5,6 +5,7 @@ import at.jku.dke.inga.rules.models.OperationIntentServiceModel
 import at.jku.dke.inga.rules.results.StringConfidenceResult
 import at.jku.dke.inga.shared.EventNames
 import org.apache.commons.lang3.math.NumberUtils
+import at.jku.dke.inga.app.ruleset.interception.OperationInputIntentModel
 
 // ------------------------------------ RULES ---------------------------------------
 rule "ExecuteOperation Intent"
@@ -12,5 +13,13 @@ rule "ExecuteOperation Intent"
 when
     $model : OperationIntentServiceModel(NumberUtils.isParsable(userInput))
 then
-    insert(new StringConfidenceResult(EventNames.NAVIGATE, 0.5));
+    insert(new StringConfidenceResult(EventNames.NAVIGATE, 1.0));
+end
+
+rule "ExecuteOperation Intent Similarity"
+    agenda-group "operation-intent-determination"
+when
+    $model : OperationInputIntentModel(topSimilarity != null)
+then
+    insert(new StringConfidenceResult(EventNames.NAVIGATE, $model.getTopSimilarity().getScore()));
 end

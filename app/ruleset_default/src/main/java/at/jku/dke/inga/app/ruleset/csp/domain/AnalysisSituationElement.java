@@ -1,6 +1,6 @@
 package at.jku.dke.inga.app.ruleset.csp.domain;
 
-import at.jku.dke.inga.data.models.Similarity;
+import at.jku.dke.inga.data.models.CubeSimilarity;
 
 import java.util.HashSet;
 import java.util.Objects;
@@ -9,28 +9,28 @@ import java.util.StringJoiner;
 
 public class AnalysisSituationElement {
 
-    private Set<Similarity> elements;
+    private Set<CubeSimilarity> elements;
 
     public AnalysisSituationElement() {
         this.elements = new HashSet<>();
     }
 
-    public AnalysisSituationElement(Set<Similarity> elements) {
+    public AnalysisSituationElement(Set<CubeSimilarity> elements) {
         this.elements = elements;
     }
 
-    public Set<Similarity> getElements() {
+    public Set<CubeSimilarity> getElements() {
         return elements;
     }
 
-    public void setElements(Set<Similarity> elements) {
+    public void setElements(Set<CubeSimilarity> elements) {
         this.elements = elements;
     }
 
     public double getScore() {
         if (elements == null) return 1;
         double score = elements.stream()
-                .mapToDouble(Similarity::getScore)
+                .mapToDouble(CubeSimilarity::getScore)
                 .reduce(0, (left, right) -> left * right);
         return Double.compare(score, 0) == 0 ? 1 : score;
     }

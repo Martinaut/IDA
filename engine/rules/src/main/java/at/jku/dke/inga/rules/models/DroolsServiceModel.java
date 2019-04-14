@@ -87,6 +87,15 @@ public abstract class DroolsServiceModel {
     // region --- Additional Data ---
 
     /**
+     * Gets the additional data.
+     *
+     * @return the additional data
+     */
+    public Map<String, Object> getAdditionalData() {
+        return Collections.unmodifiableMap(additionalData);
+    }
+
+    /**
      * Returns {@code true} if the additional data contains a mapping for the specified key.
      *
      * @param key The key whose presence in the additional data is to be tested.

@@ -6,10 +6,10 @@ import at.jku.dke.inga.rules.results.StringConfidenceResult
 import at.jku.dke.inga.shared.EventNames
 
 // ------------------------------------ RULES ---------------------------------------
-rule "MoreInformation Intent - 'more' Keyword"
-    agenda-group "intent-determination"
-when
-    $model : OperationIntentServiceModel(userInput.toLowerCase() contains "more")
-then
-    insert(new StringConfidenceResult(EventNames.MORE_INFORMATION, 0.5));
-end
+//rule "MoreInformation Intent - 'more' Keyword"
+//    agenda-group "intent-determination"
+//when
+//    $model : OperationIntentServiceModel(userInput.toLowerCase() contains "more")
+//then
+//    insert(new StringConfidenceResult(EventNames.MORE_INFORMATION, 0.5));
+//end

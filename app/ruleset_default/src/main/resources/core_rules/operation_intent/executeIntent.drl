@@ -4,6 +4,7 @@ package core_rules.operation_intent
 import at.jku.dke.inga.rules.models.OperationIntentServiceModel
 import at.jku.dke.inga.rules.results.StringConfidenceResult
 import at.jku.dke.inga.shared.EventNames
+import at.jku.dke.inga.app.ruleset.interception.OperationInputIntentModel
 
 // ------------------------------------ RULES ---------------------------------------
 rule "ExecuteQuery Intent - 'execute' keyword"
@@ -12,4 +13,12 @@ when
     $model : OperationIntentServiceModel(userInput.toLowerCase() contains "execute")
 then
     insert(new StringConfidenceResult(EventNames.EXECUTE_QUERY, 0.5));
+end
+
+rule "ExecuteQuery Intent - 'execute' similarity"
+    agenda-group "operation-intent-determination"
+when
+    $model : OperationInputIntentModel(topSimilarity != null && topSimilarity.getElement().getDisplayableId() == EventNames.EXECUTE_QUERY)
+then
+    insert(new StringConfidenceResult(EventNames.EXECUTE_QUERY, $model.getTopSimilarity().getScore()));
 end

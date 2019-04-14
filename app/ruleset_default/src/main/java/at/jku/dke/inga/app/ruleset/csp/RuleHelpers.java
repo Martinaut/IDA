@@ -2,9 +2,8 @@ package at.jku.dke.inga.app.ruleset.csp;
 
 import at.jku.dke.inga.app.ruleset.csp.domain.AnalysisSituation;
 import at.jku.dke.inga.app.ruleset.csp.domain.AnalysisSituationElement;
+import at.jku.dke.inga.data.models.CubeSimilarity;
 import at.jku.dke.inga.data.models.DimensionSimilarity;
-import at.jku.dke.inga.data.models.Similarity;
-import com.google.common.util.concurrent.AtomicDouble;
 
 import java.util.*;
 import java.util.function.Function;
@@ -63,7 +62,7 @@ public final class RuleHelpers {
         if (as == null) return false;
 
         return as.getAllSimilarities().stream()
-                .map(Similarity::getTerm)
+                .map(CubeSimilarity::getTerm)
                 .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()))
                 .values().stream()
                 .anyMatch(x -> x > 1);
@@ -73,14 +72,14 @@ public final class RuleHelpers {
         if (as == null) return 0;
 
         // Build map
-        Map<String, List<Similarity>> similarityMap = as.getAllSimilarities().stream().collect(Collectors.groupingBy(Similarity::getTerm));
+        Map<String, List<CubeSimilarity>> similarityMap = as.getAllSimilarities().stream().collect(Collectors.groupingBy(CubeSimilarity::getTerm));
         if (similarityMap.values().stream().allMatch(x -> x.size() <= 1)) return 0;
 
         // Calculate
         return (int) ((similarityMap.values().stream()
                 .filter(x -> x.size() > 1)
                 .flatMap(Collection::stream)
-                .mapToDouble(Similarity::getScore)
+                .mapToDouble(CubeSimilarity::getScore)
                 .map(d -> 1 - d)
                 .sum() * -1) * 10_000d);
     }
@@ -88,7 +87,7 @@ public final class RuleHelpers {
     public static boolean containsDuplicates(AnalysisSituation as) {
         if (as == null) return false;
         return as.getAllSimilarities().stream()
-                .collect(Collectors.groupingBy(Similarity::getElement, Collectors.counting()))
+                .collect(Collectors.groupingBy(CubeSimilarity::getElement, Collectors.counting()))
                 .values()
                 .stream()
                 .anyMatch(x -> x > 1);

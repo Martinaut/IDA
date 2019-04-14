@@ -1,7 +1,6 @@
 package at.jku.dke.inga.app.ruleset.csp.domain;
 
-import at.jku.dke.inga.data.models.Similarity;
-import com.google.common.math.DoubleMath;
+import at.jku.dke.inga.data.models.CubeSimilarity;
 import org.optaplanner.core.api.domain.entity.PlanningEntity;
 import org.optaplanner.core.api.domain.variable.PlanningVariable;
 
@@ -103,8 +102,8 @@ public class AnalysisSituation {
         return (int) (score * 10_000d); // TODO: was wenn mehrere gleich in z. b. measures? --> regel
     }
 
-    public Set<Similarity> getAllSimilarities() {
-        Set<Similarity> similarities = new HashSet<>();
+    public Set<CubeSimilarity> getAllSimilarities() {
+        Set<CubeSimilarity> similarities = new HashSet<>();
         if (getGranularityLevels() != null)
             similarities.addAll(getGranularityLevels().getElements());
         if (getSliceConditions() != null)

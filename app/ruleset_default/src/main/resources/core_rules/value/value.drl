@@ -11,6 +11,7 @@ import at.jku.dke.inga.shared.display.ListDisplay
 import at.jku.dke.inga.shared.display.TwoListDisplay
 import at.jku.dke.inga.shared.EventNames
 import at.jku.dke.inga.app.ruleset.helpers.UserInput
+import at.jku.dke.inga.app.ruleset.interception.ValueModel
 
 // ------------------------------------ RULES ---------------------------------------
 rule "Resolve Value - ListDisplay"
@@ -42,7 +43,26 @@ then
                      1.0));
 end
 
-rule "Invalid Operation Number - ListDisplay"
+rule "Resolve Value - Similarity"
+    agenda-group "value-determination"
+    salience 100
+when
+    $model : ValueModel(topSimilarity != null)
+then
+    insert(new DisplayableConfidenceResult($model.getTopSimilarity().getElement(), $model.getTopSimilarity().getScore()));
+end
+
+rule "Invalid Value Similarity"
+    agenda-group "value-determination"
+    salience 3
+when
+    $model : ValueModel(topSimilarity == null)
+    not ConfidenceResult()
+then
+    insert(new StringConfidenceResult(EventNames.INVALID_INPUT, 1.0));
+end
+
+rule "Invalid Value Number - ListDisplay"
     agenda-group "value-determination"
     salience 2
 when

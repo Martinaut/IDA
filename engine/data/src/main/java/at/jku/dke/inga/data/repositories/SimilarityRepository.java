@@ -3,7 +3,7 @@ package at.jku.dke.inga.data.repositories;
 import at.jku.dke.inga.data.QueryException;
 import at.jku.dke.inga.data.configuration.GraphDbConnection;
 import at.jku.dke.inga.data.models.DimensionSimilarity;
-import at.jku.dke.inga.data.models.Similarity;
+import at.jku.dke.inga.data.models.CubeSimilarity;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.rdf4j.model.Literal;
@@ -40,7 +40,7 @@ public class SimilarityRepository extends BaseRepository {
      * @throws QueryException                If an exception occurred while executing the query.
      * @throws UnsupportedOperationException If the {@code lang} is not {@code en}.
      */
-    public List<Similarity> getTermSimilarity(String lang, String term) throws QueryException {
+    public List<CubeSimilarity> getTermSimilarity(String lang, String term) throws QueryException {
         if (StringUtils.isBlank(term)) throw new IllegalArgumentException("term must not be null or empty");
         if (StringUtils.isBlank(lang)) throw new IllegalArgumentException("lang must not be null or empty");
         if (!lang.equals("en"))
@@ -61,7 +61,7 @@ public class SimilarityRepository extends BaseRepository {
                                 ((Literal) x.getValue("score")).doubleValue(),
                                 x.getValue("dimension").stringValue()
                         ) :
-                        new Similarity(
+                        new CubeSimilarity(
                                 term,
                                 x.getValue("cube").stringValue(),
                                 x.getValue("element").stringValue(),
@@ -81,7 +81,7 @@ public class SimilarityRepository extends BaseRepository {
      * @throws QueryException                If an exception occurred while executing the query.
      * @throws UnsupportedOperationException If the {@code lang} is not {@code en}.
      */
-    public List<Similarity> getWordSimilarity(String lang, String term) throws QueryException {
+    public List<CubeSimilarity> getWordSimilarity(String lang, String term) throws QueryException {
         if (StringUtils.isBlank(term)) throw new IllegalArgumentException("term must not be null or empty");
         if (StringUtils.isBlank(lang)) throw new IllegalArgumentException("lang must not be null or empty");
         if (!lang.equals("en"))
@@ -116,7 +116,7 @@ public class SimilarityRepository extends BaseRepository {
                                 ((Literal) x.getValue("score")).doubleValue(),
                                 x.getValue("dimension").stringValue()
                         ) :
-                        new Similarity(
+                        new CubeSimilarity(
                                 term,
                                 x.getValue("cube").stringValue(),
                                 x.getValue("element").stringValue(),

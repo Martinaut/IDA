@@ -5,6 +5,7 @@ import at.jku.dke.inga.rules.models.OperationServiceModel
 import at.jku.dke.inga.shared.EventNames
 import at.jku.dke.inga.rules.results.StringConfidenceResult
 import org.apache.commons.lang3.math.NumberUtils
+import at.jku.dke.inga.app.ruleset.interception.OperationModel
 
 // ------------------------------------ RULES ---------------------------------------
 rule "Resolve Operation"
@@ -16,6 +17,25 @@ then
     insert(new StringConfidenceResult($model.getPossibleOperations().get(NumberUtils.createInteger($model.getUserInput())).getEventName(), 1.0));
 end
 
+rule "Resolve Operation Similarity"
+    agenda-group "operation-determination"
+    salience 100
+when
+    $model : OperationModel(topSimilarity != null)
+then
+    insert(new StringConfidenceResult($model.getTopSimilarity().getElement().getDisplayableId(), $model.getTopSimilarity().getScore()));
+end
+
+rule "Invalid Operation Similarity"
+    agenda-group "operation-determination"
+    salience 2
+when
+    $model : OperationModel(topSimilarity == null)
+    not StringConfidenceResult()
+then
+    insert(new StringConfidenceResult(EventNames.INVALID_INPUT, 1.0));
+end
+
 rule "Invalid Operation Number"
     agenda-group "operation-determination"
     salience 1
@@ -25,3 +45,5 @@ when
 then
     insert(new StringConfidenceResult(EventNames.INVALID_INPUT, 1.0));
 end
+
+// TODO: e.g. "option 1" "the first option"

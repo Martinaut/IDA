@@ -1,0 +1,17 @@
+apply plugin: 'java-library'
+version '1.0.0-SNAPSHOT'
+
+dependencies {
+    implementation project(':engine:data')
+    implementation project(':engine:shared')
+    implementation project(':engine:rules')
+
+    implementation 'edu.stanford.nlp:stanford-corenlp:3.9.2'
+    implementation 'edu.stanford.nlp:stanford-corenlp:3.9.2:models'
+    implementation 'edu.stanford.nlp:stanford-corenlp:3.9.2:models-english'
+    implementation 'edu.stanford.nlp:stanford-corenlp:3.9.2:models-english-kbp'
+    implementation 'edu.stanford.nlp:stanford-corenlp:3.9.2:models-german'
+    // implementation 'edu.stanford.nlp:stanford-parser:3.9.2'
+
+    implementation 'info.debatty:java-string-similarity:1.2.1'
+}
