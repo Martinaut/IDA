@@ -6,8 +6,11 @@ import at.jku.dke.inga.data.models.Similarity;
 import at.jku.dke.inga.rules.models.OperationIntentServiceModel;
 import at.jku.dke.inga.scxml.interceptors.DetermineOperationInputIntentInterceptor;
 import at.jku.dke.inga.shared.display.Displayable;
+import at.jku.dke.inga.shared.operations.Operation;
+import com.ibm.icu.text.RuleBasedNumberFormat;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -21,6 +24,19 @@ public class OperationInputIntentInterceptor implements DetermineOperationInputI
      */
     @Override
     public OperationIntentServiceModel modifyModel(OperationIntentServiceModel operationIntentServiceModel) {
+        Collection<Displayable> possibleValues = operationIntentServiceModel.getPossibleOperations().values().stream().map(x -> (Displayable) x).collect(Collectors.toSet());
+
+        int i = 1;
+        RuleBasedNumberFormat nf = new RuleBasedNumberFormat(operationIntentServiceModel.getLocale(), RuleBasedNumberFormat.SPELLOUT);
+        for (Operation op : operationIntentServiceModel.getPossibleOperations().values()) {
+            possibleValues.add(new Operation(op.getEventName(), "Option " + nf.format(i++), op.getPosition())); // TODO: i18n
+        }
+
+        i = 1;
+        for (Operation op : operationIntentServiceModel.getPossibleOperations().values()) {
+            possibleValues.add(new Operation(op.getEventName(), nf.format(i++, "%spellout-ordinal") + " Option", op.getPosition())); // TODO: i18n
+        }
+
         // Build Model
         StringSimilarityServiceModel model = new StringSimilarityServiceModel(
                 operationIntentServiceModel.getCurrentState(),
@@ -29,7 +45,7 @@ public class OperationInputIntentInterceptor implements DetermineOperationInputI
                 operationIntentServiceModel.getOperation(),
                 operationIntentServiceModel.getAdditionalData(),
                 operationIntentServiceModel.getUserInput(),
-                operationIntentServiceModel.getPossibleOperations().values().stream().map(x -> (Displayable) x).collect(Collectors.toSet())
+                possibleValues
         );
 
         // Execute

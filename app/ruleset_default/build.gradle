@@ -8,4 +8,5 @@ dependencies {
     implementation project(':app:nlp')
 
     implementation 'org.optaplanner:optaplanner-core:7.20.0.Final'
+    implementation 'com.ibm.icu:icu4j:64.1'
 }
