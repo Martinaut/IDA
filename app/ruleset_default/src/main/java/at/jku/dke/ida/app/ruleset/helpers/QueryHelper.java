@@ -5,7 +5,7 @@ import at.jku.dke.ida.data.models.DimensionLabel;
 import at.jku.dke.ida.data.models.DimensionLevelLabel;
 import at.jku.dke.ida.data.models.Label;
 import at.jku.dke.ida.data.repositories.GranularityLevelRepository;
-import at.jku.dke.ida.rules.models.ValueDisplayServiceModel;
+import at.jku.dke.ida.rules.interfaces.ValueDisplayServiceModel;
 import at.jku.dke.ida.shared.models.DimensionQualification;
 import at.jku.dke.ida.shared.models.NonComparativeAnalysisSituation;
 import org.apache.commons.lang3.tuple.Pair;

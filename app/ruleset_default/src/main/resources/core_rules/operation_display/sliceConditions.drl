@@ -1,18 +1,18 @@
 package core_rules.operation_display
 
 // ------------------------------------ IMPORT --------------------------------------
-import at.jku.dke.ida.shared.EventNames
+import at.jku.dke.ida.shared.Event
 import at.jku.dke.ida.shared.models.NonComparativeAnalysisSituation
 import at.jku.dke.ida.shared.operations.Operation
-import at.jku.dke.ida.rules.models.OperationDisplayServiceModel
+import at.jku.dke.ida.rules.models.DefaultOperationDisplayServiceModel
 
 // -------------------------- SLICE CONDITION OPERATIONS ----------------------------
 rule "'Add Slice Condition' - if not selected level predicate available"
     agenda-group "operation-display-determination"
 when
-    $model : OperationDisplayServiceModel(notSelectedSliceConditions.isEmpty() == false)
+    $model : DefaultOperationDisplayServiceModel(notSelectedSliceConditions.isEmpty() == false)
 then
-    insert(new Operation(EventNames.NAVIGATE_SLICE_CONDITION_NARROW, $model.getLocale(), 40));
+    insert(new Operation(Event.NAVIGATE_SLICE_CONDITION_NARROW, $model.getLocale(), 40));
 end
 
 //rule "'Narrow Slice Condition' - if "
@@ -26,9 +26,9 @@ end
 rule "'Drop Slice Condition' - if at least one level predicate selected"
     agenda-group "operation-display-determination"
 when
-    $model : OperationDisplayServiceModel(selectedSliceConditions.isEmpty() == false)
+    $model : DefaultOperationDisplayServiceModel(selectedSliceConditions.isEmpty() == false)
 then
-    insert(new Operation(EventNames.NAVIGATE_SLICE_CONDITION_BROADEN, $model.getLocale(), 42));
+    insert(new Operation(Event.NAVIGATE_SLICE_CONDITION_BROADEN, $model.getLocale(), 42));
 end
 
 //rule "'Broaden Slice Condition' - if "
@@ -42,7 +42,7 @@ end
 rule "'Refocus Slice Condition' - if at least one selected an one not selected"
     agenda-group "operation-display-determination"
 when
-    $model : OperationDisplayServiceModel(sliceConditionRefocusDimensions.isEmpty() == false)
+    $model : DefaultOperationDisplayServiceModel(sliceConditionRefocusDimensions.isEmpty() == false)
 then
-    insert(new Operation(EventNames.NAVIGATE_SLICE_CONDITION_REFOCUS, $model.getLocale(), 41));
+    insert(new Operation(Event.NAVIGATE_SLICE_CONDITION_REFOCUS, $model.getLocale(), 41));
 end

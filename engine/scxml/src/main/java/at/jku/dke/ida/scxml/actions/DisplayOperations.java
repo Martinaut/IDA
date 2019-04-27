@@ -2,7 +2,8 @@ package at.jku.dke.ida.scxml.actions;
 
 import at.jku.dke.ida.data.QueryException;
 import at.jku.dke.ida.data.repositories.*;
-import at.jku.dke.ida.rules.models.OperationDisplayServiceModel;
+import at.jku.dke.ida.rules.interfaces.OperationDisplayServiceModel;
+import at.jku.dke.ida.rules.models.DefaultOperationDisplayServiceModel;
 import at.jku.dke.ida.rules.services.OperationDisplayService;
 import at.jku.dke.ida.scxml.interceptors.DisplayOperationsInterceptor;
 import at.jku.dke.ida.scxml.session.SessionContextModel;
@@ -24,7 +25,7 @@ import java.util.*;
  * This action identifies operations from which the user can select one.
  * Operations can be select cube, drop measure, ...
  */
-public class DisplayOperations extends BaseAction {
+public class DisplayOperations extends BaseAction { // TODO: überarbeiten
     /**
      * Executes the action operations.
      *
@@ -57,18 +58,15 @@ public class DisplayOperations extends BaseAction {
         }
 
         // Build model
-        var model = new OperationDisplayServiceModel(
+        OperationDisplayServiceModel model = new DefaultOperationDisplayServiceModel(
                 getCurrentState(),
-                ctxModel.getLocale(),
-                ctxModel.getAnalysisSituation(),
-                ctxModel.getOperation(),
-                ctxModel.getAdditionalData(),
+                ctxModel,
                 measures,
                 granularityLevels,
                 sliceConditions,
+                diceNodes,
                 bmcs,
-                filters,
-                diceNodes
+                filters
         );
 
         var interceptor = BeanUtil.getOptionalBean(DisplayOperationsInterceptor.class);
@@ -79,7 +77,6 @@ public class DisplayOperations extends BaseAction {
         Collection<Operation> operations = new OperationDisplayService().executeRules(model);
         if (interceptor != null)
             operations = interceptor.modifyResult(operations);
-        ctxModel.setAdditionalData(new HashMap<>(model.getAdditionalData()));
 
         // Send to display
         ctxModel.setDisplayData(new ListDisplay("selectOperation", ctxModel.getLocale(), List.copyOf(operations)));

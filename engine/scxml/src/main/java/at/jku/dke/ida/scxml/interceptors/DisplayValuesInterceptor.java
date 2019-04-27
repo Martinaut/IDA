@@ -1,6 +1,6 @@
 package at.jku.dke.ida.scxml.interceptors;
 
-import at.jku.dke.ida.rules.models.ValueDisplayServiceModel;
+import at.jku.dke.ida.rules.interfaces.ValueDisplayServiceModel;
 import at.jku.dke.ida.shared.display.Display;
 
 /**

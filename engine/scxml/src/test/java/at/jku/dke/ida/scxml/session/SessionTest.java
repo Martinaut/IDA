@@ -3,7 +3,7 @@ package at.jku.dke.ida.scxml.session;
 import at.jku.dke.ida.scxml.events.AnalysisSituationListener;
 import at.jku.dke.ida.scxml.events.DisplayListener;
 import at.jku.dke.ida.scxml.exceptions.StateMachineInstantiationException;
-import at.jku.dke.ida.shared.EventNames;
+import at.jku.dke.ida.shared.Event;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -94,6 +94,6 @@ class SessionTest {
         s.setCubeSetFlag(false);
 
         // Assert
-        assertEquals(EventNames.NAVIGATE_CUBE_SELECT, s.getSessionContextModel().getOperation());
+        assertEquals(Event.NAVIGATE_CUBE_SELECT, s.getSessionContextModel().getOperation());
     }
 }

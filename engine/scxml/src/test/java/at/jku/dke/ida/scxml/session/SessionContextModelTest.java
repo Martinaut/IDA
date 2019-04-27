@@ -2,10 +2,10 @@ package at.jku.dke.ida.scxml.session;
 
 import at.jku.dke.ida.scxml.events.AnalysisSituationListener;
 import at.jku.dke.ida.scxml.events.DisplayListener;
-import at.jku.dke.ida.shared.EventNames;
+import at.jku.dke.ida.shared.Event;
 import at.jku.dke.ida.shared.display.Display;
 import at.jku.dke.ida.shared.display.ErrorDisplay;
-import at.jku.dke.ida.shared.models.AnalysisSituation;
+import at.jku.dke.ida.shared.models.EngineAnalysisSituation;
 import at.jku.dke.ida.shared.models.NonComparativeAnalysisSituation;
 import org.junit.jupiter.api.Test;
 
@@ -66,7 +66,7 @@ class SessionContextModelTest {
         assertEquals(locale, s.getLocale().getLanguage());
         assertEquals(dListener, s.getDisplayListener());
         assertEquals(asListener, s.getAnalysisSituationListener());
-        assertEquals(EventNames.NAVIGATE_CUBE_SELECT, s.getOperation());
+        assertEquals(Event.NAVIGATE_CUBE_SELECT, s.getOperation());
         assertNotNull(s.getAnalysisSituation());
         assertNotNull(s.getAdditionalData());
         assertNull(s.getDisplayData());
@@ -78,7 +78,7 @@ class SessionContextModelTest {
         // Prepare
         final String sessionId = "evtlistenertest";
         final String locale = "en";
-        final AnalysisSituation as = new NonComparativeAnalysisSituation();
+        final EngineAnalysisSituation as = new NonComparativeAnalysisSituation();
         final AnalysisSituationListener asListener = evt -> {
             assertNotNull(evt);
             assertEquals(as, evt.getAnalysisSituation());

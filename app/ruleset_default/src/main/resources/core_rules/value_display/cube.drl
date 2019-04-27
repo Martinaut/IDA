@@ -1,15 +1,15 @@
 package core_rules.value_display
 
 // ------------------------------------ IMPORT --------------------------------------
-import at.jku.dke.ida.shared.EventNames
+import at.jku.dke.ida.shared.Event
 import at.jku.dke.ida.shared.display.ListDisplay
-import at.jku.dke.ida.rules.models.ValueDisplayServiceModel
+import at.jku.dke.ida.rules.interfaces.ValueDisplayServiceModel
 
 // ------------------------------------ RULES ---------------------------------------
 rule "Select cubes"
     agenda-group "value-display-determination"
 when
-    $model : ValueDisplayServiceModel(operation == EventNames.NAVIGATE_CUBE_SELECT)
+    $model : ValueDisplayServiceModel(operation == Event.NAVIGATE_CUBE_SELECT)
 then
     insert(new ListDisplay("selectCube", $model.getLocale(), $model.getCubeRepository().getLabelsByLang($model.getLanguage())));
 end

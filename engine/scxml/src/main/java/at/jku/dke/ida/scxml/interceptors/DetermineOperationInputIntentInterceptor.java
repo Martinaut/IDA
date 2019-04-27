@@ -1,19 +1,19 @@
 package at.jku.dke.ida.scxml.interceptors;
 
-import at.jku.dke.ida.rules.models.OperationIntentServiceModel;
-import at.jku.dke.ida.rules.results.StringConfidenceResult;
-import at.jku.dke.ida.shared.EventNames;
+import at.jku.dke.ida.rules.interfaces.OperationIntentServiceModel;
+import at.jku.dke.ida.rules.results.EventConfidenceResult;
+import at.jku.dke.ida.shared.Event;
 
 import java.util.Collection;
 
 /**
  * Interceptor for modifying the model and the result of the {@link at.jku.dke.ida.scxml.actions.DetermineOperationInputIntent} action.
  */
-public interface DetermineOperationInputIntentInterceptor extends Interceptor<OperationIntentServiceModel, Collection<StringConfidenceResult>, String> {
+public interface DetermineOperationInputIntentInterceptor extends Interceptor<OperationIntentServiceModel, Collection<EventConfidenceResult>, Event> {
     @Override
-    default String modifyResult(Collection<StringConfidenceResult> result) {
+    default Event modifyResult(Collection<EventConfidenceResult> result) {
         return result.stream()
                 .sorted()
-                .findFirst().orElse(new StringConfidenceResult(EventNames.INVALID_INPUT)).getValue();
+                .findFirst().orElse(new EventConfidenceResult(Event.INVALID_INPUT)).getValue();
     }
 }

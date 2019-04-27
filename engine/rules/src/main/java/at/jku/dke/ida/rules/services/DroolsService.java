@@ -90,7 +90,7 @@ public abstract class DroolsService<TModel, TResult> implements AutoCloseable {
      *
      * @return The new kie session.
      */
-    protected final KieSession createNewSession() {
+    private KieSession createNewSession() {
         logger.debug("Creating new Kie Session.");
         if (container == null) {
             KieServices kieServices = KieServices.Factory.get();

@@ -1,7 +1,7 @@
 package at.jku.dke.ida.rules.services;
 
-import at.jku.dke.ida.rules.models.ValueIntentServiceModel;
-import at.jku.dke.ida.rules.results.StringConfidenceResult;
+import at.jku.dke.ida.rules.interfaces.ValueIntentServiceModel;
+import at.jku.dke.ida.rules.results.EventConfidenceResult;
 import org.kie.api.runtime.KieSession;
 
 import java.util.Collection;
@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
  *
  * <p>Executes rules belonging to agenda-groups: {@code intent-determination}, {@code value-intent-determination}</p>
  */
-public class ValueIntentService extends DroolsService<ValueIntentServiceModel, Collection<StringConfidenceResult>> {
+public class ValueIntentService extends DroolsService<ValueIntentServiceModel, Collection<EventConfidenceResult>> {
 
     /**
      * Instantiates a new instance of class {@linkplain ValueIntentService}.
@@ -23,13 +23,16 @@ public class ValueIntentService extends DroolsService<ValueIntentServiceModel, C
 
     /**
      * Executes the rules using the given model.
+     * <p>
+     * Inserts the model, the display data and the analysis situation into the Kie session.
      *
      * @param session The new kie session.
      * @param model   The model required by the rules. It is guaranteed, that the model is not {@code null}.
      * @return Result of the query execution
      */
     @Override
-    protected Collection<StringConfidenceResult> execute(KieSession session, ValueIntentServiceModel model) {
+    @SuppressWarnings("Duplicates")
+    protected Collection<EventConfidenceResult> execute(KieSession session, ValueIntentServiceModel model) {
         logger.info("Determining the value intent");
 
         // Add data
@@ -41,12 +44,12 @@ public class ValueIntentService extends DroolsService<ValueIntentServiceModel, C
         session.fireAllRules();
 
         // Get results and close session
-        Collection<?> result = session.getObjects(obj -> obj instanceof StringConfidenceResult);
+        Collection<?> result = session.getObjects(obj -> obj instanceof EventConfidenceResult);
         closeSession();
 
         // Sort and return
         return result.stream()
-                .map(x -> (StringConfidenceResult) x)
+                .map(x -> (EventConfidenceResult) x)
                 .sorted()
                 .collect(Collectors.toList());
     }

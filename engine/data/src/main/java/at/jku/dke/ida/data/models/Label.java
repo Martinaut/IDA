@@ -8,7 +8,7 @@ import java.util.StringJoiner;
 /**
  * Represents an element with a label and description of a specific language.
  */
-public class Label implements Displayable {
+public class Label implements Displayable, Comparable<Label> {
 
     private String uri;
     private String lang;
@@ -50,7 +50,7 @@ public class Label implements Displayable {
     /**
      * Instantiates a new instance of class {@linkplain Label}.
      *
-     * @param label       The label of the element.
+     * @param label The label of the element.
      */
     public Label(String label) {
         this.label = label;
@@ -167,5 +167,10 @@ public class Label implements Displayable {
     @Override
     public int hashCode() {
         return Objects.hash(uri, lang, label, description);
+    }
+
+    @Override
+    public int compareTo(Label other) {
+        return label.compareTo(other.label);
     }
 }

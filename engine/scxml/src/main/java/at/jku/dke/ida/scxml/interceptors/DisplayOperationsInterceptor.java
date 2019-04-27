@@ -1,6 +1,6 @@
 package at.jku.dke.ida.scxml.interceptors;
 
-import at.jku.dke.ida.rules.models.OperationDisplayServiceModel;
+import at.jku.dke.ida.rules.interfaces.OperationDisplayServiceModel;
 import at.jku.dke.ida.shared.operations.Operation;
 
 import java.util.Collection;

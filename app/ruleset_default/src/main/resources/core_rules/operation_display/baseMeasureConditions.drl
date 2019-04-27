@@ -1,18 +1,18 @@
 package core_rules.operation_display
 
 // ------------------------------------ IMPORT --------------------------------------
-import at.jku.dke.ida.shared.EventNames
+import at.jku.dke.ida.shared.Event
 import at.jku.dke.ida.shared.models.NonComparativeAnalysisSituation
 import at.jku.dke.ida.shared.operations.Operation
-import at.jku.dke.ida.rules.models.OperationDisplayServiceModel
+import at.jku.dke.ida.rules.interfaces.OperationDisplayServiceModel
 
 // ---------------------- BASE MEASURE CONDITION OPERATIONS -------------------------
 rule "'Add Base Measure Condition' - if at least one predicate is available"
     agenda-group "operation-display-determination"
 when
-    $model : OperationDisplayServiceModel(notSelectedBaseMeasureConditions.isEmpty() == false)
+    $model : OperationDisplayServiceModel(areNotSelectedBaseMeasureConditionsAvailable())
 then
-    insert(new Operation(EventNames.NAVIGATE_BMC_NARROW, 50));
+    insert(new Operation(Event.NAVIGATE_BMC_NARROW, 50));
 end
 
 //rule "'Narrow Base Measure Condition' - if "
@@ -28,7 +28,7 @@ when
     $as : NonComparativeAnalysisSituation(baseMeasureConditions.isEmpty() == false)
     $model : OperationDisplayServiceModel(analysisSituation == $as)
 then
-    insert(new Operation(EventNames.NAVIGATE_BMC_BROADEN, 52));
+    insert(new Operation(Event.NAVIGATE_BMC_BROADEN, 52));
 end
 
 //rule "'Broaden Base Measure Condition' - if "
@@ -43,7 +43,7 @@ rule "'Refocus Base Measure Condition' - if at least one predicate is selected a
     enabled false
 when
     $as : NonComparativeAnalysisSituation(baseMeasureConditions.isEmpty() == false)
-    $model : OperationDisplayServiceModel(notSelectedBaseMeasureConditions.isEmpty() == false, analysisSituation == $as)
+    $model : OperationDisplayServiceModel(areNotSelectedBaseMeasureConditionsAvailable(), analysisSituation == $as)
 then
-    insert(new Operation(EventNames.NAVIGATE_BMC_REFOCUS, 51));
+    insert(new Operation(Event.NAVIGATE_BMC_REFOCUS, 51));
 end

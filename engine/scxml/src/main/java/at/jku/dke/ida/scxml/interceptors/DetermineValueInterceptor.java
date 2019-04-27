@@ -1,9 +1,9 @@
 package at.jku.dke.ida.scxml.interceptors;
 
-import at.jku.dke.ida.rules.models.ValueServiceModel;
+import at.jku.dke.ida.rules.interfaces.ValueServiceModel;
 import at.jku.dke.ida.rules.results.ConfidenceResult;
-import at.jku.dke.ida.rules.results.StringConfidenceResult;
-import at.jku.dke.ida.shared.EventNames;
+import at.jku.dke.ida.rules.results.EventConfidenceResult;
+import at.jku.dke.ida.shared.Event;
 
 import java.util.Collection;
 
@@ -15,6 +15,6 @@ public interface DetermineValueInterceptor extends Interceptor<ValueServiceModel
     default ConfidenceResult modifyResult(Collection<ConfidenceResult> result) {
         return result.stream()
                 .sorted()
-                .findFirst().orElse(new StringConfidenceResult(EventNames.INVALID_INPUT));
+                .findFirst().orElse(new EventConfidenceResult(Event.INVALID_INPUT));
     }
 }

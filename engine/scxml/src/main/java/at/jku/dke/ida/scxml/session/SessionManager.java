@@ -5,6 +5,7 @@ import at.jku.dke.ida.scxml.events.DisplayListener;
 import at.jku.dke.ida.scxml.exceptions.SessionExpiredException;
 import at.jku.dke.ida.scxml.exceptions.StateMachineExecutionException;
 import at.jku.dke.ida.scxml.exceptions.StateMachineInstantiationException;
+import at.jku.dke.ida.shared.Event;
 import at.jku.dke.ida.shared.spring.BeanUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.scxml2.model.ModelException;
@@ -139,7 +140,7 @@ public final class SessionManager {
      * @param userInput The user input.
      * @throws StateMachineExecutionException If an error occurred while executing a state machine.
      * @throws SessionExpiredException        If the state chart session does not exist or is already expired (or state chart has finished).
-     * @see at.jku.dke.ida.shared.EventNames#USER_INPUT
+     * @see Event#USER_INPUT
      */
     public void triggerUserInput(String sessionId, String userInput) throws StateMachineExecutionException, SessionExpiredException {
         if (StringUtils.isBlank(sessionId)) throw new IllegalArgumentException("sessionId must not be null empty");

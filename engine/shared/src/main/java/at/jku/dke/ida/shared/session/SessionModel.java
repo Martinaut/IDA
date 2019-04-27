@@ -1,14 +1,16 @@
 package at.jku.dke.ida.shared.session;
 
-import at.jku.dke.ida.shared.EventNames;
+import at.jku.dke.ida.shared.Event;
 import at.jku.dke.ida.shared.display.Display;
 import at.jku.dke.ida.shared.models.AnalysisSituation;
+import at.jku.dke.ida.shared.models.EngineAnalysisSituation;
 import at.jku.dke.ida.shared.models.NonComparativeAnalysisSituation;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The model of a session context.
@@ -19,18 +21,18 @@ public class SessionModel {
     private final String sessionId;
     private final Locale locale;
 
-    private AnalysisSituation analysisSituation;
+    private EngineAnalysisSituation analysisSituation;
     private Display displayData;
 
     private String userInput;
-    private String operation;
+    private Event operation;
     private Map<String, Object> additionalData;
 
     /**
      * Instantiates a new instance of class {@link SessionModel}.
      *
-     * @param sessionId  The session id.
-     * @param locale     The locale of the context.
+     * @param sessionId The session id.
+     * @param locale    The locale of the context.
      * @throws IllegalArgumentException If the {@code sessionId} or {@code locale} is {@code null} or empty or blank.
      */
     public SessionModel(String sessionId, String locale) {
@@ -44,7 +46,7 @@ public class SessionModel {
         this.displayData = null;
 
         this.userInput = null;
-        this.operation = EventNames.NAVIGATE_CUBE_SELECT;
+        this.operation = Event.NAVIGATE_CUBE_SELECT;
         this.additionalData = new HashMap<>();
     }
 
@@ -80,7 +82,7 @@ public class SessionModel {
      *
      * @return the operation
      */
-    public String getOperation() {
+    public Event getOperation() {
         return operation;
     }
 
@@ -89,7 +91,7 @@ public class SessionModel {
      *
      * @param operation the operation
      */
-    public void setOperation(String operation) {
+    public void setOperation(Event operation) {
         this.operation = operation;
     }
 
@@ -107,7 +109,7 @@ public class SessionModel {
      *
      * @return the analysis situation
      */
-    public AnalysisSituation getAnalysisSituation() {
+    public EngineAnalysisSituation getAnalysisSituation() {
         return analysisSituation;
     }
 
@@ -115,8 +117,10 @@ public class SessionModel {
      * Sets the analysis situation.
      *
      * @param analysisSituation the analysis situation
+     * @throws IllegalArgumentException analysisSituation must not be null
      */
-    public void setAnalysisSituation(AnalysisSituation analysisSituation) {
+    public void setAnalysisSituation(EngineAnalysisSituation analysisSituation) {
+        if (analysisSituation == null) throw new IllegalArgumentException("analysisSituation must not be null");
         this.analysisSituation = analysisSituation;
     }
 
@@ -153,6 +157,7 @@ public class SessionModel {
      * @param additionalData the additional data
      */
     public void setAdditionalData(Map<String, Object> additionalData) {
-        this.additionalData = additionalData;
+        this.additionalData = Objects.requireNonNullElseGet(additionalData, HashMap::new);
     }
+
 }

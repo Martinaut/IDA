@@ -1,18 +1,18 @@
 package core_rules.value_display
 
 // ------------------------------------ IMPORT --------------------------------------
-import at.jku.dke.ida.shared.EventNames
+import at.jku.dke.ida.shared.Event
 import at.jku.dke.ida.shared.models.NonComparativeAnalysisSituation
 import at.jku.dke.ida.shared.display.ListDisplay
 import at.jku.dke.ida.shared.display.TwoListDisplay
-import at.jku.dke.ida.rules.models.ValueDisplayServiceModel
+import at.jku.dke.ida.rules.interfaces.ValueDisplayServiceModel
 
 // ------------------------------------ RULES ---------------------------------------
 rule "Add Measure - Select all measures, except the already selected ones"
     agenda-group "value-display-determination"
 when
     $as : NonComparativeAnalysisSituation()
-    $model : ValueDisplayServiceModel(operation == EventNames.NAVIGATE_MEASURE_ADD, analysisSituation == $as)
+    $model : ValueDisplayServiceModel(operation == Event.NAVIGATE_MEASURE_ADD, analysisSituation == $as)
 then
     insert(new ListDisplay(
         "addMeasure",
@@ -24,7 +24,7 @@ rule "Drop Measure - Select all selected Measures"
     agenda-group "value-display-determination"
 when
     $as : NonComparativeAnalysisSituation()
-    $model : ValueDisplayServiceModel(operation == EventNames.NAVIGATE_MEASURE_DROP, analysisSituation == $as)
+    $model : ValueDisplayServiceModel(operation == Event.NAVIGATE_MEASURE_DROP, analysisSituation == $as)
 then
     insert(new ListDisplay(
         "dropMeasure",
@@ -36,7 +36,7 @@ rule "Refocus Measure - Select all selected Measures and all not selected measur
     agenda-group "value-display-determination"
 when
     $as : NonComparativeAnalysisSituation()
-    $model : ValueDisplayServiceModel(operation == EventNames.NAVIGATE_MEASURE_REFOCUS, analysisSituation == $as)
+    $model : ValueDisplayServiceModel(operation == Event.NAVIGATE_MEASURE_REFOCUS, analysisSituation == $as)
 then
     insert(new TwoListDisplay(
         "refocusMeasure",

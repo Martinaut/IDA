@@ -1,12 +1,12 @@
 package core_rules.value_display
 
 // ------------------------------------ IMPORT --------------------------------------
-import at.jku.dke.ida.shared.EventNames
+import at.jku.dke.ida.shared.Event
 import at.jku.dke.ida.shared.models.NonComparativeAnalysisSituation
 import at.jku.dke.ida.shared.models.DimensionQualification
 import at.jku.dke.ida.shared.display.ListDisplay
 import at.jku.dke.ida.shared.display.TwoListDisplay
-import at.jku.dke.ida.rules.models.ValueDisplayServiceModel
+import at.jku.dke.ida.rules.interfaces.ValueDisplayServiceModel
 import at.jku.dke.ida.app.ruleset.helpers.Constants
 import at.jku.dke.ida.app.ruleset.helpers.QueryHelper
 
@@ -15,7 +15,7 @@ rule "Roll Up - Select Dimension"
     agenda-group "value-display-determination"
 when
     $as : NonComparativeAnalysisSituation()
-    $model : ValueDisplayServiceModel(operation == EventNames.NAVIGATE_GL_ROLL_UP, analysisSituation == $as, additionalDataContainsKey(Constants.ADD_DATA_DIMENSION) == false)
+    $model : ValueDisplayServiceModel(operation == Event.NAVIGATE_GL_ROLL_UP, analysisSituation == $as, additionalDataContainsKey(Constants.ADD_DATA_DIMENSION) == false)
 then
     insert(new ListDisplay(
         "rollUpDimension",
@@ -27,7 +27,7 @@ rule "Roll Up - All parent levels"
     agenda-group "value-display-determination"
 when
     $as : NonComparativeAnalysisSituation()
-    $model : ValueDisplayServiceModel(operation == EventNames.NAVIGATE_GL_ROLL_UP, analysisSituation == $as, additionalDataContainsKey(Constants.ADD_DATA_DIMENSION))
+    $model : ValueDisplayServiceModel(operation == Event.NAVIGATE_GL_ROLL_UP, analysisSituation == $as, additionalDataContainsKey(Constants.ADD_DATA_DIMENSION))
 then
     insert(new ListDisplay(
         "rollUp",
@@ -39,7 +39,7 @@ rule "Drill Down - Select Dimension"
     agenda-group "value-display-determination"
 when
     $as : NonComparativeAnalysisSituation()
-    $model : ValueDisplayServiceModel(operation == EventNames.NAVIGATE_GL_DRILL_DOWN, analysisSituation == $as, additionalDataContainsKey(Constants.ADD_DATA_DIMENSION) == false)
+    $model : ValueDisplayServiceModel(operation == Event.NAVIGATE_GL_DRILL_DOWN, analysisSituation == $as, additionalDataContainsKey(Constants.ADD_DATA_DIMENSION) == false)
 then
     insert(new ListDisplay(
         "drillDownDimension",
@@ -51,7 +51,7 @@ rule "Drill Down - All child levels"
     agenda-group "value-display-determination"
 when
     $as : NonComparativeAnalysisSituation()
-    $model : ValueDisplayServiceModel(operation == EventNames.NAVIGATE_GL_DRILL_DOWN, analysisSituation == $as, additionalDataContainsKey(Constants.ADD_DATA_DIMENSION))
+    $model : ValueDisplayServiceModel(operation == Event.NAVIGATE_GL_DRILL_DOWN, analysisSituation == $as, additionalDataContainsKey(Constants.ADD_DATA_DIMENSION))
 then
     insert(new ListDisplay(
         "drillDown",

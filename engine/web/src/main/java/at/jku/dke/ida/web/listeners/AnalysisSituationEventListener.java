@@ -1,15 +1,8 @@
 package at.jku.dke.ida.web.listeners;
 
-import at.jku.dke.ida.data.QueryException;
-import at.jku.dke.ida.data.models.Label;
 import at.jku.dke.ida.data.repositories.SimpleRepository;
 import at.jku.dke.ida.scxml.events.AnalysisSituationEvent;
 import at.jku.dke.ida.scxml.events.AnalysisSituationListener;
-import at.jku.dke.ida.shared.models.AnalysisSituation;
-import at.jku.dke.ida.shared.models.ComparativeAnalysisSituation;
-import at.jku.dke.ida.shared.models.DimensionQualification;
-import at.jku.dke.ida.shared.models.NonComparativeAnalysisSituation;
-import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,8 +12,6 @@ import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.SimpMessageType;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Component;
-
-import java.util.*;
 
 /**
  * Listens to analysis situation changes and sends them to the specified session.
@@ -58,113 +49,10 @@ public class AnalysisSituationEventListener implements AnalysisSituationListener
         headerAccessor.setSessionId(evt.getSessionId());
         headerAccessor.setLeaveMutable(true);
 
-        AnalysisSituation as;
-        if (evt.getAnalysisSituation() instanceof NonComparativeAnalysisSituation) {
-            as = translate((NonComparativeAnalysisSituation) evt.getAnalysisSituation(), evt.getLanguage());
-        } else {
-            if (evt.getAnalysisSituation() instanceof ComparativeAnalysisSituation) {
-                as = translate((ComparativeAnalysisSituation) evt.getAnalysisSituation(), evt.getLanguage());
-            } else {
-                throw new IllegalStateException("Analysis Situation is of an invalid type. This exception should never be thrown.");
-            }
-        }
-
         template.convertAndSendToUser(
                 evt.getSessionId(),
                 "/queue/as",
-                as,
+                AnalysisSituationConverter.convert(evt.getLanguage(), this.simpleRepository, evt.getAnalysisSituation()),
                 headerAccessor.getMessageHeaders());
-
-    }
-
-    private NonComparativeAnalysisSituation translate(NonComparativeAnalysisSituation evtAs, String lang) {
-        LOGGER.debug("Translating NonComparativeAnalysisSituation with cube {}.", evtAs.getCube());
-
-        // region Get Labels
-        Set<String> uris = new HashSet<>();
-        uris.add(evtAs.getCube());
-        uris.addAll(evtAs.getMeasures());
-        uris.addAll(evtAs.getBaseMeasureConditions());
-        uris.addAll(evtAs.getFilterConditions());
-        evtAs.getDimensionQualifications().forEach(dq -> {
-            uris.add(dq.getDimension());
-            uris.add(dq.getGranularityLevel());
-            uris.add(dq.getDiceNode());
-            uris.add(dq.getDiceLevel());
-            uris.addAll(dq.getSliceConditions());
-        });
-        // endregion
-
-        try {
-            Map<String, Label> lbls = simpleRepository.getLabelsByLangAndIris(lang, uris);
-
-            // region Create New AS
-            NonComparativeAnalysisSituation newAs = new NonComparativeAnalysisSituation();
-//            newAs.setMeasures(new TreeSet<>());
-            newAs.setBaseMeasureConditions(new TreeSet<>());
-            newAs.setFilterConditions(new TreeSet<>());
-            newAs.setDimensionQualifications(new TreeSet<>());
-            // endregion
-
-            // region Set Labels
-            newAs.setCube(lbls.getOrDefault(evtAs.getCube(), new Label(evtAs.getCube())).getLabel());
-            evtAs.getMeasures().forEach(m -> newAs.addMeasure(lbls.getOrDefault(m, new Label(m)).getLabel()));
-            evtAs.getBaseMeasureConditions().forEach(bm -> newAs.addBaseMeasureCondition(lbls.getOrDefault(bm, new Label(bm)).getLabel()));
-            evtAs.getFilterConditions().forEach(f -> newAs.addFilterCondition(lbls.getOrDefault(f, new Label(f)).getLabel()));
-            evtAs.getDimensionQualifications().forEach(dq -> {
-                DimensionQualification mapped = new DimensionQualification();
-                mapped.setSliceConditions(new TreeSet<>());
-                mapped.setDimension(lbls.getOrDefault(dq.getDimension(), new Label(dq.getDimension())).getLabel());
-                mapped.setGranularityLevel(lbls.getOrDefault(dq.getGranularityLevel(), new Label(dq.getGranularityLevel())).getLabel());
-                mapped.setDiceNode(lbls.getOrDefault(dq.getDiceNode(), new Label(dq.getDiceNode())).getLabel());
-                mapped.setDiceLevel(lbls.getOrDefault(dq.getDiceLevel(), new Label(dq.getDiceLevel())).getLabel());
-                dq.getSliceConditions().forEach(sc -> mapped.addSliceCondition(lbls.getOrDefault(sc, new Label(sc)).getLabel()));
-                newAs.addDimensionQualification(mapped);
-            });
-            // endregion
-
-            return newAs;
-        } catch (QueryException ex) {
-            LOGGER.error("Could not load translations of NonComparativeAnalysisSituation.", ex);
-        }
-        return evtAs;
-    }
-
-    private ComparativeAnalysisSituation translate(ComparativeAnalysisSituation evtAs, String lang) {
-        LOGGER.debug("Translating ComparativeAnalysisSituation.");
-        ComparativeAnalysisSituation newAs = new ComparativeAnalysisSituation();
-        newAs.setContextOfInterest(translate(evtAs.getContextOfInterest(), lang));
-        newAs.setContextOfComparison(translate(evtAs.getContextOfComparison(), lang));
-
-        // region Get Labels
-        Set<String> uris = new HashSet<>();
-        uris.addAll(evtAs.getScores());
-        uris.addAll(evtAs.getScoreFilters());
-        evtAs.getJoinConditions().forEach(jc -> {
-            uris.add(jc.getLeft());
-            uris.add(jc.getRight());
-        });
-        // endregion
-
-        try {
-            Map<String, Label> lbls = simpleRepository.getLabelsByLangAndIris(lang, uris);
-
-//            newAs.setJoinConditions(new TreeSet<>());
-//            newAs.setScores(new TreeSet<>());
-            newAs.setScoreFilters(new TreeSet<>());
-
-            // region Set Labels
-            evtAs.getScores().forEach(s -> newAs.addScore(lbls.getOrDefault(s, new Label(s)).getLabel()));
-            evtAs.getScoreFilters().forEach(sf -> newAs.addScoreFilter(lbls.getOrDefault(sf, new Label(sf)).getLabel()));
-            evtAs.getJoinConditions().forEach(jc -> newAs.addJoinCondition(new ImmutablePair<>(
-                    lbls.getOrDefault(jc.getLeft(), new Label(jc.getLeft())).getLabel(),
-                    lbls.getOrDefault(jc.getRight(), new Label(jc.getRight())).getLabel()
-            )));
-            // endregion
-            return newAs;
-        } catch (QueryException ex) {
-            LOGGER.error("Could not load translations of ComparativeAnalysisSituation.", ex);
-        }
-        return newAs;
     }
 }

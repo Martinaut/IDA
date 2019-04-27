@@ -1,6 +1,6 @@
 package at.jku.dke.ida.rules.services;
 
-import at.jku.dke.ida.rules.models.SetValueServiceModel;
+import at.jku.dke.ida.rules.interfaces.SetValueServiceModel;
 import org.kie.api.runtime.KieSession;
 
 /**
@@ -19,6 +19,8 @@ public class SetValueService extends DroolsService<SetValueServiceModel, Void>  
 
     /**
      * Executes the rules using the given model.
+     * <p>
+     * Inserts the model, the value and the analysis situation into the Kie session.
      *
      * @param session The new kie session.
      * @param model   The model required by the rules. It is guaranteed, that the model is not {@code null}.

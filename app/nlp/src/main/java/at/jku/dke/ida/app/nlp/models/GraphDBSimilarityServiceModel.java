@@ -1,47 +1,43 @@
 package at.jku.dke.ida.app.nlp.models;
 
-import at.jku.dke.ida.rules.models.DroolsServiceModel;
-import at.jku.dke.ida.shared.models.AnalysisSituation;
+import at.jku.dke.ida.rules.models.AbstractServiceModel;
+import at.jku.dke.ida.shared.models.EngineAnalysisSituation;
+import at.jku.dke.ida.shared.session.SessionModel;
 
 import java.util.Collections;
 import java.util.Locale;
-import java.util.Map;
 import java.util.Set;
 
 /**
  * Model used by {@link at.jku.dke.ida.app.nlp.drools.GraphDBSimilarityService}.
  */
-public class GraphDBSimilarityServiceModel extends DroolsServiceModel {
+public class GraphDBSimilarityServiceModel extends AbstractServiceModel {
 
     private final Set<WordGroup> wordGroups;
 
     /**
      * Instantiates a new instance of class {@link GraphDBSimilarityServiceModel}.
      *
-     * @param locale            The display locale.
-     * @param analysisSituation The analysis situation.
-     * @param additionalData    Additional data.
-     * @param wordGroups        The word groups.
-     * @throws IllegalArgumentException If {@code analysisSituation} is {@code null} or empty.
+     * @param sessionModel The session model.
+     * @param wordGroups   The word groups.
+     * @throws IllegalArgumentException If {@code sessionModel} is {@code null} or empty.
      */
-    public GraphDBSimilarityServiceModel(Locale locale, AnalysisSituation analysisSituation, Map<String, Object> additionalData, Set<WordGroup> wordGroups) {
-        super("NONE", locale, analysisSituation, "nlp", additionalData);
+    public GraphDBSimilarityServiceModel(SessionModel sessionModel, Set<WordGroup> wordGroups) {
+        super("NONE", sessionModel);
         this.wordGroups = Collections.unmodifiableSet(wordGroups);
     }
 
     /**
-     * Instantiates a new instance of class {@link WordGroupsServiceModel}.
+     * Instantiates a new instance of class {@link GraphDBSimilarityServiceModel}.
      *
-     * @param currentState      The current state.
      * @param locale            The display locale.
      * @param analysisSituation The analysis situation.
-     * @param operation         The operation.
-     * @param additionalData    Additional data.
+     * @param sessionModel      The session model.
      * @param wordGroups        The word groups.
-     * @throws IllegalArgumentException If {@code analysisSituation} is {@code null} or empty.
+     * @throws IllegalArgumentException If the any of the parameters (except {@code locale} and {@code wordGroups}) is {@code null} or empty.
      */
-    public GraphDBSimilarityServiceModel(String currentState, Locale locale, AnalysisSituation analysisSituation, String operation, Map<String, Object> additionalData, Set<WordGroup> wordGroups) {
-        super(currentState, locale, analysisSituation, operation, additionalData);
+    public GraphDBSimilarityServiceModel(Locale locale, EngineAnalysisSituation analysisSituation, SessionModel sessionModel, Set<WordGroup> wordGroups) {
+        super("NONE", locale, analysisSituation, null, sessionModel);
         this.wordGroups = Collections.unmodifiableSet(wordGroups);
     }
 

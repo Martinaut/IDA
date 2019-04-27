@@ -3,6 +3,7 @@ package at.jku.dke.ida.app;
 import at.jku.dke.ida.app.ruleset.InitialSentenceService;
 import at.jku.dke.ida.scxml.events.AnalysisSituationEvent;
 import at.jku.dke.ida.scxml.events.AnalysisSituationListener;
+import at.jku.dke.ida.scxml.session.Session;
 import at.jku.dke.ida.scxml.session.SessionManager;
 import at.jku.dke.ida.shared.session.SessionModel;
 import at.jku.dke.ida.web.controllers.InitialSentenceHandler;
@@ -23,6 +24,7 @@ public class NLPSentenceHandler implements InitialSentenceHandler {
      *
      * @param listener The analysis situation listener.
      */
+    @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
     public NLPSentenceHandler(Optional<AnalysisSituationListener> listener) {
         this.listener = listener.orElse(evt -> {
         });
@@ -37,11 +39,14 @@ public class NLPSentenceHandler implements InitialSentenceHandler {
     @Override
     public void parseSentence(SessionModel sessionModel, String initialSentence) {
         InitialSentenceService.fillAnalysisSituation(sessionModel, initialSentence);
+
         if (sessionModel.getAnalysisSituation().isCubeDefined()) {
-            SessionManager.getInstance().getSession(sessionModel.getSessionId()).setCubeSetFlag(true);
-            if (listener != null)
-                listener.changed(new AnalysisSituationEvent(this, sessionModel.getSessionId(), sessionModel.getAnalysisSituation(), sessionModel.getLocale().getLanguage()));
+            Session session = SessionManager.getInstance().getSession(sessionModel.getSessionId());
+            if (session != null) {
+                session.setCubeSetFlag(true);
+                if (listener != null)
+                    listener.changed(new AnalysisSituationEvent(this, sessionModel.getSessionId(), sessionModel.getAnalysisSituation(), sessionModel.getLocale().getLanguage()));
+            }
         }
     }
-
 }

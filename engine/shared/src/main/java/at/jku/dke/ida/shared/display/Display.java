@@ -11,6 +11,19 @@ import java.util.StringJoiner;
  */
 public abstract class Display {
 
+    // region --- STATIC ---
+    private static String BUNDLE_NAME = "shared.DisplayMessages";
+
+    /**
+     * Overrides the default bundle name ({@code shared.DisplayMessages}) for display messages.
+     *
+     * @param bundleName The bundle base name to use.
+     */
+    public static void setBundleName(String bundleName) {
+        BUNDLE_NAME = bundleName;
+    }
+    // endregion
+
     private final String displayMessage;
 
     /**
@@ -29,7 +42,7 @@ public abstract class Display {
      * @param locale                     The locale for the resource name.
      */
     protected Display(String displayMessageResourceName, Locale locale) {
-        this.displayMessage = ResourceBundleHelper.getResourceString("DisplayMessages", locale, displayMessageResourceName);
+        this.displayMessage = ResourceBundleHelper.getResourceString(BUNDLE_NAME, locale, displayMessageResourceName);
     }
 
     /**

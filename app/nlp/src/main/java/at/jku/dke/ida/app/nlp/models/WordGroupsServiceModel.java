@@ -1,16 +1,16 @@
 package at.jku.dke.ida.app.nlp.models;
 
-import at.jku.dke.ida.rules.models.DroolsServiceModel;
-import at.jku.dke.ida.shared.models.AnalysisSituation;
+import at.jku.dke.ida.rules.models.AbstractServiceModel;
+import at.jku.dke.ida.shared.models.EngineAnalysisSituation;
+import at.jku.dke.ida.shared.session.SessionModel;
 import edu.stanford.nlp.pipeline.CoreDocument;
 
 import java.util.Locale;
-import java.util.Map;
 
 /**
  * Model used by {@link at.jku.dke.ida.app.nlp.drools.WordGroupsService}.
  */
-public class WordGroupsServiceModel extends DroolsServiceModel {
+public class WordGroupsServiceModel extends AbstractServiceModel {
 
     private final String initialSentence;
     private CoreDocument annotatedText;
@@ -18,30 +18,26 @@ public class WordGroupsServiceModel extends DroolsServiceModel {
     /**
      * Instantiates a new instance of class {@link WordGroupsServiceModel}.
      *
-     * @param locale            The display locale.
-     * @param analysisSituation The analysis situation.
-     * @param additionalData    Additional data.
-     * @param initialSentence   The initial sentence.
-     * @throws IllegalArgumentException If {@code analysisSituation} is {@code null} or empty.
+     * @param sessionModel    The session model.
+     * @param initialSentence The initial sentence.
+     * @throws IllegalArgumentException If {@code sessionModel} is {@code null} or empty.
      */
-    public WordGroupsServiceModel(Locale locale, AnalysisSituation analysisSituation, Map<String, Object> additionalData, String initialSentence) {
-        super("NONE", locale, analysisSituation, "nlp", additionalData);
+    public WordGroupsServiceModel(SessionModel sessionModel, String initialSentence) {
+        super("NONE", sessionModel);
         this.initialSentence = initialSentence;
     }
 
     /**
      * Instantiates a new instance of class {@link WordGroupsServiceModel}.
      *
-     * @param currentState      The current state.
      * @param locale            The display locale.
      * @param analysisSituation The analysis situation.
-     * @param operation         The operation.
-     * @param additionalData    Additional data.
+     * @param sessionModel      The session model.
      * @param initialSentence   The initial sentence.
-     * @throws IllegalArgumentException If {@code analysisSituation} is {@code null} or empty.
+     * @throws IllegalArgumentException If the any of the parameters (except {@code locale} and {@code initialSentence}) is {@code null} or empty.
      */
-    public WordGroupsServiceModel(String currentState, Locale locale, AnalysisSituation analysisSituation, String operation, Map<String, Object> additionalData, String initialSentence) {
-        super(currentState, locale, analysisSituation, operation, additionalData);
+    public WordGroupsServiceModel(Locale locale, EngineAnalysisSituation analysisSituation, SessionModel sessionModel, String initialSentence) {
+        super("NONE", locale, analysisSituation, null, sessionModel);
         this.initialSentence = initialSentence;
     }
 

@@ -2,10 +2,10 @@ package core_rules.set_value
 
 // ------------------------------------ IMPORT --------------------------------------
 import at.jku.dke.ida.shared.models.NonComparativeAnalysisSituation
-import at.jku.dke.ida.shared.EventNames
+import at.jku.dke.ida.shared.Event
 import at.jku.dke.ida.data.models.Label
 import at.jku.dke.ida.data.models.DimensionLevelLabel
-import at.jku.dke.ida.rules.models.SetValueServiceModel
+import at.jku.dke.ida.rules.interfaces.SetValueServiceModel
 import org.apache.commons.lang3.tuple.Pair
 
 // ------------------------------------ RULES ---------------------------------------
@@ -13,7 +13,7 @@ rule "Add Dice Node"
     agenda-group "set-value"
 when
     $as : NonComparativeAnalysisSituation()
-    $model : SetValueServiceModel(operation == EventNames.NAVIGATE_DICE_NODE_MOVE_DOWN, analysisSituation == $as, value instanceof DimensionLevelLabel)
+    $model : SetValueServiceModel(operation == Event.NAVIGATE_DICE_NODE_MOVE_DOWN, analysisSituation == $as, value instanceof DimensionLevelLabel)
 then
     $as.getDimensionQualification(((DimensionLevelLabel)$model.getValue()).getDimensionUri()).setDiceNode(((DimensionLevelLabel)$model.getValue()).getUri());
     $as.getDimensionQualification(((DimensionLevelLabel)$model.getValue()).getDimensionUri()).setDiceLevel(((DimensionLevelLabel)$model.getValue()).getLevelUri());
@@ -23,7 +23,7 @@ rule "Drop Dice Node"
     agenda-group "set-value"
 when
     $as : NonComparativeAnalysisSituation()
-    $model : SetValueServiceModel(operation == EventNames.NAVIGATE_DICE_NODE_MOVE_UP, analysisSituation == $as, value instanceof Label)
+    $model : SetValueServiceModel(operation == Event.NAVIGATE_DICE_NODE_MOVE_UP, analysisSituation == $as, value instanceof Label)
 then
     $as.getDimensionQualification(((Label)$model.getValue()).getUri()).setDiceLevel(null);
     $as.getDimensionQualification(((Label)$model.getValue()).getUri()).setDiceNode(null);

@@ -1,5 +1,6 @@
 package at.jku.dke.ida.shared.operations;
 
+import at.jku.dke.ida.shared.Event;
 import at.jku.dke.ida.shared.PojoTestUtils;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -10,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class OperationTest {
 
-    private static final String DEFAULT_TEST_EVENT_NAME = "exit";
+    private static final Event DEFAULT_TEST_EVENT_NAME = Event.EXIT;
     private static final String DEFAULT_TEST_EVENT_TEXT = "Exit";
     private static final int DEFAULT_TEST_POSITION = 5;
 
@@ -57,7 +58,7 @@ class OperationTest {
         String result = op.getDisplayableId();
 
         // Assert
-        assertEquals(DEFAULT_TEST_EVENT_NAME, result);
+        assertEquals(DEFAULT_TEST_EVENT_NAME.getEventName(), result);
     }
 
     @Test
@@ -69,7 +70,7 @@ class OperationTest {
         String result = op.getEventName();
 
         // Assert
-        assertEquals(DEFAULT_TEST_EVENT_NAME, result);
+        assertEquals(DEFAULT_TEST_EVENT_NAME.getEventName(), result);
     }
 
     @Test
@@ -147,7 +148,7 @@ class OperationTest {
 
         // Assert
         assertEquals(DEFAULT_TEST_POSITION, pos);
-        assertEquals(DEFAULT_TEST_EVENT_NAME, evt);
+        assertEquals(DEFAULT_TEST_EVENT_NAME.getEventName(), evt);
         assertEquals("Beenden", txt);
     }
 
@@ -163,7 +164,7 @@ class OperationTest {
 
         // Assert
         assertEquals(DEFAULT_TEST_POSITION, pos);
-        assertEquals(DEFAULT_TEST_EVENT_NAME, evt);
+        assertEquals(DEFAULT_TEST_EVENT_NAME.getEventName(), evt);
         assertEquals("execute a Query", txt);
     }
 
@@ -179,7 +180,7 @@ class OperationTest {
 
         // Assert
         assertEquals(DEFAULT_TEST_POSITION, pos);
-        assertEquals(DEFAULT_TEST_EVENT_NAME, evt);
+        assertEquals(DEFAULT_TEST_EVENT_NAME.getEventName(), evt);
         assertEquals("Abfrage ausführen", txt);
     }
 }

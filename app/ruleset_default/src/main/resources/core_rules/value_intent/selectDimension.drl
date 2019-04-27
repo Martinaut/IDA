@@ -1,0 +1,80 @@
+package core_rules.value_intent
+
+// ------------------------------------ IMPORT --------------------------------------
+import at.jku.dke.ida.rules.interfaces.ValueIntentServiceModel
+import at.jku.dke.ida.rules.results.EventConfidenceResult
+import at.jku.dke.ida.shared.Event
+import at.jku.dke.ida.shared.models.NonComparativeAnalysisSituation
+import at.jku.dke.ida.shared.display.ListDisplay
+import at.jku.dke.ida.app.ruleset.helpers.UserInput
+import at.jku.dke.ida.app.ruleset.helpers.Constants
+import at.jku.dke.ida.app.ruleset.interception.models.ValueInputIntentModel
+
+// ------------------------------------ RULES ---------------------------------------
+rule "SelectDimension Intent"
+    agenda-group "value-intent-determination"
+    salience 2
+when
+    $as : NonComparativeAnalysisSituation()
+    $display : ListDisplay()
+    $model : ValueIntentServiceModel(UserInput.isNumber(userInput) &&
+                                     UserInput.toInteger(userInput) > 0 &&
+                                     UserInput.toInteger(userInput) <= $display.data.size(),
+                                     analysisSituation == $as,
+                                     displayData == $display,
+                                     additionalDataContainsKey(Constants.ADD_DATA_DIMENSION) == false)
+    eval($model.getOperation() == Event.NAVIGATE_GL_DRILL_DOWN || $model.getOperation() == Event.NAVIGATE_GL_ROLL_UP
+        || $model.getOperation() == Event.NAVIGATE_SLICE_CONDITION_BROADEN || $model.getOperation() == Event.NAVIGATE_SLICE_CONDITION_NARROW || $model.getOperation() == Event.NAVIGATE_SLICE_CONDITION_REFOCUS
+        || $model.getOperation() == Event.NAVIGATE_DICE_NODE_MOVE_DOWN)
+then
+    $model.addAdditionalData(Constants.ADD_DATA_DIMENSION, $as.getDimensionQualification($display.getData().get(UserInput.toInteger($model.getUserInput()) - 1).getDisplayableId()));
+    insert(new EventConfidenceResult(Event.MORE_INFORMATION, 1.0));
+end
+
+rule "SelectDimension Intent Similarity"
+    agenda-group "value-intent-determination"
+    salience 2
+when
+    $as : NonComparativeAnalysisSituation()
+    $display : ListDisplay()
+    $model : ValueInputIntentModel(topSimilarity != null,
+                                   analysisSituation == $as,
+                                   displayData == $display,
+                                   additionalDataContainsKey(Constants.ADD_DATA_DIMENSION) == false)
+    eval($model.getOperation() == Event.NAVIGATE_GL_DRILL_DOWN || $model.getOperation() == Event.NAVIGATE_GL_ROLL_UP
+        || $model.getOperation() == Event.NAVIGATE_SLICE_CONDITION_BROADEN || $model.getOperation() == Event.NAVIGATE_SLICE_CONDITION_NARROW || $model.getOperation() == Event.NAVIGATE_SLICE_CONDITION_REFOCUS
+        || $model.getOperation() == Event.NAVIGATE_DICE_NODE_MOVE_DOWN)
+then
+    $model.addAdditionalData(Constants.ADD_DATA_DIMENSION, $as.getDimensionQualification($model.getTopSimilarity().getElement().getDisplayableId()));
+    insert(new EventConfidenceResult(Event.MORE_INFORMATION, $model.getTopSimilarity().getScore()));
+end
+
+rule "SelectDimensionValue Intent"
+    agenda-group "value-intent-determination"
+    salience 0
+when
+    $as : NonComparativeAnalysisSituation()
+    $display : ListDisplay()
+    $model : ValueIntentServiceModel(UserInput.isNumber(userInput) &&
+                                     UserInput.toInteger(userInput) > 0 &&
+                                     UserInput.toInteger(userInput) <= $display.data.size(),
+                                     analysisSituation == $as,
+                                     displayData == $display,
+                                     additionalDataContainsKey(Constants.ADD_DATA_DIMENSION))
+    eval($model.getOperation() == Event.NAVIGATE_GL_DRILL_DOWN || $model.getOperation() == Event.NAVIGATE_GL_ROLL_UP
+        || $model.getOperation() == Event.NAVIGATE_SLICE_CONDITION_BROADEN || $model.getOperation() == Event.NAVIGATE_SLICE_CONDITION_NARROW || $model.getOperation() == Event.NAVIGATE_SLICE_CONDITION_REFOCUS)
+then
+    $model.removeAdditionalData(Constants.ADD_DATA_DIMENSION);
+end
+
+rule "SelectDimensionValue Intent Similarity"
+    agenda-group "value-intent-determination"
+    salience 0
+when
+    $model : ValueInputIntentModel(topSimilarity != null,
+                                   additionalDataContainsKey(Constants.ADD_DATA_DIMENSION))
+    eval($model.getOperation() == Event.NAVIGATE_GL_DRILL_DOWN || $model.getOperation() == Event.NAVIGATE_GL_ROLL_UP
+        || $model.getOperation() == Event.NAVIGATE_SLICE_CONDITION_BROADEN || $model.getOperation() == Event.NAVIGATE_SLICE_CONDITION_NARROW || $model.getOperation() == Event.NAVIGATE_SLICE_CONDITION_REFOCUS)
+then
+    $model.removeAdditionalData(Constants.ADD_DATA_DIMENSION);
+end

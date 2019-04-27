@@ -2,9 +2,9 @@ package core_rules.set_value
 
 // ------------------------------------ IMPORT --------------------------------------
 import at.jku.dke.ida.shared.models.NonComparativeAnalysisSituation
-import at.jku.dke.ida.shared.EventNames
+import at.jku.dke.ida.shared.Event
 import at.jku.dke.ida.data.models.DimensionLabel
-import at.jku.dke.ida.rules.models.SetValueServiceModel
+import at.jku.dke.ida.rules.interfaces.SetValueServiceModel
 import org.apache.commons.lang3.tuple.Pair
 
 // ------------------------------------ RULES ---------------------------------------
@@ -12,7 +12,7 @@ rule "Add Slice Condition"
     agenda-group "set-value"
 when
     $as : NonComparativeAnalysisSituation()
-    $model : SetValueServiceModel(operation == EventNames.NAVIGATE_SLICE_CONDITION_NARROW, analysisSituation == $as, value instanceof DimensionLabel)
+    $model : SetValueServiceModel(operation == Event.NAVIGATE_SLICE_CONDITION_NARROW, analysisSituation == $as, value instanceof DimensionLabel)
 then
     $as.getDimensionQualification(((DimensionLabel)$model.getValue()).getDimensionUri()).addSliceCondition(((DimensionLabel)$model.getValue()).getUri());
 end
@@ -21,7 +21,7 @@ rule "Drop Slice Condition"
     agenda-group "set-value"
 when
     $as : NonComparativeAnalysisSituation()
-    $model : SetValueServiceModel(operation == EventNames.NAVIGATE_SLICE_CONDITION_BROADEN, analysisSituation == $as, value instanceof DimensionLabel)
+    $model : SetValueServiceModel(operation == Event.NAVIGATE_SLICE_CONDITION_BROADEN, analysisSituation == $as, value instanceof DimensionLabel)
 then
     $as.getDimensionQualification(((DimensionLabel)$model.getValue()).getDimensionUri()).removeSliceCondition(((DimensionLabel)$model.getValue()).getUri());
 end
@@ -30,7 +30,7 @@ rule "Refocus Slice Condition"
     agenda-group "set-value"
 when
     $as : NonComparativeAnalysisSituation()
-    $model : SetValueServiceModel(operation == EventNames.NAVIGATE_SLICE_CONDITION_REFOCUS, analysisSituation == $as, value instanceof Pair)
+    $model : SetValueServiceModel(operation == Event.NAVIGATE_SLICE_CONDITION_REFOCUS, analysisSituation == $as, value instanceof Pair)
 then
     $as.getDimensionQualification(((Pair<DimensionLabel, DimensionLabel>)$model.getValue()).getLeft().getDimensionUri()).removeSliceCondition(((Pair<DimensionLabel, DimensionLabel>)$model.getValue()).getLeft().getUri());
     $as.getDimensionQualification(((Pair<DimensionLabel, DimensionLabel>)$model.getValue()).getRight().getDimensionUri()).addSliceCondition(((Pair<DimensionLabel, DimensionLabel>)$model.getValue()).getRight().getUri());

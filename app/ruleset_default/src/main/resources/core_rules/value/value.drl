@@ -1,17 +1,17 @@
 package core_rules.value
 
 // ------------------------------------ IMPORT --------------------------------------
-import at.jku.dke.ida.rules.models.ValueServiceModel
+import at.jku.dke.ida.rules.interfaces.ValueServiceModel
 import at.jku.dke.ida.rules.results.ConfidenceResult
-import at.jku.dke.ida.rules.results.StringConfidenceResult
+import at.jku.dke.ida.rules.results.EventConfidenceResult
 import at.jku.dke.ida.rules.results.DisplayableConfidenceResult
 import at.jku.dke.ida.rules.results.DualDisplayableConfidenceResult
 import at.jku.dke.ida.shared.display.Display
 import at.jku.dke.ida.shared.display.ListDisplay
 import at.jku.dke.ida.shared.display.TwoListDisplay
-import at.jku.dke.ida.shared.EventNames
+import at.jku.dke.ida.shared.Event
 import at.jku.dke.ida.app.ruleset.helpers.UserInput
-import at.jku.dke.ida.app.ruleset.interception.ValueModel
+import at.jku.dke.ida.app.ruleset.interception.models.ValueModel
 
 // ------------------------------------ RULES ---------------------------------------
 rule "Resolve Value - ListDisplay"
@@ -59,7 +59,7 @@ when
     $model : ValueModel(topSimilarity == null)
     not ConfidenceResult()
 then
-    insert(new StringConfidenceResult(EventNames.INVALID_INPUT, 1.0));
+    insert(new EventConfidenceResult(Event.INVALID_INPUT, 1.0));
 end
 
 rule "Invalid Value Number - ListDisplay"
@@ -70,5 +70,5 @@ when
     $model : ValueServiceModel(displayData == $display)
     not ConfidenceResult()
 then
-    insert(new StringConfidenceResult(EventNames.INVALID_INPUT, 1.0));
+    insert(new EventConfidenceResult(Event.INVALID_INPUT, 1.0));
 end

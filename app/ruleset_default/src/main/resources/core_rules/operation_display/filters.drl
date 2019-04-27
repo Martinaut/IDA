@@ -1,18 +1,18 @@
 package core_rules.operation_display
 
 // ------------------------------------ IMPORT --------------------------------------
-import at.jku.dke.ida.shared.EventNames
+import at.jku.dke.ida.shared.Event
 import at.jku.dke.ida.shared.models.NonComparativeAnalysisSituation
 import at.jku.dke.ida.shared.operations.Operation
-import at.jku.dke.ida.rules.models.OperationDisplayServiceModel
+import at.jku.dke.ida.rules.interfaces.OperationDisplayServiceModel
 
 // ------------------------------ FILTER OPERATIONS --------------------------------
 rule "'Add Filter' - if at least one filter is available"
     agenda-group "operation-display-determination"
 when
-    $model : OperationDisplayServiceModel(notSelectedFilters.isEmpty() == false)
+    $model : OperationDisplayServiceModel(areNotSelectedFilterConditionsAvailable())
 then
-    insert(new Operation(EventNames.NAVIGATE_FILTER_NARROW, 60));
+    insert(new Operation(Event.NAVIGATE_FILTER_NARROW, 60));
 end
 
 //rule "'Narrow Filter' - if "
@@ -28,7 +28,7 @@ when
     $as : NonComparativeAnalysisSituation(filterConditions.isEmpty() == false)
     $model : OperationDisplayServiceModel(analysisSituation == $as)
 then
-    insert(new Operation(EventNames.NAVIGATE_FILTER_BROADEN, 62));
+    insert(new Operation(Event.NAVIGATE_FILTER_BROADEN, 62));
 end
 
 //rule "'Broaden Filter' - if "
@@ -43,7 +43,7 @@ rule "'Refocus Filter' - if at least one filter is selected and one available"
     enabled false
 when
     $as : NonComparativeAnalysisSituation(filterConditions.isEmpty() == false)
-    $model : OperationDisplayServiceModel(notSelectedFilters.isEmpty() == false, analysisSituation == $as)
+    $model : OperationDisplayServiceModel(areNotSelectedFilterConditionsAvailable(), analysisSituation == $as)
 then
-    insert(new Operation(EventNames.NAVIGATE_FILTER_REFOCUS, 61));
+    insert(new Operation(Event.NAVIGATE_FILTER_REFOCUS, 61));
 end

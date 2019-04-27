@@ -30,7 +30,8 @@ public final class InitialSentenceService {
      */
     private InitialSentenceService() {
     }
-//TODO: javadoc
+
+    //TODO: javadoc
     public static void fillAnalysisSituation(SessionModel sessionModel, String initialSentence) {
         if (sessionModel == null) throw new IllegalArgumentException("sessionModel must not be null");
         if (initialSentence == null || initialSentence.isBlank()) return;
@@ -43,12 +44,7 @@ public final class InitialSentenceService {
 
     private static Set<WordGroup> getWordGroups(SessionModel sessionModel, String initialSentence) {
         // Create model
-        WordGroupsServiceModel model = new WordGroupsServiceModel(
-                sessionModel.getLocale(),
-                sessionModel.getAnalysisSituation(),
-                sessionModel.getAdditionalData(),
-                initialSentence
-        );
+        WordGroupsServiceModel model = new WordGroupsServiceModel(sessionModel, initialSentence);
 
         // Run service
         return new WordGroupsService().executeRules(model);
@@ -56,12 +52,7 @@ public final class InitialSentenceService {
 
     private static Set<CubeSimilarity> getSimilarities(SessionModel sessionModel, Set<WordGroup> wordGroups) {
         // Create model
-        GraphDBSimilarityServiceModel model = new GraphDBSimilarityServiceModel(
-                sessionModel.getLocale(),
-                sessionModel.getAnalysisSituation(),
-                sessionModel.getAdditionalData(),
-                wordGroups
-        );
+        GraphDBSimilarityServiceModel model = new GraphDBSimilarityServiceModel(sessionModel, wordGroups);
 
         // Run service
         return new GraphDBSimilarityService().executeRules(model);

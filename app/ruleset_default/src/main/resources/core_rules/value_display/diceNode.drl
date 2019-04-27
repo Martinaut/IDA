@@ -1,12 +1,12 @@
 package core_rules.value_display
 
 // ------------------------------------ IMPORT --------------------------------------
-import at.jku.dke.ida.shared.EventNames
+import at.jku.dke.ida.shared.Event
 import at.jku.dke.ida.shared.models.NonComparativeAnalysisSituation
 import at.jku.dke.ida.shared.models.DimensionQualification
 import at.jku.dke.ida.shared.display.ListDisplay
 import at.jku.dke.ida.shared.display.TwoListDisplay
-import at.jku.dke.ida.rules.models.ValueDisplayServiceModel
+import at.jku.dke.ida.rules.interfaces.ValueDisplayServiceModel
 import at.jku.dke.ida.app.ruleset.helpers.Constants
 import at.jku.dke.ida.app.ruleset.helpers.QueryHelper
 
@@ -15,7 +15,7 @@ rule "Add Dice Node - Select Dimension"
     agenda-group "value-display-determination"
 when
     $as : NonComparativeAnalysisSituation()
-    $model : ValueDisplayServiceModel(operation == EventNames.NAVIGATE_DICE_NODE_MOVE_DOWN, analysisSituation == $as, additionalDataContainsKey(Constants.ADD_DATA_DIMENSION) == false)
+    $model : ValueDisplayServiceModel(operation == Event.NAVIGATE_DICE_NODE_MOVE_DOWN, analysisSituation == $as, additionalDataContainsKey(Constants.ADD_DATA_DIMENSION) == false)
 then
     insert(new ListDisplay(
         "addDNDimension",
@@ -26,7 +26,7 @@ rule "Add Dice Node - Select Level"
     agenda-group "value-display-determination"
 when
     $as : NonComparativeAnalysisSituation()
-    $model : ValueDisplayServiceModel(operation == EventNames.NAVIGATE_DICE_NODE_MOVE_DOWN,
+    $model : ValueDisplayServiceModel(operation == Event.NAVIGATE_DICE_NODE_MOVE_DOWN,
                                       analysisSituation == $as,
                                       additionalDataContainsKey(Constants.ADD_DATA_DIMENSION),
                                       additionalDataContainsKey(Constants.ADD_DATA_LEVEL) == false)
@@ -40,7 +40,7 @@ rule "Add Dice Node - Not selected level member"
     agenda-group "value-display-determination"
 when
     $as : NonComparativeAnalysisSituation()
-    $model : ValueDisplayServiceModel(operation == EventNames.NAVIGATE_DICE_NODE_MOVE_DOWN,
+    $model : ValueDisplayServiceModel(operation == Event.NAVIGATE_DICE_NODE_MOVE_DOWN,
                                       analysisSituation == $as,
                                       additionalDataContainsKey(Constants.ADD_DATA_DIMENSION),
                                       additionalDataContainsKey(Constants.ADD_DATA_LEVEL))
@@ -55,7 +55,7 @@ rule "Drop Dice Node - Select Dimension"
     agenda-group "value-display-determination"
 when
     $as : NonComparativeAnalysisSituation()
-    $model : ValueDisplayServiceModel(operation == EventNames.NAVIGATE_DICE_NODE_MOVE_UP, analysisSituation == $as)
+    $model : ValueDisplayServiceModel(operation == Event.NAVIGATE_DICE_NODE_MOVE_UP, analysisSituation == $as)
 then
     insert(new ListDisplay(
         "dropDN",

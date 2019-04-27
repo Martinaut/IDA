@@ -1,7 +1,15 @@
+import { Displayable } from './displayable.model';
+
 export interface NonComparativeAnalysisSituation {
-  cube: string;
-  baseMeasureConditions: Array<string>;
-  measures: Array<string>;
-  filterConditions: Array<string>;
-  dimensionQualifications: Array<{ dimension: string; diceLevel: string; diceNode: string; granularityLevel: string; sliceConditions: Array<string> }>;
+  cube: Displayable;
+  baseMeasureConditions: Array<Displayable>;
+  measures: Array<Displayable>;
+  filterConditions: Array<Displayable>;
+  dimensionQualifications: Array<{
+    dimension: Displayable;
+    diceLevel: Displayable;
+    diceNode: Displayable;
+    granularityLevel: Displayable;
+    sliceConditions: Array<Displayable>
+  }>;
 }

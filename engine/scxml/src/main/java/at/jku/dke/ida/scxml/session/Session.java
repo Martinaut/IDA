@@ -4,7 +4,7 @@ import at.jku.dke.ida.scxml.StateMachineFactory;
 import at.jku.dke.ida.scxml.events.AnalysisSituationListener;
 import at.jku.dke.ida.scxml.events.DisplayListener;
 import at.jku.dke.ida.scxml.exceptions.StateMachineInstantiationException;
-import at.jku.dke.ida.shared.EventNames;
+import at.jku.dke.ida.shared.Event;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.scxml2.SCXMLExecutor;
 import org.apache.commons.scxml2.TriggerEvent;
@@ -34,6 +34,7 @@ public class Session {
     Session(String sessionId, String locale, DisplayListener listener, AnalysisSituationListener asListener) throws StateMachineInstantiationException {
         if (StringUtils.isBlank(sessionId)) throw new IllegalArgumentException("sessionId must not be null empty");
         if (StringUtils.isBlank(locale)) throw new IllegalArgumentException("locale must not be null empty");
+
         this.sessionId = sessionId;
         this.executor = StateMachineFactory.create(sessionId);
         this.sessionContextModel = new SessionContextModel(sessionId, locale, listener, asListener);
@@ -72,14 +73,14 @@ public class Session {
      * @param userInput The user input.
      * @throws ModelException           If an error occurred while triggering an event.
      * @throws IllegalArgumentException If {@code userInput} is {@code null}.
-     * @see EventNames#USER_INPUT
+     * @see Event#USER_INPUT
      */
     public void triggerUserInputEvent(String userInput) throws ModelException {
         if (userInput == null) throw new IllegalArgumentException("userInput must not be null");
 
         LOGGER.info("Triggering user-input event.");
         sessionContextModel.setUserInput(userInput);
-        executor.triggerEvent(new TriggerEvent(EventNames.USER_INPUT, TriggerEvent.SIGNAL_EVENT));
+        executor.triggerEvent(new TriggerEvent(Event.USER_INPUT.getEventName(), TriggerEvent.SIGNAL_EVENT));
     }
 
     /**
@@ -88,7 +89,7 @@ public class Session {
      * This flag is only used once on initialization of the state machine. The default value is {@code false}.
      * Call this method before {@link #initiate()}.
      * Additionally this method sets {@link SessionContextModel#getOperation()} to {@code null} if {@code set} is {@code true};
-     * to {@link EventNames#NAVIGATE_CUBE_SELECT} otherwise.
+     * to {@link Event#NAVIGATE_CUBE_SELECT} otherwise.
      *
      * @param set {@code true} if the cube is selected; {@code false} otherwise.
      */
@@ -108,18 +109,18 @@ public class Session {
         if (set)
             sessionContextModel.setOperation(null);
         else
-            sessionContextModel.setOperation(EventNames.NAVIGATE_CUBE_SELECT);
+            sessionContextModel.setOperation(Event.NAVIGATE_CUBE_SELECT);
     }
 
     /**
      * Trigger the exit event.
      *
      * @throws ModelException If an error occurred while triggering an event.
-     * @see EventNames#EXIT
+     * @see Event#EXIT
      */
     void triggerExitEvent() throws ModelException {
         LOGGER.info("Triggering exit event.");
-        executor.triggerEvent(new TriggerEvent(EventNames.EXIT, TriggerEvent.SIGNAL_EVENT));
+        executor.triggerEvent(new TriggerEvent(Event.EXIT.getEventName(), TriggerEvent.SIGNAL_EVENT));
         executor.detachInstance();
     }
 

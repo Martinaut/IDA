@@ -4,6 +4,7 @@ import at.jku.dke.ida.app.nlp.models.GraphDBSimilarityServiceModel;
 import at.jku.dke.ida.app.nlp.models.WordGroupsServiceModel;
 import at.jku.dke.ida.data.configuration.DataSpringConfiguration;
 import at.jku.dke.ida.shared.models.NonComparativeAnalysisSituation;
+import at.jku.dke.ida.shared.session.SessionModel;
 import at.jku.dke.ida.shared.spring.SharedSpringConfiguration;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -24,13 +25,13 @@ class GraphDBSimilarityServiceTest {
         WordGroupsServiceModel model = new WordGroupsServiceModel(
                 Locale.ENGLISH,
                 new NonComparativeAnalysisSituation(),
-                new HashMap<>(),
+                new SessionModel("test", "en"),
                 "Show me the total costs per insurant and doctor district.");
         var wgs = new WordGroupsService().executeRules(model);
         GraphDBSimilarityServiceModel simModel = new GraphDBSimilarityServiceModel(
                 Locale.ENGLISH,
                 new NonComparativeAnalysisSituation(),
-                new HashMap<>(),
+                new SessionModel("test", "en"),
                 wgs
         );
 

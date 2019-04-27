@@ -1,27 +1,27 @@
 package core_rules.operation_display
 
 // ------------------------------------ IMPORT --------------------------------------
-import at.jku.dke.ida.shared.EventNames
+import at.jku.dke.ida.shared.Event
 import at.jku.dke.ida.shared.models.NonComparativeAnalysisSituation
 import at.jku.dke.ida.shared.operations.Operation
-import at.jku.dke.ida.rules.models.OperationDisplayServiceModel
+import at.jku.dke.ida.rules.interfaces.OperationDisplayServiceModel
 
 // ------------------------------ MEASURE OPERATIONS --------------------------------
 rule "'Add Measure' - if at least one measure is available"
     agenda-group "operation-display-determination"
 when
-    $model : OperationDisplayServiceModel(notSelectedMeasures.isEmpty() == false)
+    $model : OperationDisplayServiceModel(areNotSelectedMeasuresAvailable())
 then
-    insert(new Operation(EventNames.NAVIGATE_MEASURE_ADD, $model.getLocale(), 10));
+    insert(new Operation(Event.NAVIGATE_MEASURE_ADD, $model.getLocale(), 10));
 end
 
 rule "'Refocus Measure' - if at least one measure is available and one selected"
     agenda-group "operation-display-determination"
 when
     $as : NonComparativeAnalysisSituation(measures.isEmpty() == false)
-    $model : OperationDisplayServiceModel(notSelectedMeasures.isEmpty() == false, analysisSituation == $as)
+    $model : OperationDisplayServiceModel(areNotSelectedMeasuresAvailable(), analysisSituation == $as)
 then
-    insert(new Operation(EventNames.NAVIGATE_MEASURE_REFOCUS, $model.getLocale(), 11));
+    insert(new Operation(Event.NAVIGATE_MEASURE_REFOCUS, $model.getLocale(), 11));
 end
 
 rule "'Drop Measure' - if at least one measure is selected"
@@ -30,5 +30,5 @@ when
     $as : NonComparativeAnalysisSituation(measures.isEmpty() == false)
     $model : OperationDisplayServiceModel(analysisSituation == $as)
 then
-    insert(new Operation(EventNames.NAVIGATE_MEASURE_DROP, $model.getLocale(), 14));
+    insert(new Operation(Event.NAVIGATE_MEASURE_DROP, $model.getLocale(), 14));
 end

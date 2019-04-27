@@ -1,10 +1,10 @@
 package core_rules.operation_display
 
 // ------------------------- IMPORT ------------------------------
-import at.jku.dke.ida.shared.EventNames
+import at.jku.dke.ida.shared.Event
 import at.jku.dke.ida.shared.models.AnalysisSituation
 import at.jku.dke.ida.shared.operations.Operation
-import at.jku.dke.ida.rules.models.OperationDisplayServiceModel
+import at.jku.dke.ida.rules.interfaces.OperationDisplayServiceModel
 
 // ------------------- GENERAL OPERATIONS ------------------------
 rule "'Exit' - Always"
@@ -13,7 +13,7 @@ rule "'Exit' - Always"
 when
     $model : OperationDisplayServiceModel()
 then
-    insert(new Operation(EventNames.EXIT, $model.getLocale(), Integer.MIN_VALUE));
+    insert(new Operation(Event.EXIT, $model.getLocale(), Integer.MIN_VALUE));
 end
 
 // --------------------- AS OPERATIONS --------------------------
@@ -24,7 +24,7 @@ when
     $as : AnalysisSituation(isCubeDefined() == false)
     $model : OperationDisplayServiceModel(analysisSituation == $as)
 then
-    insert(new Operation(EventNames.NAVIGATE_CUBE_SELECT, $model.getLocale(), Integer.MAX_VALUE));
+    insert(new Operation(Event.NAVIGATE_CUBE_SELECT, $model.getLocale(), Integer.MAX_VALUE));
     drools.halt();
 end
 
@@ -34,5 +34,5 @@ when
     $as : AnalysisSituation(isExecutable() == true)
     $model : OperationDisplayServiceModel(analysisSituation == $as)
 then
-    insert(new Operation(EventNames.EXECUTE_QUERY, $model.getLocale(), Integer.MAX_VALUE - 1));
+    insert(new Operation(Event.EXECUTE_QUERY, $model.getLocale(), Integer.MAX_VALUE - 1));
 end

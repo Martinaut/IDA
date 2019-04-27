@@ -1,11 +1,11 @@
 package core_rules.operation
 
 // ------------------------------------ IMPORT --------------------------------------
-import at.jku.dke.ida.rules.models.OperationServiceModel
-import at.jku.dke.ida.shared.EventNames
-import at.jku.dke.ida.rules.results.StringConfidenceResult
+import at.jku.dke.ida.rules.interfaces.OperationServiceModel
+import at.jku.dke.ida.shared.Event
+import at.jku.dke.ida.rules.results.EventConfidenceResult
 import org.apache.commons.lang3.math.NumberUtils
-import at.jku.dke.ida.app.ruleset.interception.OperationModel
+import at.jku.dke.ida.app.ruleset.interception.models.OperationModel
 
 // ------------------------------------ RULES ---------------------------------------
 rule "Resolve Operation"
@@ -14,26 +14,27 @@ rule "Resolve Operation"
 when
     $model : OperationServiceModel(NumberUtils.isParsable(userInput), possibleOperations.containsKey(NumberUtils.createInteger(userInput)))
 then
-    insert(new StringConfidenceResult($model.getPossibleOperations().get(NumberUtils.createInteger($model.getUserInput())).getEventName(), 1.0));
+    insert(new EventConfidenceResult($model.getPossibleOperations().get(NumberUtils.createInteger($model.getUserInput())).getEvent(), 1.0));
 end
 
-rule "Resolve Operation Similarity"
-    agenda-group "operation-determination"
-    salience 100
-when
-    $model : OperationModel(topSimilarity != null)
-then
-    insert(new StringConfidenceResult($model.getTopSimilarity().getElement().getDisplayableId(), $model.getTopSimilarity().getScore()));
-end
+// TODO
+//rule "Resolve Operation Similarity"
+//    agenda-group "operation-determination"
+//    salience 100
+//when
+//    $model : OperationModel(topSimilarity != null)
+//then
+//    insert(new EventConfidenceResult($model.getTopSimilarity().getElement().getDisplayableId(), $model.getTopSimilarity().getScore()));
+//end
 
 rule "Invalid Operation Similarity"
     agenda-group "operation-determination"
     salience 2
 when
     $model : OperationModel(topSimilarity == null)
-    not StringConfidenceResult()
+    not EventConfidenceResult()
 then
-    insert(new StringConfidenceResult(EventNames.INVALID_INPUT, 1.0));
+    insert(new EventConfidenceResult(Event.INVALID_INPUT, 1.0));
 end
 
 rule "Invalid Operation Number"
@@ -41,9 +42,9 @@ rule "Invalid Operation Number"
     salience 1
 when
     $model : OperationServiceModel(!NumberUtils.isParsable(userInput) || !possibleOperations.containsKey(NumberUtils.createInteger(userInput)))
-    not StringConfidenceResult()
+    not EventConfidenceResult()
 then
-    insert(new StringConfidenceResult(EventNames.INVALID_INPUT, 1.0));
+    insert(new EventConfidenceResult(Event.INVALID_INPUT, 1.0));
 end
 
 // TODO: e.g. "option 1" "the first option"

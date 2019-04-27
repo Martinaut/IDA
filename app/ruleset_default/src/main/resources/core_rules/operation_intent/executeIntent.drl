@@ -1,10 +1,10 @@
 package core_rules.operation_intent
 
 // ------------------------------------ IMPORT --------------------------------------
-import at.jku.dke.ida.rules.models.OperationIntentServiceModel
-import at.jku.dke.ida.rules.results.StringConfidenceResult
-import at.jku.dke.ida.shared.EventNames
-import at.jku.dke.ida.app.ruleset.interception.OperationInputIntentModel
+import at.jku.dke.ida.rules.interfaces.OperationIntentServiceModel
+import at.jku.dke.ida.rules.results.EventConfidenceResult
+import at.jku.dke.ida.shared.Event
+import at.jku.dke.ida.app.ruleset.interception.models.OperationInputIntentModel
 
 // ------------------------------------ RULES ---------------------------------------
 rule "ExecuteQuery Intent - 'execute' keyword"
@@ -12,13 +12,13 @@ rule "ExecuteQuery Intent - 'execute' keyword"
 when
     $model : OperationIntentServiceModel(userInput.toLowerCase() contains "execute")
 then
-    insert(new StringConfidenceResult(EventNames.EXECUTE_QUERY, 0.5));
+    insert(new EventConfidenceResult(Event.EXECUTE_QUERY, 0.5));
 end
 
 rule "ExecuteQuery Intent - 'execute' similarity"
     agenda-group "operation-intent-determination"
 when
-    $model : OperationInputIntentModel(topSimilarity != null && topSimilarity.getElement().getDisplayableId() == EventNames.EXECUTE_QUERY)
+    $model : OperationInputIntentModel(topSimilarity != null && topSimilarity.getElement().getDisplayableId() == Event.EXECUTE_QUERY)
 then
-    insert(new StringConfidenceResult(EventNames.EXECUTE_QUERY, $model.getTopSimilarity().getScore()));
+    insert(new EventConfidenceResult(Event.EXECUTE_QUERY, $model.getTopSimilarity().getScore()));
 end

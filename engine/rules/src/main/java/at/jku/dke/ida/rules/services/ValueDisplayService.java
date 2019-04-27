@@ -1,6 +1,6 @@
 package at.jku.dke.ida.rules.services;
 
-import at.jku.dke.ida.rules.models.ValueDisplayServiceModel;
+import at.jku.dke.ida.rules.interfaces.ValueDisplayServiceModel;
 import at.jku.dke.ida.shared.display.Display;
 import org.kie.api.runtime.KieSession;
 
@@ -23,6 +23,8 @@ public class ValueDisplayService extends DroolsService<ValueDisplayServiceModel,
 
     /**
      * Executes the rules using the given model.
+     * <p>
+     * Inserts the model and the analysis situation into the Kie session.
      *
      * @param session The new kie session.
      * @param model   The model required by the rules. It is guaranteed, that the model is not {@code null}.

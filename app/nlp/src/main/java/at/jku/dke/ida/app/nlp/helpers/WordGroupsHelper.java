@@ -17,32 +17,6 @@ public final class WordGroupsHelper {
     private WordGroupsHelper() {
     }
 
-//    /**
-//     * Returns all labels that have an exact match with a part of the initial sentence.
-//     *
-//     * @param model The model.
-//     * @return All exact matches
-//     * @see #hasExactMatches(InitialSentenceModel)
-//     */
-//    public static Collection<CubeSimilarity> exactMatches(InitialSentenceModel model) {
-//        return model.getAllLabels().stream()
-//                .filter(x -> model.getInitialSentence().contains(x.getLabel()))
-//                .map(x -> new CubeSimilarity(x.getLabel(), null, x.getUri(), 0.5))
-//                .collect(Collectors.toList());
-//    }
-//
-//    /**
-//     * Returns {@code true}, if there is at least one exact match with a part of the initial sentence.
-//     *
-//     * @param model The model.
-//     * @return {@code true} if there is an exact match; {@code false} otherwise.
-//     * @see #exactMatches(InitialSentenceModel)
-//     */
-//    public static boolean hasExactMatches(InitialSentenceModel model) {
-//        return model.getAllLabels().stream()
-//                .anyMatch(x -> model.getInitialSentence().contains(x.getLabel()));
-//    }
-
     /**
      * Converts a set of strings to a set of word groups.
      *

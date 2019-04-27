@@ -3,6 +3,8 @@ package at.jku.dke.ida.web.controllers;
 import at.jku.dke.ida.scxml.exceptions.*;
 import at.jku.dke.ida.scxml.session.Session;
 import at.jku.dke.ida.scxml.session.SessionManager;
+import at.jku.dke.ida.shared.Event;
+import at.jku.dke.ida.shared.ResourceBundleHelper;
 import at.jku.dke.ida.shared.display.ErrorDisplay;
 import at.jku.dke.ida.web.models.InputMessage;
 import at.jku.dke.ida.web.models.StartDialogMessage;
@@ -64,7 +66,7 @@ public class WebsocketController {
      * @param headerAccessor The header accessor used to get the session id.
      * @throws StateMachineExecutionException If an error occurred while executing a state machine.
      * @throws SessionExpiredException        If the state chart session does not exist or is already expired (or state chart has finished).
-     * @see at.jku.dke.ida.shared.EventNames#USER_INPUT
+     * @see Event#USER_INPUT
      */
     @MessageMapping("/input")
     public void userInput(@Payload InputMessage message, SimpMessageHeaderAccessor headerAccessor) throws StateMachineExecutionException, SessionExpiredException {
@@ -83,7 +85,7 @@ public class WebsocketController {
     @MessageExceptionHandler
     public ErrorDisplay handleException(StateMachineInstantiationException ex) {
         LOGGER.error("An error occurred while instantiating a state machine.", ex);
-        return new ErrorDisplay("The State Machine could not be instantiated: " + ex.getMessage()); // TODO: i18n
+        return new ErrorDisplay(ResourceBundleHelper.getResourceString("web.ErrorMessages","ExecuteStateMachine") + ex.getLocalizedMessage());
     }
 
     /**
@@ -95,7 +97,7 @@ public class WebsocketController {
     @MessageExceptionHandler
     public ErrorDisplay handleException(StateMachineExecutionException ex) {
         LOGGER.error("An error occurred while executing a state machine.", ex);
-        return new ErrorDisplay("An error occurred while executing a state machine: " + ex.getMessage()); // TODO: i18n
+        return new ErrorDisplay(ResourceBundleHelper.getResourceString("web.ErrorMessages","InitiateStateMachine") + ex.getLocalizedMessage());
     }
 
     /**
@@ -107,7 +109,7 @@ public class WebsocketController {
     @MessageExceptionHandler
     public ErrorDisplay handleException(SessionExpiredException ex) {
         LOGGER.error("The state chart session does not exist or is already expired (or state chart has finished).", ex);
-        return new ErrorDisplay("The state chart session does not exist or is already expired (or state chart has finished): " + ex.getMessage()); // TODO: i18n
+        return new ErrorDisplay(ResourceBundleHelper.getResourceString("web.ErrorMessages","SessionExpired") + ex.getLocalizedMessage());
     }
     // endregion
 }

@@ -1,7 +1,8 @@
 package at.jku.dke.ida.scxml.actions;
 
 import at.jku.dke.ida.data.repositories.*;
-import at.jku.dke.ida.rules.models.ValueDisplayServiceModel;
+import at.jku.dke.ida.rules.interfaces.ValueDisplayServiceModel;
+import at.jku.dke.ida.rules.models.DefaultValueDisplayServiceModel;
 import at.jku.dke.ida.rules.services.ValueDisplayService;
 import at.jku.dke.ida.scxml.interceptors.DisplayValuesInterceptor;
 import at.jku.dke.ida.scxml.session.SessionContextModel;
@@ -9,8 +10,6 @@ import at.jku.dke.ida.shared.display.Display;
 import at.jku.dke.ida.shared.spring.BeanUtil;
 import org.apache.commons.scxml2.ActionExecutionContext;
 import org.apache.commons.scxml2.model.ModelException;
-
-import java.util.HashMap;
 
 /**
  * This action identifies values from which the user can select one.
@@ -26,12 +25,9 @@ public class DisplayValues extends BaseAction {
     @Override
     protected void execute(ActionExecutionContext ctx, SessionContextModel ctxModel) throws ModelException {
         // Get data
-        var model = new ValueDisplayServiceModel(
+        ValueDisplayServiceModel model = new DefaultValueDisplayServiceModel(
                 getCurrentState(),
-                ctxModel.getLocale(),
-                ctxModel.getAnalysisSituation(),
-                ctxModel.getOperation(),
-                ctxModel.getAdditionalData(),
+                ctxModel,
                 BeanUtil.getBean(SimpleRepository.class),
                 BeanUtil.getBean(CubeRepository.class),
                 BeanUtil.getBean(AggregateMeasureRepository.class),
@@ -49,7 +45,6 @@ public class DisplayValues extends BaseAction {
         Display display = new ValueDisplayService().executeRules(model);
         if (interceptor != null)
             display = interceptor.modifyResult(display);
-        ctxModel.setAdditionalData(new HashMap<>(model.getAdditionalData()));
 
         // Send to display
         ctxModel.setDisplayData(display);

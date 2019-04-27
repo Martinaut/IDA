@@ -1,7 +1,5 @@
 package at.jku.dke.ida.shared.models;
 
-import org.apache.commons.lang3.tuple.ImmutablePair;
-import org.apache.commons.lang3.tuple.Pair;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashSet;
@@ -31,7 +29,7 @@ class ComparativeAnalysisSituationTest {
     @Test
     void testAddJoinCondition() {
         // Prepare
-        Pair<String, String> val = new ImmutablePair<>("leftjc", "rightjc");
+        String val = "jc";
         var as = new ComparativeAnalysisSituation();
 
         // Execute
@@ -46,7 +44,7 @@ class ComparativeAnalysisSituationTest {
     @Test
     void testRemoveJoinCondition() {
         // Prepare
-        Pair<String, String> val = new ImmutablePair<>("leftjc", "rightjc");
+        String val = "jc";
         var as = new ComparativeAnalysisSituation();
         as.addJoinCondition(val);
 

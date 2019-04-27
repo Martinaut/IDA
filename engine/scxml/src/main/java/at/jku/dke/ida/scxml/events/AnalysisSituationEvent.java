@@ -1,6 +1,6 @@
 package at.jku.dke.ida.scxml.events;
 
-import at.jku.dke.ida.shared.models.AnalysisSituation;
+import at.jku.dke.ida.shared.models.EngineAnalysisSituation;
 
 import java.util.StringJoiner;
 
@@ -9,7 +9,7 @@ import java.util.StringJoiner;
  */
 public class AnalysisSituationEvent extends SessionEvent {
 
-    private final AnalysisSituation analysisSituation;
+    private final EngineAnalysisSituation analysisSituation;
     private final String language;
 
     /**
@@ -20,7 +20,7 @@ public class AnalysisSituationEvent extends SessionEvent {
      * @param analysisSituation The analysis situation.
      * @param language          The language.
      */
-    public AnalysisSituationEvent(Object source, String sessionId, AnalysisSituation analysisSituation, String language) {
+    public AnalysisSituationEvent(Object source, String sessionId, EngineAnalysisSituation analysisSituation, String language) {
         super(source, sessionId);
         this.analysisSituation = analysisSituation;
         this.language = language;
@@ -31,7 +31,7 @@ public class AnalysisSituationEvent extends SessionEvent {
      *
      * @return the analysis situation
      */
-    public AnalysisSituation getAnalysisSituation() {
+    public EngineAnalysisSituation getAnalysisSituation() {
         return analysisSituation;
     }
 

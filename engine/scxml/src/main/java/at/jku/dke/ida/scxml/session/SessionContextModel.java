@@ -5,7 +5,7 @@ import at.jku.dke.ida.scxml.events.AnalysisSituationListener;
 import at.jku.dke.ida.scxml.events.DisplayEvent;
 import at.jku.dke.ida.scxml.events.DisplayListener;
 import at.jku.dke.ida.shared.display.Display;
-import at.jku.dke.ida.shared.models.AnalysisSituation;
+import at.jku.dke.ida.shared.models.EngineAnalysisSituation;
 import at.jku.dke.ida.shared.session.SessionModel;
 
 /**
@@ -51,12 +51,13 @@ public class SessionContextModel extends SessionModel {
     }
 
     @Override
-    public void setAnalysisSituation(AnalysisSituation analysisSituation) {
+    public void setAnalysisSituation(EngineAnalysisSituation analysisSituation) {
         super.setAnalysisSituation(analysisSituation);
         if (asListener != null)
             asListener.changed(new AnalysisSituationEvent(this, getSessionId(), analysisSituation, getLocale().getLanguage()));
     }
 
+    @Override
     public void setDisplayData(Display displayData) {
         super.setDisplayData(displayData);
         if (listener != null)

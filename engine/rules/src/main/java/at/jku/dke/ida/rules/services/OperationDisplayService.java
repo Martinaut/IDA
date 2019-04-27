@@ -1,6 +1,6 @@
 package at.jku.dke.ida.rules.services;
 
-import at.jku.dke.ida.rules.models.OperationDisplayServiceModel;
+import at.jku.dke.ida.rules.interfaces.OperationDisplayServiceModel;
 import at.jku.dke.ida.shared.operations.Operation;
 import org.kie.api.runtime.KieSession;
 
@@ -24,6 +24,8 @@ public class OperationDisplayService extends DroolsService<OperationDisplayServi
 
     /**
      * Executes the rules using the given model.
+     * <p>
+     * Inserts the model and the analysis situation into the Kie session.
      *
      * @param session The new kie session.
      * @param model   The model required by the rules. It is guaranteed, that the model is not {@code null}.

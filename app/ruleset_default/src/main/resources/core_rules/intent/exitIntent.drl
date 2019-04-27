@@ -1,33 +1,33 @@
 package core_rules.intent
 
 // ------------------------------------ IMPORT --------------------------------------
-import at.jku.dke.ida.rules.models.OperationIntentServiceModel
-import at.jku.dke.ida.rules.results.StringConfidenceResult
-import at.jku.dke.ida.shared.EventNames
-import at.jku.dke.ida.app.ruleset.interception.OperationInputIntentModel
-import at.jku.dke.ida.app.ruleset.interception.ValueInputIntentModel
+import at.jku.dke.ida.rules.models.DefaultOperationIntentServiceModel
+import at.jku.dke.ida.rules.results.EventConfidenceResult
+import at.jku.dke.ida.shared.Event
+import at.jku.dke.ida.app.ruleset.interception.models.OperationInputIntentModel
+import at.jku.dke.ida.app.ruleset.interception.models.ValueInputIntentModel
 
 // ------------------------------------ RULES ---------------------------------------
 rule "ExitApplication Intent - 'exit' keyword"
     agenda-group "intent-determination"
 when
-    $model : OperationIntentServiceModel(userInput.toLowerCase() contains "exit")
+    $model : DefaultOperationIntentServiceModel(userInput.toLowerCase() contains "exit")
 then
-    insert(new StringConfidenceResult(EventNames.EXIT, 0.5));
+    insert(new EventConfidenceResult(Event.EXIT, 0.5));
 end
 
 rule "ExitApplication Intent - 'exit' operation similarity"
     agenda-group "operation-intent-determination"
 when
-    $model : OperationInputIntentModel(topSimilarity != null && topSimilarity.getElement().getDisplayableId() == EventNames.EXIT)
+    $model : OperationInputIntentModel(topSimilarity != null && topSimilarity.getElement().getDisplayableId() == Event.EXIT)
 then
-    insert(new StringConfidenceResult(EventNames.EXIT, $model.getTopSimilarity().getScore()));
+    insert(new EventConfidenceResult(Event.EXIT, $model.getTopSimilarity().getScore()));
 end
 
 rule "ExitApplication Intent - 'exit' value similarity"
     agenda-group "value-intent-determination"
 when
-    $model : ValueInputIntentModel(topSimilarity != null && topSimilarity.getElement().getDisplayableId() == EventNames.EXIT)
+    $model : ValueInputIntentModel(topSimilarity != null && topSimilarity.getElement().getDisplayableId() == Event.EXIT)
 then
-    insert(new StringConfidenceResult(EventNames.EXIT, $model.getTopSimilarity().getScore()));
+    insert(new EventConfidenceResult(Event.EXIT, $model.getTopSimilarity().getScore()));
 end

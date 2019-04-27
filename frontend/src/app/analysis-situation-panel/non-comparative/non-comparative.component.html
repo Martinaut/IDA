@@ -3,7 +3,7 @@
   <!-- Cube -->
   <tr class="d-flex">
     <th scope="row" class="col-3" [translate]="'as.cube'">Cube</th>
-    <td class="col-9">{{ analysisSituation.cube }}</td>
+    <td class="col-9" title="{{ analysisSituation.cube.displayableId }}">{{ analysisSituation.cube.title }}</td>
   </tr>
 
   <!-- Base Measure Conditions -->
@@ -11,7 +11,7 @@
     <th scope="row" class="col-3" [translate]="'as.baseMeasureConds'">Base Measure Conditions</th>
     <td class="col-9">
       <ul class="list-unstyled mb-0">
-        <li *ngFor="let m of analysisSituation.baseMeasureConditions">{{ m }}</li>
+        <li *ngFor="let m of analysisSituation.baseMeasureConditions" title="{{ m.displayableId }}">{{ m.title }}</li>
       </ul>
     </td>
   </tr>
@@ -21,7 +21,7 @@
     <th scope="row" class="col-3" [translate]="'as.measures'">Measures</th>
     <td class="col-9">
       <ul class="list-unstyled mb-0">
-        <li *ngFor="let m of analysisSituation.measures">{{ m }}</li>
+        <li *ngFor="let m of analysisSituation.measures" title="{{ m.displayableId }}">{{ m.title }}</li>
       </ul>
     </td>
   </tr>
@@ -32,30 +32,30 @@
     <td class="col-9">
       <div class="row">
         <div class="col-12 col-xl-6" *ngFor="let dq of analysisSituation.dimensionQualifications">
-          <h5>{{ dq.dimension }}</h5>
+          <h5 title="{{ dq.dimension.displayableId }}">{{ dq.dimension.title }}</h5>
           <table class="table table-sm">
             <tr class="d-flex">
               <th scope="row" class="col-5" [translate]="'as.diceLevel'">Dice Level</th>
-              <td class="col-7">{{ dq.diceLevel }}</td>
+              <td class="col-7" title="{{ dq.diceLevel.displayableId }}">{{ dq.diceLevel.title }}</td>
             </tr>
 
             <tr class="d-flex">
               <th scope="row" class="col-5" [translate]="'as.diceNode'">Dice Node</th>
-              <td class="col-7">{{ dq.diceNode }}</td>
+              <td class="col-7" title="{{ dq.diceNode.displayableId }}">{{ dq.diceNode.title }}</td>
             </tr>
 
             <tr class="d-flex">
               <th scope="row" class="col-5" [translate]="'as.sliceConds'">Slice Conditions</th>
               <td class="col-7">
                 <ul class="list-unstyled mb-0">
-                  <li *ngFor="let sc of dq.sliceConditions">{{ sc }}</li>
+                  <li *ngFor="let sc of dq.sliceConditions" title="{{ sc.displayableId }}">{{ sc.title }}</li>
                 </ul>
               </td>
             </tr>
 
             <tr class="d-flex">
               <th scope="row" class="col-5" [translate]="'as.granLevel'">Granularity level</th>
-              <td class="col-7">{{ dq.granularityLevel }}</td>
+              <td class="col-7" title="{{ dq.granularityLevel.displayableId }}">{{ dq.granularityLevel.title }}</td>
             </tr>
           </table>
         </div>
@@ -68,7 +68,7 @@
     <th scope="row" class="col-3" [translate]="'as.filterConds'">Filter Conditions</th>
     <td class="col-9">
       <ul class="list-unstyled mb-0">
-        <li *ngFor="let fc of analysisSituation.filterConditions">{{ fc }}</li>
+        <li *ngFor="let fc of analysisSituation.filterConditions" title="{{ fc.displayableId }}">{{ fc.title }}</li>
       </ul>
     </td>
   </tr>

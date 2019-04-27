@@ -1,11 +1,13 @@
 package at.jku.dke.ida.scxml.actions;
 
-import at.jku.dke.ida.rules.models.OperationIntentServiceModel;
+import at.jku.dke.ida.rules.interfaces.OperationIntentServiceModel;
+import at.jku.dke.ida.rules.models.DefaultOperationIntentServiceModel;
+import at.jku.dke.ida.rules.results.EventConfidenceResult;
 import at.jku.dke.ida.rules.results.StringConfidenceResult;
 import at.jku.dke.ida.rules.services.OperationIntentService;
 import at.jku.dke.ida.scxml.interceptors.DetermineOperationInputIntentInterceptor;
 import at.jku.dke.ida.scxml.session.SessionContextModel;
-import at.jku.dke.ida.shared.EventNames;
+import at.jku.dke.ida.shared.Event;
 import at.jku.dke.ida.shared.display.Display;
 import at.jku.dke.ida.shared.display.ListDisplay;
 import at.jku.dke.ida.shared.operations.Operation;
@@ -36,13 +38,9 @@ public class DetermineOperationInputIntent extends BaseAction {
     @Override
     protected void execute(ActionExecutionContext ctx, SessionContextModel ctxModel) throws ModelException {
         // Get data
-        var model = new OperationIntentServiceModel(
+        OperationIntentServiceModel model = new DefaultOperationIntentServiceModel(
                 getCurrentState(),
-                ctxModel.getLocale(),
-                ctxModel.getAnalysisSituation(),
-                ctxModel.getOperation(),
-                ctxModel.getAdditionalData(),
-                ctxModel.getUserInput(),
+                ctxModel,
                 convertDisplayToOperationsMap(ctxModel.getDisplayData())
         );
         var interceptor = BeanUtil.getOptionalBean(DetermineOperationInputIntentInterceptor.class);
@@ -50,17 +48,16 @@ public class DetermineOperationInputIntent extends BaseAction {
             model = interceptor.modifyModel(model);
 
         // Determine possible events
-        String operation;
-        Collection<StringConfidenceResult> operations = new OperationIntentService().executeRules(model);
+        Event operation;
+        Collection<EventConfidenceResult> operations = new OperationIntentService().executeRules(model);
         if (interceptor != null)
             operation = interceptor.modifyResult(operations);
         else
             operation = operations.stream().sorted()
-                    .findFirst().orElse(new StringConfidenceResult(EventNames.INVALID_INPUT)).getValue();
-        ctxModel.setAdditionalData(new HashMap<>(model.getAdditionalData()));
+                    .findFirst().orElse(new EventConfidenceResult(Event.INVALID_INPUT)).getValue();
 
         // Trigger event
-        ctx.getInternalIOProcessor().addEvent(new TriggerEvent(operation, TriggerEvent.SIGNAL_EVENT));
+        ctx.getInternalIOProcessor().addEvent(new TriggerEvent(operation.getEventName(), TriggerEvent.SIGNAL_EVENT));
     }
 
     @SuppressWarnings("Duplicates")

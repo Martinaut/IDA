@@ -1,6 +1,6 @@
 package at.jku.dke.ida.scxml.interceptors;
 
-import at.jku.dke.ida.rules.models.SetValueServiceModel;
+import at.jku.dke.ida.rules.interfaces.SetValueServiceModel;
 
 /**
  * Interceptor for modifying the model and the result of the {@link at.jku.dke.ida.scxml.actions.DetermineValue} action.

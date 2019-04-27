@@ -10,7 +10,7 @@ import java.util.ResourceBundle;
 /**
  * A helper-class for retrieving values from resource bundles.
  */
-public final class ResourceBundleHelper { // TODO: evtl. resource bundles in andere lib verschieben, oder mergen?
+public final class ResourceBundleHelper {
 
     private static final Logger LOG = LogManager.getLogger(ResourceBundleHelper.class);
 

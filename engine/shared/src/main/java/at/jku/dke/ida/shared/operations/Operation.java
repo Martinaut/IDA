@@ -1,5 +1,6 @@
 package at.jku.dke.ida.shared.operations;
 
+import at.jku.dke.ida.shared.Event;
 import at.jku.dke.ida.shared.ResourceBundleHelper;
 import at.jku.dke.ida.shared.display.Displayable;
 
@@ -12,6 +13,19 @@ import java.util.StringJoiner;
  */
 public class Operation implements Comparable<Operation>, Displayable {
 
+    // region --- STATIC ---
+    private static String BUNDLE_NAME = "shared.OperationNames";
+
+    /**
+     * Overrides the default bundle name ({@code shared.OperationNames}) for operation names.
+     *
+     * @param bundleName The bundle base name to use.
+     */
+    public static void setBundleName(String bundleName) {
+        BUNDLE_NAME = bundleName;
+    }
+    // endregion
+
     private final String eventName;
     private final String displayName;
     private final int position;
@@ -19,24 +33,24 @@ public class Operation implements Comparable<Operation>, Displayable {
     /**
      * Instantiates a new instance of class {@link Operation}.
      *
-     * @param eventName The event name and resource name in the <code>OperationNames</code> resource bundle.
-     * @param position  The position of operation in the list of operations.
+     * @param event    The event name and resource name in the <code>OperationNames</code> resource bundle.
+     * @param position The position of operation in the list of operations.
      */
-    public Operation(String eventName, int position) {
-        this.eventName = eventName;
-        this.displayName = ResourceBundleHelper.getResourceString("OperationNames", eventName);
+    public Operation(Event event, int position) {
+        this.eventName = event.getEventName();
+        this.displayName = ResourceBundleHelper.getResourceString(BUNDLE_NAME, eventName);
         this.position = position;
     }
 
     /**
      * Instantiates a new instance of class {@link Operation}.
      *
-     * @param eventName   The event name.
+     * @param event       The event name.
      * @param displayName The display name.
      * @param position    The position of operation in the list of operations.
      */
-    public Operation(String eventName, String displayName, int position) {
-        this.eventName = eventName;
+    public Operation(Event event, String displayName, int position) {
+        this.eventName = event.getEventName();
         this.displayName = displayName;
         this.position = position;
     }
@@ -44,27 +58,27 @@ public class Operation implements Comparable<Operation>, Displayable {
     /**
      * Instantiates a new instance of class {@link Operation}.
      *
-     * @param eventName The event name and resource name in the <code>OperationNames</code> resource bundle.
-     * @param locale    The locale for the resource name.
-     * @param position  The position of operation in the list of operations.
+     * @param event    The event name and resource name in the <code>OperationNames</code> resource bundle.
+     * @param locale   The locale for the resource name.
+     * @param position The position of operation in the list of operations.
      */
-    public Operation(String eventName, Locale locale, int position) {
-        this.eventName = eventName;
-        this.displayName = ResourceBundleHelper.getResourceString("OperationNames", locale, eventName);
+    public Operation(Event event, Locale locale, int position) {
+        this.eventName = event.getEventName();
+        this.displayName = ResourceBundleHelper.getResourceString(BUNDLE_NAME, locale, eventName);
         this.position = position;
     }
 
     /**
      * Instantiates a new instance of class {@link Operation}.
      *
-     * @param eventName    The event name.
+     * @param event        The event name.
      * @param resourceName The resource name in the <code>OperationNames</code> resource bundle.
      * @param locale       The locale for the resource name.
      * @param position     The position of operation in the list of operations.
      */
-    public Operation(String eventName, String resourceName, Locale locale, int position) {
-        this.eventName = eventName;
-        this.displayName = ResourceBundleHelper.getResourceString("OperationNames", locale, resourceName);
+    public Operation(Event event, String resourceName, Locale locale, int position) {
+        this.eventName = event.getEventName();
+        this.displayName = ResourceBundleHelper.getResourceString(BUNDLE_NAME, locale, resourceName);
         this.position = position;
     }
 

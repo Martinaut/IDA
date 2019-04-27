@@ -1,7 +1,7 @@
 package at.jku.dke.ida.rules.services;
 
-import at.jku.dke.ida.rules.models.OperationServiceModel;
-import at.jku.dke.ida.rules.results.StringConfidenceResult;
+import at.jku.dke.ida.rules.interfaces.OperationServiceModel;
+import at.jku.dke.ida.rules.results.EventConfidenceResult;
 import org.kie.api.runtime.KieSession;
 
 import java.util.Collection;
@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
  *
  * <p>Executes rules belonging to agenda-group: {@code operation-determination}</p>
  */
-public class OperationService extends DroolsService<OperationServiceModel, Collection<StringConfidenceResult>>  {
+public class OperationService extends DroolsService<OperationServiceModel, Collection<EventConfidenceResult>>  {
 
     /**
      * Instantiates a new instance of class {@linkplain OperationService}.
@@ -23,13 +23,16 @@ public class OperationService extends DroolsService<OperationServiceModel, Colle
 
     /**
      * Executes the rules using the given model.
+     * <p>
+     * Inserts the model and the analysis situation into the Kie session.
      *
      * @param session The new kie session.
      * @param model   The model required by the rules. It is guaranteed, that the model is not {@code null}.
      * @return Result of the query execution
      */
     @Override
-    protected Collection<StringConfidenceResult> execute(KieSession session, OperationServiceModel model) {
+    @SuppressWarnings("Duplicates")
+    protected Collection<EventConfidenceResult> execute(KieSession session, OperationServiceModel model) {
         logger.info("Determining the operation");
 
         // Add data
@@ -40,12 +43,12 @@ public class OperationService extends DroolsService<OperationServiceModel, Colle
         session.fireAllRules();
 
         // Get results and close session
-        Collection<?> result = session.getObjects(obj -> obj instanceof StringConfidenceResult);
+        Collection<?> result = session.getObjects(obj -> obj instanceof EventConfidenceResult);
         closeSession();
 
         // Sort and return
         return result.stream()
-                .map(x -> (StringConfidenceResult) x)
+                .map(x -> (EventConfidenceResult) x)
                 .sorted()
                 .collect(Collectors.toList());
     }

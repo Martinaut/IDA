@@ -1,18 +1,19 @@
 package at.jku.dke.ida.app.nlp.models;
 
-import at.jku.dke.ida.rules.models.DroolsServiceModel;
+import at.jku.dke.ida.rules.models.AbstractServiceModel;
+import at.jku.dke.ida.shared.Event;
 import at.jku.dke.ida.shared.display.Displayable;
-import at.jku.dke.ida.shared.models.AnalysisSituation;
+import at.jku.dke.ida.shared.models.EngineAnalysisSituation;
+import at.jku.dke.ida.shared.session.SessionModel;
 
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Locale;
-import java.util.Map;
 
 /**
  * Model used by {@link at.jku.dke.ida.app.nlp.drools.StringSimilarityService}.
  */
-public class StringSimilarityServiceModel extends DroolsServiceModel {
+public class StringSimilarityServiceModel extends AbstractServiceModel {
 
     private final String input;
     private final Collection<Displayable> possibleValues;
@@ -20,34 +21,32 @@ public class StringSimilarityServiceModel extends DroolsServiceModel {
     /**
      * Instantiates a new instance of class {@link StringSimilarityServiceModel}.
      *
-     * @param locale            The display locale.
-     * @param analysisSituation The analysis situation.
-     * @param additionalData    Additional data.
-     * @param input             The user input.
-     * @param possibleValues    The possible values the user can select from.
+     * @param currentState   The current state of the state machine.
+     * @param sessionModel   The session model.
+     * @param possibleValues The possible values the user can select from.
+     * @throws IllegalArgumentException If the any of the parameters is {@code null} or empty.
      */
-    public StringSimilarityServiceModel(Locale locale, AnalysisSituation analysisSituation,
-                                        Map<String, Object> additionalData, String input, Collection<Displayable> possibleValues) {
-        super("NONE", locale, analysisSituation, "nlp", additionalData);
-        this.input = input;
+    public StringSimilarityServiceModel(String currentState, SessionModel sessionModel, Collection<Displayable> possibleValues) {
+        super(currentState, sessionModel);
+        this.input = sessionModel.getUserInput();
         this.possibleValues = Collections.unmodifiableCollection(possibleValues);
     }
 
     /**
      * Instantiates a new instance of class {@link StringSimilarityServiceModel}.
      *
-     * @param currentState      The current state.
+     * @param currentState      The current state of the state machine.
      * @param locale            The display locale.
      * @param analysisSituation The analysis situation.
-     * @param operation         The operation.
-     * @param additionalData    Additional data.
-     * @param input             The user input.
+     * @param operation         The operation the user wants to perform.
+     * @param sessionModel      The session model.
      * @param possibleValues    The possible values the user can select from.
+     * @throws IllegalArgumentException If the any of the parameters (except {@code locale} and {@code operation}) is {@code null} or empty.
      */
-    public StringSimilarityServiceModel(String currentState, Locale locale, AnalysisSituation analysisSituation, String operation,
-                                        Map<String, Object> additionalData, String input, Collection<Displayable> possibleValues) {
-        super(currentState, locale, analysisSituation, operation, additionalData);
-        this.input = input;
+    public StringSimilarityServiceModel(String currentState, Locale locale, EngineAnalysisSituation analysisSituation,
+                                        Event operation, SessionModel sessionModel, Collection<Displayable> possibleValues) {
+        super(currentState, locale, analysisSituation, operation, sessionModel);
+        this.input = sessionModel.getUserInput();
         this.possibleValues = Collections.unmodifiableCollection(possibleValues);
     }
 

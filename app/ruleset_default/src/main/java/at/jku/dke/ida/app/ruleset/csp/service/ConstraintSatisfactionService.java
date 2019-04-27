@@ -5,6 +5,7 @@ import at.jku.dke.ida.app.ruleset.csp.domain.AnalysisSituationSolution;
 import at.jku.dke.ida.app.ruleset.helpers.ValueSetter;
 import at.jku.dke.ida.data.models.CubeSimilarity;
 import at.jku.dke.ida.data.models.DimensionSimilarity;
+import at.jku.dke.ida.shared.models.EngineAnalysisSituation;
 import at.jku.dke.ida.shared.models.NonComparativeAnalysisSituation;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
@@ -15,7 +16,7 @@ import org.optaplanner.core.api.solver.SolverFactory;
 import java.util.Collections;
 import java.util.Set;
 import java.util.stream.Collectors;
-
+// TODO: Klasse überarbeiten
 /**
  * This service performs a constraint satisfaction algorithm to determine the
  * best-fitting analysis situation.
@@ -46,7 +47,7 @@ public class ConstraintSatisfactionService {
      * @param similarities The set with found similarities.
      * @throws IllegalArgumentException If {@code as} is {@code null} or if it is not an instance of {@link NonComparativeAnalysisSituation}.
      */
-    public void fillAnalysisSituation(String language, at.jku.dke.ida.shared.models.AnalysisSituation as, Set<CubeSimilarity> similarities) {
+    public void fillAnalysisSituation(String language, EngineAnalysisSituation as, Set<CubeSimilarity> similarities) {
         if (as == null) throw new IllegalArgumentException("as must not be null");
         if (StringUtils.isBlank(language)) throw new IllegalArgumentException("language must not be empty.");
         if (!(as instanceof NonComparativeAnalysisSituation))

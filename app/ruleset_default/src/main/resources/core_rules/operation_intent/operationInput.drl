@@ -1,11 +1,11 @@
 package core_rules.operation_intent
 
 // ------------------------------------ IMPORT --------------------------------------
-import at.jku.dke.ida.rules.models.OperationIntentServiceModel
-import at.jku.dke.ida.rules.results.StringConfidenceResult
-import at.jku.dke.ida.shared.EventNames
+import at.jku.dke.ida.rules.interfaces.OperationIntentServiceModel
+import at.jku.dke.ida.rules.results.EventConfidenceResult
+import at.jku.dke.ida.shared.Event
 import org.apache.commons.lang3.math.NumberUtils
-import at.jku.dke.ida.app.ruleset.interception.OperationInputIntentModel
+import at.jku.dke.ida.app.ruleset.interception.models.OperationInputIntentModel
 
 // ------------------------------------ RULES ---------------------------------------
 rule "ExecuteOperation Intent"
@@ -13,7 +13,7 @@ rule "ExecuteOperation Intent"
 when
     $model : OperationIntentServiceModel(NumberUtils.isParsable(userInput))
 then
-    insert(new StringConfidenceResult(EventNames.NAVIGATE, 1.0));
+    insert(new EventConfidenceResult(Event.NAVIGATE, 1.0));
 end
 
 rule "ExecuteOperation Intent Similarity"
@@ -21,5 +21,5 @@ rule "ExecuteOperation Intent Similarity"
 when
     $model : OperationInputIntentModel(topSimilarity != null)
 then
-    insert(new StringConfidenceResult(EventNames.NAVIGATE, $model.getTopSimilarity().getScore()));
+    insert(new EventConfidenceResult(Event.NAVIGATE, $model.getTopSimilarity().getScore()));
 end

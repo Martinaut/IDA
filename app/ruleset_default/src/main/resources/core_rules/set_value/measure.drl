@@ -2,9 +2,9 @@ package core_rules.set_value
 
 // ------------------------------------ IMPORT --------------------------------------
 import at.jku.dke.ida.shared.models.NonComparativeAnalysisSituation
-import at.jku.dke.ida.shared.EventNames
+import at.jku.dke.ida.shared.Event
 import at.jku.dke.ida.shared.display.Displayable
-import at.jku.dke.ida.rules.models.SetValueServiceModel
+import at.jku.dke.ida.rules.interfaces.SetValueServiceModel
 import org.apache.commons.lang3.tuple.Pair
 
 // ------------------------------------ RULES ---------------------------------------
@@ -12,7 +12,7 @@ rule "Add measure"
     agenda-group "set-value"
 when
     $as : NonComparativeAnalysisSituation()
-    $model : SetValueServiceModel(operation == EventNames.NAVIGATE_MEASURE_ADD, analysisSituation == $as, value instanceof Displayable)
+    $model : SetValueServiceModel(operation == Event.NAVIGATE_MEASURE_ADD, analysisSituation == $as, value instanceof Displayable)
 then
     $as.addMeasure(((Displayable)$model.getValue()).getDisplayableId());
 end
@@ -21,7 +21,7 @@ rule "Drop measure"
     agenda-group "set-value"
 when
     $as : NonComparativeAnalysisSituation()
-    $model : SetValueServiceModel(operation == EventNames.NAVIGATE_MEASURE_DROP, analysisSituation == $as, value instanceof Displayable)
+    $model : SetValueServiceModel(operation == Event.NAVIGATE_MEASURE_DROP, analysisSituation == $as, value instanceof Displayable)
 then
     $as.removeMeasure(((Displayable)$model.getValue()).getDisplayableId());
 end
@@ -30,7 +30,7 @@ rule "Refocus measure"
     agenda-group "set-value"
 when
     $as : NonComparativeAnalysisSituation()
-    $model : SetValueServiceModel(operation == EventNames.NAVIGATE_MEASURE_REFOCUS, analysisSituation == $as, value instanceof Pair)
+    $model : SetValueServiceModel(operation == Event.NAVIGATE_MEASURE_REFOCUS, analysisSituation == $as, value instanceof Pair)
 then
     $as.removeMeasure(((Pair<Displayable, Displayable>)$model.getValue()).getLeft().getDisplayableId());
     $as.addMeasure(((Pair<Displayable, Displayable>)$model.getValue()).getRight().getDisplayableId());

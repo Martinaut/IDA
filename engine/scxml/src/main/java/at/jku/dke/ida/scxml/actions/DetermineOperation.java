@@ -1,11 +1,13 @@
 package at.jku.dke.ida.scxml.actions;
 
-import at.jku.dke.ida.rules.models.OperationServiceModel;
+import at.jku.dke.ida.rules.interfaces.OperationServiceModel;
+import at.jku.dke.ida.rules.models.DefaultOperationServiceModel;
+import at.jku.dke.ida.rules.results.EventConfidenceResult;
 import at.jku.dke.ida.rules.results.StringConfidenceResult;
 import at.jku.dke.ida.rules.services.OperationService;
 import at.jku.dke.ida.scxml.interceptors.DetermineOperationInterceptor;
 import at.jku.dke.ida.scxml.session.SessionContextModel;
-import at.jku.dke.ida.shared.EventNames;
+import at.jku.dke.ida.shared.Event;
 import at.jku.dke.ida.shared.display.Display;
 import at.jku.dke.ida.shared.display.ListDisplay;
 import at.jku.dke.ida.shared.operations.Operation;
@@ -35,13 +37,9 @@ public class DetermineOperation extends BaseAction {
     @Override
     protected void execute(ActionExecutionContext ctx, SessionContextModel ctxModel) throws ModelException {
         // Get data
-        var model = new OperationServiceModel(
+        OperationServiceModel model = new DefaultOperationServiceModel(
                 getCurrentState(),
-                ctxModel.getLocale(),
-                ctxModel.getAnalysisSituation(),
-                ctxModel.getOperation(),
-                ctxModel.getAdditionalData(),
-                ctxModel.getUserInput(),
+                ctxModel,
                 convertDisplayToOperationsMap(ctxModel.getDisplayData())
         );
         var interceptor = BeanUtil.getOptionalBean(DetermineOperationInterceptor.class);
@@ -49,19 +47,18 @@ public class DetermineOperation extends BaseAction {
             model = interceptor.modifyModel(model);
 
         // Determine possible events
-        Collection<StringConfidenceResult> operations = new OperationService().executeRules(model);
+        Collection<EventConfidenceResult> operations = new OperationService().executeRules(model);
         if (interceptor != null)
             ctxModel.setOperation(interceptor.modifyResult(operations));
         else
             ctxModel.setOperation(operations.stream().sorted()
-                    .findFirst().orElse(new StringConfidenceResult(EventNames.INVALID_INPUT)).getValue());
-        ctxModel.setAdditionalData(new HashMap<>(model.getAdditionalData()));
+                    .findFirst().orElse(new EventConfidenceResult(Event.INVALID_INPUT)).getValue());
 
         // Trigger event
-        if (ctxModel.getOperation().equals(EventNames.INVALID_INPUT) || ctxModel.getOperation().equals(EventNames.EXIT)) {
-            ctx.getInternalIOProcessor().addEvent(new TriggerEvent(ctxModel.getOperation(), TriggerEvent.SIGNAL_EVENT));
+        if (ctxModel.getOperation().equals(Event.INVALID_INPUT) || ctxModel.getOperation().equals(Event.EXIT)) {
+            ctx.getInternalIOProcessor().addEvent(new TriggerEvent(ctxModel.getOperation().getEventName(), TriggerEvent.SIGNAL_EVENT));
         } else {
-            ctx.getInternalIOProcessor().addEvent(new TriggerEvent(EventNames.DETERMINED, TriggerEvent.SIGNAL_EVENT));
+            ctx.getInternalIOProcessor().addEvent(new TriggerEvent(Event.DETERMINED.getEventName(), TriggerEvent.SIGNAL_EVENT));
         }
     }
 
