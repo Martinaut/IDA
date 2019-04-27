@@ -9,7 +9,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.scxml2.SCXMLExecutor;
 import org.apache.commons.scxml2.TriggerEvent;
 import org.apache.commons.scxml2.model.Data;
-import org.apache.commons.scxml2.model.Datamodel;
 import org.apache.commons.scxml2.model.ModelException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

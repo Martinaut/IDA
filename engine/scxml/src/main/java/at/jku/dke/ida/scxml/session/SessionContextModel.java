@@ -4,16 +4,9 @@ import at.jku.dke.ida.scxml.events.AnalysisSituationEvent;
 import at.jku.dke.ida.scxml.events.AnalysisSituationListener;
 import at.jku.dke.ida.scxml.events.DisplayEvent;
 import at.jku.dke.ida.scxml.events.DisplayListener;
-import at.jku.dke.ida.shared.EventNames;
 import at.jku.dke.ida.shared.display.Display;
 import at.jku.dke.ida.shared.models.AnalysisSituation;
-import at.jku.dke.ida.shared.models.NonComparativeAnalysisSituation;
 import at.jku.dke.ida.shared.session.SessionModel;
-import org.apache.commons.lang3.StringUtils;
-
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
 
 /**
  * The model of a session context.

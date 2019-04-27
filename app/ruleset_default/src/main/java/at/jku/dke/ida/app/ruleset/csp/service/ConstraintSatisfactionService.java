@@ -71,7 +71,7 @@ public class ConstraintSatisfactionService {
         logger.debug("Building problem");
         return new AnalysisSituationSolution(
                 similarities.stream().map(CubeSimilarity::getCube).collect(Collectors.toSet()),
-                similarities.stream().filter(x -> x.getType().equals("http://dke.jku.at/inga/cubes#AggregateMeasure")).collect(Collectors.toSet()),
+                similarities.stream().filter(x -> x.getType().equals("http://dke.jku.at/inga/cubes#AggregateMeasure")).collect(Collectors.toSet()), // TODO: move type to constant
                 similarities.stream().filter(x -> x.getType().equals("http://dke.jku.at/inga/cubes#Level")).collect(Collectors.toSet()),
                 similarities.stream().filter(x -> x.getType().equals("http://dke.jku.at/inga/cubes#LevelPredicate")).collect(Collectors.toSet()),
                 Collections.emptySet(),//similarities.stream().filter(x -> x.getType().equals("http://dke.jku.at/inga/cubes#BaseMeasurePredicate")).collect(Collectors.toSet()),

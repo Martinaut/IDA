@@ -8,7 +8,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Locale;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * Model used by {@link at.jku.dke.ida.app.nlp.drools.StringSimilarityService}.

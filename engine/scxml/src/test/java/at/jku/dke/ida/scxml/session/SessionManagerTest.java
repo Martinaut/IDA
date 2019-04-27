@@ -2,7 +2,6 @@ package at.jku.dke.ida.scxml.session;
 
 import at.jku.dke.ida.data.configuration.DataSpringConfiguration;
 import at.jku.dke.ida.scxml.exceptions.SessionExpiredException;
-import at.jku.dke.ida.scxml.exceptions.StateMachineExecutionException;
 import at.jku.dke.ida.scxml.exceptions.StateMachineInstantiationException;
 import at.jku.dke.ida.shared.spring.SharedSpringConfiguration;
 import org.apache.commons.scxml2.model.ModelException;
