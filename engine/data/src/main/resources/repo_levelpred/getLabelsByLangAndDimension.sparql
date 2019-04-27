@@ -1,4 +1,5 @@
 PREFIX qbx: <http://dke.jku.at/inga/cubes#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
 SELECT DISTINCT ?dimension ?dimensionLabel ?element ?label ?description
 WHERE {
@@ -35,5 +36,6 @@ WHERE {
     }
 
     ?dimension rdfs:label ?dimensionLabel .
+    FILTER (lang(?dimensionLabel) = "###LANG###") .
 }
 ORDER BY ?dimensionLabel ?label

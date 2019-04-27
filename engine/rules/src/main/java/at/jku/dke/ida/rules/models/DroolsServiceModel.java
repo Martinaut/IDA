@@ -36,7 +36,7 @@ public abstract class DroolsServiceModel {
         this.locale = locale;
         this.analysisSituation = analysisSituation;
         this.operation = operation;
-        this.additionalData = Objects.requireNonNullElseGet(additionalData, HashMap::new);
+        this.additionalData = Objects.requireNonNullElseGet(new HashMap<>(additionalData), HashMap::new);
     }
 
     /**

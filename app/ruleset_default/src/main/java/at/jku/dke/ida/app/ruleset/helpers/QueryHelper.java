@@ -2,12 +2,14 @@ package at.jku.dke.ida.app.ruleset.helpers;
 
 import at.jku.dke.ida.data.QueryException;
 import at.jku.dke.ida.data.models.DimensionLabel;
+import at.jku.dke.ida.data.models.DimensionLevelLabel;
 import at.jku.dke.ida.data.models.Label;
 import at.jku.dke.ida.data.repositories.GranularityLevelRepository;
 import at.jku.dke.ida.rules.models.ValueDisplayServiceModel;
 import at.jku.dke.ida.shared.models.DimensionQualification;
 import at.jku.dke.ida.shared.models.NonComparativeAnalysisSituation;
 import org.apache.commons.lang3.tuple.Pair;
+import org.apache.commons.lang3.tuple.Triple;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -48,6 +50,106 @@ public final class QueryHelper {
     public static List<DimensionLabel> getChildLevelLabelsByLangAndDimension(ValueDisplayServiceModel model) throws QueryException {
         return model.getGranularityLevelRepository()
                 .getChildLevelLabelsByLangAndDimension(model.getLanguage(), model.getAdditionalData(Constants.ADD_DATA_DIMENSION, DimensionQualification.class));
+    }
+    // endregion
+
+    // region --- VALUE DISPLAY: DICE NODE ---
+
+    /**
+     * Returns all dimensions where a dice node can be added, because there are not already all possible selected.
+     *
+     * @param model The model.
+     * @return The dimensions.
+     * @throws QueryException If an error occurred while executing the query.
+     */
+    public static Collection<Label> getDimensionsWhereAddDicePossible(ValueDisplayServiceModel model) throws QueryException {
+        if (!(model.getAnalysisSituation() instanceof NonComparativeAnalysisSituation))
+            return Collections.emptyList();
+        NonComparativeAnalysisSituation as = (NonComparativeAnalysisSituation) model.getAnalysisSituation();
+
+        // Get all level predicates
+        Set<Triple<String, String, String>> all = model.getLevelMemberRepository().getAllByCube(as.getCube());
+
+        // Remove the already selected ones and where already a dice level is set
+        Set<Triple<String, String, String>> selected = all.stream()
+                .filter(x -> as.getDimensionQualification(x.getLeft()) != null)
+                .filter(x -> as.getDimensionQualification(x.getLeft()).getDiceNode() != null)
+                .filter(x -> as.getDimensionQualification(x.getLeft()).getDiceNode().equals(x.getRight()))
+                .collect(Collectors.toSet());
+        all.removeAll(selected);
+
+        // Get labels of dimensions
+        return model.getSimpleRepository()
+                .getLabelsByLangAndIris(model.getLanguage(), all.stream().map(Triple::getLeft).collect(Collectors.toSet()))
+                .values();
+    }
+
+    /**
+     * Returns all levels where a dice node can be added, because there are not already all possible selected.
+     *
+     * @param model The model.
+     * @return The dimensions.
+     * @throws QueryException If an error occurred while executing the query.
+     */
+    public static Collection<Label> getLevelsWhereAddDicePossible(ValueDisplayServiceModel model) throws QueryException {
+        if (!(model.getAnalysisSituation() instanceof NonComparativeAnalysisSituation))
+            return Collections.emptyList();
+        NonComparativeAnalysisSituation as = (NonComparativeAnalysisSituation) model.getAnalysisSituation();
+
+        // Get all level predicates
+        Set<Triple<String, String, String>> all = model.getLevelMemberRepository().getAllByCubeAndDimension(as.getCube(), model.getAdditionalData(Constants.ADD_DATA_DIMENSION, DimensionQualification.class).getDimension());
+
+        // Remove the already selected ones and where already a dice level is set
+        Set<Triple<String, String, String>> selected = all.stream()
+                .filter(x -> as.getDimensionQualification(x.getLeft()) != null)
+                .filter(x -> as.getDimensionQualification(x.getLeft()).getDiceNode() != null)
+                .filter(x -> as.getDimensionQualification(x.getLeft()).getDiceLevel().equals(x.getMiddle()))
+                .collect(Collectors.toSet());
+        all.removeAll(selected);
+
+        // Get labels of dimensions
+        return model.getSimpleRepository()
+                .getLabelsByLangAndIris(model.getLanguage(), all.stream().map(Triple::getMiddle).collect(Collectors.toSet()))
+                .values();
+    }
+
+    /**
+     * Calls {@link at.jku.dke.ida.data.repositories.LevelPredicateRepository#getLabelsByLangAndDimension(String, String, Collection)}
+     * with the dimension set in additional data and with the already selected ones excluded.
+     *
+     * @param model The model.
+     * @return The level predicates.
+     * @throws QueryException If an error occurred while executing the query.
+     */
+    public static List<DimensionLevelLabel> getLevelMembersToAdd(ValueDisplayServiceModel model) throws QueryException {
+        return model.getLevelMemberRepository()
+                .getLabelsByLangAndLevel(
+                        model.getLanguage(),
+                        model.getAdditionalData(Constants.ADD_DATA_LEVEL, String.class),
+                        Collections.emptySet());
+    }
+
+    /**
+     * Returns all dimensions where a slice condition can be removed, because there are already slice conditions selected.
+     *
+     * @param model The model.
+     * @return The dimensions.
+     * @throws QueryException If an error occurred while executing the query.
+     */
+    public static Collection<Label> getDimensionsWhereDropDicePossible(ValueDisplayServiceModel model) throws QueryException {
+        if (!(model.getAnalysisSituation() instanceof NonComparativeAnalysisSituation))
+            return Collections.emptyList();
+        NonComparativeAnalysisSituation as = (NonComparativeAnalysisSituation) model.getAnalysisSituation();
+
+        return model.getSimpleRepository()
+                .getLabelsByLangAndIris(
+                        model.getLanguage(),
+                        as.getDimensionQualifications().stream()
+                                .filter(x -> x.getDiceNode() != null)
+                                .map(DimensionQualification::getDimension)
+                                .collect(Collectors.toSet())
+                )
+                .values();
     }
     // endregion
 

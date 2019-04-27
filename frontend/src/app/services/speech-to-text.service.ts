@@ -16,6 +16,7 @@ export class SpeechToTextService {
   private speechRecognition: SpeechRecognition;
 
   private _autoStart: boolean;
+  private recogActive: boolean;
 
   /**
    * Initializes a new instance of class TextToSpeechService.
@@ -26,13 +27,20 @@ export class SpeechToTextService {
       this.speechRecognition = new window.SpeechRecognition();
       this.speechRecognition.maxAlternatives = 1;
       this.speechRecognition.interimResults = true;
-      this.speechRecognition.onstart = evt => this.startedSource.next(evt);
-      this.speechRecognition.onend = evt => this.endedSource.next(evt);
+      this.speechRecognition.onstart = evt => {
+        this.recogActive = true;
+        this.startedSource.next(evt);
+      };
+      this.speechRecognition.onend = evt => {
+        this.recogActive = false;
+        this.endedSource.next(evt);
+      };
       this.speechRecognition.onresult = evt => this.resultAvailableSource.next(evt);
       this.speechRecognition.onerror = evt => console.log('Error during speech recognition: ' + evt);
       this.autoStart = this.getValueFromStorage('ida.voice.autoStart', 'yes') === 'yes';
       this.setLanguage(this.getValueFromStorage('ida.lang', 'en'));
     }
+    this.recogActive = false;
   }
 
   /**
@@ -49,7 +57,9 @@ export class SpeechToTextService {
     if (!SpeechToTextService.isSupported()) {
       return;
     }
-    this.speechRecognition.start();
+    if (!this.recogActive) {
+      this.speechRecognition.start();
+    }
   }
 
   /**
@@ -59,7 +69,9 @@ export class SpeechToTextService {
     if (!SpeechToTextService.isSupported()) {
       return;
     }
-    this.speechRecognition.stop();
+    if (this.recogActive) {
+      this.speechRecognition.stop();
+    }
   }
 
   // region --- EVENTS ---

@@ -1,25 +1,19 @@
 PREFIX qbx: <http://dke.jku.at/inga/cubes#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
-SELECT ?dimension ?dimensionLabel ?element ?label ?description
+SELECT DISTINCT ?dimension ?dimensionLabel ?level ?levelLabel ?element ?label ?description
 WHERE {
-    { ?element qbx:over ?level . }
-    UNION
-    {
-        ?pred qbx:over ?level .
-        ?element qbx:conjunct ?pred .
-    }
+    ?element qbx:inLevel ?level .
+    FILTER (?element IN (###IN###)) .
 
     {
         SELECT ?dimension ?level
         WHERE {
             {
-                <###CUBE###> qbx:dimension ?dimension .
     			?dimension qbx:hasHierarchy ?hier .
     			?hs qbx:inHierarchy ?hier ;
     				qbx:childLevel ?level .
             } UNION {
-                <###CUBE###> qbx:dimension ?dimension .
     			?dimension qbx:hasHierarchy ?hier .
     			?hs qbx:inHierarchy ?hier ;
     				qbx:parentLevel ?level .
@@ -36,5 +30,8 @@ WHERE {
 
     ?dimension rdfs:label ?dimensionLabel .
     FILTER (lang(?dimensionLabel) = "###LANG###") .
+
+    ?level rdfs:label ?levelLabel .
+    FILTER (lang(?levelLabel) = "###LANG###") .
 }
-ORDER BY ?dimensionLabel ?label
+ORDER BY ?dimensionLabel ?levelLabel ?label

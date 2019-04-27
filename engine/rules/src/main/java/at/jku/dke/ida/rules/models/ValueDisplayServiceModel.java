@@ -17,6 +17,7 @@ public class ValueDisplayServiceModel extends DroolsServiceModel {
     private final LevelPredicateRepository levelPredicateRepository;
     private final BaseMeasurePredicateRepository baseMeasurePredicateRepository;
     private final AggregateMeasurePredicateRepository aggregateMeasurePredicateRepository;
+    private final LevelMemberRepository levelMemberRepository;
 
     /**
      * Instantiates a new instance of class {@link ValueDisplayServiceModel}.
@@ -33,12 +34,14 @@ public class ValueDisplayServiceModel extends DroolsServiceModel {
      * @param levelPredicateRepository            The level predicate repository.
      * @param baseMeasurePredicateRepository      The base measure predicate repository.
      * @param aggregateMeasurePredicateRepository The aggregate measure predicate repository.
+     * @param levelMemberRepository               The level member repository.
      * @throws IllegalArgumentException If any of the parameters is {@code null} (except {@code locale} and {@code additionalData}).
      */
     public ValueDisplayServiceModel(String currentState, Locale locale, AnalysisSituation analysisSituation, String operation, Map<String, Object> additionalData,
                                     SimpleRepository simpleRepository, CubeRepository cubeRepository, AggregateMeasureRepository aggregateMeasureRepository,
                                     GranularityLevelRepository granularityLevelRepository, LevelPredicateRepository levelPredicateRepository,
-                                    BaseMeasurePredicateRepository baseMeasurePredicateRepository, AggregateMeasurePredicateRepository aggregateMeasurePredicateRepository) {
+                                    BaseMeasurePredicateRepository baseMeasurePredicateRepository, AggregateMeasurePredicateRepository aggregateMeasurePredicateRepository,
+                                    LevelMemberRepository levelMemberRepository) {
         super(currentState, locale, analysisSituation, operation, additionalData);
 
         if (operation == null)
@@ -57,6 +60,8 @@ public class ValueDisplayServiceModel extends DroolsServiceModel {
             throw new IllegalArgumentException("baseMeasurePredicateRepository must not be null");
         if (aggregateMeasurePredicateRepository == null)
             throw new IllegalArgumentException("aggregateMeasurePredicateRepository must not be null");
+        if (levelMemberRepository == null)
+            throw new IllegalArgumentException("levelMemberRepository must not be null");
 
         this.simpleRepository = simpleRepository;
         this.cubeRepository = cubeRepository;
@@ -65,6 +70,7 @@ public class ValueDisplayServiceModel extends DroolsServiceModel {
         this.levelPredicateRepository = levelPredicateRepository;
         this.baseMeasurePredicateRepository = baseMeasurePredicateRepository;
         this.aggregateMeasurePredicateRepository = aggregateMeasurePredicateRepository;
+        this.levelMemberRepository = levelMemberRepository;
     }
 
     /**
@@ -128,5 +134,14 @@ public class ValueDisplayServiceModel extends DroolsServiceModel {
      */
     public AggregateMeasurePredicateRepository getAggregateMeasurePredicateRepository() {
         return aggregateMeasurePredicateRepository;
+    }
+
+    /**
+     * Gets the level member repository.
+     *
+     * @return the level member repository
+     */
+    public LevelMemberRepository getLevelMemberRepository() {
+        return levelMemberRepository;
     }
 }

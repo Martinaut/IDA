@@ -20,8 +20,8 @@ public class DimensionLabel extends Label {
      * Instantiates a new instance of class {@linkplain Label}.
      *
      * @param lang           The language of this label.
-     * @param dimensionUri   the dimension uri
-     * @param dimensionLabel the dimension label
+     * @param dimensionUri   The uri of the dimension.
+     * @param dimensionLabel The label of the dimension.
      * @param uri            The uri this label belongs to.
      * @param label          The label of the element.
      */
@@ -35,8 +35,8 @@ public class DimensionLabel extends Label {
      * Instantiates a new instance of class {@linkplain Label}.
      *
      * @param lang           The language of this label and description.
-     * @param dimensionUri   the dimension uri
-     * @param dimensionLabel the dimension label
+     * @param dimensionUri   The uri of the dimension.
+     * @param dimensionLabel The label of the dimension.
      * @param uri            The uri this label belongs to.
      * @param label          The label of the element.
      * @param description    The description of the element.

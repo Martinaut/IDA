@@ -6,7 +6,9 @@ import at.jku.dke.ida.shared.models.NonComparativeAnalysisSituation;
 import com.google.common.graph.Graph;
 import com.google.common.graph.ImmutableGraph;
 import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.ImmutableTriple;
 import org.apache.commons.lang3.tuple.Pair;
+import org.apache.commons.lang3.tuple.Triple;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -19,6 +21,7 @@ public class OperationDisplayServiceModel extends DroolsServiceModel {
     private final Collection<String> measures;
     private final Graph<String> granularityLevelHierarchy;
     private final Collection<Pair<String, String>> sliceConditions;
+    private final Collection<Triple<String, String, String>> diceNodes;
     private final Collection<String> baseMeasureConditions;
     private final Collection<String> filters;
 
@@ -35,11 +38,12 @@ public class OperationDisplayServiceModel extends DroolsServiceModel {
      * @param sliceConditions           The slice conditions.
      * @param baseMeasureConditions     The base measure conditions.
      * @param filters                   The filters.
+     * @param diceNodes                 The dice nodes.
      * @throws IllegalArgumentException If any of the parameters is {@code null} (except {@code locale} and {@code additionalData}).
      */
     public OperationDisplayServiceModel(String currentState, Locale locale, AnalysisSituation analysisSituation, String operation, Map<String, Object> additionalData,
                                         Collection<String> measures, Graph<String> granularityLevelHierarchy, Collection<Pair<String, String>> sliceConditions,
-                                        Collection<String> baseMeasureConditions, Collection<String> filters) {
+                                        Collection<String> baseMeasureConditions, Collection<String> filters, Collection<Triple<String, String, String>> diceNodes) {
         super(currentState, locale, analysisSituation, operation, additionalData);
 
         if (measures == null) throw new IllegalArgumentException("measures must not be null");
@@ -57,6 +61,7 @@ public class OperationDisplayServiceModel extends DroolsServiceModel {
         this.sliceConditions = Collections.unmodifiableCollection(sliceConditions);
         this.baseMeasureConditions = Collections.unmodifiableCollection(baseMeasureConditions);
         this.filters = Collections.unmodifiableCollection(filters);
+        this.diceNodes = Collections.unmodifiableCollection(diceNodes);
     }
 
     // region --- MEASURES ---
@@ -142,7 +147,52 @@ public class OperationDisplayServiceModel extends DroolsServiceModel {
 
     // endregion
 
-    // region --- TODO DICE NODES ---
+    // region --- DICE NODES ---
+
+    /**
+     * Gets the dice nodes.
+     *
+     * @return the dice nodes
+     */
+    public Collection<Triple<String, String, String>> getDiceNodes() {
+        return diceNodes;
+    }
+
+    /**
+     * Returns all dice nodes which are already selected in the analysis situation.
+     *
+     * @return already selected dice nodes
+     */
+    public Collection<Triple<String, String, String>> getSelectedDiceNodes() {
+        if (!(getAnalysisSituation() instanceof NonComparativeAnalysisSituation)) return Collections.emptySet();
+        NonComparativeAnalysisSituation as = (NonComparativeAnalysisSituation) getAnalysisSituation();
+
+        return diceNodes.stream()
+                .filter(x -> {
+                    DimensionQualification dq = as.getDimensionQualification(x.getLeft());
+                    if (dq == null || dq.getDiceNode() == null) return false;
+                    return dq.getDiceNode().equals(x.getRight());
+                }).collect(Collectors.toSet());
+    }
+
+    /**
+     * Returns all dice nodes which are not already selected in the analysis situation.
+     *
+     * @return not already selected dice nodes
+     */
+    public Collection<Triple<String, String, String>> getNotSelectedDiceNodes() {
+        if (sliceConditions.isEmpty()) return Collections.emptySet();
+        if (!(getAnalysisSituation() instanceof NonComparativeAnalysisSituation)) return Collections.emptySet();
+        NonComparativeAnalysisSituation as = (NonComparativeAnalysisSituation) getAnalysisSituation();
+
+        return diceNodes.stream()
+                .filter(x -> {
+                    DimensionQualification dq = as.getDimensionQualification(x.getLeft());
+                    if (dq == null) return false;
+                    if (dq.getDiceNode() == null) return true;
+                    return !dq.getDiceNode().equals(x.getRight());
+                }).collect(Collectors.toSet());
+    }
     // endregion
 
     // region --- SLICE CONDITIONS ---

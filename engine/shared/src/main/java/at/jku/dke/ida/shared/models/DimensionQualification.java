@@ -22,9 +22,9 @@ public class DimensionQualification implements Comparable<DimensionQualification
     public DimensionQualification() {
         this.dimension = null;
         this.sliceConditions = new HashSet<>();
-        this.granularityLevel = "top"; // TODO: is this the right value for top, or does it have an URI?
-        this.diceLevel = "top";  // TODO: is this the right value for top, or does it have an URI?
-        this.diceNode = "all";  // TODO: is this the right value for all, or does it have an URI?
+        this.granularityLevel = null; // TODO: "top" is this the right value for top, or does it have an URI?
+        this.diceLevel = null;  // TODO: "top" is this the right value for top, or does it have an URI?
+        this.diceNode = null;  // TODO: "all" is this the right value for all, or does it have an URI?
     }
 
     /**

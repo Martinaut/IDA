@@ -18,10 +18,7 @@ import org.apache.commons.lang3.tuple.Triple;
 import org.apache.commons.scxml2.ActionExecutionContext;
 import org.apache.commons.scxml2.model.ModelException;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * This action identifies operations from which the user can select one.
@@ -42,6 +39,7 @@ public class DisplayOperations extends BaseAction {
         Set<Pair<String, String>> sliceConditions = Collections.emptySet();
         Set<String> filters = Collections.emptySet();
         Set<String> bmcs = Collections.emptySet();
+        Set<Triple<String, String, String>> diceNodes = Collections.emptySet();
         try {
             if (ctxModel.getAnalysisSituation() instanceof NonComparativeAnalysisSituation && ctxModel.getAnalysisSituation().isCubeDefined()) {
                 String cube = ((NonComparativeAnalysisSituation) ctxModel.getAnalysisSituation()).getCube();
@@ -49,6 +47,7 @@ public class DisplayOperations extends BaseAction {
                 sliceConditions = BeanUtil.getBean(LevelPredicateRepository.class).getAllByCube(cube);
                 filters = BeanUtil.getBean(AggregateMeasurePredicateRepository.class).getAllByCube(cube);
                 bmcs = BeanUtil.getBean(BaseMeasurePredicateRepository.class).getAllByCube(cube);
+                diceNodes = BeanUtil.getBean(LevelMemberRepository.class).getAllByCube(cube);
                 buildGranularityLevelGraph(cube, granularityLevels);
             }
         } catch (QueryException ex) {
@@ -68,7 +67,8 @@ public class DisplayOperations extends BaseAction {
                 granularityLevels,
                 sliceConditions,
                 bmcs,
-                filters
+                filters,
+                diceNodes
         );
 
         var interceptor = BeanUtil.getOptionalBean(DisplayOperationsInterceptor.class);
@@ -79,6 +79,7 @@ public class DisplayOperations extends BaseAction {
         Collection<Operation> operations = new OperationDisplayService().executeRules(model);
         if (interceptor != null)
             operations = interceptor.modifyResult(operations);
+        ctxModel.setAdditionalData(new HashMap<>(model.getAdditionalData()));
 
         // Send to display
         ctxModel.setDisplayData(new ListDisplay("selectOperation", ctxModel.getLocale(), List.copyOf(operations)));

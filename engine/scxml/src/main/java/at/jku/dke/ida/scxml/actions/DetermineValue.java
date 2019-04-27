@@ -16,6 +16,8 @@ import org.apache.commons.scxml2.ActionExecutionContext;
 import org.apache.commons.scxml2.TriggerEvent;
 import org.apache.commons.scxml2.model.ModelException;
 
+import java.util.HashMap;
+
 /**
  * This action determines the selected value and sets the value accordingly in the analysis situation.
  */
@@ -61,6 +63,7 @@ public class DetermineValue extends BaseAction {
         else
             result = values.stream().sorted()
                     .findFirst().orElse(new StringConfidenceResult(EventNames.INVALID_INPUT));
+        ctxModel.setAdditionalData(new HashMap<>(model.getAdditionalData()));
 
         return result;
     }
@@ -81,6 +84,7 @@ public class DetermineValue extends BaseAction {
 
         // Execute
         new SetValueService().executeRules(model);
+        ctxModel.setAdditionalData(new HashMap<>(model.getAdditionalData()));
 
         // Notify
         if (ctxModel.getAnalysisSituationListener() != null && ctxModel.getAnalysisSituation().isCubeDefined())

@@ -10,6 +10,8 @@ import at.jku.dke.ida.shared.spring.BeanUtil;
 import org.apache.commons.scxml2.ActionExecutionContext;
 import org.apache.commons.scxml2.model.ModelException;
 
+import java.util.HashMap;
+
 /**
  * This action identifies values from which the user can select one.
  * Values can be cubes, measures, ...
@@ -36,7 +38,8 @@ public class DisplayValues extends BaseAction {
                 BeanUtil.getBean(GranularityLevelRepository.class),
                 BeanUtil.getBean(LevelPredicateRepository.class),
                 BeanUtil.getBean(BaseMeasurePredicateRepository.class),
-                BeanUtil.getBean(AggregateMeasurePredicateRepository.class)
+                BeanUtil.getBean(AggregateMeasurePredicateRepository.class),
+                BeanUtil.getBean(LevelMemberRepository.class)
         );
         var interceptor = BeanUtil.getOptionalBean(DisplayValuesInterceptor.class);
         if (interceptor != null)
@@ -46,6 +49,7 @@ public class DisplayValues extends BaseAction {
         Display display = new ValueDisplayService().executeRules(model);
         if (interceptor != null)
             display = interceptor.modifyResult(display);
+        ctxModel.setAdditionalData(new HashMap<>(model.getAdditionalData()));
 
         // Send to display
         ctxModel.setDisplayData(display);

@@ -57,6 +57,7 @@ public class DetermineOperationInputIntent extends BaseAction {
         else
             operation = operations.stream().sorted()
                     .findFirst().orElse(new StringConfidenceResult(EventNames.INVALID_INPUT)).getValue();
+        ctxModel.setAdditionalData(new HashMap<>(model.getAdditionalData()));
 
         // Trigger event
         ctx.getInternalIOProcessor().addEvent(new TriggerEvent(operation, TriggerEvent.SIGNAL_EVENT));

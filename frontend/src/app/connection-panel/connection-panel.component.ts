@@ -40,6 +40,11 @@ export class ConnectionPanelComponent implements OnInit, OnDestroy {
       this.isConnected = value;
       this.isCollapsed = value;
     });
+    this.connectionService.connectionStateChanged.subscribe(value => {
+      if (!value) {
+        this.tts.stop();
+      }
+    });
   }
 
   /**

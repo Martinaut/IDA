@@ -11,6 +11,11 @@ public final class Constants {
     public static final String ADD_DATA_DIMENSION = "dimension";
 
     /**
+     * Used for selection a level prior to the selection of a dice node.
+     */
+    public static final String ADD_DATA_LEVEL = "level";
+
+    /**
      * Prevents creation of instances of this class.
      */
     private Constants() {

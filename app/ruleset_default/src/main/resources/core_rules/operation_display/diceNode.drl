@@ -7,22 +7,18 @@ import at.jku.dke.ida.shared.operations.Operation
 import at.jku.dke.ida.rules.models.OperationDisplayServiceModel
 
 // ----------------------------- DICE NODE OPERATIONS -------------------------------
-rule "'Move Down To Node' - if "
+rule "'Move Down To Node' - if not selected dice node available"
     agenda-group "operation-display-determination"
-    enabled false
 when
-    //$as : NonComparativeAnalysisSituation(measures.isEmpty() == false)
-    //$model : OperationDisplayServiceModel(notSelectedMeasures.isEmpty() == false)
+    $model : OperationDisplayServiceModel(notSelectedDiceNodes.isEmpty() == false)
 then
-    //insert(new Operation(EventNames., 30));
+    insert(new Operation(EventNames.NAVIGATE_DICE_NODE_MOVE_DOWN, 30));
 end
 
-rule "'Move Up To Node' - if "
+rule "'Move Up To Node' - if if at least one dice node selected"
     agenda-group "operation-display-determination"
-    enabled false
 when
-    //$as : NonComparativeAnalysisSituation(measures.isEmpty() == false)
-    //$model : OperationDisplayServiceModel(notSelectedMeasures.isEmpty() == false)
+    $model : OperationDisplayServiceModel(selectedDiceNodes.isEmpty() == false)
 then
-    //insert(new Operation(EventNames., 31));
+    insert(new Operation(EventNames.NAVIGATE_DICE_NODE_MOVE_UP, 31));
 end

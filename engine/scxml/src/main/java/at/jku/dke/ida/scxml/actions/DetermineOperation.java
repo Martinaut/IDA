@@ -55,6 +55,7 @@ public class DetermineOperation extends BaseAction {
         else
             ctxModel.setOperation(operations.stream().sorted()
                     .findFirst().orElse(new StringConfidenceResult(EventNames.INVALID_INPUT)).getValue());
+        ctxModel.setAdditionalData(new HashMap<>(model.getAdditionalData()));
 
         // Trigger event
         if (ctxModel.getOperation().equals(EventNames.INVALID_INPUT) || ctxModel.getOperation().equals(EventNames.EXIT)) {
