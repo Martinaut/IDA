@@ -1,10 +1,10 @@
 package app_rules
 
 // ------------------------------------ IMPORT --------------------------------------
-import at.jku.dke.inga.app.nlp.models.GraphDBSimilarityServiceModel
-import at.jku.dke.inga.app.nlp.helpers.SimilarityHelper
-import at.jku.dke.inga.app.nlp.models.WordGroup
-import at.jku.dke.inga.data.models.CubeSimilarity
+import at.jku.dke.ida.app.nlp.models.GraphDBSimilarityServiceModel
+import at.jku.dke.ida.app.nlp.helpers.SimilarityHelper
+import at.jku.dke.ida.app.nlp.models.WordGroup
+import at.jku.dke.ida.data.models.CubeSimilarity
 
 // ------------------------------------ RULES ---------------------------------------
 rule "CubeSimilarity EN - Word Similarity"

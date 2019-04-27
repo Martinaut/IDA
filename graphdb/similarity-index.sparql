@@ -1,7 +1,7 @@
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX ontolex: <http://www.w3.org/ns/lemon/ontolex#>
 PREFIX wordnet: <http://wordnet-rdf.princeton.edu/ontology#>
-PREFIX sim: <http://dke.jku.at/inga/similarity#>
+PREFIX sim: <http://dke.jku.at/ida/similarity#>
 
 SELECT DISTINCT ?documentID ?documentText WHERE {
     {

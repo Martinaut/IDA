@@ -1,7 +1,7 @@
 PREFIX : <http://www.ontotext.com/graphdb/similarity/>
 PREFIX inst: <http://www.ontotext.com/graphdb/similarity/instance/>
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-PREFIX sim: <http://dke.jku.at/inga/similarity#>
+PREFIX sim: <http://dke.jku.at/ida/similarity#>
 
 SELECT ?cube ?dimension ?element ?type (MAX(?score) AS ?score)
 WHERE {

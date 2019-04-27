@@ -4,7 +4,7 @@
   </div>
   <div class="card-body">
     <div class="input-group">
-      <input type="text" placeholder="{{ 'input.placeholder' | translate }}" class="form-control" name="ingaInput"
+      <input type="text" placeholder="{{ 'input.placeholder' | translate }}" class="form-control" name="idaInput"
              [ngClass]="{'is-invalid': inputError}" #input
              [(ngModel)]="userInput" (keyup.enter)="inputFieldEnterPressed()" [disabled]="waitingForResult">
       <div class="input-group-append">

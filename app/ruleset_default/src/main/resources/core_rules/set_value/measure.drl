@@ -1,10 +1,10 @@
 package core_rules.set_value
 
 // ------------------------------------ IMPORT --------------------------------------
-import at.jku.dke.inga.shared.models.NonComparativeAnalysisSituation
-import at.jku.dke.inga.shared.EventNames
-import at.jku.dke.inga.shared.display.Displayable
-import at.jku.dke.inga.rules.models.SetValueServiceModel
+import at.jku.dke.ida.shared.models.NonComparativeAnalysisSituation
+import at.jku.dke.ida.shared.EventNames
+import at.jku.dke.ida.shared.display.Displayable
+import at.jku.dke.ida.rules.models.SetValueServiceModel
 import org.apache.commons.lang3.tuple.Pair
 
 // ------------------------------------ RULES ---------------------------------------

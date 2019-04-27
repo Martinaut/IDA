@@ -1,4 +1,4 @@
-rootProject.name = 'inga'
+rootProject.name = 'ida'
 
 include 'engine:shared'
 include 'engine:data'

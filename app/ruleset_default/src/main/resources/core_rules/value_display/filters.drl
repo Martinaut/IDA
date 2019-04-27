@@ -1,11 +1,11 @@
 package core_rules.value_display
 
 // ------------------------------------ IMPORT --------------------------------------
-import at.jku.dke.inga.shared.EventNames
-import at.jku.dke.inga.shared.models.NonComparativeAnalysisSituation
-import at.jku.dke.inga.shared.display.ListDisplay
-import at.jku.dke.inga.shared.display.TwoListDisplay
-import at.jku.dke.inga.rules.models.ValueDisplayServiceModel
+import at.jku.dke.ida.shared.EventNames
+import at.jku.dke.ida.shared.models.NonComparativeAnalysisSituation
+import at.jku.dke.ida.shared.display.ListDisplay
+import at.jku.dke.ida.shared.display.TwoListDisplay
+import at.jku.dke.ida.rules.models.ValueDisplayServiceModel
 
 // ------------------------------------ RULES ---------------------------------------
 rule "Add Filter - Select all filters, except the already selected ones"

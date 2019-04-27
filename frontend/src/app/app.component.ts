@@ -20,7 +20,7 @@ export class AppComponent {
   }
 
   private getLangFromStorage(): string {
-    const lang = localStorage.getItem('inga.lang');
+    const lang = localStorage.getItem('ida.lang');
     if (lang) {
       return lang;
     }

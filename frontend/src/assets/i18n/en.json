@@ -21,7 +21,7 @@
 	"conn": {
 		"connect": "Connect",
 		"disconnect": "Disconnect",
-		"title": "InGA Connection",
+		"title": "IDA Connection",
 		"url": "Server URL"
 	},
 	"input": {
@@ -38,8 +38,8 @@
 		"rightSide": "On the right side"
 	},
 	"site": {
-		"header": "InGA Voice User Interface",
-		"websocketError": "We're sorry but InGA doesn't work without Websockets and TextEncoder. Your browser does not support Websockets. Please use an up-to-date browser."
+		"header": "IDA Voice User Interface",
+		"websocketError": "We're sorry but IDA doesn't work without Websockets and TextEncoder. Your browser does not support Websockets. Please use an up-to-date browser."
 	},
 	"tts": {
 		"local": "Local",

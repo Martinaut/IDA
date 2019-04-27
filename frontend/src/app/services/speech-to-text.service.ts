@@ -30,8 +30,8 @@ export class SpeechToTextService {
       this.speechRecognition.onend = evt => this.endedSource.next(evt);
       this.speechRecognition.onresult = evt => this.resultAvailableSource.next(evt);
       this.speechRecognition.onerror = evt => console.log('Error during speech recognition: ' + evt);
-      this.autoStart = this.getValueFromStorage('inga.voice.autoStart', 'yes') === 'yes';
-      this.setLanguage(this.getValueFromStorage('inga.lang', 'en'));
+      this.autoStart = this.getValueFromStorage('ida.voice.autoStart', 'yes') === 'yes';
+      this.setLanguage(this.getValueFromStorage('ida.lang', 'en'));
     }
   }
 
@@ -126,7 +126,7 @@ export class SpeechToTextService {
    */
   set autoStart(value: boolean) {
     this._autoStart = value;
-    localStorage.setItem('inga.voice.autoStart', value ? 'yes' : 'no');
+    localStorage.setItem('ida.voice.autoStart', value ? 'yes' : 'no');
   }
 
   private getValueFromStorage(key: string, fallback) {

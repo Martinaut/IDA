@@ -38,7 +38,7 @@ export class ConnectionPanelComponent implements OnInit, OnDestroy {
     this.isCollapsed = false;
     this.connectionService.initializedStateChanged.subscribe(value => {
       this.isConnected = value;
-      // this.isCollapsed = value;
+      this.isCollapsed = value;
     });
   }
 
@@ -76,12 +76,12 @@ export class ConnectionPanelComponent implements OnInit, OnDestroy {
 
   // region --- SETTINGS ---
   private storeSettings(): void {
-    localStorage.setItem('inga.lang', this.selectedLanguage);
-    localStorage.setItem('inga.url', this.serverUrl);
+    localStorage.setItem('ida.lang', this.selectedLanguage);
+    localStorage.setItem('ida.url', this.serverUrl);
   }
 
   private getLangFromStorage(): string {
-    const lang = localStorage.getItem('inga.lang');
+    const lang = localStorage.getItem('ida.lang');
     if (lang) {
       return lang;
     }
@@ -89,7 +89,7 @@ export class ConnectionPanelComponent implements OnInit, OnDestroy {
   }
 
   private getUrlFromStorage(): string {
-    const lang = localStorage.getItem('inga.url');
+    const lang = localStorage.getItem('ida.url');
     if (lang) {
       return lang;
     }

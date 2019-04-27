@@ -27,11 +27,11 @@ export class TextToSpeechService {
   constructor() {
     if (TextToSpeechService.isSupported()) {
       this.synth = TextToSpeechService.isSupported() ? window.speechSynthesis : null;
-      this.language = this.getValueFromStorage('inga.lang', 'en');
-      this.volume = this.getValueFromStorage('inga.voice.volume', 1.0);
-      this.pitch = this.getValueFromStorage('inga.voice.pitch', 1.0);
-      this.rate = this.getValueFromStorage('inga.voice.rate', 1.0);
-      this.voiceUri = this.getValueFromStorage('inga.voice.' + this.language, null);
+      this.language = this.getValueFromStorage('ida.lang', 'en');
+      this.volume = this.getValueFromStorage('ida.voice.volume', 1.0);
+      this.pitch = this.getValueFromStorage('ida.voice.pitch', 1.0);
+      this.rate = this.getValueFromStorage('ida.voice.rate', 1.0);
+      this.voiceUri = this.getValueFromStorage('ida.voice.' + this.language, null);
       this.loadVoices().then(value => {
         this.voices = value;
         this.supportedVoicesChangedSource.next(this.getVoices());
@@ -160,7 +160,7 @@ export class TextToSpeechService {
   set volume(value: number) {
     if (value >= 0 && value <= 1) {
       this._volume = value;
-      localStorage.setItem('inga.voice.volume', value.toString());
+      localStorage.setItem('ida.voice.volume', value.toString());
     } else {
       throw new Error('Error setting volume. Please verify the volume value is a number between 0 and 1.');
     }
@@ -174,7 +174,7 @@ export class TextToSpeechService {
   set pitch(value: number) {
     if (value >= 0 && value <= 2) {
       this._pitch = value;
-      localStorage.setItem('inga.voice.pitch', value.toString());
+      localStorage.setItem('ida.voice.pitch', value.toString());
     } else {
       throw new Error('Error setting pitch. Please verify the pitch value is a number between 0 and 2.');
     }
@@ -188,7 +188,7 @@ export class TextToSpeechService {
   set rate(value: number) {
     if (value >= 0 && value <= 10) {
       this._rate = value;
-      localStorage.setItem('inga.voice.rate', value.toString());
+      localStorage.setItem('ida.voice.rate', value.toString());
     } else {
       throw new Error('Error setting rate. Please verify the rate value is a number between 0 and 10.');
     }
@@ -210,7 +210,7 @@ export class TextToSpeechService {
         }
       }
       this._language = value;
-      this.voiceUri = this.getValueFromStorage('inga.voice.' + this.language, null);
+      this.voiceUri = this.getValueFromStorage('ida.voice.' + this.language, null);
       this.supportedVoicesChangedSource.next(this.getVoices());
     } else {
       throw new Error('Error setting language. Please verify the language value is a valid language.');
@@ -226,7 +226,7 @@ export class TextToSpeechService {
     if (value == null || value.trim().length === 0) {
       this._voice = null;
       this._voiceUri = '';
-      localStorage.removeItem('inga.voice.' + this.language);
+      localStorage.removeItem('ida.voice.' + this.language);
       return;
     }
 
@@ -237,13 +237,13 @@ export class TextToSpeechService {
         if (v.voiceURI === value && v.lang.startsWith(langPart)) {
           this._voice = v;
           this._voiceUri = value;
-          localStorage.setItem('inga.voice.' + this.language, v.voiceURI);
+          localStorage.setItem('ida.voice.' + this.language, v.voiceURI);
           return;
         }
       }
       this._voice = null;
       this._voiceUri = '';
-      localStorage.removeItem('inga.voice.' + this.language);
+      localStorage.removeItem('ida.voice.' + this.language);
     }, timeout);
   }
   // endregion

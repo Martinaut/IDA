@@ -1,5 +1,5 @@
 {
-  "name": "inga-frontend",
+  "name": "ida-frontend",
   "version": "1.0.0",
   "scripts": {
     "ng": "ng",
@@ -9,7 +9,7 @@
     "lint": "ng lint",
     "e2e": "ng e2e",
     "extract-translations": "ngx-translate-extract --input ./src --output ./src/assets/i18n/en.json ./src/assets/i18n/de.json --clean --sort --format namespaced-json --marker _",
-    "deploy": "ng build --prod --baseHref=/frontend/ && cpx ./dist/inga-frontend/**/* ../app/server/src/main/resources/static/frontend/"
+    "deploy": "ng build --prod --baseHref=/frontend/ && cpx ./dist/ida-frontend/**/* ../app/server/src/main/resources/static/frontend/"
   },
   "private": true,
   "dependencies": {

@@ -1,7 +1,7 @@
 <scxml xmlns="http://www.w3.org/2005/07/scxml"
        version="1.0" datamodel="jexl" initial="AnalysisSituation"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:inga="http://dke.jku.at/2019/inga"
+       xmlns:ida="http://dke.jku.at/2019/ida"
        xsi:schemaLocation="http://www.w3.org/2005/07/scxml https://www.w3.org/2011/04/SCXML/scxml.xsd">
     <!-- Datamodel -->
     <datamodel>
@@ -25,7 +25,7 @@
             <!-- DisplayingValues -->
             <state id="DisplayingValues">
                 <onentry>
-                    <inga:DisplayValues/>
+                    <ida:DisplayValues/>
                 </onentry>
                 <transition event="userInput" target="DeterminingValueInputIntent"/>
             </state>
@@ -33,7 +33,7 @@
             <!-- DeterminingValueInputIntent -->
             <state id="DeterminingValueInputIntent">
                 <onentry>
-                    <inga:DetermineValueInputIntent/>
+                    <ida:DetermineValueInputIntent/>
                 </onentry>
                 <transition event="moreInformation" target="DisplayingValues"/>
                 <transition event="navigate" target="DeterminingValue"/>
@@ -43,7 +43,7 @@
         <!-- DeterminingValue -->
         <state id="DeterminingValue">
             <onentry>
-                <inga:DetermineValue/>
+                <ida:DetermineValue/>
             </onentry>
             <transition event="determined" target="Executable"/>
             <transition event="invalidInput" target="Changing"/>
@@ -54,7 +54,7 @@
             <!-- DisplayingOperations -->
             <state id="DisplayingOperations">
                 <onentry>
-                    <inga:DisplayOperations/>
+                    <ida:DisplayOperations/>
                 </onentry>
                 <transition event="userInput" target="DeterminingOperationInputIntent"/>
             </state>
@@ -62,7 +62,7 @@
             <!-- DeterminingOperationInputIntent -->
             <state id="DeterminingOperationInputIntent">
                 <onentry>
-                    <inga:DetermineOperationInputIntent/>
+                    <ida:DetermineOperationInputIntent/>
                 </onentry>
                 <transition event="moreInformation" target="DisplayingOperations"/>
                 <transition event="navigate" target="DeterminingOperation"/>
@@ -73,7 +73,7 @@
         <!-- Executed -->
         <state id="Executed">
             <onentry>
-                <inga:ExecuteQuery/>
+                <ida:ExecuteQuery/>
             </onentry>
             <transition event="reviseQuery" target="Executable"/>
         </state>
@@ -81,7 +81,7 @@
         <!-- DeterminingOperation -->
         <state id="DeterminingOperation">
             <onentry>
-                <inga:DetermineOperation/>
+                <ida:DetermineOperation/>
             </onentry>
             <transition event="determined" target="Changing"/>
             <transition event="invalidInput" target="Executable"/>
@@ -94,7 +94,7 @@
     <!-- Finished -->
     <final id="Finished">
         <onentry>
-            <inga:ExitApplication/>
+            <ida:ExitApplication/>
         </onentry>
     </final>
 </scxml>

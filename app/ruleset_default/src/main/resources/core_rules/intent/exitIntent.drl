@@ -1,11 +1,11 @@
 package core_rules.intent
 
 // ------------------------------------ IMPORT --------------------------------------
-import at.jku.dke.inga.rules.models.OperationIntentServiceModel
-import at.jku.dke.inga.rules.results.StringConfidenceResult
-import at.jku.dke.inga.shared.EventNames
-import at.jku.dke.inga.app.ruleset.interception.OperationInputIntentModel
-import at.jku.dke.inga.app.ruleset.interception.ValueInputIntentModel
+import at.jku.dke.ida.rules.models.OperationIntentServiceModel
+import at.jku.dke.ida.rules.results.StringConfidenceResult
+import at.jku.dke.ida.shared.EventNames
+import at.jku.dke.ida.app.ruleset.interception.OperationInputIntentModel
+import at.jku.dke.ida.app.ruleset.interception.ValueInputIntentModel
 
 // ------------------------------------ RULES ---------------------------------------
 rule "ExitApplication Intent - 'exit' keyword"

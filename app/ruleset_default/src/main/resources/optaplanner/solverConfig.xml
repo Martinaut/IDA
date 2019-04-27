@@ -2,7 +2,7 @@
 <solver>
     <!-- Domain model configuration -->
     <scanAnnotatedClasses>
-        <packageInclude>at.jku.dke.inga.app.ruleset.csp</packageInclude>
+        <packageInclude>at.jku.dke.ida.app.ruleset.csp</packageInclude>
     </scanAnnotatedClasses>
 
     <!-- Score configuration -->

@@ -1,8 +1,8 @@
 package optaplanner
 
 // ------------------------------------ IMPORT --------------------------------------
-import at.jku.dke.inga.app.ruleset.csp.domain.AnalysisSituation
-import at.jku.dke.inga.app.ruleset.csp.RuleHelpers
+import at.jku.dke.ida.app.ruleset.csp.domain.AnalysisSituation
+import at.jku.dke.ida.app.ruleset.csp.RuleHelpers
 import org.optaplanner.core.api.score.buildin.hardsoft.HardSoftScoreHolder
 
 // ------------------------------------ GLOBAL --------------------------------------

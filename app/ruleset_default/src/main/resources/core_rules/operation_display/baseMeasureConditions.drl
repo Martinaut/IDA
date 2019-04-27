@@ -1,10 +1,10 @@
 package core_rules.operation_display
 
 // ------------------------------------ IMPORT --------------------------------------
-import at.jku.dke.inga.shared.EventNames
-import at.jku.dke.inga.shared.models.NonComparativeAnalysisSituation
-import at.jku.dke.inga.shared.operations.Operation
-import at.jku.dke.inga.rules.models.OperationDisplayServiceModel
+import at.jku.dke.ida.shared.EventNames
+import at.jku.dke.ida.shared.models.NonComparativeAnalysisSituation
+import at.jku.dke.ida.shared.operations.Operation
+import at.jku.dke.ida.rules.models.OperationDisplayServiceModel
 
 // ---------------------- BASE MEASURE CONDITION OPERATIONS -------------------------
 rule "'Add Base Measure Condition' - if at least one predicate is available"

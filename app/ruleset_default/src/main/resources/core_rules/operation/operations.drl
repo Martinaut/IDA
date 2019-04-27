@@ -1,11 +1,11 @@
 package core_rules.operation
 
 // ------------------------------------ IMPORT --------------------------------------
-import at.jku.dke.inga.rules.models.OperationServiceModel
-import at.jku.dke.inga.shared.EventNames
-import at.jku.dke.inga.rules.results.StringConfidenceResult
+import at.jku.dke.ida.rules.models.OperationServiceModel
+import at.jku.dke.ida.shared.EventNames
+import at.jku.dke.ida.rules.results.StringConfidenceResult
 import org.apache.commons.lang3.math.NumberUtils
-import at.jku.dke.inga.app.ruleset.interception.OperationModel
+import at.jku.dke.ida.app.ruleset.interception.OperationModel
 
 // ------------------------------------ RULES ---------------------------------------
 rule "Resolve Operation"
