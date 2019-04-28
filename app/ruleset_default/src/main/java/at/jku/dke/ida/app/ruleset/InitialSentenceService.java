@@ -2,16 +2,23 @@ package at.jku.dke.ida.app.ruleset;
 
 import at.jku.dke.ida.app.nlp.drools.GraphDBSimilarityService;
 import at.jku.dke.ida.app.nlp.drools.WordGroupsService;
+import at.jku.dke.ida.app.nlp.helpers.SimilarityHelper;
 import at.jku.dke.ida.app.nlp.models.GraphDBSimilarityServiceModel;
 import at.jku.dke.ida.app.nlp.models.WordGroup;
 import at.jku.dke.ida.app.nlp.models.WordGroupsServiceModel;
 import at.jku.dke.ida.app.ruleset.csp.service.ConstraintSatisfactionService;
+import at.jku.dke.ida.data.QueryException;
 import at.jku.dke.ida.data.models.CubeSimilarity;
+import at.jku.dke.ida.data.models.Label;
+import at.jku.dke.ida.data.models.Similarity;
+import at.jku.dke.ida.data.repositories.SimpleRepository;
 import at.jku.dke.ida.shared.session.SessionModel;
+import at.jku.dke.ida.shared.spring.BeanUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * This class provides a method to fill the analysis situation based on the initial sentence.
@@ -56,10 +63,46 @@ public final class InitialSentenceService {
     }
 
     private static Set<CubeSimilarity> getSimilarities(SessionModel sessionModel, Set<WordGroup> wordGroups) {
-        // Create model
+        // GraphDB similarity
         GraphDBSimilarityServiceModel model = new GraphDBSimilarityServiceModel(sessionModel, wordGroups);
+        Set<CubeSimilarity> similarities = new GraphDBSimilarityService().executeRules(model);
 
-        // Run service
-        return new GraphDBSimilarityService().executeRules(model);
+        // String similarity
+        try {
+            similarities = onlyKeepHighestStringSimilarity(sessionModel.getLocale().getLanguage(), similarities);
+        } catch (QueryException ex) {
+            LOGGER.error("Could not load labels for string similarity check.", ex);
+        }
+
+        // Return result
+        return similarities;
+    }
+
+    private static Set<CubeSimilarity> onlyKeepHighestStringSimilarity(String language, Set<CubeSimilarity> similarities) throws QueryException {
+        // Load all labels
+        SimpleRepository repo = BeanUtil.getBean(SimpleRepository.class);
+        Map<String, Label> labels = repo.getLabelsByLangAndIris(language, similarities.stream().map(Similarity::getElement).collect(Collectors.toList()));
+
+        // Calculate similarity per term
+        Set<CubeSimilarity> reduced = new HashSet<>();
+        Map<String, List<CubeSimilarity>> map = similarities.stream().collect(Collectors.groupingBy(Similarity::getTerm));
+        for (String term : map.keySet()) {
+            // Calculate similarity
+            Map<CubeSimilarity, Integer> simMap = new HashMap<>();
+            for (CubeSimilarity sim : map.get(term)) {
+                Similarity levensthein = SimilarityHelper.getNormalizedLevenstheinSimilarity(term, labels.get(sim.getElement()));
+                Similarity jaro = SimilarityHelper.getJaroWinklerSimilarity(term, labels.get(sim.getElement()));
+
+                simMap.put(sim, (int) ((levensthein.getScore() * jaro.getScore()) * 1_000_000d));
+            }
+
+            // Get the one with the highest score
+            int max = simMap.values().stream().max(Integer::compareTo).orElse(0);
+            simMap.entrySet().stream()
+                    .filter(e -> e.getValue() == max)
+                    .map(Map.Entry::getKey)
+                    .forEach(reduced::add);
+        }
+        return reduced;
     }
 }

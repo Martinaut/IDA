@@ -77,18 +77,8 @@ public class AnalysisSituationSolution {
     public static Set<AnalysisSituationElement> createAllPossibleCombinations(Set<CubeSimilarity> data) {
         Set<Set<CubeSimilarity>> result = new HashSet<>();
 
-        // Group by cube and optionally by dimension
+        // Group by cube
         Map<String, List<CubeSimilarity>> grouped = data.stream().collect(Collectors.groupingBy(CubeSimilarity::getCube));
-        if (data.stream().allMatch(x -> x instanceof DimensionSimilarity)) {
-            Map<String, List<DimensionSimilarity>> groupedDim = grouped.values().stream()
-                    .map(x -> (DimensionSimilarity) x)
-                    .collect(Collectors.groupingBy(DimensionSimilarity::getDimension));
-
-            grouped.clear();
-            for (String key : groupedDim.keySet()) {
-                grouped.put(key, groupedDim.get(key).stream().map(x->(CubeSimilarity)x).collect(Collectors.toList()));
-            }
-        }
 
         // Create combinations
         for (List<CubeSimilarity> sims : grouped.values()) {
