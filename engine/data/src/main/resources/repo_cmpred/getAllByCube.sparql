@@ -1,0 +1,14 @@
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX qbx: <http://dke.jku.at/inga/cubes#>
+
+SELECT DISTINCT ?element
+WHERE {
+    <###CUBE###> qbx:measure ?bmeasure .
+    ?bmeasure rdf:type qbx:BaseMeasure .
+	?aggmeasure rdf:type qbx:AggregateMeasure ;
+	            qbx:derivedFrom+ ?bmeasure .
+    ?cmeasure rdf:type qbx:ComparativeMeasure ;
+              (qbx:setOfInterestMeasure | qbx:setOfComparisonMeasure) ?aggmeasure .
+    ?element rdf:type qbx:ComparativeMeasurePredicate ;
+             qbx:over ?cmeasure .
+} 

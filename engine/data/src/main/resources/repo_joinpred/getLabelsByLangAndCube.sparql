@@ -1,0 +1,35 @@
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX qbx: <http://dke.jku.at/inga/cubes#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT DISTINCT ?element ?label ?description
+WHERE {
+    ?element rdf:type qbx:JoinConditionPredicate ;
+            (qbx:overLevelInSetOfInterest | qbx:overLevelInSetOfComparison) ?level ;
+            rdfs:label ?label .
+
+    {
+        SELECT DISTINCT ?dimension ?level
+        WHERE {
+            {
+                <###CUBE###> qbx:dimension ?dimension .
+    			?dimension qbx:hasHierarchy ?hier .
+    			?hs qbx:inHierarchy ?hier ;
+    				qbx:childLevel ?level .
+            } UNION {
+                <###CUBE###> qbx:dimension ?dimension .
+    			?dimension qbx:hasHierarchy ?hier .
+    			?hs qbx:inHierarchy ?hier ;
+    				qbx:parentLevel ?level .
+            }
+        }
+    }
+
+    FILTER (lang(?label) = "###LANG###") .
+    
+    OPTIONAL {
+        ?element rdfs:comment ?description .
+    	FILTER (lang(?description) = "###LANG###") .
+    }
+}
+ORDER BY ?label

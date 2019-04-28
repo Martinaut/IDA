@@ -1,0 +1,25 @@
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX qbx: <http://dke.jku.at/inga/cubes#>
+
+SELECT DISTINCT ?element
+WHERE {
+    ?element rdf:type qbx:JoinConditionPredicate ;
+            (qbx:overLevelInSetOfInterest | qbx:overLevelInSetOfComparison) ?level .
+
+    {
+        SELECT DISTINCT ?dimension ?level
+        WHERE {
+            {
+                <###CUBE###> qbx:dimension ?dimension .
+    			?dimension qbx:hasHierarchy ?hier .
+    			?hs qbx:inHierarchy ?hier ;
+    				qbx:childLevel ?level .
+            } UNION {
+                <###CUBE###> qbx:dimension ?dimension .
+    			?dimension qbx:hasHierarchy ?hier .
+    			?hs qbx:inHierarchy ?hier ;
+    				qbx:parentLevel ?level .
+            }
+        }
+    }
+}
