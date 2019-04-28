@@ -61,7 +61,7 @@ public class AnalysisSituationElement {
         if (elements == null || elements.isEmpty()) return 0;
         return elements.stream()
                 .mapToDouble(CubeSimilarity::getScore)
-                .reduce(1, (left, right) -> left * right);
+                .reduce(0, (left, right) -> left + right);
     }
 
     @Override

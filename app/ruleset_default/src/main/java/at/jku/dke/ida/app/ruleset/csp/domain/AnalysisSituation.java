@@ -174,7 +174,7 @@ public class AnalysisSituation {
         if (valSupplier.get() != null) {
             double tmp = valSupplier.get().getScore();
             if (tmp > 0) {
-                score = Math.abs(score - 0d) < 0.00000001 ? tmp : score * tmp;
+                score = Math.abs(score - 0d) < 0.00000001 ? tmp : score + tmp;
             }
         }
         return score;

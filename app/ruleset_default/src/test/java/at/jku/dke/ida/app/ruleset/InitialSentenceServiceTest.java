@@ -1,5 +1,6 @@
 package at.jku.dke.ida.app.ruleset;
 
+import at.jku.dke.ida.app.ruleset.csp.ConstraintSatisfactionConfiguration;
 import at.jku.dke.ida.data.configuration.DataSpringConfiguration;
 import at.jku.dke.ida.shared.session.SessionModel;
 import at.jku.dke.ida.shared.spring.SharedSpringConfiguration;
@@ -10,7 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 
-@SpringBootTest(classes = {SharedSpringConfiguration.class, DataSpringConfiguration.class})
+@SpringBootTest(classes = {SharedSpringConfiguration.class, DataSpringConfiguration.class, ConstraintSatisfactionConfiguration.class})
 @ExtendWith(SpringExtension.class)
 class InitialSentenceServiceTest {
     @Test
@@ -19,7 +20,7 @@ class InitialSentenceServiceTest {
         SessionModel sessionModel = new SessionModel("test", "en");
 
         // Execute
-        InitialSentenceService.fillAnalysisSituation(sessionModel, "Show me the total costs per insurant and doctor district.");
+        InitialSentenceService.fillAnalysisSituation(sessionModel, "Show me the total costs per insurant province and doctor district.");
 
         // Assert
         System.out.println(sessionModel.getAnalysisSituation());
