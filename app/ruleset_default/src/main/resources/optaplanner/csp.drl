@@ -3,10 +3,11 @@ package optaplanner
 // ------------------------------------ IMPORT --------------------------------------
 import at.jku.dke.ida.app.ruleset.csp.domain.AnalysisSituation
 import at.jku.dke.ida.app.ruleset.csp.RuleHelpers
-import org.optaplanner.core.api.score.buildin.hardsoft.HardSoftScoreHolder
+import org.optaplanner.core.api.score.buildin.hardsoftbigdecimal.HardSoftBigDecimalScoreHolder
+import java.math.BigDecimal
 
 // ------------------------------------ GLOBAL --------------------------------------
-global HardSoftScoreHolder scoreHolder;
+global HardSoftBigDecimalScoreHolder scoreHolder;
 
 // ------------------------------------ RULES ---------------------------------------
 // ### EMPTY VALUES ###
@@ -14,14 +15,14 @@ rule "No cube set"
 when
     AnalysisSituation(cube == null || cube.isEmpty())
 then
-    scoreHolder.addHardConstraintMatch(kcontext, -1);
+    scoreHolder.addHardConstraintMatch(kcontext, RuleHelpers.MINUS_ONE);
 end
 
 rule "No measure set"
 when
     AnalysisSituation(measures == null)
 then
-    scoreHolder.addSoftConstraintMatch(kcontext, -1);
+    scoreHolder.addSoftConstraintMatch(kcontext, RuleHelpers.MINUS_ONE);
 end
 
 // ### SAME CUBE ###
@@ -29,60 +30,59 @@ rule "All measures in same cube"
 when
     AnalysisSituation(!RuleHelpers.allInCube(cube, measures))
 then
-    scoreHolder.addHardConstraintMatch(kcontext, -1);
+    scoreHolder.addHardConstraintMatch(kcontext, RuleHelpers.MINUS_ONE);
 end
 
 rule "All levels in same cube"
 when
     AnalysisSituation(!RuleHelpers.allInCube(cube, granularityLevels))
 then
-    scoreHolder.addHardConstraintMatch(kcontext, -1);
+    scoreHolder.addHardConstraintMatch(kcontext, RuleHelpers.MINUS_ONE);
 end
 
 rule "All slice conditions in same cube"
 when
     AnalysisSituation(!RuleHelpers.allInCube(cube, sliceConditions))
 then
-    scoreHolder.addHardConstraintMatch(kcontext, -1);
+    scoreHolder.addHardConstraintMatch(kcontext, RuleHelpers.MINUS_ONE);
 end
 
 rule "All bmcs in same cube"
 when
     AnalysisSituation(!RuleHelpers.allInCube(cube, baseMeasureConditions))
 then
-    scoreHolder.addHardConstraintMatch(kcontext, -1);
+    scoreHolder.addHardConstraintMatch(kcontext, RuleHelpers.MINUS_ONE);
 end
 
 rule "All filters in same cube"
 when
     AnalysisSituation(!RuleHelpers.allInCube(cube, filterConditions))
 then
-    scoreHolder.addHardConstraintMatch(kcontext, -1);
+    scoreHolder.addHardConstraintMatch(kcontext, RuleHelpers.MINUS_ONE);
 end
 
 rule "Maximum one granularity level per dimesion"
 when
     AnalysisSituation(!RuleHelpers.maximumOneElementPerDimension(granularityLevels))
 then
-    scoreHolder.addHardConstraintMatch(kcontext, -1);
+    scoreHolder.addHardConstraintMatch(kcontext, RuleHelpers.MINUS_ONE);
 end
 
-//rule "Maximum one assignment for a term"
-//when
-//    $as : AnalysisSituation()
-//    eval(RuleHelpers.multipleAssignmentsPerTerm($as))
-//then
-//    scoreHolder.addSoftConstraintMatch(kcontext, RuleHelpers.getMultipleAssignmentsPerTermScore($as));
-//end
+rule "Maximum one assignment for a term"
+when
+    $as : AnalysisSituation()
+    eval(RuleHelpers.multipleAssignmentsPerTerm($as))
+then
+    scoreHolder.addSoftConstraintMatch(kcontext, RuleHelpers.MINUS_ONE);
+end
 
 rule "No duplicates"
 when
     $as : AnalysisSituation()
     eval(RuleHelpers.containsDuplicates($as))
 then
-    scoreHolder.addSoftConstraintMatch(kcontext, -1);
+    scoreHolder.addSoftConstraintMatch(kcontext, RuleHelpers.MINUS_ONE);
 end
-
 
 // ### SCORE ###
 rule "Similarity Score"

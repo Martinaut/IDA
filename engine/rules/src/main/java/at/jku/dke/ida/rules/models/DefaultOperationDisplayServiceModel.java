@@ -2,6 +2,7 @@ package at.jku.dke.ida.rules.models;
 
 import at.jku.dke.ida.rules.interfaces.OperationDisplayServiceModel;
 import at.jku.dke.ida.shared.Event;
+import at.jku.dke.ida.shared.IRIConstants;
 import at.jku.dke.ida.shared.models.AnalysisSituation;
 import at.jku.dke.ida.shared.models.DimensionQualification;
 import at.jku.dke.ida.shared.models.EngineAnalysisSituation;
@@ -229,6 +230,7 @@ public class DefaultOperationDisplayServiceModel extends AbstractServiceModel im
                     DimensionQualification dq = as.getDimensionQualification(x.getLeft());
                     if (dq == null) return false;
                     if (dq.getDiceNode() == null) return true;
+                    if (dq.getDiceNode().equals(IRIConstants.RESOURCE_ALL_NODES)) return true;
                     return !dq.getDiceNode().equals(x.getRight());
                 }).collect(Collectors.toSet());
     }

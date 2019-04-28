@@ -35,6 +35,7 @@ public class WebsocketController {
      *
      * @param sentenceHandler The sentence handler.
      */
+    @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
     @Autowired
     public WebsocketController(Optional<InitialSentenceHandler> sentenceHandler) {
         this.sentenceHandler = sentenceHandler.orElse(null);
@@ -46,15 +47,18 @@ public class WebsocketController {
      * @param message        The message.
      * @param headerAccessor The header accessor used to get the session id.
      * @throws StateMachineInstantiationException If the state machine could not be instantiated.
+     * @throws SessionExpiredException If the session does not exist (This should never happen).
      */
     @MessageMapping("/start")
-    public void start(@Payload StartDialogMessage message, SimpMessageHeaderAccessor headerAccessor) throws StateMachineInstantiationException {
+    public void start(@Payload StartDialogMessage message, SimpMessageHeaderAccessor headerAccessor) throws StateMachineInstantiationException, SessionExpiredException {
         LOGGER.info("{} - Start message received", headerAccessor.getSessionId());
         SessionManager.getInstance().createSession(headerAccessor.getSessionId(), message.getLocale());
         if (!StringUtils.isBlank(message.getInitialSentence()) && sentenceHandler != null) {
             Session session = SessionManager.getInstance().getSession(headerAccessor.getSessionId());
             if (session != null) // This should be always the case
                 sentenceHandler.parseSentence(session.getSessionContextModel(), message.getInitialSentence());
+            else
+                throw new SessionExpiredException("Session " + headerAccessor.getSessionId() + " does not exist.");
         }
         SessionManager.getInstance().initiateStateMachine(headerAccessor.getSessionId());
     }
@@ -85,7 +89,7 @@ public class WebsocketController {
     @MessageExceptionHandler
     public ErrorDisplay handleException(StateMachineInstantiationException ex) {
         LOGGER.error("An error occurred while instantiating a state machine.", ex);
-        return new ErrorDisplay(ResourceBundleHelper.getResourceString("web.ErrorMessages","ExecuteStateMachine") + ex.getLocalizedMessage());
+        return new ErrorDisplay(ResourceBundleHelper.getResourceString("web.ErrorMessages", "ExecuteStateMachine") + ex.getLocalizedMessage());
     }
 
     /**
@@ -97,7 +101,7 @@ public class WebsocketController {
     @MessageExceptionHandler
     public ErrorDisplay handleException(StateMachineExecutionException ex) {
         LOGGER.error("An error occurred while executing a state machine.", ex);
-        return new ErrorDisplay(ResourceBundleHelper.getResourceString("web.ErrorMessages","InitiateStateMachine") + ex.getLocalizedMessage());
+        return new ErrorDisplay(ResourceBundleHelper.getResourceString("web.ErrorMessages", "InitiateStateMachine") + ex.getLocalizedMessage());
     }
 
     /**
@@ -109,7 +113,7 @@ public class WebsocketController {
     @MessageExceptionHandler
     public ErrorDisplay handleException(SessionExpiredException ex) {
         LOGGER.error("The state chart session does not exist or is already expired (or state chart has finished).", ex);
-        return new ErrorDisplay(ResourceBundleHelper.getResourceString("web.ErrorMessages","SessionExpired") + ex.getLocalizedMessage());
+        return new ErrorDisplay(ResourceBundleHelper.getResourceString("web.ErrorMessages", "SessionExpired") + ex.getLocalizedMessage());
     }
     // endregion
 }

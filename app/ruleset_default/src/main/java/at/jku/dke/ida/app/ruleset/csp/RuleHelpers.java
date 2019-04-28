@@ -5,7 +5,7 @@ import at.jku.dke.ida.app.ruleset.csp.domain.AnalysisSituationElement;
 import at.jku.dke.ida.data.models.CubeSimilarity;
 import at.jku.dke.ida.data.models.DimensionSimilarity;
 
-import java.util.*;
+import java.math.BigDecimal;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -18,6 +18,11 @@ public final class RuleHelpers {
      */
     private RuleHelpers() {
     }
+
+    /**
+     * BigDecimal with value "-1"
+     */
+    public static final BigDecimal MINUS_ONE = BigDecimal.valueOf(-1);
 
     /**
      * Returns whether all elements are in the specified cube.
@@ -58,6 +63,30 @@ public final class RuleHelpers {
                 .allMatch(x -> x <= 1);
     }
 
+    /**
+     * Returns whether one cube element is used in more than one place.
+     *
+     * @param as The analysis situation.
+     * @return {@code true} if there exists at least one element that is used more than one time; {@code false} otherwise.
+     */
+    public static boolean containsDuplicates(AnalysisSituation as) {
+        if (as == null) return false;
+        return as.getAllSimilarities().stream()
+                .collect(Collectors.groupingBy(CubeSimilarity::getElement, Collectors.counting()))
+                .values()
+                .stream()
+                .anyMatch(x -> x > 1);
+    }
+
+    /**
+     * Returns whether a term is used for more than one element.
+     * <p>
+     * This function only compares the strings. For example, if there are the terms "amount" and "total amount", these
+     * therms are not considered equal and therefore not multiple assignment is detected.
+     *
+     * @param as The analysis situation.
+     * @return {@code true} if a term is used multiple times; {@code false} otherwise.
+     */
     public static boolean multipleAssignmentsPerTerm(AnalysisSituation as) {
         if (as == null) return false;
 
@@ -65,31 +94,6 @@ public final class RuleHelpers {
                 .map(CubeSimilarity::getTerm)
                 .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()))
                 .values().stream()
-                .anyMatch(x -> x > 1);
-    }
-
-    public static int getMultipleAssignmentsPerTermScore(AnalysisSituation as) {
-        if (as == null) return 0;
-
-        // Build map
-        Map<String, List<CubeSimilarity>> similarityMap = as.getAllSimilarities().stream().collect(Collectors.groupingBy(CubeSimilarity::getTerm));
-        if (similarityMap.values().stream().allMatch(x -> x.size() <= 1)) return 0;
-
-        // Calculate
-        return (int) ((similarityMap.values().stream()
-                .filter(x -> x.size() > 1)
-                .flatMap(Collection::stream)
-                .mapToDouble(CubeSimilarity::getScore)
-                .map(d -> 1 - d)
-                .sum() * -1) * 10_000d);
-    }
-
-    public static boolean containsDuplicates(AnalysisSituation as) {
-        if (as == null) return false;
-        return as.getAllSimilarities().stream()
-                .collect(Collectors.groupingBy(CubeSimilarity::getElement, Collectors.counting()))
-                .values()
-                .stream()
                 .anyMatch(x -> x > 1);
     }
 }

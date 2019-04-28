@@ -31,7 +31,12 @@ public final class InitialSentenceService {
     private InitialSentenceService() {
     }
 
-    //TODO: javadoc
+    /**
+     * Fills the analysis situation in the {@code sessionModel} with elements detected in the {@code initialSentence}.
+     *
+     * @param sessionModel    The session model.
+     * @param initialSentence The initial sentence.
+     */
     public static void fillAnalysisSituation(SessionModel sessionModel, String initialSentence) {
         if (sessionModel == null) throw new IllegalArgumentException("sessionModel must not be null");
         if (initialSentence == null || initialSentence.isBlank()) return;

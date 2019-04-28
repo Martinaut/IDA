@@ -1,12 +1,15 @@
 package at.jku.dke.ida.app.ruleset.csp.service;
 
+import at.jku.dke.ida.app.ruleset.csp.ConstraintSatisfactionSettings;
 import at.jku.dke.ida.app.ruleset.csp.domain.AnalysisSituation;
 import at.jku.dke.ida.app.ruleset.csp.domain.AnalysisSituationSolution;
 import at.jku.dke.ida.app.ruleset.helpers.ValueSetter;
 import at.jku.dke.ida.data.models.CubeSimilarity;
 import at.jku.dke.ida.data.models.DimensionSimilarity;
+import at.jku.dke.ida.shared.IRIConstants;
 import at.jku.dke.ida.shared.models.EngineAnalysisSituation;
 import at.jku.dke.ida.shared.models.NonComparativeAnalysisSituation;
+import at.jku.dke.ida.shared.spring.BeanUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -16,7 +19,7 @@ import org.optaplanner.core.api.solver.SolverFactory;
 import java.util.Collections;
 import java.util.Set;
 import java.util.stream.Collectors;
-// TODO: Klasse überarbeiten
+
 /**
  * This service performs a constraint satisfaction algorithm to determine the
  * best-fitting analysis situation.
@@ -70,36 +73,48 @@ public class ConstraintSatisfactionService {
 
     private AnalysisSituationSolution buildProblem(Set<CubeSimilarity> similarities) {
         logger.debug("Building problem");
+        ConstraintSatisfactionSettings settings = BeanUtil.getBean(ConstraintSatisfactionSettings.class);
         return new AnalysisSituationSolution(
                 similarities.stream().map(CubeSimilarity::getCube).collect(Collectors.toSet()),
-                similarities.stream().filter(x -> x.getType().equals("http://dke.jku.at/inga/cubes#AggregateMeasure")).collect(Collectors.toSet()), // TODO: move type to constant
-                similarities.stream().filter(x -> x.getType().equals("http://dke.jku.at/inga/cubes#Level")).collect(Collectors.toSet()),
-                similarities.stream().filter(x -> x.getType().equals("http://dke.jku.at/inga/cubes#LevelPredicate")).collect(Collectors.toSet()),
-                Collections.emptySet(),//similarities.stream().filter(x -> x.getType().equals("http://dke.jku.at/inga/cubes#BaseMeasurePredicate")).collect(Collectors.toSet()),
-                Collections.emptySet()//similarities.stream().filter(x -> x.getType().equals("http://dke.jku.at/inga/cubes#AggregateMeasurePredicate")).collect(Collectors.toSet())
+                similarities.stream().filter(x -> x.getType().equals(IRIConstants.TYPE_AGGREGATE_MEASURE)).collect(Collectors.toSet()),
+                settings.isUseLevels() ? similarities.stream().filter(x -> x.getType().equals(IRIConstants.TYPE_LEVEL)).collect(Collectors.toSet()) : Collections.emptySet(),
+                settings.isUseLevelPredicates() ? similarities.stream().filter(x -> x.getType().equals(IRIConstants.TYPE_LEVEL_PREDICATE)).collect(Collectors.toSet()) : Collections.emptySet(),
+                settings.isUseBaseMeasurePredicates() ? similarities.stream().filter(x -> x.getType().equals(IRIConstants.TYPE_BASE_MEASURE_PREDICATE)).collect(Collectors.toSet()) : Collections.emptySet(),
+                settings.isUseAggregateMeasurePredicates() ? similarities.stream().filter(x -> x.getType().equals(IRIConstants.TYPE_AGGREGATE_MEASURE_PREDICATE)).collect(Collectors.toSet()) : Collections.emptySet()
         );
     }
 
     private void setValues(String language, NonComparativeAnalysisSituation as, AnalysisSituation solution) {
         if (solution == null) return;
-
         logger.debug("Setting values");
+        ConstraintSatisfactionSettings settings = BeanUtil.getBean(ConstraintSatisfactionSettings.class);
+
+        // Cube
         if (solution.getCube() != null) {
             ValueSetter.setCube(language, as, solution.getCube());
         } else return;
 
+        // Measures
         if (solution.getMeasures() != null && !solution.getMeasures().getElements().isEmpty())
             as.setMeasures(solution.getMeasures().getElements().stream().map(CubeSimilarity::getElement).collect(Collectors.toSet()));
-        if (solution.getBaseMeasureConditions() != null && !solution.getBaseMeasureConditions().getElements().isEmpty())
+
+        // Base Measure Conditions
+        if (settings.isUseBaseMeasurePredicates() && solution.getBaseMeasureConditions() != null && !solution.getBaseMeasureConditions().getElements().isEmpty())
             as.setBaseMeasureConditions(solution.getBaseMeasureConditions().getElements().stream().map(CubeSimilarity::getElement).collect(Collectors.toSet()));
-        if (solution.getFilterConditions() != null&& !solution.getFilterConditions().getElements().isEmpty())
+
+        // Filter Conditions
+        if (settings.isUseAggregateMeasurePredicates() && solution.getFilterConditions() != null && !solution.getFilterConditions().getElements().isEmpty())
             as.setFilterConditions(solution.getFilterConditions().getElements().stream().map(CubeSimilarity::getElement).collect(Collectors.toSet()));
-        if (solution.getSliceConditions() != null && !solution.getSliceConditions().getElements().isEmpty())
+
+        // Slice Conditions
+        if (settings.isUseLevelPredicates() && solution.getSliceConditions() != null && !solution.getSliceConditions().getElements().isEmpty())
             solution.getSliceConditions().getElements().stream()
                     .filter(x -> x instanceof DimensionSimilarity)
                     .map(x -> (DimensionSimilarity) x)
                     .forEach(x -> as.getDimensionQualification(x.getDimension()).addSliceCondition(x.getElement()));
-        if (solution.getGranularityLevels() != null && !solution.getGranularityLevels().getElements().isEmpty())
+
+        // Granularity Levels
+        if (settings.isUseLevels() && solution.getGranularityLevels() != null && !solution.getGranularityLevels().getElements().isEmpty())
             solution.getGranularityLevels().getElements().stream()
                     .filter(x -> x instanceof DimensionSimilarity)
                     .map(x -> (DimensionSimilarity) x)

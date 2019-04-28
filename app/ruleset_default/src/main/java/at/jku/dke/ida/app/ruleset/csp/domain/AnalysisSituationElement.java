@@ -7,32 +7,61 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.StringJoiner;
 
+/**
+ * The element contains a set of analysis situation elements.
+ * This elements are of type {@link CubeSimilarity} which contain the element and its similarity score.
+ */
 public class AnalysisSituationElement {
 
     private Set<CubeSimilarity> elements;
 
+    /**
+     * Instantiates a new instance of class {@linkplain AnalysisSituationElement}.
+     */
     public AnalysisSituationElement() {
         this.elements = new HashSet<>();
     }
 
+    /**
+     * Instantiates a new instance of class {@linkplain AnalysisSituationElement}.
+     *
+     * @param elements The set of elements.
+     */
     public AnalysisSituationElement(Set<CubeSimilarity> elements) {
         this.elements = elements;
     }
 
+    /**
+     * Gets the elements.
+     *
+     * @return the elements
+     */
     public Set<CubeSimilarity> getElements() {
         return elements;
     }
 
+    /**
+     * Sets the elements.
+     *
+     * @param elements the elements
+     */
     public void setElements(Set<CubeSimilarity> elements) {
         this.elements = elements;
     }
 
+    /**
+     * Gets the score of the element.
+     * <p>
+     * For this, the scores of all elements are multiplied.
+     * If elements is {@code null} or empty, 0 will be returned.
+     *
+     * @return the score
+     */
     public double getScore() {
-        if (elements == null) return 1;
-        double score = elements.stream()
+        if (elements == null || elements.isEmpty()) return 0;
+        return elements.stream()
                 .mapToDouble(CubeSimilarity::getScore)
-                .reduce(0, (left, right) -> left * right);
-        return Double.compare(score, 0) == 0 ? 1 : score;
+                .reduce(1, (left, right) -> left * right);
     }
 
     @Override
