@@ -1,5 +1,7 @@
-package at.jku.dke.ida.shared.models;
+package at.jku.dke.ida.shared.models.generic;
 
+import at.jku.dke.ida.shared.models.AnalysisSituation;
+import at.jku.dke.ida.shared.models.DimensionQualification;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.*;
@@ -8,19 +10,22 @@ import java.util.stream.Collectors;
 
 /**
  * Non-comparative analysis situations represent multi-dimensional queries on cube instances.
+ *
+ * @param <TValue>   The type of the schema elements.
+ * @param <TDimQual> The type of the dimension qualifications.
  */
-public class NonComparativeAnalysisSituation extends AnalysisSituation {
+public class GenericNonComparativeAnalysisSituation<TValue extends Comparable<? super TValue>, TDimQual extends GenericDimensionQualification<TValue>> extends AnalysisSituation {
 
-    private String cube; // 1. a cube instance of cube schema
-    private Set<String> baseMeasureConditions; // 2. a possibly empty set of base measure conditions
-    private Set<String> measures; // 3. a non-empty set of measures
-    private Map<String, DimensionQualification> dimensionQualifications; // 4. a set of dimension qualifications
-    private Set<String> filterConditions; // 5. a possibly empty set of filter conditions
+    private TValue cube; // 1. a cube instance of cube schema
+    private Set<TValue> baseMeasureConditions; // 2. a possibly empty set of base measure conditions
+    private Set<TValue> measures; // 3. a non-empty set of measures
+    private Map<TValue, TDimQual> dimensionQualifications; // 4. a set of dimension qualifications
+    private Set<TValue> filterConditions; // 5. a possibly empty set of filter conditions
 
     /**
-     * Instantiates a new instance of class {@linkplain NonComparativeAnalysisSituation}.
+     * Instantiates a new instance of class {@linkplain GenericNonComparativeAnalysisSituation}.
      */
-    public NonComparativeAnalysisSituation() {
+    public GenericNonComparativeAnalysisSituation() {
         this.baseMeasureConditions = new HashSet<>();
         this.measures = new HashSet<>();
         this.dimensionQualifications = new HashMap<>();
@@ -32,7 +37,7 @@ public class NonComparativeAnalysisSituation extends AnalysisSituation {
      *
      * @return the cube
      */
-    public String getCube() {
+    public TValue getCube() {
         return cube;
     }
 
@@ -41,7 +46,7 @@ public class NonComparativeAnalysisSituation extends AnalysisSituation {
      *
      * @param cube the cube
      */
-    public void setCube(String cube) {
+    public void setCube(TValue cube) {
         this.cube = cube;
     }
 
@@ -52,7 +57,7 @@ public class NonComparativeAnalysisSituation extends AnalysisSituation {
      *
      * @return the base measure conditions
      */
-    public Set<String> getBaseMeasureConditions() {
+    public Set<TValue> getBaseMeasureConditions() {
         return Collections.unmodifiableSet(baseMeasureConditions);
     }
 
@@ -61,7 +66,7 @@ public class NonComparativeAnalysisSituation extends AnalysisSituation {
      *
      * @param baseMeasureConditions the base measure conditions
      */
-    public void setBaseMeasureConditions(Set<String> baseMeasureConditions) {
+    public void setBaseMeasureConditions(Set<TValue> baseMeasureConditions) {
         this.baseMeasureConditions = Objects.requireNonNullElseGet(baseMeasureConditions, HashSet::new);
     }
 
@@ -72,7 +77,7 @@ public class NonComparativeAnalysisSituation extends AnalysisSituation {
      * @return {@code true} if this set did not already contain the specified condition
      * @see Set#add(Object)
      */
-    public boolean addBaseMeasureCondition(String cond) {
+    public boolean addBaseMeasureCondition(TValue cond) {
         return baseMeasureConditions.add(cond);
     }
 
@@ -83,7 +88,7 @@ public class NonComparativeAnalysisSituation extends AnalysisSituation {
      * @return {@code true} if the set contained the specified condition
      * @see Set#remove(Object)
      */
-    public boolean removeBaseMeasureCondition(String cond) {
+    public boolean removeBaseMeasureCondition(TValue cond) {
         return baseMeasureConditions.remove(cond);
     }
 
@@ -96,7 +101,7 @@ public class NonComparativeAnalysisSituation extends AnalysisSituation {
      *
      * @return the measures
      */
-    public Set<String> getMeasures() {
+    public Set<TValue> getMeasures() {
         return measures;
     }
 
@@ -105,8 +110,8 @@ public class NonComparativeAnalysisSituation extends AnalysisSituation {
      *
      * @param measures the measures
      */
-    public void setMeasures(Set<String> measures) {
-        this.measures = Objects.requireNonNullElseGet(measures, HashSet::new);;
+    public void setMeasures(Set<TValue> measures) {
+        this.measures = Objects.requireNonNullElseGet(measures, HashSet::new);
     }
 
     /**
@@ -116,7 +121,7 @@ public class NonComparativeAnalysisSituation extends AnalysisSituation {
      * @return {@code true} if this set did not already contain the specified measure
      * @see Set#add(Object)
      */
-    public boolean addMeasure(String measure) {
+    public boolean addMeasure(TValue measure) {
         return measures.add(measure);
     }
 
@@ -127,7 +132,7 @@ public class NonComparativeAnalysisSituation extends AnalysisSituation {
      * @return {@code true} if the set contained the specified measure
      * @see Set#remove(Object)
      */
-    public boolean removeMeasure(String measure) {
+    public boolean removeMeasure(TValue measure) {
         return measures.remove(measure);
     }
     // endregion
@@ -139,7 +144,7 @@ public class NonComparativeAnalysisSituation extends AnalysisSituation {
      *
      * @return the dimension qualifications
      */
-    public Set<DimensionQualification> getDimensionQualifications() {
+    public Set<TDimQual> getDimensionQualifications() {
         return Set.copyOf(dimensionQualifications.values());
     }
 
@@ -149,13 +154,13 @@ public class NonComparativeAnalysisSituation extends AnalysisSituation {
      * @param dimensionQualifications the dimension qualifications
      * @throws IllegalArgumentException If {@code dimensionQualifications} contains duplicate {@link DimensionQualification#getDimension()} values.
      */
-    public void setDimensionQualifications(Set<DimensionQualification> dimensionQualifications) {
+    public void setDimensionQualifications(Set<TDimQual> dimensionQualifications) {
         if (dimensionQualifications == null ||
-                dimensionQualifications.stream().map(DimensionQualification::getDimension).distinct().count() != dimensionQualifications.size())
+                dimensionQualifications.stream().map(TDimQual::getDimension).distinct().count() != dimensionQualifications.size())
             throw new IllegalArgumentException("There are duplicate dimension values in dimensionQualifications.");
 
         this.dimensionQualifications = dimensionQualifications.stream()
-                .collect(Collectors.toMap(DimensionQualification::getDimension, Function.identity()));
+                .collect(Collectors.toMap(TDimQual::getDimension, Function.identity()));
     }
 
     /**
@@ -165,7 +170,7 @@ public class NonComparativeAnalysisSituation extends AnalysisSituation {
      * @param dimensionUri The dimension URI.
      * @return The dimension qualification instance, if present.
      */
-    public DimensionQualification getDimensionQualification(String dimensionUri) {
+    public TDimQual getDimensionQualification(TValue dimensionUri) {
         return this.dimensionQualifications.get(dimensionUri);
     }
 
@@ -176,7 +181,7 @@ public class NonComparativeAnalysisSituation extends AnalysisSituation {
      * @throws IllegalArgumentException If the {@code qualification} is {@code null} or if there exists already an
      *                                  entry with the same {@link DimensionQualification#getDimension()} value.
      */
-    public void addDimensionQualification(DimensionQualification qualification) {
+    public void addDimensionQualification(TDimQual qualification) {
         if (qualification == null || dimensionQualifications.containsKey(qualification.getDimension()))
             throw new IllegalArgumentException("qualification must not be null and the dimension has to be unique.");
         dimensionQualifications.put(qualification.getDimension(), qualification);
@@ -187,7 +192,7 @@ public class NonComparativeAnalysisSituation extends AnalysisSituation {
      *
      * @param qualification The dimension qualification to be removed from the set, if present.
      */
-    public void removeDimensionQualification(DimensionQualification qualification) {
+    public void removeDimensionQualification(TDimQual qualification) {
         dimensionQualifications.remove(qualification.getDimension());
     }
 
@@ -200,7 +205,7 @@ public class NonComparativeAnalysisSituation extends AnalysisSituation {
      *
      * @return the filter conditions
      */
-    public Set<String> getFilterConditions() {
+    public Set<TValue> getFilterConditions() {
         return Collections.unmodifiableSet(filterConditions);
     }
 
@@ -209,7 +214,7 @@ public class NonComparativeAnalysisSituation extends AnalysisSituation {
      *
      * @param filterConditions the filter conditions
      */
-    public void setFilterConditions(Set<String> filterConditions) {
+    public void setFilterConditions(Set<TValue> filterConditions) {
         this.filterConditions = Objects.requireNonNullElseGet(filterConditions, HashSet::new);
     }
 
@@ -220,7 +225,7 @@ public class NonComparativeAnalysisSituation extends AnalysisSituation {
      * @return {@code true} if this set did not already contain the specified condition
      * @see Set#add(Object)
      */
-    public boolean addFilterCondition(String cond) {
+    public boolean addFilterCondition(TValue cond) {
         return filterConditions.add(cond);
     }
 
@@ -231,26 +236,26 @@ public class NonComparativeAnalysisSituation extends AnalysisSituation {
      * @return {@code true} if the set contained the specified condition
      * @see Set#remove(Object)
      */
-    public boolean removeFilterCondition(String cond) {
+    public boolean removeFilterCondition(TValue cond) {
         return filterConditions.remove(cond);
     }
     // endregion
 
     @Override
     public boolean isExecutable() {
-        return StringUtils.isNotBlank(cube) &&
+        return isCubeDefined() &&
                 !measures.isEmpty() &&
-                dimensionQualifications.values().stream().allMatch(DimensionQualification::isFilled);
+                dimensionQualifications.values().stream().allMatch(TDimQual::isFilled);
     }
 
     @Override
     public boolean isCubeDefined() {
-        return StringUtils.isNotBlank(cube);
+        return cube != null;
     }
 
     @Override
     public String toString() {
-        return new StringJoiner(", ", NonComparativeAnalysisSituation.class.getSimpleName() + "[", "]")
+        return new StringJoiner(", ", GenericNonComparativeAnalysisSituation.class.getSimpleName() + "[", "]")
                 .add("cube='" + cube + "'")
                 .add("baseMeasureConditions=" + baseMeasureConditions)
                 .add("measures=" + measures)
@@ -264,7 +269,7 @@ public class NonComparativeAnalysisSituation extends AnalysisSituation {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
-        NonComparativeAnalysisSituation that = (NonComparativeAnalysisSituation) o;
+        GenericNonComparativeAnalysisSituation that = (GenericNonComparativeAnalysisSituation) o;
         return Objects.equals(cube, that.cube) &&
                 Objects.equals(baseMeasureConditions, that.baseMeasureConditions) &&
                 Objects.equals(measures, that.measures) &&

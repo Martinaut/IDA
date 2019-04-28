@@ -1,4 +1,4 @@
-package at.jku.dke.ida.shared.models.iris;
+package at.jku.dke.ida.shared.models;
 
 import at.jku.dke.ida.shared.IRIConstants;
 import at.jku.dke.ida.shared.models.generic.GenericDimensionQualification;
@@ -11,9 +11,22 @@ import java.util.Objects;
 public class DimensionQualification extends GenericDimensionQualification<String> {
 
     /**
-     * Instantiates a new instance of class {@linkplain GenericDimensionQualification}.
+     * Instantiates a new instance of class {@linkplain DimensionQualification}.
      */
     public DimensionQualification() {
+        super();
+        this.setGranularityLevel(IRIConstants.RESOURCE_TOP_LEVEL);
+        this.setDiceLevel(IRIConstants.RESOURCE_TOP_LEVEL);
+        this.setDiceNode(IRIConstants.RESOURCE_ALL_NODES);
+    }
+
+    /**
+     * Instantiates a new instance of class {@linkplain DimensionQualification}.
+     *
+     * @param dimension The URI of the dimension.
+     */
+    public DimensionQualification(String dimension) {
+        super(dimension);
         this.setGranularityLevel(IRIConstants.RESOURCE_TOP_LEVEL);
         this.setDiceLevel(IRIConstants.RESOURCE_TOP_LEVEL);
         this.setDiceNode(IRIConstants.RESOURCE_ALL_NODES);

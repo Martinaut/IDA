@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 /**
  * Non-comparative analysis situations represent multi-dimensional queries on cube instances.
  */
-public class NonComparativeAnalysisSituation extends GenericNonComparativeAnalysisSituation<String, DimensionQualification> {
+public class NonComparativeAnalysisSituation extends GenericNonComparativeAnalysisSituation<String, DimensionQualification> implements EngineAnalysisSituation {
 
     /**
      * Instantiates a new Non comparative analysis situation.

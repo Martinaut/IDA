@@ -26,7 +26,7 @@ public class Operation implements Comparable<Operation>, Displayable {
     }
     // endregion
 
-    private final String eventName;
+    private final Event event;
     private final String displayName;
     private final int position;
 
@@ -37,8 +37,8 @@ public class Operation implements Comparable<Operation>, Displayable {
      * @param position The position of operation in the list of operations.
      */
     public Operation(Event event, int position) {
-        this.eventName = event.getEventName();
-        this.displayName = ResourceBundleHelper.getResourceString(BUNDLE_NAME, eventName);
+        this.event = event;
+        this.displayName = ResourceBundleHelper.getResourceString(BUNDLE_NAME, this.event.getEventName());
         this.position = position;
     }
 
@@ -50,7 +50,7 @@ public class Operation implements Comparable<Operation>, Displayable {
      * @param position    The position of operation in the list of operations.
      */
     public Operation(Event event, String displayName, int position) {
-        this.eventName = event.getEventName();
+        this.event = event;
         this.displayName = displayName;
         this.position = position;
     }
@@ -63,8 +63,8 @@ public class Operation implements Comparable<Operation>, Displayable {
      * @param position The position of operation in the list of operations.
      */
     public Operation(Event event, Locale locale, int position) {
-        this.eventName = event.getEventName();
-        this.displayName = ResourceBundleHelper.getResourceString(BUNDLE_NAME, locale, eventName);
+        this.event = event;
+        this.displayName = ResourceBundleHelper.getResourceString(BUNDLE_NAME, locale, this.event.getEventName());
         this.position = position;
     }
 
@@ -77,7 +77,7 @@ public class Operation implements Comparable<Operation>, Displayable {
      * @param position     The position of operation in the list of operations.
      */
     public Operation(Event event, String resourceName, Locale locale, int position) {
-        this.eventName = event.getEventName();
+        this.event = event;
         this.displayName = ResourceBundleHelper.getResourceString(BUNDLE_NAME, locale, resourceName);
         this.position = position;
     }
@@ -88,7 +88,16 @@ public class Operation implements Comparable<Operation>, Displayable {
      * @return the event name
      */
     public String getEventName() {
-        return eventName;
+        return event.getEventName();
+    }
+
+    /**
+     * Gets the event.
+     *
+     * @return the event
+     */
+    public Event getEvent() {
+        return event;
     }
 
     /**
@@ -115,19 +124,19 @@ public class Operation implements Comparable<Operation>, Displayable {
         if (o == null || getClass() != o.getClass()) return false;
         Operation operation = (Operation) o;
         return position == operation.position &&
-                Objects.equals(eventName, operation.eventName) &&
+                Objects.equals(event, operation.event) &&
                 Objects.equals(displayName, operation.displayName);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(eventName, displayName, position);
+        return Objects.hash(event, displayName, position);
     }
 
     @Override
     public String toString() {
         return new StringJoiner(", ", Operation.class.getSimpleName() + "[", "]")
-                .add("eventName='" + eventName + "'")
+                .add("event='" + event + "'")
                 .add("displayName='" + displayName + "'")
                 .add("position=" + position)
                 .toString();
@@ -140,7 +149,7 @@ public class Operation implements Comparable<Operation>, Displayable {
 
     @Override
     public String getDisplayableId() {
-        return eventName;
+        return getEventName();
     }
 
     @Override

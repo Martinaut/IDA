@@ -1,39 +1,38 @@
-package at.jku.dke.ida.shared.models;
-
-import at.jku.dke.ida.shared.IRIConstants;
-import org.apache.commons.lang3.StringUtils;
+package at.jku.dke.ida.shared.models.generic;
 
 import java.util.*;
 
 /**
  * Represents a dimension qualification.
  * It describes the selection of dimension nodes that have to be analyzed.
+ *
+ * @param <TValue> The type of the schema elements.
  */
-public class DimensionQualification implements Comparable<DimensionQualification> {
+public class GenericDimensionQualification<TValue extends Comparable<? super TValue>> implements Comparable<GenericDimensionQualification<TValue>> {
 
-    private String dimension; // 1. a dimension instance of dimension schema
-    private String diceLevel; // 2. a dice level variable
-    private String diceNode; // 3. a dice node variable
-    private Set<String> sliceConditions; // 4. a possibly empty set of slice conditions
-    private String granularityLevel; // 5 . a granularity level variable
+    private TValue dimension; // 1. a dimension instance of dimension schema
+    private TValue diceLevel; // 2. a dice level variable
+    private TValue diceNode; // 3. a dice node variable
+    private Set<TValue> sliceConditions; // 4. a possibly empty set of slice conditions
+    private TValue granularityLevel; // 5 . a granularity level variable
 
     /**
-     * Instantiates a new instance of class {@linkplain DimensionQualification}.
+     * Instantiates a new instance of class {@linkplain GenericDimensionQualification}.
      */
-    public DimensionQualification() {
+    public GenericDimensionQualification() {
         this.dimension = null;
+        this.granularityLevel = null;
+        this.diceLevel = null;
+        this.diceNode = null;
         this.sliceConditions = new HashSet<>();
-        this.granularityLevel = IRIConstants.RESOURCE_TOP_LEVEL;
-        this.diceLevel = IRIConstants.RESOURCE_TOP_LEVEL;
-        this.diceNode = IRIConstants.RESOURCE_ALL_NODES;
     }
 
     /**
-     * Instantiates a new instance of class {@linkplain DimensionQualification}.
+     * Instantiates a new instance of class {@linkplain GenericDimensionQualification}.
      *
      * @param dimension The URI of the dimension.
      */
-    public DimensionQualification(String dimension) {
+    public GenericDimensionQualification(TValue dimension) {
         this();
         this.dimension = dimension;
     }
@@ -43,7 +42,7 @@ public class DimensionQualification implements Comparable<DimensionQualification
      *
      * @return the dimension
      */
-    public String getDimension() {
+    public TValue getDimension() {
         return dimension;
     }
 
@@ -52,7 +51,7 @@ public class DimensionQualification implements Comparable<DimensionQualification
      *
      * @param dimension the dimension
      */
-    public void setDimension(String dimension) {
+    public void setDimension(TValue dimension) {
         this.dimension = dimension;
     }
 
@@ -61,7 +60,7 @@ public class DimensionQualification implements Comparable<DimensionQualification
      *
      * @return the dice level
      */
-    public String getDiceLevel() {
+    public TValue getDiceLevel() {
         return diceLevel;
     }
 
@@ -70,7 +69,7 @@ public class DimensionQualification implements Comparable<DimensionQualification
      *
      * @param diceLevel the dice level
      */
-    public void setDiceLevel(String diceLevel) {
+    protected void setDiceLevel(TValue diceLevel) {
         this.diceLevel = diceLevel;
     }
 
@@ -79,7 +78,7 @@ public class DimensionQualification implements Comparable<DimensionQualification
      *
      * @return the dice node
      */
-    public String getDiceNode() {
+    public TValue getDiceNode() {
         return diceNode;
     }
 
@@ -88,8 +87,19 @@ public class DimensionQualification implements Comparable<DimensionQualification
      *
      * @param diceNode the dice node
      */
-    public void setDiceNode(String diceNode) {
+    protected void setDiceNode(TValue diceNode) {
         this.diceNode = diceNode;
+    }
+
+    /**
+     * Sets the dice level and node.
+     *
+     * @param diceLevel The dice level.
+     * @param diceNode  The dice node.
+     */
+    public void setDice(TValue diceLevel, TValue diceNode) {
+        this.setDiceLevel(diceLevel);
+        this.setDiceNode(diceNode);
     }
 
     /**
@@ -97,7 +107,7 @@ public class DimensionQualification implements Comparable<DimensionQualification
      *
      * @return the slice conditions
      */
-    public Set<String> getSliceConditions() {
+    public Set<TValue> getSliceConditions() {
         return Collections.unmodifiableSet(sliceConditions);
     }
 
@@ -106,7 +116,7 @@ public class DimensionQualification implements Comparable<DimensionQualification
      *
      * @param sliceConditions the slice conditions
      */
-    public void setSliceConditions(Set<String> sliceConditions) {
+    public void setSliceConditions(Set<TValue> sliceConditions) {
         this.sliceConditions = Objects.requireNonNullElseGet(sliceConditions, HashSet::new);
     }
 
@@ -117,7 +127,7 @@ public class DimensionQualification implements Comparable<DimensionQualification
      * @return {@code true} if this set did not already contain the specified element
      * @see Set#add(Object)
      */
-    public boolean addSliceCondition(String cond) {
+    public boolean addSliceCondition(TValue cond) {
         return sliceConditions.add(cond);
     }
 
@@ -128,7 +138,7 @@ public class DimensionQualification implements Comparable<DimensionQualification
      * @return {@code true} if the set contained the specified condition
      * @see Set#remove(Object)
      */
-    public boolean removeSliceCondition(String cond) {
+    public boolean removeSliceCondition(TValue cond) {
         return sliceConditions.remove(cond);
     }
 
@@ -137,7 +147,7 @@ public class DimensionQualification implements Comparable<DimensionQualification
      *
      * @return the granularity level
      */
-    public String getGranularityLevel() {
+    public TValue getGranularityLevel() {
         return granularityLevel;
     }
 
@@ -146,7 +156,7 @@ public class DimensionQualification implements Comparable<DimensionQualification
      *
      * @param granularityLevel the granularity level
      */
-    public void setGranularityLevel(String granularityLevel) {
+    public void setGranularityLevel(TValue granularityLevel) {
         this.granularityLevel = granularityLevel;
     }
 
@@ -157,15 +167,15 @@ public class DimensionQualification implements Comparable<DimensionQualification
      * @return {@code true}, if all necessary fields of the dimension qualification are filled.
      */
     public boolean isFilled() {
-        return StringUtils.isNotBlank(dimension) &&
-                StringUtils.isNotBlank(diceLevel) &&
-                StringUtils.isNotBlank(diceNode) &&
-                StringUtils.isNotBlank(granularityLevel);
+        return dimension != null &&
+                diceLevel != null &&
+                diceNode != null &&
+                granularityLevel != null;
     }
 
     @Override
     public String toString() {
-        return new StringJoiner(", ", DimensionQualification.class.getSimpleName() + "[", "]")
+        return new StringJoiner(", ", GenericDimensionQualification.class.getSimpleName() + "[", "]")
                 .add("dimension='" + dimension + "'")
                 .add("diceLevel='" + diceLevel + "'")
                 .add("diceNode='" + diceNode + "'")
@@ -178,7 +188,7 @@ public class DimensionQualification implements Comparable<DimensionQualification
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        DimensionQualification that = (DimensionQualification) o;
+        GenericDimensionQualification that = (GenericDimensionQualification) o;
         return Objects.equals(dimension, that.dimension) &&
                 Objects.equals(diceLevel, that.diceLevel) &&
                 Objects.equals(diceNode, that.diceNode) &&
@@ -192,7 +202,7 @@ public class DimensionQualification implements Comparable<DimensionQualification
     }
 
     @Override
-    public int compareTo(DimensionQualification other) {
-        return StringUtils.compare(dimension, other.dimension);
+    public int compareTo(GenericDimensionQualification<TValue> other) {
+        return dimension.compareTo(other.dimension);
     }
 }
