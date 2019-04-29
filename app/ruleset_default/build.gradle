@@ -5,6 +5,7 @@ dependencies {
     implementation project(':engine:shared')
     implementation project(':engine:rules')
     implementation project(':engine:scxml')
+    implementation project(':engine:data')
     implementation project(':app:nlp')
 
     implementation 'org.optaplanner:optaplanner-core:7.20.0.Final'

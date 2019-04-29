@@ -42,6 +42,7 @@
 		"websocketError": "We're sorry but IDA doesn't work without Websockets and TextEncoder. Your browser does not support Websockets. Please use an up-to-date browser."
 	},
 	"tts": {
+		"autoStart": "Auto Start Listening",
 		"local": "Local",
 		"pitch": "Pitch",
 		"rate": "Rate",
@@ -49,8 +50,7 @@
 		"title": "Voice Settings",
 		"voice": "Voice",
 		"volume": "Volume",
-    "true": "yes",
-    "false": "no",
-    "autoStart": "Auto Start Listening"
+    "true": "Yes",
+    "false": "No"
 	}
 }

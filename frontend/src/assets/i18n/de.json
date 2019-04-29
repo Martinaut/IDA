@@ -1,21 +1,21 @@
 {
 	"as": {
-		"baseMeasureConds": "Base Measure Conditions",
-    "cc": "Context of Comparison",
-    "ci": "Context of Interest",
-		"cube": "Cube",
-		"diceLevel": "Dice Level",
-		"diceNode": "Dice Node",
-		"dimQualis": "Dimension Qualifications",
-		"filterConds": "Filter Conditions",
-		"granLevel": "Granularity level",
+		"baseMeasureConds": "Kennzahleneinschränkungen",
+		"cc": "Vergleichskontext",
+		"ci": "Kontext von Interesse",
+		"cube": "Würfel",
+		"diceLevel": "Würfel Level",
+		"diceNode": "Würfel Knoten",
+		"dimQualis": "Dimensionseigenschaften",
+		"filterConds": "Filterbedingungen",
+		"granLevel": "Granularitätsstufe",
 		"invalidData": "Ungültige Daten. Das hätte nicht passieren sollen.",
-    "joinConditions": "Join Conditions",
-		"measures": "Measures",
+		"joinConditions": "Verknüpfungsbedingungen",
+		"measures": "Kennzahlen",
 		"noData": "Keine Daten vorhanden.",
-    "scoreFilters": "Score Filters",
-    "scores": "Scores",
-		"sliceConds": "Slice Conditions",
+		"scoreFilters": "Ergebnisfilter",
+		"scores": "Ergebnis",
+		"sliceConds": "Schnittbedingungen",
 		"title": "Aktuelle Analysesituation"
 	},
 	"conn": {
@@ -42,6 +42,7 @@
 		"websocketError": "Entschuldigung, aber IDA funktioniert ohne Websockets und TextEncoder nicht. Ihr Browser unterstützt diese Funktionen nicht. Bitte aktualisieren Sie Ihren Browser."
 	},
 	"tts": {
+		"autoStart": "Automatisch zuhören",
 		"local": "Lokal",
 		"pitch": "Höhe",
 		"rate": "Geschwindigkeit",
@@ -49,7 +50,7 @@
 		"title": "Sprachausgabe Einstellungen",
 		"voice": "Stimme",
 		"volume": "Lautstärke",
-    "true": "ja",
-    "false": "nein"
+    "true": "Ja",
+    "false": "Nein"
 	}
 }

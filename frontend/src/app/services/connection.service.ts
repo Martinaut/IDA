@@ -138,7 +138,7 @@ export class ConnectionService {
     }
 
     this.initialData = {
-      locale: 'en',
+      locale: language,
       initialSentence: null
     };
     this.client = new Client({

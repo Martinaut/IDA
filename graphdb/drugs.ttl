@@ -13,6 +13,8 @@
 drugs:DrugPrescriptionCube a qbx:BaseCube ;
   rdfs:label "Drug Prescription"@en ;
   rdfs:comment "Drug Prescription Cube"@en ;
+  rdfs:label "Medikamentenrezept"@de ;
+  rdfs:comment "Enthält Daten über Medikatemntenverschreibungen"@de ;
   qbx:measure drugs:QuantityMeasure ;
   qbx:measure drugs:CostsMeasure ;
   qbx:dimension drugs:DrugDimension ;
@@ -24,10 +26,12 @@ drugs:DrugPrescriptionCube a qbx:BaseCube ;
 # Measure: BASE
 drugs:QuantityMeasure a qbx:BaseMeasure ;
   rdfs:label "Quantity"@en ;
+  rdfs:label "Menge"@de ;
   qbx:dataType xsd:integer .
 
 drugs:CostsMeasure a qbx:BaseMeasure ;
   rdfs:label "Costs"@en ;
+  rdfs:label "Kosten"@de ;
   qbx:unitOfMeasurement drugs:Euro ;
   qbx:dataType xsd:number .
 
@@ -35,12 +39,14 @@ drugs:CostsMeasure a qbx:BaseMeasure ;
 # Measure: AGGREGATE
 drugs:SumQuantityMeasure a qbx:AggregateMeasure ;
   rdfs:label "Sum of Quantity"@en ;
+  rdfs:label "Summe der Menge"@de ;
   rdfs:comment "Sum of Quantity; Expression: a+b+c; aggregationfunction: sum;explanation explanation explanation explanation explanation explanation explanation explanation explanation explanation explanation explanation explanation explanation explanation explanation explanation explanation explanation explanation "@en ;
   qbx:aggregationFunction qbx:Sum ;
   qbx:derivedFrom drugs:QuantityMeasure .
 
 drugs:SumCostsMeasure a qbx:AggregateMeasure ;
   rdfs:label "Sum of Costs"@en ;
+  rdfs:label "Summe der Kosten"@de ;
   rdfs:comment "Sum of Costs; Expression: a+b+c; aggregationfunction: sum"@en ;
   qbx:aggregationFunction qbx:Sum ;
   qbx:derivedFrom drugs:CostsMeasure .
@@ -48,6 +54,7 @@ drugs:SumCostsMeasure a qbx:AggregateMeasure ;
 
 drugs:CostsPerUnitMeasure a qbx:AggregateMeasure ;
   rdfs:label "Costs per Unit"@en ;
+  rdfs:label "Kosten pro Einheit"@de ;
   rdfs:comment "Costs per Unit; Expression: a+b+c; aggregationfunction: sum"@en ;
   qbx:aggregationFunction qbx:Sum ;
   qbx:derivedFrom drugs:SumQuantityMeasure ;
@@ -56,6 +63,7 @@ drugs:CostsPerUnitMeasure a qbx:AggregateMeasure ;
 
 drugs:TestMeasure a qbx:AggregateMeasure ;
   rdfs:label "TestMeasure"@en ;
+  rdfs:label "Testkennzahl"@de ;
   rdfs:comment "Test Measure; Expression: a+b+c; aggregationfunction: sum"@en ;
   qbx:aggregationFunction qbx:Avg ;
   qbx:derivedFrom drugs:CostsPerUnitMeasure .
@@ -64,6 +72,7 @@ drugs:TestMeasure a qbx:AggregateMeasure ;
 # Measure Predicate: BASE
 drugs:HighCostsPerUnitPredicate a qbx:BaseMeasurePredicate ;
   rdfs:label "High Costs per Unit"@en ;
+  rdfs:label "Hohe Kosten pro Einheit"@de ;
   rdfs:comment "High Costs per Unit"@en ;
   qbx:over drugs:QuantityMeasure ;
   qbx:over drugs:CostsMeasure .
@@ -72,6 +81,7 @@ drugs:HighCostsPerUnitPredicate a qbx:BaseMeasurePredicate ;
 # Measure Predicate: AGGREGATE
 drugs:HighDrugPrescriptionCostsPerUnitPredicate a qbx:AggregateMeasurePredicate ;
   rdfs:label "High Drug Prescription Costs per Unit"@en ;
+  rdfs:label "Hohe Medikamentenverschreibungskosten pro Einheit"@de ;
   rdfs:comment "High Drug Prescription Costs per Unit"@en ;
   qbx:over drugs:CostsPerUnitMeasure .
 
@@ -79,12 +89,14 @@ drugs:HighDrugPrescriptionCostsPerUnitPredicate a qbx:AggregateMeasurePredicate 
 # Measure: COMPARATIVE
 drugs:ChangeOfCostsMeasure a qbx:ComparativeMeasure ;
   rdfs:label "Change of costs"@en ;
+  rdfs:label "Änderung der Kosten"@de ;
   rdfs:comment "Description"@en ;
   qbx:setOfInterestMeasure drugs:SumCostsMeasure ;
   qbx:setOfComparisonMeasure drugs:SumCostsMeasure .
 
 drugs:SignificantChange a qbx:ComparativeMeasurePredicate ;
   rdfs:label "Change of costs"@en ;
+  rdfs:label "Änderung der Kosten"@de ;
   rdfs:comment "Change over 10%"@en ;
   qbx:over drugs:ChangeOfCostsMeasure .
 
@@ -92,6 +104,7 @@ drugs:SignificantChange a qbx:ComparativeMeasurePredicate ;
 # Join Condition Predicate
 drugs:Vorjahresvergleich a qbx:JoinConditionPredicate ;
   rdfs:label "year-on-year"@en ;
+  rdfs:label "Jahresvergleich"@de ;
   rdfs:comment "Descritpion"@en ;
   qbx:overLevelInSetOfInterest drugs:TimeDimensionYearLevel ;
   qbx:overLevelInSetOfInterest drugs:TimeDimensionMonthLevel ;
@@ -102,11 +115,13 @@ drugs:Vorjahresvergleich a qbx:JoinConditionPredicate ;
 # Level Predicate
 drugs:DocInRuralDistrictPredicate a qbx:LevelPredicate ;
   rdfs:label "Doctor in Rural District"@en ;
+  rdfs:label "Arzt im ländlichen Bezirk"@de ;
   rdfs:comment "Doctor in Rural District"@en ;
   qbx:over drugs:DoctorDimensionDocDistrictLevel .
 
 drugs:OldDoctorPredicate a qbx:LevelPredicate ;
   rdfs:label "Old Doctor"@en ;
+  rdfs:label "Alter Arzt"@de ;
   rdfs:comment "Old Doctor"@en ;
   qbx:over drugs:DoctorDimensionDoctorLevel .
 
@@ -114,6 +129,7 @@ drugs:OldDoctorPredicate a qbx:LevelPredicate ;
 # Level Predicate CONJUNCTIVE
 drugs:OldDoctorInRuralDistrictPredicate a qbx:ConjunctiveLevelPredicate ;
   rdfs:label "Old Doctor in Rural District"@en ;
+  rdfs:label "Alter Arzt im ländlichen Bezirk"@de ;
   rdfs:comment "Old Doctor in Rural District"@en ;
   qbx:conjunct drugs:DocInRuralDistrictPredicate ;
   qbx:conjunct drugs:OldDoctorPredicate .
@@ -122,39 +138,48 @@ drugs:OldDoctorInRuralDistrictPredicate a qbx:ConjunctiveLevelPredicate ;
 # Dimension DRUG
 drugs:DrugDimension a qbx:Dimension ;
   rdfs:label "Drug"@en ;
+  rdfs:label "Medikament"@de ;
   qbx:hasHierarchy drugs:DrugDimensionMainHierarchy .
 
 drugs:DrugDimensionMainHierarchy a qbx:Hierarchy ;
+  rdfs:label "Medikament"@de ;
   rdfs:label "Drug"@en .
 
 drugs:DrugDimensionDrugLevel a qbx:Level ;
   rdfs:label "Drug"@en ;
+  rdfs:label "Medikament"@de ;
   rdfs:comment "Drug"@en ;
   qbx:attribute drugs:DrugDimensionDrugLevelDrugPriceAttribute .
 
 drugs:DrugDimensionDrugLevelDrugPriceAttribute a qbx:Attribute ;
   rdfs:label "Drug Price"@en ;
+  rdfs:label "Medikamentenpreis"@de ;
   rdfs:comment "Drug"@en ;
   qbx:dataType xsd:number .
 
 drugs:DrugDimensionATC5Level a qbx:Level ;
   rdfs:label "ATC5"@en ;
+  rdfs:label "Anatomisch-Therapeutisch-Chemisches Klassifikationssystem Level 5"@de ;
   rdfs:comment "ATC5"@en .
 
 drugs:DrugDimensionATC4Level a qbx:Level ;
   rdfs:label "ATC4"@en ;
+  rdfs:label "Anatomisch-Therapeutisch-Chemisches Klassifikationssystem Level 4"@de ;
   rdfs:comment "ATC4"@en .
 
 drugs:DrugDimensionATC3Level a qbx:Level ;
   rdfs:label "ATC3"@en ;
+  rdfs:label "Anatomisch-Therapeutisch-Chemisches Klassifikationssystem Level 3"@de ;
   rdfs:comment "ATC3"@en .
 
 drugs:DrugDimensionATC2Level a qbx:Level ;
   rdfs:label "ATC2"@en ;
+  rdfs:label "Anatomisch-Therapeutisch-Chemisches Klassifikationssystem Level 2"@de ;
   rdfs:comment "ATC2"@en .
 
 drugs:DrugDimensionATC1Level a qbx:Level ;
   rdfs:label "ATC1"@en ;
+  rdfs:label "Anatomisch-Therapeutisch-Chemisches Klassifikationssystem Level 1"@de ;
   rdfs:comment "ATC1"@en .
 
 drugs:DrugDimensionDrugToATC5 a qbx:HierarchyStep ;
@@ -191,26 +216,32 @@ drugs:DrugDimensionATC2ToATC1 a qbx:HierarchyStep ;
 # Dimension TIME
 drugs:TimeDimension a qbx:Dimension ;
   rdfs:label "Time"@en ;
+  rdfs:label "Zeit"@de ;
   rdfs:comment "Time"@en ;
   qbx:hasHierarchy drugs:TimeDimensionMainHierarchy .
 
 drugs:TimeDimensionMainHierarchy a qbx:Hierarchy ;
+  rdfs:label "Zeit"@de ;
   rdfs:label "Time"@en .
 
 drugs:TimeDimensionDateLevel a qbx:Level ;
   rdfs:label "Date"@en ;
+  rdfs:label "Datum"@de ;
   rdfs:comment "Date"@en .
 
 drugs:TimeDimensionMonthLevel a qbx:Level ;
   rdfs:label "Month"@en ;
+  rdfs:label "Monat"@de ;
   rdfs:comment "Month"@en .
 
 drugs:TimeDimensionQuarterLevel a qbx:Level ;
   rdfs:label "Quarter"@en ;
+  rdfs:label "Quartal"@de ;
   rdfs:comment "Quarter"@en .
 
 drugs:TimeDimensionYearLevel a qbx:Level ;
   rdfs:label "Year"@en ;
+  rdfs:label "Jahr"@de ;
   rdfs:comment "Year"@en .
 
 drugs:TimeDimensionDateToMonth a qbx:HierarchyStep ;
@@ -235,24 +266,29 @@ drugs:TimeDimensionQuarterToYear a qbx:HierarchyStep ;
 # Dimension DOCTOR
 drugs:DoctorDimension a qbx:Dimension ;
   rdfs:label "Doctor"@en ;
+  rdfs:label "Arzt"@de ;
   rdfs:comment "Doctor"@en ;
   qbx:hasHierarchy drugs:DoctorDimensionMainHierarchy .
 
 drugs:DoctorDimensionMainHierarchy a qbx:Hierarchy ;
+  rdfs:label "Arzt"@de ;
   rdfs:label "Doctor"@en .
 
 drugs:DoctorDimensionDoctorLevel a qbx:Level ;
   rdfs:label "Doctor"@en ;
+  rdfs:label "Arzt"@de ;
   rdfs:comment "Doctor"@en ;
   qbx:attribute drugs:DoctorDimensionDoctorLevelDocAgeAttribute .
 
 drugs:DoctorDimensionDocDistrictLevel a qbx:Level ;
   rdfs:label "Doctor District"@en ;
+  rdfs:label "Arzt-Bezirk"@de ;
   rdfs:comment "DocDistrict"@en ;
   qbx:attribute drugs:DoctorDimensionDocDistrictLevelInhPerSqkmInDocDistrictAttribute .
 
 drugs:DoctorDimensionDocProvinceLevel a qbx:Level ;
   rdfs:label "Doctor Province"@en ;
+  rdfs:label "Arzt-Provinz"@de ;
   rdfs:comment "DocDistrict"@en .
 
 drugs:DoctorDimensionDoctorToDocDistrict a qbx:HierarchyStep ;
@@ -269,11 +305,13 @@ drugs:DoctorDimensionDocDistrictToDocProvince a qbx:HierarchyStep ;
 
 drugs:DoctorDimensionDoctorLevelDocAgeAttribute a qbx:Attribute ;
   rdfs:label "Doctor Age"@en ;
+  rdfs:label "Alter des Arztes"@de ;
   rdfs:comment "Doctor Age"@en ;
   qbx:dataType xsd:integer .
 
 drugs:DoctorDimensionDocDistrictLevelInhPerSqkmInDocDistrictAttribute a qbx:Attribute ;
   rdfs:label "InhPerSqkmInDocDistrict"@en ;
+  rdfs:label "Einwohner pro m² im Arzt-Bezirk"@de ;
   rdfs:comment "InhPerSqkmInDocDistrict"@en ;
   qbx:dataType xsd:number .
 
@@ -281,30 +319,37 @@ drugs:DoctorDimensionDocDistrictLevelInhPerSqkmInDocDistrictAttribute a qbx:Attr
 # Dimension INSURANT
 drugs:InsurantDimension a qbx:Dimension ;
   rdfs:label "Insurant"@en ;
+  rdfs:label "Versicherungsnehmer"@de ;
   qbx:hasHierarchy drugs:InsurantDimensionMainHierarchy ;
   qbx:hasHierarchy drugs:InsurantDimensionRegionHierarchy .
 
 drugs:InsurantDimensionMainHierarchy a qbx:Hierarchy ;
+  rdfs:label "Versicherungsnehmer"@de ;
   rdfs:label "Insurant"@en .
 
 drugs:InsurantDimensionRegionHierarchy a qbx:Hierarchy ;
+  rdfs:label "Regional"@de ;
   rdfs:label "Regional"@en .
 
 drugs:InsurantDimensionInsurantLevel a qbx:Level ;
   rdfs:label "Insurant"@en ;
+  rdfs:label "Versicherungsnehmer"@de ;
   rdfs:comment "Insurant"@en ;
   qbx:attribute drugs:DoctorDimensionInsurantLevelInsAgeAttribute .
 
 drugs:InsurantDimensionInsDistrictLevel a qbx:Level ;
+  rdfs:label "Versicherungsnehmer-Bezirk"@de ;
   rdfs:label "Insurant District"@en ;
   rdfs:comment "Insurant District"@en ;
   qbx:attribute drugs:InsurantDimensionInsDistrictLevelInhPerSqkmInInsDistrictAttribute .
 
 drugs:InsurantDimensionInsProvinceLevel a qbx:Level ;
+  rdfs:label "Versicherungsnehmer-Provinz"@de ;
   rdfs:label "Insurant Province"@en ;
   rdfs:comment "Insurant Province"@en .
 
 drugs:InsurantDimensionInsRegionLevel a qbx:Level ;
+  rdfs:label "Versicherungsnehmer-Region"@de ;
   rdfs:label "Insurant Region"@en ;
   rdfs:comment "Insurant Region"@en .
 
@@ -323,9 +368,11 @@ drugs:InsurantDimensionInsDistrictToInsProvince a qbx:HierarchyStep ;
 
 drugs:InsurantDimensionInsurantLevelInsAgeAttribute a qbx:Attribute ;
   rdfs:label "Insurant Age"@en ;
+  rdfs:label "Alter des Versicherungsnehmers"@de ;
   qbx:dataType xsd:integer .
 
 drugs:InsurantDimensionInsDistrictLevelInhPerSqkmInInsDistrictAttribute a qbx:Attribute ;
+  rdfs:label "Einwohner pro m² im Versicherungsnehmer-Bezirk"@de ;
   rdfs:label "Inhabitants Per Sqkm In Insurant District"@en ;
   qbx:dataType xsd:number .
 
