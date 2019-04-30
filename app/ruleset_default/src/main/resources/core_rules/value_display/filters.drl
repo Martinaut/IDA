@@ -17,7 +17,7 @@ then
     insert(new ListDisplay(
         "addFilter",
         $model.getLocale(),
-        $model.getAggregateMeasurePredicateRepository().getLabelsByLangAndCubeWithExclusions($model.getLanguage(), $as.getCube(), $as.getFilterConditions())));
+        $model.getAggregateMeasurePredicateRepository().getLabelsByLangAndCube($model.getLanguage(), $as.getCube(), $as.getFilterConditions())));
 end
 
 rule "Drop Filter - Select all selected filters"
@@ -42,5 +42,5 @@ then
         "refocusFilter",
         $model.getLocale(),
         $model.getAggregateMeasurePredicateRepository().getLabelsByLangAndIris($model.getLanguage(), $as.getFilterConditions()),
-        $model.getAggregateMeasurePredicateRepository().getLabelsByLangAndCubeWithExclusions($model.getLanguage(), $as.getCube(), $as.getFilterConditions())));
+        $model.getAggregateMeasurePredicateRepository().getLabelsByLangAndCube($model.getLanguage(), $as.getCube(), $as.getFilterConditions())));
 end

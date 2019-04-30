@@ -4,6 +4,6 @@ dependencies {
     implementation 'com.ontotext.graphdb:graphdb-free-runtime:8.8.1'
     implementation 'org.hibernate:hibernate-validator:6.0.15.Final'
     implementation 'org.springframework.boot:spring-boot-configuration-processor'
-    
+    api 'com.google.guava:guava:27.1-jre'
     implementation project(':engine:shared')
 }

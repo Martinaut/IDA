@@ -14,7 +14,7 @@ WHERE {
     }
 
     {
-        SELECT ?dimension ?level
+        SELECT DISTINCT ?dimension ?level
         WHERE {
             {
     			?dimension qbx:hasHierarchy ?hier .

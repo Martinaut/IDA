@@ -16,7 +16,7 @@ public class DefaultValueDisplayServiceModel extends AbstractServiceModel implem
     private final SimpleRepository simpleRepository;
     private final CubeRepository cubeRepository;
     private final AggregateMeasureRepository aggregateMeasureRepository;
-    private final GranularityLevelRepository granularityLevelRepository;
+    private final LevelRepository granularityLevelRepository;
     private final LevelPredicateRepository levelPredicateRepository;
     private final BaseMeasurePredicateRepository baseMeasurePredicateRepository;
     private final AggregateMeasurePredicateRepository aggregateMeasurePredicateRepository;
@@ -39,7 +39,7 @@ public class DefaultValueDisplayServiceModel extends AbstractServiceModel implem
      */
     public DefaultValueDisplayServiceModel(String currentState, SessionModel sessionModel, SimpleRepository simpleRepository,
                                            CubeRepository cubeRepository, AggregateMeasureRepository aggregateMeasureRepository,
-                                           GranularityLevelRepository granularityLevelRepository, LevelPredicateRepository levelPredicateRepository,
+                                           LevelRepository granularityLevelRepository, LevelPredicateRepository levelPredicateRepository,
                                            BaseMeasurePredicateRepository baseMeasurePredicateRepository,
                                            AggregateMeasurePredicateRepository aggregateMeasurePredicateRepository, LevelMemberRepository levelMemberRepository) {
         super(currentState, sessionModel);
@@ -91,7 +91,7 @@ public class DefaultValueDisplayServiceModel extends AbstractServiceModel implem
      */
     public DefaultValueDisplayServiceModel(String currentState, Locale locale, EngineAnalysisSituation analysisSituation, Event operation, SessionModel sessionModel,
                                            SimpleRepository simpleRepository, CubeRepository cubeRepository, AggregateMeasureRepository aggregateMeasureRepository,
-                                           GranularityLevelRepository granularityLevelRepository, LevelPredicateRepository levelPredicateRepository,
+                                           LevelRepository granularityLevelRepository, LevelPredicateRepository levelPredicateRepository,
                                            BaseMeasurePredicateRepository baseMeasurePredicateRepository, AggregateMeasurePredicateRepository aggregateMeasurePredicateRepository,
                                            LevelMemberRepository levelMemberRepository) {
         super(currentState, locale, analysisSituation, operation, sessionModel);
@@ -141,7 +141,7 @@ public class DefaultValueDisplayServiceModel extends AbstractServiceModel implem
     }
 
     @Override
-    public GranularityLevelRepository getGranularityLevelRepository() {
+    public LevelRepository getGranularityLevelRepository() {
         return granularityLevelRepository;
     }
 

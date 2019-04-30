@@ -1,13 +1,18 @@
 package at.jku.dke.ida.app.ruleset.helpers;
 
+import at.jku.dke.ida.data.GraphHelper;
 import at.jku.dke.ida.data.QueryException;
 import at.jku.dke.ida.data.models.DimensionLabel;
-import at.jku.dke.ida.data.repositories.GranularityLevelRepository;
+import at.jku.dke.ida.data.repositories.LevelPredicateRepository;
+import at.jku.dke.ida.data.repositories.LevelRepository;
 import at.jku.dke.ida.shared.models.DimensionQualification;
 import at.jku.dke.ida.shared.models.NonComparativeAnalysisSituation;
 import at.jku.dke.ida.shared.spring.BeanUtil;
+import com.google.common.graph.Graph;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.util.Set;
 
 /**
  * Contains some helper methods used in the rules for setting values.
@@ -33,7 +38,7 @@ public final class ValueSetter {
         as.setCube(cube);
 
         try {
-            var baseLevels = BeanUtil.getBean(GranularityLevelRepository.class).getBaseLevelLabelsByLangAndCube(lang, cube);
+            var baseLevels = BeanUtil.getBean(LevelRepository.class).getBaseLevelLabelsByLangAndCube(lang, cube);
             for (DimensionLabel lvl : baseLevels) {
                 var dq = new DimensionQualification(lvl.getDimensionUri());
                 dq.setGranularityLevel(lvl.getUri());
@@ -41,6 +46,27 @@ public final class ValueSetter {
             }
         } catch (QueryException ex) {
             LOGGER.fatal("Cannot set dimension qualifications for cube " + cube + " as there occurred an error while querying the levels.", ex);
+        }
+    }
+
+    /**
+     * Sets the slice condition.
+     *
+     * @param as        The analysis situation.
+     * @param sliceCond The slice condition to set.
+     */
+    public static void addSliceCondition(NonComparativeAnalysisSituation as, DimensionLabel sliceCond) {
+        DimensionQualification dq = as.getDimensionQualification(sliceCond.getDimensionUri());
+
+        try {
+            // remove all implied ones
+            Graph<String> graph = BeanUtil.getBean(LevelPredicateRepository.class).getDependencyGraph(as.getCube());
+            GraphHelper.getAllPredecessors(graph, sliceCond.getUri()).forEach(dq::removeSliceCondition);
+
+            // add new one
+            dq.addSliceCondition(sliceCond.getUri());
+        } catch (QueryException ex) {
+            LOGGER.fatal("Cannot set slice condition for cube " + as.getCube() + " as there occurred an error while querying the dependencies.", ex);
         }
     }
 }

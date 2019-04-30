@@ -1,13 +1,16 @@
 package at.jku.dke.ida.app.ruleset.helpers;
 
+import at.jku.dke.ida.data.GraphHelper;
 import at.jku.dke.ida.data.QueryException;
 import at.jku.dke.ida.data.models.DimensionLabel;
 import at.jku.dke.ida.data.models.DimensionLevelLabel;
 import at.jku.dke.ida.data.models.Label;
-import at.jku.dke.ida.data.repositories.GranularityLevelRepository;
+import at.jku.dke.ida.data.repositories.LevelRepository;
 import at.jku.dke.ida.rules.interfaces.ValueDisplayServiceModel;
+import at.jku.dke.ida.shared.IRIConstants;
 import at.jku.dke.ida.shared.models.DimensionQualification;
 import at.jku.dke.ida.shared.models.NonComparativeAnalysisSituation;
+import com.google.common.graph.Graph;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
 
@@ -27,7 +30,7 @@ public final class QueryHelper {
     // region --- VALUE DISPLAY: GRANULARITY LEVEL ---
 
     /**
-     * Calls {@link GranularityLevelRepository#getParentLevelLabelsByLangAndDimension(String, DimensionQualification)}
+     * Calls {@link LevelRepository#getParentLevelLabelsByLangAndDimension(String, DimensionQualification)}
      * with the dimension set in additional data.
      *
      * @param model The model.
@@ -40,7 +43,7 @@ public final class QueryHelper {
     }
 
     /**
-     * Calls {@link GranularityLevelRepository#getChildLevelLabelsByLangAndDimension(String, DimensionQualification)}
+     * Calls {@link LevelRepository#getChildLevelLabelsByLangAndDimension(String, DimensionQualification)}
      * with the dimension set in additional data.
      *
      * @param model The model.
@@ -156,7 +159,7 @@ public final class QueryHelper {
     // region --- VALUE DISPLAY: SLICE CONDITION ---
 
     /**
-     * Returns all dimensions where a slice condition can be added, because there are not already all possible selected.
+     * Returns all dimensions where a slice condition can be added/narrowed, because there are not already all possible selected.
      *
      * @param model The model.
      * @return The dimensions.
@@ -180,10 +183,51 @@ public final class QueryHelper {
         return model.getSimpleRepository()
                 .getLabelsByLangAndIris(model.getLanguage(), all.stream().map(Pair::getLeft).collect(Collectors.toSet()))
                 .values();
+
+//        if (!(model.getAnalysisSituation() instanceof NonComparativeAnalysisSituation))
+//            return Collections.emptyList();
+//        NonComparativeAnalysisSituation as = (NonComparativeAnalysisSituation) model.getAnalysisSituation();
+//
+//        Set<String> dimensions = new HashSet<>();
+//
+//        // Get all level predicates
+//        Set<Pair<String, String>> all = model.getLevelPredicateRepository().getAllByCube(as.getCube());
+//
+//        // Get dependency graph
+//        Graph<String> graph = model.getLevelPredicateRepository().getDependencyGraph(as.getCube());
+//        for (DimensionQualification dq : as.getDimensionQualifications()) {
+//            Set<String> scs = new HashSet<>(dq.getSliceConditions());
+//            scs.add(IRIConstants.RESOURCE_TOP_LEVEL);
+//            for (String sc : scs) {
+//                GraphHelper.getAllSuccessors(graph, sc)
+//                        .forEach(x -> dimensions.addAll(all
+//                                .stream()
+//                                .filter(lp -> lp.getLeft().equals(dq.getDimension()))
+//                                .filter(lp -> lp.getRight().equals(x))
+//                                .map(Pair::getLeft)
+//                                .collect(Collectors.toList())
+//                        ));
+//            }
+//
+//            for (String sc : dq.getSliceConditions()) {
+//                GraphHelper.getAllPredecessors(graph, sc)
+//                        .forEach(x -> dimensions.removeAll(all
+//                                .stream()
+//                                .filter(lp -> lp.getRight().equals(x))
+//                                .map(Pair::getLeft)
+//                                .collect(Collectors.toList())
+//                        ));
+//            }
+//        }
+//
+//        // Get labels of dimensions
+//        return model.getSimpleRepository()
+//                .getLabelsByLangAndIris(model.getLanguage(), dimensions)
+//                .values();
     }
 
     /**
-     * Returns all dimensions where a slice condition can be removed, because there are already slice conditions selected.
+     * Returns all dimensions where a slice condition can be removed/broadened, because there are already slice conditions selected.
      *
      * @param model The model.
      * @return The dimensions.
@@ -239,6 +283,45 @@ public final class QueryHelper {
                         model.getLanguage(),
                         model.getAdditionalData(Constants.ADD_DATA_DIMENSION, DimensionQualification.class).getDimension(),
                         exclusions);
+
+//        if (!(model.getAnalysisSituation() instanceof NonComparativeAnalysisSituation))
+//            return Collections.emptyList();
+//        NonComparativeAnalysisSituation as = (NonComparativeAnalysisSituation) model.getAnalysisSituation();
+//
+//        // Load data
+//        Set<String> set = new HashSet<>();
+//        DimensionQualification dq = as.getDimensionQualification(model.getAdditionalData(Constants.ADD_DATA_DIMENSION, DimensionQualification.class).getDimension());
+//        Set<Pair<String, String>> all = model.getLevelPredicateRepository().getAllByCube(as.getCube()); // TODO: create method to only load of current dimension
+//        Graph<String> graph = model.getLevelPredicateRepository().getDependencyGraph(as.getCube());
+//
+//        // Determine conditions
+//        Set<String> scs = new HashSet<>(dq.getSliceConditions());
+//        scs.add(IRIConstants.RESOURCE_TOP_LEVEL);
+//        for (String sc : scs) {
+//            GraphHelper.getAllSuccessors(graph, sc)
+//                    .forEach(x -> set.addAll(all
+//                            .stream()
+//                            .filter(lp -> lp.getRight().equals(x))
+//                            .filter(lp -> lp.getLeft().equals(model.getAdditionalData(Constants.ADD_DATA_DIMENSION, DimensionQualification.class).getDimension()))
+//                            .filter(lp -> !dq.getSliceConditions().contains(lp.getRight()))
+//                            .map(Pair::getRight)
+//                            .collect(Collectors.toList())
+//                    ));
+//        }
+////        for (String sc : dq.getSliceConditions()) {
+////            GraphHelper.getAllPredecessors(graph, sc)
+////                    .forEach(x -> set.removeAll(all
+////                            .stream()
+////                            .filter(lp -> lp.getRight().equals(x))
+////                            .map(Pair::getRight)
+////                            .collect(Collectors.toList())
+////                    ));
+////        }
+//
+//        return model.getLevelPredicateRepository()
+//                .getLabelsByLangAndIris(
+//                        model.getLanguage(),
+//                        set);
     }
 
     /**

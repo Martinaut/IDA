@@ -12,7 +12,7 @@ WHERE {
         (qbx:ConjunctiveLevelPredicate)
         (qbx:Level)
     }
-
+# TODO check types
 	?element rdf:type ?type ;
 	         rdfs:label ?label .
     FILTER (lang(?label) = "###LANG###") .

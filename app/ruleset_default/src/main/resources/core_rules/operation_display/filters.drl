@@ -10,7 +10,7 @@ import at.jku.dke.ida.rules.interfaces.OperationDisplayServiceModel
 rule "'Add Filter' - if at least one filter is available"
     agenda-group "operation-display-determination"
 when
-    $model : OperationDisplayServiceModel(areNotSelectedFilterConditionsAvailable())
+    $model : OperationDisplayServiceModel(isNotSelectedFilterConditionAvailable())
 then
     insert(new Operation(Event.NAVIGATE_FILTER_NARROW, $model.getLocale(), 60));
 end
@@ -43,7 +43,7 @@ rule "'Refocus Filter' - if at least one filter is selected and one available"
     enabled false
 when
     $as : NonComparativeAnalysisSituation(filterConditions.isEmpty() == false)
-    $model : OperationDisplayServiceModel(areNotSelectedFilterConditionsAvailable(), analysisSituation == $as)
+    $model : OperationDisplayServiceModel(isNotSelectedFilterConditionAvailable(), analysisSituation == $as)
 then
     insert(new Operation(Event.NAVIGATE_FILTER_REFOCUS, $model.getLocale(), 61));
 end

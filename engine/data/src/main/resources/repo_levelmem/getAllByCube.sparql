@@ -20,4 +20,6 @@ WHERE {
             }
         }
     }
+
+    FILTER (?element NOT IN (###NOTIN###)) .
 }

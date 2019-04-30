@@ -1,14 +1,12 @@
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-PREFIX qbx: <http://dke.jku.at/inga/cubes#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX qbx: <http://dke.jku.at/inga/cubes#>
 
 SELECT DISTINCT ?element ?label ?description
 WHERE {
-    <###CUBE###> qbx:measure ?bmeasure .
-    ?bmeasure rdf:type qbx:BaseMeasure .
-	?measure rdf:type qbx:AggregateMeasure ;
-	         qbx:derivedFrom+ ?bmeasure .
-	?element rdf:type qbx:AggregateMeasurePredicate ;
+    <###CUBE###> qbx:measure ?measure .
+    ?measure rdf:type qbx:BaseMeasure .
+	?element rdf:type qbx:BaseMeasurePredicate ;
 	         qbx:over ?measure ;
              rdfs:label ?label.
 
@@ -18,5 +16,7 @@ WHERE {
         ?element rdfs:comment ?description .
     	FILTER (lang(?description) = "###LANG###") .
     }
+
+    FILTER (?element NOT IN (###NOTIN###)) .
 }
 ORDER BY ?label

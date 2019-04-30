@@ -1,21 +1,23 @@
 PREFIX qbx: <http://dke.jku.at/inga/cubes#>
 
-SELECT DISTINCT ?dimension ?level ?element
+SELECT DISTINCT ?dimension ?child ?parent
 WHERE {
-    VALUES(?element) {
-        ###IN###
+    ?child qbx:over ?level .
+
+    OPTIONAL {
+        ?parent qbx:conjunct ?child .
     }
 
-    ?element qbx:inLevel ?level .
-
     {
-        SELECT ?dimension ?level
+        SELECT DISTINCT ?dimension ?level
         WHERE {
             {
+                <###CUBE###> qbx:dimension ?dimension .
     			?dimension qbx:hasHierarchy ?hier .
     			?hs qbx:inHierarchy ?hier ;
     				qbx:childLevel ?level .
             } UNION {
+                <###CUBE###> qbx:dimension ?dimension .
     			?dimension qbx:hasHierarchy ?hier .
     			?hs qbx:inHierarchy ?hier ;
     				qbx:parentLevel ?level .

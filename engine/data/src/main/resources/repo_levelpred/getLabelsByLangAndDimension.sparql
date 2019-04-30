@@ -14,7 +14,7 @@ WHERE {
     FILTER (?element NOT IN (###NOTIN###)) .
 
     {
-        SELECT ?dimension ?level
+        SELECT DISTINCT ?dimension ?level
         WHERE {
             {
     			<###DIMENSION###> qbx:hasHierarchy ?hier .

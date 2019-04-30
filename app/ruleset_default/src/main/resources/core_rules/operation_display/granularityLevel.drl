@@ -4,14 +4,14 @@ package core_rules.operation_display
 import at.jku.dke.ida.shared.Event
 import at.jku.dke.ida.shared.models.NonComparativeAnalysisSituation
 import at.jku.dke.ida.shared.operations.Operation
-import at.jku.dke.ida.rules.models.DefaultOperationDisplayServiceModel
+import at.jku.dke.ida.rules.interfaces.OperationDisplayServiceModel
 
 // ------------------------- GRANULARITY LEVEL OPERATIONS ----------------------------
 rule "'Drill Down To Level' - if drill down relationships available"
     agenda-group "operation-display-determination"
 when
     $as : NonComparativeAnalysisSituation()
-    $model : DefaultOperationDisplayServiceModel(nextDrillDownLevels.isEmpty() == false)
+    $model : OperationDisplayServiceModel(isDrillDownRelationshipAvailable())
 then
     insert(new Operation(Event.NAVIGATE_GL_DRILL_DOWN, $model.getLocale(), 20));
 end
@@ -20,7 +20,7 @@ rule "'Roll Up To Level' - if roll up relationships available"
     agenda-group "operation-display-determination"
 when
     $as : NonComparativeAnalysisSituation()
-    $model : DefaultOperationDisplayServiceModel(nextRollUpLevels.isEmpty() == false)
+    $model : OperationDisplayServiceModel(isRollUpRelationshipAvailable())
 then
     insert(new Operation(Event.NAVIGATE_GL_ROLL_UP, $model.getLocale(), 21));
 end

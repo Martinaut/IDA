@@ -1,4 +1,4 @@
 /**
- * This package contains GraphDB configuration and connection classes.
+ * This package contains configuration classes.
  */
-package at.jku.dke.ida.data.configuration;
+package at.jku.dke.ida.scxml.configuration;

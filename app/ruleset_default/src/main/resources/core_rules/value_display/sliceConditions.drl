@@ -11,7 +11,7 @@ import at.jku.dke.ida.app.ruleset.helpers.Constants
 import at.jku.dke.ida.app.ruleset.helpers.QueryHelper
 
 // ------------------------------------ RULES ---------------------------------------
-rule "Add Slice Condition - Select Dimension"
+rule "Narrow Slice Condition - Select Dimension"
     agenda-group "value-display-determination"
 when
     $as : NonComparativeAnalysisSituation()
@@ -22,7 +22,7 @@ then
         $model.getLocale(),
         QueryHelper.getDimensionsWhereAddPossible($model)));
 end
-rule "Add Slice Condition - Not selected level predicates"
+rule "Narrow Slice Condition - Not selected level predicates"
     agenda-group "value-display-determination"
 when
     $as : NonComparativeAnalysisSituation()
@@ -34,7 +34,7 @@ then
         QueryHelper.getLevelPredicatesToAddByLangAndDimension($model)));
 end
 
-rule "Drop Slice Condition - Select Dimension"
+rule "Broaden Slice Condition - Select Dimension"
     agenda-group "value-display-determination"
 when
     $as : NonComparativeAnalysisSituation()
@@ -45,7 +45,7 @@ then
         $model.getLocale(),
         QueryHelper.getDimensionsWhereDropPossible($model)));
 end
-rule "Drop Slice Condition - Not selected level predicates"
+rule "Broaden Slice Condition - Not selected level predicates"
     agenda-group "value-display-determination"
 when
     $as : NonComparativeAnalysisSituation()

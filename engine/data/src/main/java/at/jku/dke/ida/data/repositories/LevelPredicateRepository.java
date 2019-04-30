@@ -3,15 +3,19 @@ package at.jku.dke.ida.data.repositories;
 import at.jku.dke.ida.data.IRIValidator;
 import at.jku.dke.ida.data.QueryException;
 import at.jku.dke.ida.data.configuration.GraphDbConnection;
-import at.jku.dke.ida.data.models.DimensionLabel;
+import at.jku.dke.ida.data.repositories.base.DimensionCubeElementRepository;
+import at.jku.dke.ida.shared.IRIConstants;
+import com.google.common.graph.Graph;
+import com.google.common.graph.GraphBuilder;
+import com.google.common.graph.ImmutableGraph;
+import com.google.common.graph.MutableGraph;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.tuple.ImmutablePair;
-import org.apache.commons.lang3.tuple.Pair;
+import org.apache.commons.lang3.tuple.ImmutableTriple;
+import org.apache.commons.lang3.tuple.Triple;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Collection;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -19,7 +23,7 @@ import java.util.stream.Collectors;
  * Repository for querying level predicates.
  */
 @Service
-public class LevelPredicateRepository extends BaseRepository {
+public class LevelPredicateRepository extends DimensionCubeElementRepository {
 
     /**
      * Instantiates a new instance of class {@linkplain LevelPredicateRepository}.
@@ -28,139 +32,65 @@ public class LevelPredicateRepository extends BaseRepository {
      */
     @Autowired
     public LevelPredicateRepository(GraphDbConnection connection) {
-        super(connection);
+        super(connection, "repo_levelpred", "level predicates");
     }
 
     /**
-     * Returns all level predicates for the specified cube.
+     * Returns all level predicate relationships for the specified cube.
+     * <p>
+     * The first entry of the triple is the dimension, the second one the child and the third one the parent.
      *
      * @param cubeIri The absolute IRI of the cube.
-     * @return Set with all level predicate IRIs of the specified cube. The key of the pair represents the dimension, the value is the level predicate.
+     * @return Set with all level predicate relationships of the specified cube.
      * @throws IllegalArgumentException If {@code cubeIri} is {@code null}, blank or an invalid IRI.
      * @throws QueryException           If an exception occurred while executing the query.
      */
-    public Set<Pair<String, String>> getAllByCube(String cubeIri) throws QueryException {
+    public Set<Triple<String, String, String>> getAllRelationshipsByCube(String cubeIri) throws QueryException {
         if (StringUtils.isBlank(cubeIri)) throw new IllegalArgumentException("cubeIri must not be null nor empty");
         if (!IRIValidator.isValidAbsoluteIRI(cubeIri))
             throw new IllegalArgumentException("cubeIri must be an absolute IRI");
 
-        logger.debug("Querying all level predicates of cube {}.", cubeIri);
-        return connection.getQueryResult("/repo_levelpred/getAllByCube.sparql", s -> s.replaceAll("###CUBE###", cubeIri))
+        logger.debug("Querying all level predicate relationships of cube {}.", cubeIri);
+        return connection.getQueryResult("/" + queryFolder + "/getAllRelationshipsByCube.sparql", s -> s.replaceAll("###CUBE###", cubeIri))
                 .stream()
-                .map(x -> new ImmutablePair<>(
+                .map(x -> new ImmutableTriple<>(
                         x.getValue("dimension").stringValue(),
-                        x.getValue("element").stringValue()
+                        x.getValue("child").stringValue(),
+                        x.hasBinding("parent") ? x.getValue("parent").stringValue() : null
                 )).collect(Collectors.toSet());
     }
 
     /**
-     * Returns level predicates with the specified IRIs.
+     * Gets the dependency graph of level predicates for the specified cube.
      *
-     * @param iris The absolute IRIs to query.
-     * @return Set with level predicate IRIs. The key of the pair represents the dimension, the value is the level predicate.
-     * @throws IllegalArgumentException If {@code iris} is {@code null} or contains at least one invalid IRI.
-     * @throws QueryException           If an exception occurred while executing the query.
-     */
-    public Set<Pair<String, String>> getByIri(Set<String> iris) throws QueryException {
-        if (iris == null) throw new IllegalArgumentException("iris must not be null");
-        if (iris.stream().map(IRIValidator::isValidAbsoluteIRI).anyMatch(x -> !x))
-            throw new IllegalArgumentException("iris contains at least one invalid IRI");
-
-        logger.debug("Querying level predicates {}.", iris);
-        return connection.getQueryResult(
-                "/repo_levelpred/getbyIris.sparql",
-                s -> s.replaceAll("###IN###", iris.stream()
-                        .map(x -> '(' + convertToFullIriString(x) + ')')
-                        .collect(Collectors.joining(" "))))
-                .stream()
-                .map(x -> new ImmutablePair<>(
-                        x.getValue("dimension").stringValue(),
-                        x.getValue("element").stringValue()
-                )).collect(Collectors.toSet());
-    }
-
-    /**
-     * Returns the labels of all level predicates of the specified cube.
-     *
-     * @param lang    The requested language.
      * @param cubeIri The absolute IRI of the cube.
-     * @return List with level predicate labels of the cube in the requested language
-     * @throws IllegalArgumentException If {@code lang} or {@code cubeIri} is {@code null} or blank.
+     * @return The dependency graph.
+     * @throws IllegalArgumentException If {@code cubeIri} is {@code null}, blank or an invalid IRI.
      * @throws QueryException           If an exception occurred while executing the query.
      */
-    public List<DimensionLabel> getLabelsByLangAndCube(String lang, String cubeIri) throws QueryException {
-        if (StringUtils.isBlank(lang)) throw new IllegalArgumentException("lang must not be null or empty");
-        if (StringUtils.isBlank(cubeIri)) throw new IllegalArgumentException("cubeIri must not be null or empty");
-        if (!IRIValidator.isValidAbsoluteIRI(cubeIri))
-            throw new IllegalArgumentException("cubeIri must be an absolute IRI");
+    @SuppressWarnings("Duplicates")
+    public Graph<String> getDependencyGraph(String cubeIri) throws QueryException {
+        var deps = getAllRelationshipsByCube(cubeIri);
 
-        logger.debug("Querying labels of level predicates of cube {} in language {}.", cubeIri, lang);
+        MutableGraph<String> graph = GraphBuilder.directed().build();
 
-        return connection.getQueryResult(
-                "/repo_levelpred/getLabelsByLangAndCube.sparql",
-                s -> s.replaceAll("###LANG###", lang).replaceAll("###CUBE###", cubeIri)
-        )
-                .stream()
-                .map(x -> RepositoryHelpers.convert(lang, x))
-                .collect(Collectors.toList());
-    }
+        for (Triple<String, String, String> pair : deps) {
+            graph.addNode(pair.getMiddle());
+            if (pair.getRight() != null) {
+                graph.addNode(pair.getRight());
+                graph.putEdge(pair.getMiddle(), pair.getRight());
+            }
+        }
 
-    /**
-     * Returns the labels of all level predicates of the specified dimensions (without the specified level predicates).
-     *
-     * @param lang               The requested language.
-     * @param dimensionIri       The absolute IRI of the dimension.
-     * @param levelPredicateIris The IRIs of the level predicates to exclude from the result.
-     * @return List with level predicate labels of the dimension in the requested language
-     * @throws IllegalArgumentException If {@code lang} or {@code dimensionIri} is {@code null} or blank.
-     * @throws QueryException           If an exception occurred while executing the query.
-     */
-    public List<DimensionLabel> getLabelsByLangAndDimension(String lang, String dimensionIri, Collection<String> levelPredicateIris) throws QueryException {
-        if (StringUtils.isBlank(lang)) throw new IllegalArgumentException("lang must not be null or empty");
-        if (StringUtils.isBlank(dimensionIri))
-            throw new IllegalArgumentException("dimensionIri must not be null or empty");
-        if (!IRIValidator.isValidAbsoluteIRI(dimensionIri))
-            throw new IllegalArgumentException("dimensionIri must be an absolute IRI");
-        if (levelPredicateIris != null && levelPredicateIris.stream().map(IRIValidator::isValidAbsoluteIRI).anyMatch(x -> !x))
-            throw new IllegalArgumentException("levelPredicateIris contains at least one invalid IRI");
+        // Add top level
+        graph.addNode(IRIConstants.RESOURCE_TOP_LEVEL);
+        Set<String> nodes = new HashSet<>(graph.nodes());
+        for (String node : nodes) {
+            if (!node.equals(IRIConstants.RESOURCE_TOP_LEVEL) && graph.inDegree(node) == 0) {
+                graph.putEdge(IRIConstants.RESOURCE_TOP_LEVEL, node);
+            }
+        }
 
-        logger.debug("Querying labels of level predicates of dimension {} in language {} with exclusions {}.", dimensionIri, lang, levelPredicateIris);
-
-        return connection.getQueryResult(
-                "/repo_levelpred/getLabelsByLangAndDimension.sparql",
-                s -> s.replaceAll("###LANG###", lang)
-                        .replaceAll("###DIMENSION###", dimensionIri)
-                        .replace("###NOTIN###", convertToFullIriString(levelPredicateIris))
-        )
-                .stream()
-                .map(x -> RepositoryHelpers.convert(lang, x))
-                .collect(Collectors.toList());
-    }
-
-    /**
-     * Returns the labels of the specified level predicates.
-     *
-     * @param lang               The requested language.
-     * @param levelPredicateIris The IRIs of the level predicates to query the labels.
-     * @return List with level predicate labels in the requested language
-     * @throws IllegalArgumentException If {@code lang} or {@code dimensionIri} is {@code null} or blank.
-     * @throws QueryException           If an exception occurred while executing the query.
-     */
-    public List<DimensionLabel> getLabelsByLangAndIris(String lang, Collection<String> levelPredicateIris) throws QueryException {
-        if (StringUtils.isBlank(lang)) throw new IllegalArgumentException("lang must not be null or empty");
-        if (levelPredicateIris == null) throw new IllegalArgumentException("levelPredicateIris must not be null");
-        if (levelPredicateIris.stream().map(IRIValidator::isValidAbsoluteIRI).anyMatch(x -> !x))
-            throw new IllegalArgumentException("levelPredicateIris contains at least one invalid IRI");
-
-        logger.debug("Querying labels of level predicates in language {} with for predicates {}.", lang, levelPredicateIris);
-
-        return connection.getQueryResult(
-                "/repo_levelpred/getLabelsByLangAndIris.sparql",
-                s -> s.replaceAll("###LANG###", lang)
-                        .replace("###IN###", convertToFullIriString(levelPredicateIris))
-        )
-                .stream()
-                .map(x -> RepositoryHelpers.convert(lang, x))
-                .collect(Collectors.toList());
+        return ImmutableGraph.copyOf(graph);
     }
 }

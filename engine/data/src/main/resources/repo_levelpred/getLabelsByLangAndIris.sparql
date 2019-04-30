@@ -1,5 +1,5 @@
-PREFIX qbx: <http://dke.jku.at/inga/cubes#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX qbx: <http://dke.jku.at/inga/cubes#>
 
 SELECT DISTINCT ?dimension ?dimensionLabel ?element ?label ?description
 WHERE {
@@ -12,7 +12,7 @@ WHERE {
     FILTER (?element IN (###IN###)) .
 
     {
-        SELECT ?dimension ?level
+        SELECT DISTINCT ?dimension ?level
         WHERE {
             {
     			?dimension qbx:hasHierarchy ?hier .

@@ -17,7 +17,7 @@ then
     insert(new ListDisplay(
         "addMeasure",
         $model.getLocale(),
-        $model.getAggregateMeasureRepository().getLabelsByLangAndCubeWithExclusions($model.getLanguage(), $as.getCube(), $as.getMeasures())));
+        $model.getAggregateMeasureRepository().getLabelsByLangAndCube($model.getLanguage(), $as.getCube(), $as.getMeasures())));
 end
 
 rule "Drop Measure - Select all selected Measures"
@@ -42,5 +42,5 @@ then
         "refocusMeasure",
         $model.getLocale(),
         $model.getAggregateMeasureRepository().getLabelsByLangAndIris($model.getLanguage(), $as.getMeasures()),
-        $model.getAggregateMeasureRepository().getLabelsByLangAndCubeWithExclusions($model.getLanguage(), $as.getCube(), $as.getMeasures())));
+        $model.getAggregateMeasureRepository().getLabelsByLangAndCube($model.getLanguage(), $as.getCube(), $as.getMeasures())));
 end

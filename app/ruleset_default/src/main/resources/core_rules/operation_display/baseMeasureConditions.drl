@@ -10,7 +10,7 @@ import at.jku.dke.ida.rules.interfaces.OperationDisplayServiceModel
 rule "'Add Base Measure Condition' - if at least one predicate is available"
     agenda-group "operation-display-determination"
 when
-    $model : OperationDisplayServiceModel(areNotSelectedBaseMeasureConditionsAvailable())
+    $model : OperationDisplayServiceModel(isNotSelectedBaseMeasureConditionAvailable())
 then
     insert(new Operation(Event.NAVIGATE_BMC_NARROW, $model.getLocale(), 50));
 end
@@ -43,7 +43,7 @@ rule "'Refocus Base Measure Condition' - if at least one predicate is selected a
     enabled false
 when
     $as : NonComparativeAnalysisSituation(baseMeasureConditions.isEmpty() == false)
-    $model : OperationDisplayServiceModel(areNotSelectedBaseMeasureConditionsAvailable(), analysisSituation == $as)
+    $model : OperationDisplayServiceModel(isNotSelectedBaseMeasureConditionAvailable(), analysisSituation == $as)
 then
     insert(new Operation(Event.NAVIGATE_BMC_REFOCUS, $model.getLocale(), 51));
 end

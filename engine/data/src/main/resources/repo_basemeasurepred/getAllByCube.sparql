@@ -7,4 +7,6 @@ WHERE {
     ?measure rdf:type qbx:BaseMeasure .
 	?element rdf:type qbx:BaseMeasurePredicate ;
 	         qbx:over ?measure .
+
+    FILTER (?element NOT IN (###NOTIN###)) .
 } 

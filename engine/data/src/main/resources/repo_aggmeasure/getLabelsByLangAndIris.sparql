@@ -1,10 +1,10 @@
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-PREFIX qbx: <http://dke.jku.at/inga/cubes#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX qbx: <http://dke.jku.at/inga/cubes#>
 
-SELECT DISTINCT ?element ?label ?description
+SELECT ?element ?label ?description
 WHERE {
-	?element rdf:type qbx:AggregateMeasurePredicate ;
+	?element rdf:type qbx:AggregateMeasure ;
              rdfs:label ?label .
     FILTER (lang(?label) = "###LANG###") .
     

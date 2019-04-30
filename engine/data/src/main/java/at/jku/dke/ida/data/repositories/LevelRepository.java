@@ -5,11 +5,10 @@ import at.jku.dke.ida.data.QueryException;
 import at.jku.dke.ida.data.configuration.GraphDbConnection;
 import at.jku.dke.ida.data.models.DimensionLabel;
 import at.jku.dke.ida.data.models.Label;
+import at.jku.dke.ida.data.repositories.base.DimensionCubeElementRepository;
 import at.jku.dke.ida.shared.models.DimensionQualification;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.ImmutableTriple;
-import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,64 +20,16 @@ import java.util.stream.Collectors;
  * Repository for querying granularity levels.
  */
 @Service
-public class GranularityLevelRepository extends BaseRepository {
+public class LevelRepository extends DimensionCubeElementRepository {
 
     /**
-     * Instantiates a new instance of class {@linkplain GranularityLevelRepository}.
+     * Instantiates a new instance of class {@linkplain LevelRepository}.
      *
      * @param connection The GraphDB connection service class.
      */
     @Autowired
-    public GranularityLevelRepository(GraphDbConnection connection) {
-        super(connection);
-    }
-
-    /**
-     * Returns all granularity levels for the specified cube.
-     *
-     * @param cubeIri The absolute IRI of the cube.
-     * @return Set with all granularity level IRIs of the specified cube. The key of the pair represents the dimension, the value is the level.
-     * @throws IllegalArgumentException If {@code cubeIri} is {@code null}, blank or an invalid IRI.
-     * @throws QueryException           If an exception occurred while executing the query.
-     */
-    public Set<Pair<String, String>> getAllByCube(String cubeIri) throws QueryException {
-        if (StringUtils.isBlank(cubeIri)) throw new IllegalArgumentException("cubeIri must not be null nor empty");
-        if (!IRIValidator.isValidAbsoluteIRI(cubeIri))
-            throw new IllegalArgumentException("cubeIri must be an absolute IRI");
-
-        logger.debug("Querying all granularity levels of cube {}.", cubeIri);
-        return connection.getQueryResult("/repo_gl/getAllByCube.sparql", s -> s.replaceAll("###CUBE###", cubeIri))
-                .stream()
-                .map(x -> new ImmutablePair<>(
-                        x.getValue("dimension").stringValue(),
-                        x.getValue("element").stringValue()
-                )).collect(Collectors.toSet());
-    }
-
-    /**
-     * Returns granularity levels with the specified IRIs.
-     *
-     * @param iris The absolute IRIs to query.
-     * @return Set with granularity level IRIs. The key of the pair represents the dimension, the value is the level.
-     * @throws IllegalArgumentException If {@code iris} is {@code null} or contains at least one invalid IRI.
-     * @throws QueryException           If an exception occurred while executing the query.
-     */
-    public Set<Pair<String, String>> getByIri(Set<String> iris) throws QueryException {
-        if (iris == null) throw new IllegalArgumentException("iris must not be null");
-        if (iris.stream().map(IRIValidator::isValidAbsoluteIRI).anyMatch(x -> !x))
-            throw new IllegalArgumentException("iris contains at least one invalid IRI");
-
-        logger.debug("Querying granularity levels {}.", iris);
-        return connection.getQueryResult(
-                "/repo_gl/getbyIris.sparql",
-                s -> s.replaceAll("###IN###", iris.stream()
-                        .map(x -> '(' + convertToFullIriString(x) + ')')
-                        .collect(Collectors.joining(" "))))
-                .stream()
-                .map(x -> new ImmutablePair<>(
-                        x.getValue("dimension").stringValue(),
-                        x.getValue("element").stringValue()
-                )).collect(Collectors.toSet());
+    public LevelRepository(GraphDbConnection connection) {
+        super(connection, "repo_level", "granularity levels");
     }
 
     /**
@@ -97,12 +48,12 @@ public class GranularityLevelRepository extends BaseRepository {
             throw new IllegalArgumentException("cubeIri must be an absolute IRI");
 
         logger.debug("Querying all granularity level relationships of cube {}.", cubeIri);
-        return connection.getQueryResult("/repo_gl/getAllRelationshipsByCube.sparql", s -> s.replaceAll("###CUBE###", cubeIri))
+        return connection.getQueryResult("/" + queryFolder + "/getAllRelationshipsByCube.sparql", s -> s.replaceAll("###CUBE###", cubeIri))
                 .stream()
                 .map(x -> new ImmutableTriple<>(
                         x.getValue("dimension").stringValue(),
                         x.getValue("child").stringValue(),
-                        x.getValue("parent").stringValue()
+                        x.hasBinding("parent") ? x.getValue("parent").stringValue() : null
                 )).collect(Collectors.toSet());
     }
 
@@ -123,13 +74,10 @@ public class GranularityLevelRepository extends BaseRepository {
 
         logger.debug("Querying labels of base granularity levels of cube {} in language {}.", cubeIri, lang);
 
-        return connection.getQueryResult(
-                "/repo_gl/getBaseLabelsByLangAndCube.sparql",
+        return mapResultToLabel(lang, connection.getQueryResult(
+                "/repo_level/getBaseLabelsByLangAndCube.sparql",
                 s -> s.replaceAll("###LANG###", lang).replaceAll("###CUBE###", cubeIri)
-        )
-                .stream()
-                .map(x -> RepositoryHelpers.convert(lang, x))
-                .collect(Collectors.toList());
+        ).stream());
     }
 
     /**
@@ -151,15 +99,12 @@ public class GranularityLevelRepository extends BaseRepository {
         if (!IRIValidator.isValidAbsoluteIRI(dimension.getGranularityLevel())) return Collections.emptyList();
         if (!IRIValidator.isValidAbsoluteIRI(dimension.getDimension())) return Collections.emptyList();
 
-        return connection.getQueryResult(
-                "/repo_gl/getParentLevelLabelsByLangAndDimension.sparql",
+        return mapResultToLabel(lang, connection.getQueryResult(
+                "/" + queryFolder + "/getParentLevelLabelsByLangAndDimension.sparql",
                 s -> s.replaceAll("###LANG###", lang)
                         .replaceAll("###DIMENSION###", dimension.getDimension())
                         .replaceAll("###LEVEL###", dimension.getGranularityLevel())
-        )
-                .stream()
-                .map(x -> RepositoryHelpers.convert(lang, x))
-                .collect(Collectors.toList());
+        ).stream());
     }
 
     /**
@@ -181,15 +126,12 @@ public class GranularityLevelRepository extends BaseRepository {
         if (!IRIValidator.isValidAbsoluteIRI(dimension.getGranularityLevel())) return Collections.emptyList();
         if (!IRIValidator.isValidAbsoluteIRI(dimension.getDimension())) return Collections.emptyList();
 
-        return connection.getQueryResult(
-                "/repo_gl/getChildLevelLabelsByLangAndDimension.sparql",
+        return mapResultToLabel(lang, connection.getQueryResult(
+                "/" + queryFolder + "/getChildLevelLabelsByLangAndDimension.sparql",
                 s -> s.replaceAll("###LANG###", lang)
                         .replaceAll("###DIMENSION###", dimension.getDimension())
                         .replaceAll("###LEVEL###", dimension.getGranularityLevel())
-        )
-                .stream()
-                .map(x -> RepositoryHelpers.convert(lang, x))
-                .collect(Collectors.toList());
+        ).stream());
     }
 
     /**
@@ -204,7 +146,7 @@ public class GranularityLevelRepository extends BaseRepository {
      * @throws IllegalArgumentException If {@code lang} or {@code cubeIri} is {@code null} or blank or {@code dimensionQualifications} is {@code null}.
      * @throws QueryException           If an exception occurred while executing the query.
      */
-    public List<Label> getDimensionsWhereRollUpPossible(String lang, String cubeIri, Collection<DimensionQualification> dimensionQualifications) throws QueryException {
+    public List<Label> getDimensionsWhereRollUpPossible(String lang, String cubeIri, Collection<DimensionQualification> dimensionQualifications) throws QueryException { // TODO: check if works correctly
         if (StringUtils.isBlank(lang)) throw new IllegalArgumentException("lang must not be null or empty");
         if (StringUtils.isBlank(cubeIri)) throw new IllegalArgumentException("cubeIri must not be null or empty");
         if (!IRIValidator.isValidAbsoluteIRI(cubeIri))
@@ -214,10 +156,9 @@ public class GranularityLevelRepository extends BaseRepository {
 
         logger.debug("Querying labels of dimension of cube {} in language {} for dimensions {} where rollup is possible.", cubeIri, lang, dimensionQualifications);
         return getLabelsByLang(
-                "/repo_gl/getDimensionsWhereRollUpPossible.sparql",
+                "/" + queryFolder + "/getDimensionsWhereRollUpPossible.sparql",
                 lang,
-                s -> s
-                        .replaceAll("###CUBE###", cubeIri)
+                s -> s.replaceAll("###CUBE###", cubeIri)
                         .replace("###LEVELS###", dimensionQualifications.stream()
                                 .map(x -> '(' + convertToFullIriString(x.getGranularityLevel()) + ')')
                                 .collect(Collectors.joining(" "))
@@ -236,7 +177,7 @@ public class GranularityLevelRepository extends BaseRepository {
      * @throws IllegalArgumentException If {@code lang} or {@code cubeIri} is {@code null} or blank or {@code dimensionQualifications} is {@code null}.
      * @throws QueryException           If an exception occurred while executing the query.
      */
-    public List<Label> getDimensionsWhereDrillDownPossible(String lang, String cubeIri, Collection<DimensionQualification> dimensionQualifications) throws QueryException {
+    public List<Label> getDimensionsWhereDrillDownPossible(String lang, String cubeIri, Collection<DimensionQualification> dimensionQualifications) throws QueryException { // TODO: check if works correctly
         if (StringUtils.isBlank(lang)) throw new IllegalArgumentException("lang must not be null or empty");
         if (StringUtils.isBlank(cubeIri)) throw new IllegalArgumentException("cubeIri must not be null or empty");
         if (!IRIValidator.isValidAbsoluteIRI(cubeIri))
@@ -246,10 +187,9 @@ public class GranularityLevelRepository extends BaseRepository {
 
         logger.debug("Querying labels of dimension of cube {} in language {} for dimensions {} where drill-down is possible.", cubeIri, lang, dimensionQualifications);
         return getLabelsByLang(
-                "/repo_gl/getDimensionsWhereDrillDownPossible.sparql",
+                "/" + queryFolder + "/getDimensionsWhereDrillDownPossible.sparql",
                 lang,
-                s -> s
-                        .replaceAll("###CUBE###", cubeIri)
+                s -> s.replaceAll("###CUBE###", cubeIri)
                         .replace("###LEVELS###", dimensionQualifications.stream()
                                 .map(x -> '(' + convertToFullIriString(x.getGranularityLevel()) + ')')
                                 .collect(Collectors.joining(" "))

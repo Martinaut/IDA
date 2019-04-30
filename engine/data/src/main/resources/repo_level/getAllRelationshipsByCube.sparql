@@ -5,6 +5,9 @@ WHERE {
 	<###CUBE###> qbx:dimension ?dimension .
     ?dimension qbx:hasHierarchy ?hier .
     ?hierStep qbx:inHierarchy ?hier ;
-              qbx:childLevel ?child ;
-              qbx:parentLevel ?parent .
+              qbx:childLevel ?child .
+
+    OPTIONAL {
+        ?hierStep qbx:parentLevel ?parent .
+    }
 }

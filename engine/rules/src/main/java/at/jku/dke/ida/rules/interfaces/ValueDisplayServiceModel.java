@@ -33,7 +33,7 @@ public interface ValueDisplayServiceModel extends ServiceModel {
      *
      * @return the granularity level repository
      */
-    GranularityLevelRepository getGranularityLevelRepository();
+    LevelRepository getGranularityLevelRepository();
 
     /**
      * Gets the level predicate repository.

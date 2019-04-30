@@ -31,7 +31,7 @@ public class DisplayValues extends BaseAction {
                 BeanUtil.getBean(SimpleRepository.class),
                 BeanUtil.getBean(CubeRepository.class),
                 BeanUtil.getBean(AggregateMeasureRepository.class),
-                BeanUtil.getBean(GranularityLevelRepository.class),
+                BeanUtil.getBean(LevelRepository.class),
                 BeanUtil.getBean(LevelPredicateRepository.class),
                 BeanUtil.getBean(BaseMeasurePredicateRepository.class),
                 BeanUtil.getBean(AggregateMeasurePredicateRepository.class),

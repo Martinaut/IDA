@@ -4,45 +4,29 @@ package core_rules.operation_display
 import at.jku.dke.ida.shared.Event
 import at.jku.dke.ida.shared.models.NonComparativeAnalysisSituation
 import at.jku.dke.ida.shared.operations.Operation
-import at.jku.dke.ida.rules.models.DefaultOperationDisplayServiceModel
+import at.jku.dke.ida.rules.interfaces.OperationDisplayServiceModel
 
 // -------------------------- SLICE CONDITION OPERATIONS ----------------------------
-rule "'Add Slice Condition' - if not selected level predicate available"
+rule "'Narrow Slice Condition' - if implies relationship available"
     agenda-group "operation-display-determination"
 when
-    $model : DefaultOperationDisplayServiceModel(notSelectedSliceConditions.isEmpty() == false)
+    $model : OperationDisplayServiceModel(isImplyRelationshipForSliceConditionAvailable())
 then
     insert(new Operation(Event.NAVIGATE_SLICE_CONDITION_NARROW, $model.getLocale(), 40));
 end
 
-//rule "'Narrow Slice Condition' - if "
-//    agenda-group "operation-display-determination"
-//when
-//    $model : OperationDisplayServiceModel(notSelectedSliceConditions.isEmpty() == false)
-//then
-//    insert(new Operation(EventNames.NAVIGATE_SLICE_CONDITION_NARROW, $model.getLocale(), 40));
-//end
-
-rule "'Drop Slice Condition' - if at least one level predicate selected"
+rule "'Broaden Slice Condition' - if subsumes relationship available"
     agenda-group "operation-display-determination"
 when
-    $model : DefaultOperationDisplayServiceModel(selectedSliceConditions.isEmpty() == false)
+    $model : OperationDisplayServiceModel(isSubsumeRelationshipForSliceConditionAvailable())
 then
     insert(new Operation(Event.NAVIGATE_SLICE_CONDITION_BROADEN, $model.getLocale(), 42));
 end
 
-//rule "'Broaden Slice Condition' - if "
-//    agenda-group "operation-display-determination"
-//when
-//    $model : OperationDisplayServiceModel(selectedSliceConditions.isEmpty() == false)
-//then
-//    insert(new Operation(EventNames.NAVIGATE_SLICE_CONDITION_BROADEN, $model.getLocale(), 42));
-//end
-
 rule "'Refocus Slice Condition' - if at least one selected an one not selected"
     agenda-group "operation-display-determination"
 when
-    $model : DefaultOperationDisplayServiceModel(sliceConditionRefocusDimensions.isEmpty() == false)
+    $model : OperationDisplayServiceModel(isDimensionWithSelectedAndNotSelectedSliceConditionsAvailable())
 then
     insert(new Operation(Event.NAVIGATE_SLICE_CONDITION_REFOCUS, $model.getLocale(), 41));
 end

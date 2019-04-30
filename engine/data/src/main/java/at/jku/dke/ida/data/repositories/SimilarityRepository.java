@@ -4,6 +4,7 @@ import at.jku.dke.ida.data.QueryException;
 import at.jku.dke.ida.data.configuration.GraphDbConnection;
 import at.jku.dke.ida.data.models.DimensionSimilarity;
 import at.jku.dke.ida.data.models.CubeSimilarity;
+import at.jku.dke.ida.data.repositories.base.BaseRepository;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.rdf4j.model.Literal;
@@ -47,27 +48,14 @@ public class SimilarityRepository extends BaseRepository {
             throw new UnsupportedOperationException("This method currently only supports english language.");
 
         logger.debug("Querying similarities for term '{}' in language {}.", term, lang);
-        String queryFile = "/repo_nlp/similarity_single_en.sparql"; // TODO: adjust for language
+        String queryFile = "/repo_nlp/similarity_single_" + lang + ".sparql";
 
         return connection.getQueryResult(queryFile, s -> s.replaceAll("###TERM###", term))
                 .stream()
                 .filter(x -> x.hasBinding("cube") && x.hasBinding("element") && x.hasBinding("score"))
                 .map(x -> x.hasBinding("dimension") ?
-                        new DimensionSimilarity(
-                                term,
-                                x.getValue("cube").stringValue(),
-                                x.getValue("element").stringValue(),
-                                x.getValue("type").stringValue(),
-                                ((Literal) x.getValue("score")).doubleValue(),
-                                x.getValue("dimension").stringValue()
-                        ) :
-                        new CubeSimilarity(
-                                term,
-                                x.getValue("cube").stringValue(),
-                                x.getValue("element").stringValue(),
-                                x.getValue("type").stringValue(),
-                                ((Literal) x.getValue("score")).doubleValue()
-                        ))
+                        RepositoryHelpers.convertToDimSimilarity(term, x) :
+                        RepositoryHelpers.convertToSimilarity(term, x))
                 .collect(Collectors.toList());
     }
 
@@ -88,7 +76,7 @@ public class SimilarityRepository extends BaseRepository {
             throw new UnsupportedOperationException("This method currently only supports english language.");
 
         logger.debug("Querying similarities for words '{}' in language {}.", term, lang);
-        final String queryFile = "/repo_nlp/similarity_multiple_en.sparql"; // TODO: adjust for language
+        final String queryFile = "/repo_nlp/similarity_multiple_" + lang + ".sparql";
 
         // Prepare query parts
         final String[] splitted = term.split(" ");
@@ -108,26 +96,13 @@ public class SimilarityRepository extends BaseRepository {
                 .stream()
                 .filter(x -> x.hasBinding("cube") && x.hasBinding("element") && x.hasBinding("score"))
                 .map(x -> x.hasBinding("dimension") ?
-                        new DimensionSimilarity(
-                                term,
-                                x.getValue("cube").stringValue(),
-                                x.getValue("element").stringValue(),
-                                x.getValue("type").stringValue(),
-                                ((Literal) x.getValue("score")).doubleValue(),
-                                x.getValue("dimension").stringValue()
-                        ) :
-                        new CubeSimilarity(
-                                term,
-                                x.getValue("cube").stringValue(),
-                                x.getValue("element").stringValue(),
-                                x.getValue("type").stringValue(),
-                                ((Literal) x.getValue("score")).doubleValue()
-                        ))
+                        RepositoryHelpers.convertToDimSimilarity(term, x) :
+                        RepositoryHelpers.convertToSimilarity(term, x))
                 .collect(Collectors.toList());
     }
 
     private String[] getSimilarityParts(String lang, String[] splitted) throws QueryException {
-        String queryFile = "/repo_nlp/similarity_multiple_en_part_sim.sparql"; // TODO: adjust for language
+        String queryFile = "/repo_nlp/similarity_multiple_" + lang + "_part_sim.sparql";
         try {
             final String queryText = IOUtils.toString(GraphDbConnection.class.getResourceAsStream(queryFile), StandardCharsets.UTF_8);
 

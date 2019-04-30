@@ -4,6 +4,7 @@ import at.jku.dke.ida.data.IRIValidator;
 import at.jku.dke.ida.data.QueryException;
 import at.jku.dke.ida.data.configuration.GraphDbConnection;
 import at.jku.dke.ida.data.models.Label;
+import at.jku.dke.ida.data.repositories.base.BaseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

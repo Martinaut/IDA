@@ -88,7 +88,7 @@ public final class NLPProcessor {
                 results.add(matcher.getNodeNames()
                         .stream()
                         .sorted()
-                        .flatMap(x -> matcher.getNode(x).getLeaves().stream()) // TODO
+                        .flatMap(x -> matcher.getNode(x).getLeaves().stream())
                         .map(Tree::value)
                         .collect(Collectors.joining(" ")));
             }

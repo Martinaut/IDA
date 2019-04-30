@@ -17,7 +17,7 @@ then
     insert(new ListDisplay(
         "addBMC",
         $model.getLocale(),
-        $model.getBaseMeasurePredicateRepository().getLabelsByLangAndCubeWithExclusions($model.getLanguage(), $as.getCube(), $as.getBaseMeasureConditions())));
+        $model.getBaseMeasurePredicateRepository().getLabelsByLangAndCube($model.getLanguage(), $as.getCube(), $as.getBaseMeasureConditions())));
 end
 
 rule "Drop base measure condition - Select all selected base measure conditions"
@@ -42,5 +42,5 @@ then
         "refocusBMC",
         $model.getLocale(),
         $model.getBaseMeasurePredicateRepository().getLabelsByLangAndIris($model.getLanguage(), $as.getBaseMeasureConditions()),
-        $model.getBaseMeasurePredicateRepository().getLabelsByLangAndCubeWithExclusions($model.getLanguage(), $as.getCube(), $as.getBaseMeasureConditions())));
+        $model.getBaseMeasurePredicateRepository().getLabelsByLangAndCube($model.getLanguage(), $as.getCube(), $as.getBaseMeasureConditions())));
 end

@@ -5,6 +5,7 @@ import at.jku.dke.ida.shared.models.NonComparativeAnalysisSituation
 import at.jku.dke.ida.shared.Event
 import at.jku.dke.ida.data.models.DimensionLabel
 import at.jku.dke.ida.rules.interfaces.SetValueServiceModel
+import at.jku.dke.ida.app.ruleset.helpers.ValueSetter
 import org.apache.commons.lang3.tuple.Pair
 
 // ------------------------------------ RULES ---------------------------------------
@@ -14,6 +15,7 @@ when
     $as : NonComparativeAnalysisSituation()
     $model : SetValueServiceModel(operation == Event.NAVIGATE_SLICE_CONDITION_NARROW, analysisSituation == $as, value instanceof DimensionLabel)
 then
+    //ValueSetter.addSliceCondition($as, (DimensionLabel)$model.getValue());
     $as.getDimensionQualification(((DimensionLabel)$model.getValue()).getDimensionUri()).addSliceCondition(((DimensionLabel)$model.getValue()).getUri());
 end
 
