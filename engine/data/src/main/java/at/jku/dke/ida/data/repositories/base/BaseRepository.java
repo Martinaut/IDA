@@ -1,9 +1,10 @@
-package at.jku.dke.ida.data.repositories;
+package at.jku.dke.ida.data.repositories.base;
 
 import at.jku.dke.ida.data.IRIValidator;
 import at.jku.dke.ida.data.QueryException;
 import at.jku.dke.ida.data.configuration.GraphDbConnection;
 import at.jku.dke.ida.data.models.Label;
+import at.jku.dke.ida.data.repositories.RepositoryHelpers;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -35,7 +36,7 @@ public abstract class BaseRepository {
      *
      * @param connection The GraphDB connection service class.
      */
-    public BaseRepository(GraphDbConnection connection) {
+    protected BaseRepository(GraphDbConnection connection) {
         this.logger = LogManager.getLogger(getClass());
         this.connection = connection;
     }
@@ -120,14 +121,8 @@ public abstract class BaseRepository {
                 s -> manipulator.apply(s.replaceAll("###LANG###", lang))
         )
                 .stream()
-                .map(x ->
-                        new Label(
-                                x.getValue("element").stringValue(),
-                                lang,
-                                x.getValue("label").stringValue(),
-                                x.hasBinding("description") ? x.getValue("description").stringValue() : null
-                        )
-                ).collect(Collectors.toList());
+                .map(x -> RepositoryHelpers.convert(lang, x))
+                .collect(Collectors.toList());
     }
     // endregion
 
