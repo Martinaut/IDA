@@ -12,7 +12,7 @@ rule "'Add Filter' - if at least one filter is available"
 when
     $model : OperationDisplayServiceModel(areNotSelectedFilterConditionsAvailable())
 then
-    insert(new Operation(Event.NAVIGATE_FILTER_NARROW, 60));
+    insert(new Operation(Event.NAVIGATE_FILTER_NARROW, $model.getLocale(), 60));
 end
 
 //rule "'Narrow Filter' - if "
@@ -28,7 +28,7 @@ when
     $as : NonComparativeAnalysisSituation(filterConditions.isEmpty() == false)
     $model : OperationDisplayServiceModel(analysisSituation == $as)
 then
-    insert(new Operation(Event.NAVIGATE_FILTER_BROADEN, 62));
+    insert(new Operation(Event.NAVIGATE_FILTER_BROADEN, $model.getLocale(), 62));
 end
 
 //rule "'Broaden Filter' - if "
@@ -45,5 +45,5 @@ when
     $as : NonComparativeAnalysisSituation(filterConditions.isEmpty() == false)
     $model : OperationDisplayServiceModel(areNotSelectedFilterConditionsAvailable(), analysisSituation == $as)
 then
-    insert(new Operation(Event.NAVIGATE_FILTER_REFOCUS, 61));
+    insert(new Operation(Event.NAVIGATE_FILTER_REFOCUS, $model.getLocale(), 61));
 end

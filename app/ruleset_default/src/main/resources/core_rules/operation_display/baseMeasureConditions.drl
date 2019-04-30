@@ -12,7 +12,7 @@ rule "'Add Base Measure Condition' - if at least one predicate is available"
 when
     $model : OperationDisplayServiceModel(areNotSelectedBaseMeasureConditionsAvailable())
 then
-    insert(new Operation(Event.NAVIGATE_BMC_NARROW, 50));
+    insert(new Operation(Event.NAVIGATE_BMC_NARROW, $model.getLocale(), 50));
 end
 
 //rule "'Narrow Base Measure Condition' - if "
@@ -28,7 +28,7 @@ when
     $as : NonComparativeAnalysisSituation(baseMeasureConditions.isEmpty() == false)
     $model : OperationDisplayServiceModel(analysisSituation == $as)
 then
-    insert(new Operation(Event.NAVIGATE_BMC_BROADEN, 52));
+    insert(new Operation(Event.NAVIGATE_BMC_BROADEN, $model.getLocale(), 52));
 end
 
 //rule "'Broaden Base Measure Condition' - if "
@@ -45,5 +45,5 @@ when
     $as : NonComparativeAnalysisSituation(baseMeasureConditions.isEmpty() == false)
     $model : OperationDisplayServiceModel(areNotSelectedBaseMeasureConditionsAvailable(), analysisSituation == $as)
 then
-    insert(new Operation(Event.NAVIGATE_BMC_REFOCUS, 51));
+    insert(new Operation(Event.NAVIGATE_BMC_REFOCUS, $model.getLocale(), 51));
 end

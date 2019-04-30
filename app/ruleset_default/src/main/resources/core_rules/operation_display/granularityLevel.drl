@@ -22,5 +22,5 @@ when
     $as : NonComparativeAnalysisSituation()
     $model : DefaultOperationDisplayServiceModel(nextRollUpLevels.isEmpty() == false)
 then
-    insert(new Operation(Event.NAVIGATE_GL_ROLL_UP, 21));
+    insert(new Operation(Event.NAVIGATE_GL_ROLL_UP, $model.getLocale(), 21));
 end

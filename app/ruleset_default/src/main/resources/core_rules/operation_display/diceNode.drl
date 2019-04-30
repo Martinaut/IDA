@@ -12,7 +12,7 @@ rule "'Move Down To Node' - if not selected dice node available"
 when
     $model : DefaultOperationDisplayServiceModel(notSelectedDiceNodes.isEmpty() == false)
 then
-    insert(new Operation(Event.NAVIGATE_DICE_NODE_MOVE_DOWN, 30));
+    insert(new Operation(Event.NAVIGATE_DICE_NODE_MOVE_DOWN, $model.getLocale(), 30));
 end
 
 rule "'Move Up To Node' - if if at least one dice node selected"
@@ -20,5 +20,5 @@ rule "'Move Up To Node' - if if at least one dice node selected"
 when
     $model : DefaultOperationDisplayServiceModel(selectedDiceNodes.isEmpty() == false)
 then
-    insert(new Operation(Event.NAVIGATE_DICE_NODE_MOVE_UP, 31));
+    insert(new Operation(Event.NAVIGATE_DICE_NODE_MOVE_UP, $model.getLocale(), 31));
 end
