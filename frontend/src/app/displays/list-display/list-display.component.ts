@@ -38,7 +38,7 @@ export class ListDisplayComponent implements OnChanges {
 
     let i = 1;
     for (const d of display.data) {
-      text += this.translateService.instant('result.option') + i + ': '; // option
+      text += this.translateService.instant('display.option') + i + ': '; // option
       text += d.title + '\r\n';
       i++;
     }

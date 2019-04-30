@@ -10,10 +10,10 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @ComponentScan({"at.jku.dke.ida.app.ruleset.csp"})
 @EnableConfigurationProperties(ConstraintSatisfactionSettings.class)
-public class ConstraintSatisfactionConfiguration {
+public class ConstraintSatisfactionSpringConfiguration {
     /**
-     * Instantiates a new instance of class {@linkplain ConstraintSatisfactionConfiguration}.
+     * Instantiates a new instance of class {@linkplain ConstraintSatisfactionSpringConfiguration}.
      */
-    public ConstraintSatisfactionConfiguration() {
+    public ConstraintSatisfactionSpringConfiguration() {
     }
 }

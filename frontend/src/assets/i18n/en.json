@@ -30,7 +30,7 @@
 		"title": "Your Input",
 		"validation": "Please enter a text before sending the message."
 	},
-	"result": {
+	"display": {
 		"leftOption": "Left Option",
 		"leftSide": "On the left side",
 		"option": "Option",
@@ -52,5 +52,8 @@
 		"volume": "Volume",
     "true": "Yes",
     "false": "No"
-	}
+	},
+  "result": {
+    "title": "Result"
+  }
 }

@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { ConnectionService, SpeechToTextService } from '../services';
+import { ConnectionService, SpeechToTextService, TextToSpeechService } from '../services';
 
 /**
  * Displays an input field for the user query.
@@ -33,6 +33,7 @@ export class InputPanelComponent implements OnInit, OnDestroy {
    */
   constructor(private connectionService: ConnectionService,
               private stt: SpeechToTextService,
+              private tts: TextToSpeechService,
               private changeDetector: ChangeDetectorRef) {
     this.connected = false;
     this.waitingForResult = false;
@@ -51,6 +52,7 @@ export class InputPanelComponent implements OnInit, OnDestroy {
     }
     this.inputError = false;
     this.waitingForResult = true;
+    this.tts.stop();
     this.connectionService.sendMessage(this.userInput);
   }
 
@@ -65,7 +67,7 @@ export class InputPanelComponent implements OnInit, OnDestroy {
         this.stt.stop();
       }
     });
-    this.resSub = this.connectionService.resultMessageReceived.subscribe(value => {
+    this.resSub = this.connectionService.displayMessageReceived.subscribe(value => {
       this.waitingForResult = false;
       this.userInput = null;
 
@@ -73,7 +75,7 @@ export class InputPanelComponent implements OnInit, OnDestroy {
         this.connectionService.disconnect();
       } else {
         setTimeout(() => {
-          console.log('result received');
+          console.log('displays received');
           this.inputField.nativeElement.focus();
 
           if (this.stt.autoStart) {

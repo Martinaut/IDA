@@ -1,8 +1,7 @@
 package at.jku.dke.ida.web.listeners;
 
-import at.jku.dke.ida.scxml.events.DisplayEvent;
-import at.jku.dke.ida.scxml.events.DisplayListener;
-import at.jku.dke.ida.web.models.DisplayResult;
+import at.jku.dke.ida.scxml.events.QueryResultEvent;
+import at.jku.dke.ida.scxml.events.QueryResultListener;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,33 +13,33 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Component;
 
 /**
- * Listens to available display data and sends them to the specified session.
+ * Listens to available query results and sends them to the specified session.
  */
 @Component()
 @Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON)
-public class DisplayDataEventListener implements DisplayListener {
+public class QueryResultEventListener implements QueryResultListener {
 
-    private static final Logger LOGGER = LogManager.getLogger(DisplayDataEventListener.class);
+    private static final Logger LOGGER = LogManager.getLogger(QueryResultEventListener.class);
     private SimpMessagingTemplate template;
 
     /**
-     * Instantiates a new instance of class {@linkplain DisplayDataEventListener}.
+     * Instantiates a new instance of class {@linkplain QueryResultEventListener}.
      *
      * @param template The messaging template used to send messages.
      */
     @Autowired
-    public DisplayDataEventListener(SimpMessagingTemplate template) {
+    public QueryResultEventListener(SimpMessagingTemplate template) {
         this.template = template;
     }
 
     /**
-     * Invoked when new display data are available.
+     * Invoked when the query result changed.
      *
      * @param evt The event to be processed.
      */
     @Override
-    public void displayDataAvailable(DisplayEvent evt) {
-        LOGGER.info("DisplayEvent fired: {}", evt);
+    public void changed(QueryResultEvent evt) {
+        LOGGER.info("QueryResultEvent fired: {}", evt);
 
         var headerAccessor = SimpMessageHeaderAccessor.create(SimpMessageType.MESSAGE);
         headerAccessor.setSessionId(evt.getSessionId());
@@ -48,8 +47,9 @@ public class DisplayDataEventListener implements DisplayListener {
 
         template.convertAndSendToUser(
                 evt.getSessionId(),
-                "/queue/display",
-                new DisplayResult(evt.getDisplay()),
-                headerAccessor.getMessageHeaders());
+                "/queue/result",
+                evt.getResult(),
+                headerAccessor.getMessageHeaders()
+        );
     }
 }

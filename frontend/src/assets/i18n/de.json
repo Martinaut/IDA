@@ -30,7 +30,7 @@
 		"title": "Ihre Eingabe",
 		"validation": "Bitte geben Sie einen Text ein, bevor Sie die Nachricht versenden."
 	},
-	"result": {
+	"display": {
 		"leftOption": "Linke Option",
 		"leftSide": "Auf der linken Seite",
 		"option": "Option",
@@ -52,5 +52,8 @@
 		"volume": "Lautstärke",
     "true": "Ja",
     "false": "Nein"
-	}
+	},
+  "result": {
+    "title": "Ergebnis"
+  }
 }

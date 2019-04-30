@@ -6,12 +6,13 @@ import { ConnectionService } from '../services';
  * Panel used to display the current analysis situation.
  */
 @Component({
-  selector: 'app-analysis-situation-panel',
+  selector: 'app-analysis-result-panel',
   templateUrl: './analysis-situation-panel.component.html'
 })
 export class AnalysisSituationPanelComponent implements OnInit, OnDestroy {
 
   private sub: Subscription;
+
   analysisSituation: any;
   type: string;
 
@@ -35,13 +36,16 @@ export class AnalysisSituationPanelComponent implements OnInit, OnDestroy {
       }
 
       const tmp = JSON.parse(value);
-      if ('cube' in tmp) {
+      if ('contextOfInterest' in tmp) {
         this.analysisSituation = tmp;
-        this.type = 'noncomparative';
+        this.type = 'comparative';
       } else {
-        if ('contextOfInterest' in tmp) {
+        if ('cube' in tmp) {
           this.analysisSituation = tmp;
-          this.type = 'comparative';
+          this.type = 'noncomparative';
+        } else {
+          this.analysisSituation = null;
+          this.type = null;
         }
       }
     });

@@ -90,7 +90,7 @@ export class SpeechToTextService {
   }
 
   /**
-   * Fired when the speech recognition service returns a result.
+   * Fired when the speech recognition service returns a displays.
    */
   get resultAvailable(): Observable<SpeechRecognitionEvent> {
     return this.resultAvailableSource.asObservable();

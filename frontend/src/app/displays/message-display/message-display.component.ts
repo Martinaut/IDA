@@ -1,20 +1,20 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { TextToSpeechService } from '../../services';
 
-interface ErrorDisplay {
+interface MessageDisplay {
   displayMessage: string;
 }
 
 @Component({
-  selector: 'app-error-display',
-  templateUrl: './error-display.component.html'
+  selector: 'app-message-display',
+  templateUrl: './message-display.component.html'
 })
-export class ErrorDisplayComponent implements OnChanges {
+export class MessageDisplayComponent implements OnChanges {
 
-  @Input() display: ErrorDisplay;
+  @Input() display: MessageDisplay;
 
   /**
-   * Initializes a new instance of class ErrorDisplayComponent.
+   * Initializes a new instance of class MessageDisplayComponent.
    */
   constructor(private tts: TextToSpeechService) {
   }

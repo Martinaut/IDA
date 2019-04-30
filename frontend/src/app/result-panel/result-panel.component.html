@@ -1,0 +1,19 @@
+<div class="card shadow mb-4" *ngIf="sorted != null">
+  <div class="card-body">
+    <h4 class="p-3 text-white bg-dark text-center" [translate]="'result.title'">Result</h4>
+    <div class="table-responsive">
+      <table class="table table-striped" *ngIf="sorted.length > 1">
+        <thead>
+        <tr>
+          <th *ngFor="let col of sorted[0]; let i = index;" [sortable-index]="i" (columnSort)="onSort($event)">{{ col }}</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let row of sorted | slice: 1">
+          <td *ngFor="let col of row">{{ col }}</td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,28 @@
+package core_rules.value_intent
+
+// ------------------------------------ IMPORT --------------------------------------
+import at.jku.dke.ida.rules.interfaces.ValueIntentServiceModel
+import at.jku.dke.ida.rules.results.EventConfidenceResult
+import at.jku.dke.ida.app.ruleset.helpers.UserInput
+import at.jku.dke.ida.app.ruleset.interception.models.ValueInputIntentModel
+import at.jku.dke.ida.shared.Event
+import at.jku.dke.ida.app.ruleset.interception.models.OperationInputIntentModel
+
+// ------------------------------------ RULES ---------------------------------------
+rule "Exit Value Intent - 'exit' keyword"
+    agenda-group "operation-intent-determination"
+    salience 10
+when
+    $model : ValueIntentServiceModel(userInput.toLowerCase() contains "exit")
+then
+    insert(new EventConfidenceResult(Event.EXIT, 0.3));
+end
+
+rule "Exit Value Intent - 'exit' similarity"
+    agenda-group "operation-intent-determination"
+    salience 10
+when
+    $model : ValueInputIntentModel(topSimilarity != null && topSimilarity.getElement().getDisplayableId() == Event.EXIT)
+then
+    insert(new EventConfidenceResult(Event.EXIT, $model.getTopSimilarity().getScore()));
+end

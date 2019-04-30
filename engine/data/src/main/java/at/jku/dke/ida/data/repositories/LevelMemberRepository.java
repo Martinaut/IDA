@@ -82,6 +82,33 @@ public class LevelMemberRepository extends BaseRepository {
     }
 
     /**
+     * Returns all level members for the specified cube.
+     *
+     * @param cubeIri The absolute IRI of the cube.
+     * @return Set with all level member IRIs of the specified cube. The key of the pair represents the dimension, the value is the level member.
+     * @throws IllegalArgumentException If {@code cubeIri} is {@code null}, blank or an invalid IRI.
+     * @throws QueryException           If an exception occurred while executing the query.
+     */
+    public Set<Triple<String, String, String>> getAllByCubeAndLevel(String cubeIri, String levelIri) throws QueryException {
+        if (StringUtils.isBlank(cubeIri)) throw new IllegalArgumentException("cubeIri must not be null nor empty");
+        if (StringUtils.isBlank(levelIri))
+            throw new IllegalArgumentException("levelIri must not be null nor empty");
+        if (!IRIValidator.isValidAbsoluteIRI(cubeIri))
+            throw new IllegalArgumentException("cubeIri must be an absolute IRI");
+        if (!IRIValidator.isValidAbsoluteIRI(levelIri))
+            throw new IllegalArgumentException("levelIri must be an absolute IRI");
+
+        logger.debug("Querying all level members of cube {} in level {}.", cubeIri, levelIri);
+        return connection.getQueryResult("/repo_levelmem/getAllByCubeAndLevel.sparql", s -> s.replaceAll("###CUBE###", cubeIri).replaceAll("###LEVEL###", levelIri))
+                .stream()
+                .map(x -> new ImmutableTriple<>(
+                        x.getValue("dimension").stringValue(),
+                        x.getValue("level").stringValue(),
+                        x.getValue("element").stringValue()
+                )).collect(Collectors.toSet());
+    }
+
+    /**
      * Returns level members with the specified IRIs.
      *
      * @param iris The absolute IRIs to query.

@@ -3,10 +3,10 @@ import { Subscription } from 'rxjs';
 import { ConnectionService } from '../../services';
 
 @Component({
-  selector: 'app-result-panel',
-  templateUrl: './result-panel.component.html'
+  selector: 'app-display-panel',
+  templateUrl: './display-panel.component.html'
 })
-export class ResultPanelComponent implements OnInit, OnDestroy {
+export class DisplayPanelComponent implements OnInit, OnDestroy {
 
   private resSub: Subscription;
   type: string;
@@ -24,7 +24,7 @@ export class ResultPanelComponent implements OnInit, OnDestroy {
    * A lifecycle hook that is called after Angular has initialized  all data-bound properties of a directive.
    */
   ngOnInit(): void {
-    this.resSub = this.connectionService.resultMessageReceived.subscribe(value => {
+    this.resSub = this.connectionService.displayMessageReceived.subscribe(value => {
       if (value == null) {
         this.type = null;
         this.display = null;

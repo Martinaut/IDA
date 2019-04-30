@@ -1,6 +1,6 @@
 package at.jku.dke.ida.app.ruleset;
 
-import at.jku.dke.ida.app.ruleset.csp.ConstraintSatisfactionConfiguration;
+import at.jku.dke.ida.app.ruleset.csp.ConstraintSatisfactionSpringConfiguration;
 import at.jku.dke.ida.data.configuration.DataSpringConfiguration;
 import at.jku.dke.ida.shared.session.SessionModel;
 import at.jku.dke.ida.shared.spring.SharedSpringConfiguration;
@@ -11,7 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 
-@SpringBootTest(classes = {SharedSpringConfiguration.class, DataSpringConfiguration.class, ConstraintSatisfactionConfiguration.class})
+@SpringBootTest(classes = {SharedSpringConfiguration.class, DataSpringConfiguration.class, ConstraintSatisfactionSpringConfiguration.class})
 @ExtendWith(SpringExtension.class)
 class InitialSentenceServiceTest {
     @Test

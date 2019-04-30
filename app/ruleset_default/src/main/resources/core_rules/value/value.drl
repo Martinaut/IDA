@@ -51,6 +51,7 @@ when
 then
     insert(new DisplayableConfidenceResult($model.getTopSimilarity().getElement(), $model.getTopSimilarity().getScore()));
 end
+// TODO twolist similarity??
 
 rule "Invalid Value Similarity"
     agenda-group "value-determination"

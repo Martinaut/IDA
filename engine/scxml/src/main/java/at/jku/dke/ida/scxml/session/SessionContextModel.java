@@ -1,9 +1,6 @@
 package at.jku.dke.ida.scxml.session;
 
-import at.jku.dke.ida.scxml.events.AnalysisSituationEvent;
-import at.jku.dke.ida.scxml.events.AnalysisSituationListener;
-import at.jku.dke.ida.scxml.events.DisplayEvent;
-import at.jku.dke.ida.scxml.events.DisplayListener;
+import at.jku.dke.ida.scxml.events.*;
 import at.jku.dke.ida.shared.display.Display;
 import at.jku.dke.ida.shared.models.EngineAnalysisSituation;
 import at.jku.dke.ida.shared.session.SessionModel;
@@ -16,6 +13,7 @@ public class SessionContextModel extends SessionModel {
 
     private final DisplayListener listener;
     private final AnalysisSituationListener asListener;
+    private final QueryResultListener qrListener;
 
     /**
      * Instantiates a new instance of class {@link SessionContextModel}.
@@ -24,12 +22,15 @@ public class SessionContextModel extends SessionModel {
      * @param locale     The locale of the context.
      * @param listener   The listener for listening for available display data.
      * @param asListener The listener for listening for changes of the analysis situation.
+     * @param qrListener The listener for listening for changes of the query result.
      * @throws IllegalArgumentException If the {@code sessionId} or {@code locale} is {@code null} or empty or blank.
      */
-    SessionContextModel(String sessionId, String locale, DisplayListener listener, AnalysisSituationListener asListener) {
+    SessionContextModel(String sessionId, String locale, DisplayListener listener, AnalysisSituationListener asListener,
+                        QueryResultListener qrListener) {
         super(sessionId, locale);
         this.listener = listener;
         this.asListener = asListener;
+        this.qrListener = qrListener;
     }
 
     /**
@@ -50,6 +51,21 @@ public class SessionContextModel extends SessionModel {
         return listener;
     }
 
+    /**
+     * Gets the query result listener.
+     *
+     * @return the query result listener
+     */
+    public AnalysisSituationListener getQueryResultListener() {
+        return asListener;
+    }
+
+    /**
+     * Sets the analysis situation and triggers an event if a listener is registered.
+     *
+     * @param analysisSituation the analysis situation
+     * @throws IllegalArgumentException analysisSituation must not be null
+     */
     @Override
     public void setAnalysisSituation(EngineAnalysisSituation analysisSituation) {
         super.setAnalysisSituation(analysisSituation);
@@ -57,10 +73,27 @@ public class SessionContextModel extends SessionModel {
             asListener.changed(new AnalysisSituationEvent(this, getSessionId(), analysisSituation, getLocale().getLanguage()));
     }
 
+    /**
+     * Sets the display data and triggers an event if a listener is registered.
+     *
+     * @param displayData the display data
+     */
     @Override
     public void setDisplayData(Display displayData) {
         super.setDisplayData(displayData);
         if (listener != null)
             listener.displayDataAvailable(new DisplayEvent(this, getSessionId(), displayData));
+    }
+
+    /**
+     * Sets the query result and triggers an event if a listener is registered.
+     *
+     * @param queryResult the query result
+     */
+    @Override
+    public void setQueryResult(String queryResult) {
+        super.setQueryResult(queryResult);
+        if (qrListener != null)
+            qrListener.changed(new QueryResultEvent(this, getSessionId(), queryResult));
     }
 }

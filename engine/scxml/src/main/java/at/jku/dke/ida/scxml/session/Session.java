@@ -3,6 +3,7 @@ package at.jku.dke.ida.scxml.session;
 import at.jku.dke.ida.scxml.StateMachineFactory;
 import at.jku.dke.ida.scxml.events.AnalysisSituationListener;
 import at.jku.dke.ida.scxml.events.DisplayListener;
+import at.jku.dke.ida.scxml.events.QueryResultListener;
 import at.jku.dke.ida.scxml.exceptions.StateMachineInstantiationException;
 import at.jku.dke.ida.shared.Event;
 import org.apache.commons.lang3.StringUtils;
@@ -31,13 +32,14 @@ public class Session {
      * @throws StateMachineInstantiationException If the state machine could not be instantiated.
      * @throws IllegalArgumentException           If the {@code sessionId} or {@code locale} is {@code null} or empty or blank.
      */
-    Session(String sessionId, String locale, DisplayListener listener, AnalysisSituationListener asListener) throws StateMachineInstantiationException {
+    Session(String sessionId, String locale, DisplayListener listener, AnalysisSituationListener asListener,
+            QueryResultListener qrLsitener) throws StateMachineInstantiationException {
         if (StringUtils.isBlank(sessionId)) throw new IllegalArgumentException("sessionId must not be null empty");
         if (StringUtils.isBlank(locale)) throw new IllegalArgumentException("locale must not be null empty");
 
         this.sessionId = sessionId;
         this.executor = StateMachineFactory.create(sessionId);
-        this.sessionContextModel = new SessionContextModel(sessionId, locale, listener, asListener);
+        this.sessionContextModel = new SessionContextModel(sessionId, locale, listener, asListener, qrLsitener);
     }
 
     /**

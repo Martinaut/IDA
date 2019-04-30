@@ -12,10 +12,12 @@ export class ConnectionService {
 
   private initializedStateChangedSource = new Subject<boolean>();
   private connectionStateChangedSource = new Subject<boolean>();
+  private displayMessageReceivedSource = new Subject<string>();
   private resultMessageReceivedSource = new Subject<string>();
   private asMessageReceivedSource = new Subject<string>();
 
   private client: Client;
+  private displaySub: StompSubscription;
   private resultSub: StompSubscription;
   private asSub: StompSubscription;
   private initialData: any;
@@ -49,11 +51,11 @@ export class ConnectionService {
   }
 
   /**
-   * This events get emitted when a result message has been received.
+   * This events get emitted when a displays message has been received.
    * The event contains the message body.
    */
-  get resultMessageReceived(): Observable<string> {
-    return this.resultMessageReceivedSource.asObservable();
+  get displayMessageReceived(): Observable<string> {
+    return this.displayMessageReceivedSource.asObservable();
   }
 
   /**
@@ -64,6 +66,13 @@ export class ConnectionService {
     return this.asMessageReceivedSource.asObservable();
   }
 
+  /**
+   * This events get emitted when a result-panel message has been received.
+   * The event contains the message body.
+   */
+  get resultMessageReceived(): Observable<string> {
+    return this.resultMessageReceivedSource.asObservable();
+  }
   // endregion
 
   /**
@@ -113,11 +122,14 @@ export class ConnectionService {
   disconnect(): void {
     console.log('>> DISCONNECT');
     if (this.client != null) {
-      if (this.resultSub != null) {
-        this.resultSub.unsubscribe();
+      if (this.displaySub != null) {
+        this.displaySub.unsubscribe();
       }
       if (this.asSub != null) {
         this.asSub.unsubscribe();
+      }
+      if (this.resultSub != null) {
+        this.resultSub.unsubscribe();
       }
       this.client.deactivate();
       this.client = null;
@@ -150,13 +162,15 @@ export class ConnectionService {
     });
 
     this.asMessageReceivedSource.next(null); // reset AS panel
-    this.resultMessageReceivedSource.next(null); // reset result panel
+    this.displayMessageReceivedSource.next(null); // reset displays panel
+    this.resultMessageReceivedSource.next(null); // reset result-panel panel
     this.initializedStateChangedSource.next(true);
   }
 
   private onConnected(frame: IFrame): void {
-    this.resultSub = this.client.subscribe('/user/queue/result', message => this.onResultMessage(message));
+    this.displaySub = this.client.subscribe('/user/queue/display', message => this.onDisplayMessage(message));
     this.asSub = this.client.subscribe('/user/queue/as', message => this.onASMessage(message));
+    this.resultSub = this.client.subscribe('/user/queue/result', message => this.onResultMessage(message));
     this.connectionStateChangedSource.next(true);
     this.client.publish({
       destination: '/app/start',
@@ -172,14 +186,18 @@ export class ConnectionService {
     console.log('>> ERROR: ' + frame);
   }
 
-  private onResultMessage(msg: IMessage) {
-    console.log('<<< MESSAGE RECEIVED \r\n' + msg.body);
-    this.resultMessageReceivedSource.next(msg.body);
+  private onDisplayMessage(msg: IMessage) {
+    console.log('<<< DISPLAY MESSAGE RECEIVED \r\n' + msg.body);
+    this.displayMessageReceivedSource.next(msg.body);
   }
 
   private onASMessage(msg: IMessage) {
-    console.log('<<< MESSAGE RECEIVED \r\n' + msg.body);
+    console.log('<<< AS MESSAGE RECEIVED \r\n' + msg.body);
     this.asMessageReceivedSource.next(msg.body);
   }
 
+  private onResultMessage(msg: IMessage) {
+    console.log('<<< RESULT MESSAGE RECEIVED \r\n' + msg.body);
+    this.resultMessageReceivedSource.next(msg.body);
+  }
 }

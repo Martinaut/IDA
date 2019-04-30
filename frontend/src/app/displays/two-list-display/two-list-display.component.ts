@@ -10,8 +10,7 @@ interface TwoListDisplay {
 
 @Component({
   selector: 'app-two-list-display',
-  templateUrl: './two-list-display.component.html',
-  styles: []
+  templateUrl: './two-list-display.component.html'
 })
 export class TwoListDisplayComponent implements OnChanges {
 
@@ -38,18 +37,18 @@ export class TwoListDisplayComponent implements OnChanges {
   private voiceOutput(display: TwoListDisplay) {
     let text = display.displayMessage + '\r\n';
 
-    text += this.translateService.instant('result.leftSide') + ': \r\n'; // on the left side
+    text += this.translateService.instant('display.leftSide') + ': \r\n'; // on the left side
     let i = 1;
     for (const d of display.dataLeft) {
-      text += this.translateService.instant('result.leftOption') + ' ' + i + ': '; // Left Option
+      text += this.translateService.instant('display.leftOption') + ' ' + i + ': '; // Left Option
       text += d.title + '\r\n';
       i++;
     }
 
-    text += this.translateService.instant('result.rightSide') + ': \r\n'; // on the right side
+    text += this.translateService.instant('display.rightSide') + ': \r\n'; // on the right side
     i = 1;
     for (const d of display.dataRight) {
-      text += this.translateService.instant('result.rightOption') + ' ' + i + ': '; // Right Option
+      text += this.translateService.instant('display.rightOption') + ' ' + i + ': '; // Right Option
       text += d.title + '\r\n';
       i++;
     }

@@ -2,6 +2,7 @@ package at.jku.dke.ida.scxml.session;
 
 import at.jku.dke.ida.scxml.events.AnalysisSituationListener;
 import at.jku.dke.ida.scxml.events.DisplayListener;
+import at.jku.dke.ida.scxml.events.QueryResultListener;
 import at.jku.dke.ida.scxml.exceptions.SessionExpiredException;
 import at.jku.dke.ida.scxml.exceptions.StateMachineExecutionException;
 import at.jku.dke.ida.scxml.exceptions.StateMachineInstantiationException;
@@ -72,7 +73,8 @@ public final class SessionManager {
                     sessionId,
                     locale,
                     BeanUtil.getOptionalBean(DisplayListener.class),
-                    BeanUtil.getOptionalBean(AnalysisSituationListener.class));
+                    BeanUtil.getOptionalBean(AnalysisSituationListener.class),
+                    BeanUtil.getOptionalBean(QueryResultListener.class));
             sessions.put(sessionId, session);
         }
     }

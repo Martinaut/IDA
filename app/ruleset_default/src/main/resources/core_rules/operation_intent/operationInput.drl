@@ -3,17 +3,17 @@ package core_rules.operation_intent
 // ------------------------------------ IMPORT --------------------------------------
 import at.jku.dke.ida.rules.interfaces.OperationIntentServiceModel
 import at.jku.dke.ida.rules.results.EventConfidenceResult
+import at.jku.dke.ida.app.ruleset.helpers.UserInput
 import at.jku.dke.ida.shared.Event
-import org.apache.commons.lang3.math.NumberUtils
 import at.jku.dke.ida.app.ruleset.interception.models.OperationInputIntentModel
 
 // ------------------------------------ RULES ---------------------------------------
-rule "ExecuteOperation Intent"
+rule "ExecuteOperation Intent Number"
     agenda-group "operation-intent-determination"
 when
-    $model : OperationIntentServiceModel(NumberUtils.isParsable(userInput))
+    $model : OperationIntentServiceModel(UserInput.isNumber(userInput))
 then
-    insert(new EventConfidenceResult(Event.NAVIGATE, 1.0));
+    insert(new EventConfidenceResult(Event.NAVIGATE, 0.5));
 end
 
 rule "ExecuteOperation Intent Similarity"

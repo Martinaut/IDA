@@ -23,6 +23,7 @@ public class SessionModel {
 
     private EngineAnalysisSituation analysisSituation;
     private Display displayData;
+    private String queryResult;
 
     private String userInput;
     private Event operation;
@@ -44,6 +45,7 @@ public class SessionModel {
 
         this.analysisSituation = new NonComparativeAnalysisSituation();
         this.displayData = null;
+        this.queryResult = null;
 
         this.userInput = null;
         this.operation = Event.NAVIGATE_CUBE_SELECT;
@@ -134,12 +136,30 @@ public class SessionModel {
     }
 
     /**
-     * Sets the display data and triggers an event if a listener is registered.
+     * Sets the display data.
      *
      * @param displayData the display data
      */
     public void setDisplayData(Display displayData) {
         this.displayData = displayData;
+    }
+
+    /**
+     * Gets the query result.
+     *
+     * @return the query result
+     */
+    public String getQueryResult() {
+        return queryResult;
+    }
+
+    /**
+     * Sets the query result.
+     *
+     * @param queryResult the query result
+     */
+    public void setQueryResult(String queryResult) {
+        this.queryResult = queryResult;
     }
 
     /**

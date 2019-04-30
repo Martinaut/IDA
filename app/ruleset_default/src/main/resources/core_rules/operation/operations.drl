@@ -4,7 +4,7 @@ package core_rules.operation
 import at.jku.dke.ida.rules.interfaces.OperationServiceModel
 import at.jku.dke.ida.shared.Event
 import at.jku.dke.ida.rules.results.EventConfidenceResult
-import org.apache.commons.lang3.math.NumberUtils
+import at.jku.dke.ida.app.ruleset.helpers.UserInput
 import at.jku.dke.ida.app.ruleset.interception.models.OperationModel
 
 // ------------------------------------ RULES ---------------------------------------
@@ -12,9 +12,9 @@ rule "Resolve Operation"
     agenda-group "operation-determination"
     salience 100
 when
-    $model : OperationServiceModel(NumberUtils.isParsable(userInput), possibleOperations.containsKey(NumberUtils.createInteger(userInput)))
+    $model : OperationServiceModel(UserInput.isNumber(userInput), possibleOperations.containsKey(UserInput.toInteger(userInput)))
 then
-    insert(new EventConfidenceResult($model.getPossibleOperations().get(NumberUtils.createInteger($model.getUserInput())).getEvent(), 1.0));
+    insert(new EventConfidenceResult($model.getPossibleOperations().get(UserInput.toInteger($model.getUserInput())).getEvent(), 1.0));
 end
 
 // TODO
@@ -41,7 +41,7 @@ rule "Invalid Operation Number"
     agenda-group "operation-determination"
     salience 1
 when
-    $model : OperationServiceModel(!NumberUtils.isParsable(userInput) || !possibleOperations.containsKey(NumberUtils.createInteger(userInput)))
+    $model : OperationServiceModel(!UserInput.isNumber(userInput) || !possibleOperations.containsKey(UserInput.toInteger(userInput)))
     not EventConfidenceResult()
 then
     insert(new EventConfidenceResult(Event.INVALID_INPUT, 1.0));
