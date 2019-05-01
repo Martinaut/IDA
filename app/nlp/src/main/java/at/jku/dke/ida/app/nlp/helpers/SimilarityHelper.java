@@ -42,6 +42,18 @@ public final class SimilarityHelper {
     }
 
     /**
+     * Gets english word similarities.
+     *
+     * @param wg   The word group.
+     * @param cube The cube.
+     * @return The word similarities.
+     * @throws QueryException If an error occurred while executing the query.
+     */
+    public static List<CubeSimilarity> getGraphDbEnglishWordSimilarities(WordGroup wg, String cube) throws QueryException {
+        return BeanUtil.getBean(SimilarityRepository.class).getWordSimilarity("en", wg.getText(), cube);
+    }
+
+    /**
      * Gets the normalized levensthein similarity.
      *
      * @param input  The input.

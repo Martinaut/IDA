@@ -26,4 +26,24 @@ public class DisplayableConfidenceResult extends GenericConfidenceResult<Display
         super(value, confidence);
     }
 
+    /**
+     * Instantiates a new instance of class {@link DisplayableConfidenceResult} with confidence 1.
+     *
+     * @param displayable The value.
+     * @param term        The term.
+     */
+    public DisplayableConfidenceResult(Displayable displayable, String term) {
+        super(displayable, term);
+    }
+
+    /**
+     * Instantiates a new instance of class {@link DisplayableConfidenceResult}.
+     *
+     * @param displayable The value.
+     * @param confidence  The confidence.
+     * @param term        The term.
+     */
+    public DisplayableConfidenceResult(Displayable displayable, double confidence, String term) {
+        super(displayable, confidence, term);
+    }
 }

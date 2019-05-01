@@ -11,7 +11,7 @@ import java.util.Collection;
  */
 public interface DetermineOperationInterceptor extends Interceptor<OperationServiceModel, Collection<EventConfidenceResult>, Event> {
     @Override
-    default Event modifyResult(Collection<EventConfidenceResult> result) {
+    default Event modifyResult(OperationServiceModel model, Collection<EventConfidenceResult> result) {
         return result.stream()
                 .sorted()
                 .findFirst().orElse(new EventConfidenceResult(Event.INVALID_INPUT)).getValue();

@@ -8,7 +8,7 @@ import at.jku.dke.ida.shared.display.Display;
  */
 public interface DisplayValuesInterceptor extends Interceptor<ValueDisplayServiceModel, Display, Display> {
     @Override
-    default Display modifyResult(Display result) {
+    default Display modifyResult(ValueDisplayServiceModel model, Display result) {
         return result;
     }
 }

@@ -22,6 +22,13 @@ public interface ConfidenceResult<TValue> extends Comparable<ConfidenceResult<TV
     double getConfidence();
 
     /**
+     * Returns the term to which the value is compared with for computing the confidence.
+     *
+     * @return The Term (can be {@code null}).
+     */
+    String getTerm();
+
+    /**
      * Compares this result with the specified result for order. Returns a
      * negative integer, zero, or a positive integer as this object is less
      * than, equal to, or greater than the specified object.

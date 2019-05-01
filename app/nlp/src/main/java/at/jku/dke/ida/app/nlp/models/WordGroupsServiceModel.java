@@ -12,19 +12,19 @@ import java.util.Locale;
  */
 public class WordGroupsServiceModel extends AbstractServiceModel {
 
-    private final String initialSentence;
+    private final String sentence;
     private CoreDocument annotatedText;
 
     /**
      * Instantiates a new instance of class {@link WordGroupsServiceModel}.
      *
-     * @param sessionModel    The session model.
-     * @param initialSentence The initial sentence.
+     * @param sessionModel The session model.
+     * @param sentence     The sentence.
      * @throws IllegalArgumentException If {@code sessionModel} is {@code null} or empty.
      */
-    public WordGroupsServiceModel(SessionModel sessionModel, String initialSentence) {
+    public WordGroupsServiceModel(SessionModel sessionModel, String sentence) {
         super("NONE", sessionModel);
-        this.initialSentence = initialSentence;
+        this.sentence = sentence;
     }
 
     /**
@@ -33,21 +33,21 @@ public class WordGroupsServiceModel extends AbstractServiceModel {
      * @param locale            The display locale.
      * @param analysisSituation The analysis situation.
      * @param sessionModel      The session model.
-     * @param initialSentence   The initial sentence.
-     * @throws IllegalArgumentException If the any of the parameters (except {@code locale} and {@code initialSentence}) is {@code null} or empty.
+     * @param sentence          The sentence.
+     * @throws IllegalArgumentException If the any of the parameters (except {@code locale} and {@code sentence}) is {@code null} or empty.
      */
-    public WordGroupsServiceModel(Locale locale, EngineAnalysisSituation analysisSituation, SessionModel sessionModel, String initialSentence) {
+    public WordGroupsServiceModel(Locale locale, EngineAnalysisSituation analysisSituation, SessionModel sessionModel, String sentence) {
         super("NONE", locale, analysisSituation, null, sessionModel);
-        this.initialSentence = initialSentence;
+        this.sentence = sentence;
     }
 
     /**
-     * Gets the initial sentence.
+     * Gets the sentence.
      *
-     * @return the initial sentence
+     * @return the sentence
      */
-    public String getInitialSentence() {
-        return initialSentence;
+    public String getSentence() {
+        return sentence;
     }
 
     /**

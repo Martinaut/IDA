@@ -9,18 +9,18 @@ import at.jku.dke.ida.shared.Event
 import at.jku.dke.ida.app.ruleset.interception.models.OperationInputIntentModel
 
 // ------------------------------------ RULES ---------------------------------------
-rule "Exit Value Intent - 'exit' keyword"
+rule "Abort Value Intent - 'abort' keyword"
     agenda-group "value-intent-determination"
 when
-    $model : ValueIntentServiceModel(userInput.toLowerCase() contains "exit")
+    $model : ValueIntentServiceModel(userInput.toLowerCase() contains "abort")
 then
-    insert(new EventConfidenceResult(Event.EXIT, 0.4));
+    insert(new EventConfidenceResult(Event.ABORT, 0.4));
 end
 
-rule "Exit Value Intent - 'exit' similarity"
+rule "Abort Value Intent - 'abort' similarity"
     agenda-group "value-intent-determination"
 when
-    $model : ValueInputIntentModel(topSimilarity != null && topSimilarity.getElement().getDisplayableId() == Event.EXIT.getEventName())
+    $model : ValueInputIntentModel(topSimilarity != null && topSimilarity.getElement().getDisplayableId() == Event.ABORT.getEventName())
 then
-    insert(new EventConfidenceResult(Event.EXIT, $model.getTopSimilarity().getScore()));
+    insert(new EventConfidenceResult(Event.ABORT, $model.getTopSimilarity().getScore()));
 end

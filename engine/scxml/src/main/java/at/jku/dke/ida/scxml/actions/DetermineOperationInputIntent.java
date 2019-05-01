@@ -51,7 +51,7 @@ public class DetermineOperationInputIntent extends BaseAction {
         Event operation;
         Collection<EventConfidenceResult> operations = new OperationIntentService().executeRules(model);
         if (interceptor != null)
-            operation = interceptor.modifyResult(operations);
+            operation = interceptor.modifyResult(model, operations);
         else
             operation = operations.stream().sorted()
                     .findFirst().orElse(new EventConfidenceResult(Event.INVALID_INPUT)).getValue();

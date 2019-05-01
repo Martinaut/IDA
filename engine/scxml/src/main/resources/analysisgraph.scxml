@@ -37,6 +37,7 @@
                 </onentry>
                 <transition event="moreInformation" target="DisplayingValues"/>
                 <transition event="navigate" target="DeterminingValue"/>
+                <transition event="abort" target="Executable" />
             </state>
         </state>
 

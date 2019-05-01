@@ -44,6 +44,8 @@ when
     eval($model.getOperation() == Event.NAVIGATE_GL_DRILL_DOWN || $model.getOperation() == Event.NAVIGATE_GL_ROLL_UP
         || $model.getOperation() == Event.NAVIGATE_SLICE_CONDITION_BROADEN || $model.getOperation() == Event.NAVIGATE_SLICE_CONDITION_NARROW || $model.getOperation() == Event.NAVIGATE_SLICE_CONDITION_REFOCUS
         || $model.getOperation() == Event.NAVIGATE_DICE_NODE_MOVE_DOWN)
+    eval($model.getTopSimilarity().getElement().getDisplayableId() != Event.EXIT.getEventName() &&
+         $model.getTopSimilarity().getElement().getDisplayableId() != Event.ABORT.getEventName())
 then
     $model.addAdditionalData(Constants.ADD_DATA_DIMENSION, $as.getDimensionQualification($model.getTopSimilarity().getElement().getDisplayableId()));
     insert(new EventConfidenceResult(Event.MORE_INFORMATION, $model.getTopSimilarity().getScore()));
@@ -75,6 +77,8 @@ when
                                    additionalDataContainsKey(Constants.ADD_DATA_DIMENSION))
     eval($model.getOperation() == Event.NAVIGATE_GL_DRILL_DOWN || $model.getOperation() == Event.NAVIGATE_GL_ROLL_UP
         || $model.getOperation() == Event.NAVIGATE_SLICE_CONDITION_BROADEN || $model.getOperation() == Event.NAVIGATE_SLICE_CONDITION_NARROW || $model.getOperation() == Event.NAVIGATE_SLICE_CONDITION_REFOCUS)
+    eval($model.getTopSimilarity().getElement().getDisplayableId() != Event.EXIT.getEventName() &&
+         $model.getTopSimilarity().getElement().getDisplayableId() != Event.ABORT.getEventName())
 then
     $model.removeAdditionalData(Constants.ADD_DATA_DIMENSION);
 end

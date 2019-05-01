@@ -10,7 +10,7 @@ import java.util.Collection;
  */
 public interface DisplayOperationsInterceptor extends Interceptor<OperationDisplayServiceModel, Collection<Operation>, Collection<Operation>> {
     @Override
-    default Collection<Operation> modifyResult(Collection<Operation> result) {
+    default Collection<Operation> modifyResult(OperationDisplayServiceModel model, Collection<Operation> result) {
         return result;
     }
 }

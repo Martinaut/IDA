@@ -16,6 +16,11 @@ public final class Constants {
     public static final String ADD_DATA_LEVEL = "level";
 
     /**
+     * Used for storing the word groups of the user input.
+     */
+    public static final String ADD_WORD_GROUPS = "wordgroups";
+
+    /**
      * Prevents creation of instances of this class.
      */
     private Constants() {

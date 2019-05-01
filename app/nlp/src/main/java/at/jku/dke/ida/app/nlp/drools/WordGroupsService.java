@@ -37,7 +37,7 @@ public class WordGroupsService extends DroolsService<WordGroupsServiceModel, Set
         logger.info("Finding word groups.");
 
         // Set additional model data
-        model.setAnnotatedText(NLPProcessor.annotate(model.getLanguage(), model.getInitialSentence()));
+        model.setAnnotatedText(NLPProcessor.annotate(model.getLanguage(), model.getSentence()));
 
         // Add data
         session.insert(model);

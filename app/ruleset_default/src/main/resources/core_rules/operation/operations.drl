@@ -3,6 +3,7 @@ package core_rules.operation
 // ------------------------------------ IMPORT --------------------------------------
 import at.jku.dke.ida.rules.interfaces.OperationServiceModel
 import at.jku.dke.ida.shared.Event
+import at.jku.dke.ida.shared.operations.Operation
 import at.jku.dke.ida.rules.results.EventConfidenceResult
 import at.jku.dke.ida.app.ruleset.helpers.UserInput
 import at.jku.dke.ida.app.ruleset.interception.models.OperationModel
@@ -17,15 +18,15 @@ then
     insert(new EventConfidenceResult($model.getPossibleOperations().get(UserInput.toInteger($model.getUserInput())).getEvent(), 1.0));
 end
 
-// TODO
-//rule "Resolve Operation Similarity"
-//    agenda-group "operation-determination"
-//    salience 100
-//when
-//    $model : OperationModel(topSimilarity != null)
-//then
-//    insert(new EventConfidenceResult($model.getTopSimilarity().getElement().getDisplayableId(), $model.getTopSimilarity().getScore()));
-//end
+rule "Resolve Operation Similarity"
+    agenda-group "operation-determination"
+    salience 100
+when
+    $model : OperationModel(topSimilarity != null, topSimilarity.getScore() >= 0.4)
+    eval($model.getTopSimilarity().getElement() instanceof Operation)
+then
+    insert(new EventConfidenceResult(((Operation) $model.getTopSimilarity().getElement()).getEvent(), $model.getTopSimilarity().getScore(), $model.getTopSimilarity().getTerm()));
+end
 
 rule "Invalid Operation Similarity"
     agenda-group "operation-determination"
@@ -47,4 +48,12 @@ then
     insert(new EventConfidenceResult(Event.INVALID_INPUT, 1.0));
 end
 
-// TODO: e.g. "option 1" "the first option"
+rule "Too low Operation Similarity"
+    agenda-group "operation-determination"
+    salience 2
+when
+    $model : OperationModel(topSimilarity != null, topSimilarity.getScore() < 0.4)
+    not EventConfidenceResult()
+then
+    insert(new EventConfidenceResult(Event.INVALID_INPUT, 1.0));
+end

@@ -21,9 +21,10 @@ public class DefaultValueDisplayServiceModel extends AbstractServiceModel implem
     private final BaseMeasurePredicateRepository baseMeasurePredicateRepository;
     private final AggregateMeasurePredicateRepository aggregateMeasurePredicateRepository;
     private final LevelMemberRepository levelMemberRepository;
+    private boolean skipDisplay;
 
     /**
-     * Instantiates a new instance of class {@link AbstractServiceModel}.
+     * Instantiates a new instance of class {@link DefaultValueDisplayServiceModel}.
      *
      * @param currentState                        The current state of the state machine.
      * @param sessionModel                        The session model.
@@ -69,6 +70,7 @@ public class DefaultValueDisplayServiceModel extends AbstractServiceModel implem
         this.baseMeasurePredicateRepository = baseMeasurePredicateRepository;
         this.aggregateMeasurePredicateRepository = aggregateMeasurePredicateRepository;
         this.levelMemberRepository = levelMemberRepository;
+        this.skipDisplay = false;
     }
 
     /**
@@ -123,6 +125,7 @@ public class DefaultValueDisplayServiceModel extends AbstractServiceModel implem
         this.baseMeasurePredicateRepository = baseMeasurePredicateRepository;
         this.aggregateMeasurePredicateRepository = aggregateMeasurePredicateRepository;
         this.levelMemberRepository = levelMemberRepository;
+        this.skipDisplay = false;
     }
 
     @Override
@@ -163,5 +166,19 @@ public class DefaultValueDisplayServiceModel extends AbstractServiceModel implem
     @Override
     public LevelMemberRepository getLevelMemberRepository() {
         return levelMemberRepository;
+    }
+
+    @Override
+    public boolean skipValueDisplay() {
+        return this.skipDisplay;
+    }
+
+    /**
+     * Sets whether to skip the display.
+     *
+     * @param skipDisplay {@code true} if display values should be skipped; {@code false otherwise}.
+     */
+    public void setSkipDisplay(boolean skipDisplay) {
+        this.skipDisplay = skipDisplay;
     }
 }

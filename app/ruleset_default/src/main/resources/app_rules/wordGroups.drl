@@ -26,6 +26,36 @@ then
     }
 end
 
+rule "Word Groups - Find words with nominal modifier"
+    agenda-group "word-groups"
+when
+    $model : WordGroupsServiceModel(language == "en")
+then
+    for (WordGroup group : WordGroupsHelper.executeSemgrex($model.getAnnotatedText(), "{}=A >/nmod.*/ {}=C :  {}=C >case {}=B")) {
+        insert(group);
+    }
+end
+
+rule "Word Groups - Find words with A >dobj Z, Z <det B, Z <compound C"
+    agenda-group "word-groups"
+when
+    $model : WordGroupsServiceModel(language == "en")
+then
+    for (WordGroup group : WordGroupsHelper.executeSemgrex($model.getAnnotatedText(), "{}=A >dobj {} :  {} >det {}=B : {} >compound {}=C")) {
+        insert(group);
+    }
+end
+
+rule "Word Groups - Find words with A >dobj Z, Z <compound B"
+    agenda-group "word-groups"
+when
+    $model : WordGroupsServiceModel(language == "en")
+then
+    for (WordGroup group : WordGroupsHelper.executeSemgrex($model.getAnnotatedText(), "{}=A >dobj {} :  {} >compound {}=B")) {
+        insert(group);
+    }
+end
+
 rule "Word Groups - Find sibling nouns"
     agenda-group "word-groups"
 when

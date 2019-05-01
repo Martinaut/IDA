@@ -27,6 +27,7 @@ public final class UserInput {
      * @return {@code true} if the string is a parsable number.
      */
     public static boolean isNumber(String input) {
+        if (input == null) return false;
         return NumberUtils.isParsable(input);
     }
 

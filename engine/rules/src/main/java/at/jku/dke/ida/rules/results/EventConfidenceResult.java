@@ -26,4 +26,24 @@ public class EventConfidenceResult extends GenericConfidenceResult<Event> {
         super(evt, confidence);
     }
 
+    /**
+     * Instantiates a new instance of class {@link EventConfidenceResult} with confidence 1.
+     *
+     * @param event The value.
+     * @param term  The term.
+     */
+    public EventConfidenceResult(Event event, String term) {
+        super(event, term);
+    }
+
+    /**
+     * Instantiates a new instance of class {@link EventConfidenceResult}.
+     *
+     * @param event      The value.
+     * @param confidence The confidence.
+     * @param term       The term.
+     */
+    public EventConfidenceResult(Event event, double confidence, String term) {
+        super(event, confidence, term);
+    }
 }

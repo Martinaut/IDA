@@ -14,7 +14,7 @@ rule "ExecuteQuery Intent - 'execute' keyword"
 when
     $model : OperationIntentServiceModel(userInput.toLowerCase() contains "execute")
 then
-    insert(new EventConfidenceResult(Event.EXECUTE_QUERY, 0.3));
+    insert(new EventConfidenceResult(Event.EXECUTE_QUERY, 0.4));
 end
 
 rule "ExecuteQuery Intent - 'execute' similarity"

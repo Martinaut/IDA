@@ -4,7 +4,6 @@ import at.jku.dke.ida.data.models.Similarity;
 import at.jku.dke.ida.rules.models.DefaultOperationServiceModel;
 import at.jku.dke.ida.shared.Event;
 import at.jku.dke.ida.shared.display.Displayable;
-import at.jku.dke.ida.shared.models.AnalysisSituation;
 import at.jku.dke.ida.shared.models.EngineAnalysisSituation;
 import at.jku.dke.ida.shared.operations.Operation;
 import at.jku.dke.ida.shared.session.SessionModel;

@@ -56,7 +56,7 @@ public class DetermineValue extends BaseAction {
         ConfidenceResult result;
         var values = new ValueService().executeRules(model);
         if (interceptor != null)
-            result = interceptor.modifyResult(values);
+            result = interceptor.modifyResult(model, values);
         else
             result = values.stream().sorted()
                     .findFirst().orElse(new EventConfidenceResult(Event.INVALID_INPUT));
@@ -78,6 +78,9 @@ public class DetermineValue extends BaseAction {
         // Execute
         new SetValueService().executeRules(model);
         ctxModel.setAdditionalData(new HashMap<>(model.getAdditionalData()));
+
+        if (interceptor != null)
+            interceptor.modifyResult(model, null);
 
         // Notify
         if (ctxModel.getAnalysisSituationListener() != null && ctxModel.getAnalysisSituation().isCubeDefined())

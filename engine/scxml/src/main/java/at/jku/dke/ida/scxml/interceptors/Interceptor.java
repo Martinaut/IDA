@@ -23,8 +23,9 @@ public interface Interceptor<TModel, TResultInput, TResultOutput> {
     /**
      * Use this method to modify the result before using it.
      *
+     * @param model The basic model.
      * @param result The basic result.
      * @return The modified result (may also be a new instance or an instance of a subclass).
      */
-    TResultOutput modifyResult(TResultInput result);
+    TResultOutput modifyResult(TModel model, TResultInput result);
 }

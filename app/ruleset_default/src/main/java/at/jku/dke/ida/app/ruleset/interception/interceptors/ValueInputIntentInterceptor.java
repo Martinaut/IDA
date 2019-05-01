@@ -1,7 +1,6 @@
 package at.jku.dke.ida.app.ruleset.interception.interceptors;
 
-import at.jku.dke.ida.app.nlp.drools.StringSimilarityService;
-import at.jku.dke.ida.app.nlp.models.StringSimilarityServiceModel;
+import at.jku.dke.ida.app.ruleset.helpers.UserInput;
 import at.jku.dke.ida.app.ruleset.interception.models.ValueInputIntentModel;
 import at.jku.dke.ida.data.models.Similarity;
 import at.jku.dke.ida.rules.interfaces.ValueIntentServiceModel;
@@ -13,6 +12,7 @@ import at.jku.dke.ida.shared.operations.Operation;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -32,6 +32,9 @@ public class ValueInputIntentInterceptor implements DetermineValueInputIntentInt
     @Override
     @SuppressWarnings("Duplicates") // TODO: remove duplicates in whole code
     public ValueIntentServiceModel modifyModel(ValueIntentServiceModel valueIntentServiceModel) {
+        // Only number?
+        if (UserInput.isNumber(valueIntentServiceModel.getUserInput()) || UserInput.isTwoNumberSelection(valueIntentServiceModel.getUserInput()))
+            return valueIntentServiceModel;
         if (!(valueIntentServiceModel.getDisplayData() instanceof ListDisplay)) return valueIntentServiceModel;
         // TODO: make also to work with other types (twolistdisplay)
 
@@ -39,17 +42,25 @@ public class ValueInputIntentInterceptor implements DetermineValueInputIntentInt
                 .getData().stream()
                 .map(x -> (Displayable) x)
                 .collect(Collectors.toSet());
-        possibleValues.add(new Operation(Event.EXIT, valueIntentServiceModel.getLocale(), 1));
 
-        // Build Model
-        StringSimilarityServiceModel model = new StringSimilarityServiceModel(
+        // Execute value string similarity
+        Set<Similarity<Displayable>> result = InterceptionHelper.computeValueStringSimilarities(
                 valueIntentServiceModel.getCurrentState(),
                 valueIntentServiceModel.getSessionModel(),
+                valueIntentServiceModel.getLocale(),
                 possibleValues
         );
 
-        // Execute
-        Set<Similarity<Displayable>> result = new StringSimilarityService().executeRules(model);
+        // execute operation string similarity
+        Set<Operation> possibleOperations = new HashSet<>();
+        possibleOperations.add(new Operation(Event.ABORT, valueIntentServiceModel.getLocale(), 1));
+        possibleOperations.add(new Operation(Event.EXIT, valueIntentServiceModel.getLocale(), 1));
+        result.addAll(InterceptionHelper.computeOperationStringSimilarities(
+                valueIntentServiceModel.getCurrentState(),
+                valueIntentServiceModel.getSessionModel(),
+                valueIntentServiceModel.getLocale(),
+                possibleOperations
+        ));
 
         // Return
         return new ValueInputIntentModel(

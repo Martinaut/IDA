@@ -49,4 +49,25 @@ public class DualDisplayableConfidenceResult extends GenericConfidenceResult<Pai
     public DualDisplayableConfidenceResult(Displayable valueLeft, Displayable valueRight, double confidence) {
         super(new ImmutablePair<>(valueLeft, valueRight), confidence);
     }
+
+    /**
+     * Instantiates a new instance of class {@link DualDisplayableConfidenceResult} with confidence 1.
+     *
+     * @param displayableDisplayablePair The value.
+     * @param term                       The term.
+     */
+    public DualDisplayableConfidenceResult(Pair<Displayable, Displayable> displayableDisplayablePair, String term) {
+        super(displayableDisplayablePair, term);
+    }
+
+    /**
+     * Instantiates a new instance of class {@link DualDisplayableConfidenceResult}.
+     *
+     * @param displayableDisplayablePair The value.
+     * @param confidence                 The confidence.
+     * @param term                       The term.
+     */
+    public DualDisplayableConfidenceResult(Pair<Displayable, Displayable> displayableDisplayablePair, double confidence, String term) {
+        super(displayableDisplayablePair, confidence, term);
+    }
 }

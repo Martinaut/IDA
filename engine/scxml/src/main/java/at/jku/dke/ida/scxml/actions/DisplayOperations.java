@@ -44,6 +44,18 @@ public class DisplayOperations extends BaseAction {
             if (ctxModel.getAnalysisSituation() instanceof NonComparativeAnalysisSituation && ctxModel.getAnalysisSituation().isCubeDefined()) {
                 String cube = ((NonComparativeAnalysisSituation) ctxModel.getAnalysisSituation()).getCube();
                 model = buildNonComparativeModel(ctxModel, cube);
+            } else {
+                model = new DefaultOperationDisplayServiceModel(
+                        getCurrentState(),
+                        ctxModel,
+                        Collections.emptyList(),
+                        Collections.emptyList(),
+                        Collections.emptyList(),
+                        GraphBuilder.directed().build(),
+                        GraphBuilder.directed().build(),
+                        Collections.emptySet(),
+                        Collections.emptyList()
+                );
             }
             // TODO: Non Comparative
         } catch (QueryException ex) {
@@ -60,7 +72,7 @@ public class DisplayOperations extends BaseAction {
         // Determine possible operations
         Collection<Operation> operations = new OperationDisplayService().executeRules(model);
         if (interceptor != null)
-            operations = interceptor.modifyResult(operations);
+            operations = interceptor.modifyResult(model, operations);
 
         // Send to display
         ctxModel.setDisplayData(new ListDisplay("selectOperation", ctxModel.getLocale(), List.copyOf(operations)));

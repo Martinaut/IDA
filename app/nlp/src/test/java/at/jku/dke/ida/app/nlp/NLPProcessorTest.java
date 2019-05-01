@@ -2,6 +2,7 @@ package at.jku.dke.ida.app.nlp;
 
 import edu.stanford.nlp.pipeline.CoreDocument;
 import edu.stanford.nlp.semgraph.SemanticGraph;
+import edu.stanford.nlp.semgraph.semgrex.SemgrexPattern;
 import edu.stanford.nlp.trees.Constituent;
 import edu.stanford.nlp.trees.LabeledScoredConstituentFactory;
 import edu.stanford.nlp.trees.Tree;
@@ -16,11 +17,18 @@ public class NLPProcessorTest {
 
     @Test
     void testAnnotate() {
-        String pattern = "NP < (/NN.?/=A [!$+ CC & !$+ /NN.?/ & !$- /NN.?/])";
-        TregexPattern.compile(pattern);
-        CoreDocument doc = NLPProcessor.annotate("en", "Show me the total costs per insurant and doctor district.");
+//        String pattern = "NP < (/NN.?/=A [!$+ CC & !$+ /NN.?/ & !$- /NN.?/])";
+//        TregexPattern.compile(pattern);
+//        CoreDocument doc = NLPProcessor.annotate("en", "Show me the total costs per insurant and doctor district.");
+//        System.out.println(doc.sentences().get(0).constituencyParse());
+//        NLPProcessor.executeTregex(doc, pattern);
+
+
+        String pattern = "{}=A >/nmod.*/ {}=C :  {}=C >case {}=B";
+        SemgrexPattern.compile(pattern);
+        CoreDocument doc = NLPProcessor.annotate("en", "Add the measure sum of costs.");
         System.out.println(doc.sentences().get(0).constituencyParse());
-        NLPProcessor.executeTregex(doc, pattern);
+        NLPProcessor.executeSemgrex(doc, pattern);
 
         //NLPProcessor.executeTregex(doc, "NP < /NN.?/=A");
         //NLPProcessor.executeTregex(doc, "/NN.?/=A $+ /NN.?/=B");
@@ -40,7 +48,8 @@ public class NLPProcessorTest {
 
     @Test
     void testAnnotateEnglish() {
-        CoreDocument doc = NLPProcessor.annotate("en", "I am interested in the total sale numbers per year and customer.");
+        // CoreDocument doc = NLPProcessor.annotate("en", "I am interested in the total sale numbers per year and customer.");
+        CoreDocument doc = NLPProcessor.annotate("en", "Add the measure sum of costs.");
 
         // list of the part-of-speech tags for the second sentence
         List<String> posTags = doc.sentences().get(0).posTags();

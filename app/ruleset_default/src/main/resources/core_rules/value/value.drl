@@ -53,22 +53,11 @@ then
 end
 // TODO twolist similarity??
 
-rule "Invalid Value Similarity"
+rule "Invalid Value"
     agenda-group "value-determination"
-    salience 3
+    salience -1
 when
-    $model : ValueModel(topSimilarity == null)
-    not ConfidenceResult()
-then
-    insert(new EventConfidenceResult(Event.INVALID_INPUT, 1.0));
-end
-
-rule "Invalid Value Number - ListDisplay"
-    agenda-group "value-determination"
-    salience 2
-when
-    $display : Display()
-    $model : ValueServiceModel(displayData == $display)
+    $model : ValueModel()
     not ConfidenceResult()
 then
     insert(new EventConfidenceResult(Event.INVALID_INPUT, 1.0));

@@ -49,7 +49,7 @@ public class DetermineOperation extends BaseAction {
         // Determine possible events
         Collection<EventConfidenceResult> operations = new OperationService().executeRules(model);
         if (interceptor != null)
-            ctxModel.setOperation(interceptor.modifyResult(operations));
+            ctxModel.setOperation(interceptor.modifyResult(model, operations));
         else
             ctxModel.setOperation(operations.stream().sorted()
                     .findFirst().orElse(new EventConfidenceResult(Event.INVALID_INPUT)).getValue());

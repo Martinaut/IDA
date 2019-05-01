@@ -12,7 +12,7 @@ import java.util.Collection;
  */
 public interface DetermineValueInterceptor extends Interceptor<ValueServiceModel, Collection<ConfidenceResult>, ConfidenceResult> {
     @Override
-    default ConfidenceResult modifyResult(Collection<ConfidenceResult> result) {
+    default ConfidenceResult modifyResult(ValueServiceModel model, Collection<ConfidenceResult> result) {
         return result.stream()
                 .sorted()
                 .findFirst().orElse(new EventConfidenceResult(Event.INVALID_INPUT));

@@ -7,13 +7,24 @@ import at.jku.dke.ida.app.nlp.models.WordGroup
 import at.jku.dke.ida.data.models.CubeSimilarity
 
 // ------------------------------------ RULES ---------------------------------------
-rule "CubeSimilarity EN - Word Similarity"
+rule "CubeSimilarity EN - Word Similarity for all Cubes"
     agenda-group "graphdb-similarity"
 when
-    $model : GraphDBSimilarityServiceModel(language == "en")
+    $model : GraphDBSimilarityServiceModel(language == "en", cube == null)
     $wordGroup : WordGroup()
 then
     for (CubeSimilarity s : SimilarityHelper.getGraphDbEnglishWordSimilarities($wordGroup)) {
+        insert(s);
+    }
+end
+
+rule "CubeSimilarity EN - Word Similarity for specific Cubes"
+    agenda-group "graphdb-similarity"
+when
+    $model : GraphDBSimilarityServiceModel(language == "en", cube != null)
+    $wordGroup : WordGroup()
+then
+    for (CubeSimilarity s : SimilarityHelper.getGraphDbEnglishWordSimilarities($wordGroup, $model.getCube())) {
         insert(s);
     }
 end

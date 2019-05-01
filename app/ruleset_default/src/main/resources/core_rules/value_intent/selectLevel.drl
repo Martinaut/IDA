@@ -42,6 +42,8 @@ when
                                    additionalDataContainsKey(Constants.ADD_DATA_DIMENSION),
                                    additionalDataContainsKey(Constants.ADD_DATA_LEVEL) == false)
     eval($model.getOperation() == Event.NAVIGATE_DICE_NODE_MOVE_DOWN)
+    eval($model.getTopSimilarity().getElement().getDisplayableId() != Event.EXIT.getEventName() &&
+         $model.getTopSimilarity().getElement().getDisplayableId() != Event.ABORT.getEventName())
 then
     $model.addAdditionalData(Constants.ADD_DATA_LEVEL, $model.getTopSimilarity().getElement().getDisplayableId());
     insert(new EventConfidenceResult(Event.MORE_INFORMATION, $model.getTopSimilarity().getScore()));
@@ -74,6 +76,8 @@ when
                                    additionalDataContainsKey(Constants.ADD_DATA_DIMENSION),
                                    additionalDataContainsKey(Constants.ADD_DATA_LEVEL))
     eval($model.getOperation() == Event.NAVIGATE_DICE_NODE_MOVE_DOWN)
+    eval($model.getTopSimilarity().getElement().getDisplayableId() != Event.EXIT.getEventName() &&
+         $model.getTopSimilarity().getElement().getDisplayableId() != Event.ABORT.getEventName())
 then
     $model.removeAdditionalData(Constants.ADD_DATA_DIMENSION);
     $model.removeAdditionalData(Constants.ADD_DATA_LEVEL);

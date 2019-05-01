@@ -30,6 +30,7 @@ WHERE {
         }
     }
     BIND((?score1 * ?score2) AS ?score)
+    FILTER (?cube = <###CUBE###>)
 }
 GROUP BY ?cube ?dimension ?element ?type
 ORDER BY DESC(?score)

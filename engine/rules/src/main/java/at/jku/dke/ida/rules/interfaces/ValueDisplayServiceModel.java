@@ -63,4 +63,12 @@ public interface ValueDisplayServiceModel extends ServiceModel {
      */
     LevelMemberRepository getLevelMemberRepository();
 
+    /**
+     * A flag whether to skip displaying the values and to go directly to "DeterminingValueInputIntent".
+     *
+     * @return {@code true} if display values should be skipped; {@code false otherwise}.
+     */
+    default boolean skipValueDisplay() {
+        return false;
+    }
 }

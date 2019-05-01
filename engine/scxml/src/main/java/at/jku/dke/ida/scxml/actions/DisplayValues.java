@@ -6,9 +6,11 @@ import at.jku.dke.ida.rules.models.DefaultValueDisplayServiceModel;
 import at.jku.dke.ida.rules.services.ValueDisplayService;
 import at.jku.dke.ida.scxml.interceptors.DisplayValuesInterceptor;
 import at.jku.dke.ida.scxml.session.SessionContextModel;
+import at.jku.dke.ida.shared.Event;
 import at.jku.dke.ida.shared.display.Display;
 import at.jku.dke.ida.shared.spring.BeanUtil;
 import org.apache.commons.scxml2.ActionExecutionContext;
+import org.apache.commons.scxml2.TriggerEvent;
 import org.apache.commons.scxml2.model.ModelException;
 
 /**
@@ -44,9 +46,14 @@ public class DisplayValues extends BaseAction {
         // Determine display data
         Display display = new ValueDisplayService().executeRules(model);
         if (interceptor != null)
-            display = interceptor.modifyResult(display);
+            display = interceptor.modifyResult(model, display);
 
-        // Send to display
-        ctxModel.setDisplayData(display);
+        // Display
+        if (model.skipValueDisplay()) {
+            ctxModel.setDisplayDataWithoutEvent(display);
+            ctx.getInternalIOProcessor().addEvent(new TriggerEvent(Event.USER_INPUT.getEventName(), TriggerEvent.SIGNAL_EVENT));
+        } else {
+            ctxModel.setDisplayData(display);
+        }
     }
 }

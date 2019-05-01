@@ -7,7 +7,7 @@ import at.jku.dke.ida.rules.interfaces.SetValueServiceModel;
  */
 public interface SetValueInterceptor extends Interceptor<SetValueServiceModel, Void, Void> {
     @Override
-    default Void modifyResult(Void result) {
+    default Void modifyResult(SetValueServiceModel model, Void result) {
         return null;
     }
 }

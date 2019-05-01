@@ -41,7 +41,7 @@ public class DetermineValueInputIntent extends BaseAction {
         Event operation;
         Collection<EventConfidenceResult> operations = new ValueIntentService().executeRules(model);
         if (interceptor != null)
-            operation = interceptor.modifyResult(operations);
+            operation = interceptor.modifyResult(model, operations);
         else
             operation = operations.stream().sorted()
                     .findFirst().orElse(new EventConfidenceResult(Event.INVALID_INPUT)).getValue();

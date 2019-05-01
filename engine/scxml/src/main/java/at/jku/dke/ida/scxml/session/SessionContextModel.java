@@ -86,6 +86,15 @@ public class SessionContextModel extends SessionModel {
     }
 
     /**
+     * Sets the display data and does NOT trigger an event.
+     *
+     * @param displayData the display data
+     */
+    public void setDisplayDataWithoutEvent(Display displayData) {
+        super.setDisplayData(displayData);
+    }
+
+    /**
      * Sets the query result and triggers an event if a listener is registered.
      *
      * @param queryResult the query result

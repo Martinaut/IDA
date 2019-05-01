@@ -1,6 +1,7 @@
 package at.jku.dke.ida.app.nlp.models;
 
 import at.jku.dke.ida.rules.models.AbstractServiceModel;
+import at.jku.dke.ida.shared.Event;
 import at.jku.dke.ida.shared.models.EngineAnalysisSituation;
 import at.jku.dke.ida.shared.session.SessionModel;
 
@@ -13,6 +14,7 @@ import java.util.Set;
  */
 public class GraphDBSimilarityServiceModel extends AbstractServiceModel {
 
+    private final String cube;
     private final Set<WordGroup> wordGroups;
 
     /**
@@ -25,6 +27,7 @@ public class GraphDBSimilarityServiceModel extends AbstractServiceModel {
     public GraphDBSimilarityServiceModel(SessionModel sessionModel, Set<WordGroup> wordGroups) {
         super("NONE", sessionModel);
         this.wordGroups = Collections.unmodifiableSet(wordGroups);
+        this.cube = null;
     }
 
     /**
@@ -39,6 +42,39 @@ public class GraphDBSimilarityServiceModel extends AbstractServiceModel {
     public GraphDBSimilarityServiceModel(Locale locale, EngineAnalysisSituation analysisSituation, SessionModel sessionModel, Set<WordGroup> wordGroups) {
         super("NONE", locale, analysisSituation, null, sessionModel);
         this.wordGroups = Collections.unmodifiableSet(wordGroups);
+        this.cube = null;
+    }
+
+    /**
+     * Instantiates a new instance of class {@link GraphDBSimilarityServiceModel}.
+     *
+     * @param sessionModel The session model.
+     * @param wordGroups   The word groups.
+     * @param cube         The cube for which to load the similarities.
+     * @throws IllegalArgumentException If the any of the parameters is {@code null} or empty.
+     */
+    public GraphDBSimilarityServiceModel(SessionModel sessionModel, Set<WordGroup> wordGroups, String cube) {
+        super("NONE", sessionModel);
+        this.cube = cube;
+        this.wordGroups = wordGroups;
+    }
+
+    /**
+     * Instantiates a new instance of class {@link GraphDBSimilarityServiceModel}.
+     *
+     * @param locale            The display locale.
+     * @param analysisSituation The analysis situation.
+     * @param operation         The operation the user wants to perform.
+     * @param sessionModel      The session model.
+     * @param wordGroups        The word groups.
+     * @param cube              The cube for which to load the similarities.
+     * @throws IllegalArgumentException If the any of the parameters (except {@code locale} and {@code operation}) is {@code null} or empty.
+     */
+    public GraphDBSimilarityServiceModel(Locale locale, EngineAnalysisSituation analysisSituation,
+                                         Event operation, SessionModel sessionModel, Set<WordGroup> wordGroups, String cube) {
+        super("NONE", locale, analysisSituation, operation, sessionModel);
+        this.cube = cube;
+        this.wordGroups = wordGroups;
     }
 
     /**
@@ -48,5 +84,14 @@ public class GraphDBSimilarityServiceModel extends AbstractServiceModel {
      */
     public Set<WordGroup> getWordGroups() {
         return wordGroups;
+    }
+
+    /**
+     * Gets the cube for which to load the similarities.
+     *
+     * @return the cube
+     */
+    public String getCube() {
+        return cube;
     }
 }
