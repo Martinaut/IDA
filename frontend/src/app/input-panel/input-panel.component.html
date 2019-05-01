@@ -3,7 +3,7 @@
     <h6 class="m-0 font-weight-bold text-primary" [translate]="'input.title'">Your Input</h6>
   </div>
   <div class="card-body">
-    <div class="input-group">
+    <div class="input-group" [hidden]="showReviseQueryBtn">
       <input type="text" placeholder="{{ 'input.placeholder' | translate }}" class="form-control" name="idaInput"
              [ngClass]="{'is-invalid': inputError}" #input
              [(ngModel)]="userInput" (keyup.enter)="inputFieldEnterPressed()" [disabled]="waitingForResult">
@@ -17,9 +17,16 @@
     </div>
     <span class="text-danger" *ngIf="inputError" [translate]="'input.validation'">Please enter a text before sending the message.</span>
 
-    <button class="btn btn-primary text-uppercase btn-block mt-3" (click)="sendMessage()" [disabled]="waitingForResult">
-      <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" [hidden]="!waitingForResult"></span>
+    <button class="btn btn-primary text-uppercase btn-block mt-3" (click)="sendMessage()" [disabled]="waitingForResult"
+            *ngIf="!showReviseQueryBtn">
+      <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"
+            [hidden]="!waitingForResult"></span>
       {{ 'input.send' | translate }}
+    </button>
+
+    <button class="btn btn-primary text-uppercase btn-block mt-3" (click)="reviseQuery()" [disabled]="waitingForResult"
+            *ngIf="showReviseQueryBtn">
+      {{ 'input.reviseQuery' | translate }}
     </button>
   </div>
 </div>

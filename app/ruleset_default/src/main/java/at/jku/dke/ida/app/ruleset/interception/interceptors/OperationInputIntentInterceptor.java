@@ -29,7 +29,7 @@ public class OperationInputIntentInterceptor implements DetermineOperationInputI
                 operationIntentServiceModel.getSessionModel(),
                 operationIntentServiceModel.getLocale(),
                 operationIntentServiceModel.getPossibleOperations().values()
-        ); // TODO: das wird ja nur benötigt, um herauszufinden ob er executeQuery oder Navigate gehen will, alle anderen similarities sind ja eigentlich unwichtig
+        );
 
         // Return
         return new OperationInputIntentModel(

@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Client, IFrame, IMessage, StompSubscription } from '@stomp/stompjs';
 import { Observable, Subject } from 'rxjs';
+import { TranslateService } from '@ngx-translate/core';
 
 /**
  * A service that manages the websocket connection.
@@ -25,7 +26,7 @@ export class ConnectionService {
   /**
    * Initializes a new instance of class ConnectionService.
    */
-  constructor() {
+  constructor(private translateService: TranslateService) {
     this.client = null;
     this.initialData = {
       locale: 'en',
@@ -73,6 +74,7 @@ export class ConnectionService {
   get resultMessageReceived(): Observable<string> {
     return this.resultMessageReceivedSource.asObservable();
   }
+
   // endregion
 
   /**
@@ -96,6 +98,26 @@ export class ConnectionService {
         destination: '/app/input',
         body: bodyData
       });
+    }
+  }
+
+  /**
+   * Sends a revise query message to the server.
+   */
+  sendReviseQuery(): void {
+    if (this.client == null) {
+      throw new Error('Client not initialized.');
+    }
+
+    if (!this.isConnected()) {
+      throw new Error('Not connected.');
+    } else {
+      console.log('>>> SEND REVISE QUERY MESSAGE');
+
+      this.client.publish({
+        destination: '/app/reviseQuery'
+      });
+      this.resultMessageReceivedSource.next(null);
     }
   }
 
@@ -199,5 +221,7 @@ export class ConnectionService {
   private onResultMessage(msg: IMessage) {
     console.log('<<< RESULT MESSAGE RECEIVED \r\n' + msg.body);
     this.resultMessageReceivedSource.next(msg.body);
+    this.displayMessageReceivedSource.next('{"type":"MessageDisplay","display":{"displayMessage":"' +
+      this.translateService.instant('result.resultMessage') + '"}}');
   }
 }

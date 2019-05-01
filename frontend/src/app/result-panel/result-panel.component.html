@@ -1,5 +1,5 @@
 <div class="card shadow mb-4" *ngIf="sorted != null">
-  <div class="card-body">
+  <div class="card-body" #resultTable>
     <h4 class="p-3 text-white bg-dark text-center" [translate]="'result.title'">Result</h4>
     <div class="table-responsive">
       <table class="table table-striped" *ngIf="sorted.length > 1">

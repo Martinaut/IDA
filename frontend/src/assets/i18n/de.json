@@ -28,6 +28,7 @@
 		"placeholder": "Frag mich etwas ...",
 		"send": "SENDEN",
 		"title": "Ihre Eingabe",
+    "reviseQuery": "Abfrage überarbeiten",
 		"validation": "Bitte geben Sie einen Text ein, bevor Sie die Nachricht versenden."
 	},
 	"display": {
@@ -54,6 +55,7 @@
     "false": "Nein"
 	},
   "result": {
-    "title": "Ergebnis"
+    "title": "Ergebnis",
+    "resultMessage": "Hier ist das Ergebnis."
   }
 }

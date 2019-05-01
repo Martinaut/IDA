@@ -172,4 +172,40 @@ public final class SessionManager {
             throw new StateMachineExecutionException("The triggered event left the engine in inconsistent state.", ex);
         }
     }
+
+    /**
+     * Triggers a revise query event.
+     *
+     * @param sessionId The session id.
+     * @throws StateMachineExecutionException If an error occurred while executing a state machine.
+     * @throws SessionExpiredException        If the state chart session does not exist or is already expired (or state chart has finished).
+     * @see Event#REVISE_QUERY
+     */
+    public void triggerReviseQuery(String sessionId) throws StateMachineExecutionException, SessionExpiredException {
+        if (StringUtils.isBlank(sessionId)) throw new IllegalArgumentException("sessionId must not be null empty");
+
+        LOGGER.info("Triggering revise query for session {}.", sessionId);
+
+        // Get session
+        Session session = getSession(sessionId);
+        if (session == null) {
+            LOGGER.warn("Cannot trigger revise query: Session {} does not exist.", sessionId);
+            throw new SessionExpiredException("There exists no session with id " + sessionId);
+        }
+
+        // Is already finished?
+        if (session.isInFinalState()) {
+            LOGGER.warn("Cannot trigger revise query: Session {} already expired.", sessionId);
+            deleteSession(sessionId);
+            throw new SessionExpiredException("Session with id " + sessionId + " already expired.");
+        }
+
+        // Trigger event
+        try {
+            session.triggerReviseQuery();
+        } catch (ModelException ex) {
+            LOGGER.error("An error occurred while triggering the revise query event for session {}.", sessionId);
+            throw new StateMachineExecutionException("The triggered event left the engine in inconsistent state.", ex);
+        }
+    }
 }

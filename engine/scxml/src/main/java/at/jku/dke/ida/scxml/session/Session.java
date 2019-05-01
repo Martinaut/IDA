@@ -86,6 +86,18 @@ public class Session {
     }
 
     /**
+     * Trigger the revise query event.
+     *
+     * @throws ModelException           If an error occurred while triggering an event.
+     * @throws IllegalArgumentException If {@code userInput} is {@code null}.
+     * @see Event#REVISE_QUERY
+     */
+    public void triggerReviseQuery() throws ModelException {
+        LOGGER.info("Triggering refine query event.");
+        executor.triggerEvent(new TriggerEvent(Event.REVISE_QUERY.getEventName(), TriggerEvent.SIGNAL_EVENT));
+    }
+
+    /**
      * Sets a flag whether the cube is already selected.
      * <p>
      * This flag is only used once on initialization of the state machine. The default value is {@code false}.

@@ -44,9 +44,9 @@ public class ExecuteQuery extends BaseAction {
         ctxModel.setQueryResult(csv);
 
         // Build operations list
-        List<Displayable> ops = new ArrayList<>(2);
-        ops.add(new Operation(Event.REVISE_QUERY, ctxModel.getLocale(), 1));
-        ops.add(new Operation(Event.EXIT, ctxModel.getLocale(), 2));
-        ctxModel.setDisplayData(new ListDisplay("selectOperation", ctxModel.getLocale(), ops));
+//        List<Displayable> ops = new ArrayList<>(2);
+//        ops.add(new Operation(Event.REVISE_QUERY, ctxModel.getLocale(), 1));
+//        ops.add(new Operation(Event.EXIT, ctxModel.getLocale(), 2));
+//        ctxModel.setDisplayData(new ListDisplay("selectOperation", ctxModel.getLocale(), ops));
     }
 }

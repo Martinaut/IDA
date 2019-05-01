@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, QueryList, ViewChildren } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import * as Papa from 'papaparse';
 import { ConnectionService } from '../services';
 import { Subscription } from 'rxjs';
@@ -13,6 +13,7 @@ import { SortableColumnComponent } from './sortable-column.component';
 })
 export class ResultPanelComponent implements OnInit, OnDestroy {
 
+  private resultTableElement: ElementRef;
   private sub: Subscription;
   parsed: Array<any>;
   sorted: Array<any>;
@@ -39,6 +40,12 @@ export class ResultPanelComponent implements OnInit, OnDestroy {
         const pr = Papa.parse(value, {});
         this.parsed = pr.data;
         this.sorted = pr.data;
+
+        setTimeout(() => {
+          if (this.resultTableElement && this.resultTableElement.nativeElement) {
+            this.resultTableElement.nativeElement.scrollIntoView({left: 0, block: 'start', behavior: 'smooth'});
+          }
+        }, 500);
       }
     });
   }
@@ -76,5 +83,10 @@ export class ResultPanelComponent implements OnInit, OnDestroy {
       });
       this.sorted = this.parsed.slice(0, 1).concat(tmp);
     }
+  }
+
+
+  @ViewChild('resultTable') set resultTable(element: ElementRef) {
+    this.resultTableElement = element;
   }
 }

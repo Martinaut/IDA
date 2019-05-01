@@ -28,6 +28,7 @@
 		"placeholder": "Ask me something ...",
 		"send": "SEND",
 		"title": "Your Input",
+    "reviseQuery": "Revise Query",
 		"validation": "Please enter a text before sending the message."
 	},
 	"display": {
@@ -54,6 +55,7 @@
     "false": "No"
 	},
   "result": {
-    "title": "Result"
+    "title": "Result",
+    "resultMessage": "Here is the result."
   }
 }

@@ -47,7 +47,7 @@ public class WebsocketController {
      * @param message        The message.
      * @param headerAccessor The header accessor used to get the session id.
      * @throws StateMachineInstantiationException If the state machine could not be instantiated.
-     * @throws SessionExpiredException If the session does not exist (This should never happen).
+     * @throws SessionExpiredException            If the session does not exist (This should never happen).
      */
     @MessageMapping("/start")
     public void start(@Payload StartDialogMessage message, SimpMessageHeaderAccessor headerAccessor) throws StateMachineInstantiationException, SessionExpiredException {
@@ -76,6 +76,19 @@ public class WebsocketController {
     public void userInput(@Payload InputMessage message, SimpMessageHeaderAccessor headerAccessor) throws StateMachineExecutionException, SessionExpiredException {
         LOGGER.info("{} - Input message received", headerAccessor.getSessionId());
         SessionManager.getInstance().triggerUserInput(headerAccessor.getSessionId(), message.getUserInput());
+    }
+
+    /**
+     * Triggers a revise query event on the state machine of the current session.
+     *
+     * @param headerAccessor The header accessor used to get the session id.
+     * @throws StateMachineExecutionException If an error occurred while executing a state machine.
+     * @throws SessionExpiredException        If the session does not exist (This should never happen).
+     */
+    @MessageMapping("/reviseQuery")
+    public void reviseQuery(SimpMessageHeaderAccessor headerAccessor) throws StateMachineExecutionException, SessionExpiredException {
+        LOGGER.info("{} - Revise query message received", headerAccessor.getSessionId());
+        SessionManager.getInstance().triggerReviseQuery(headerAccessor.getSessionId());
     }
 
     // region --- Exception Handlers ---

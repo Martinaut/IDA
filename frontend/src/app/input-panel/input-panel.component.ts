@@ -12,6 +12,7 @@ import { ConnectionService, SpeechToTextService, TextToSpeechService } from '../
 export class InputPanelComponent implements OnInit, OnDestroy {
 
   private connSub: Subscription;
+  private dispSub: Subscription;
   private resSub: Subscription;
 
   private speechStartSub: Subscription;
@@ -21,6 +22,7 @@ export class InputPanelComponent implements OnInit, OnDestroy {
   connected: boolean;
   waitingForResult: boolean;
   inputError: boolean;
+  showReviseQueryBtn: boolean;
 
   sttSupported: boolean;
   recording: boolean;
@@ -40,6 +42,7 @@ export class InputPanelComponent implements OnInit, OnDestroy {
     this.inputError = false;
     this.sttSupported = false;
     this.recording = false;
+    this.showReviseQueryBtn = false;
   }
 
   /**
@@ -53,6 +56,7 @@ export class InputPanelComponent implements OnInit, OnDestroy {
     this.inputError = false;
     this.waitingForResult = true;
     this.tts.stop();
+    this.stt.stop();
     this.connectionService.sendMessage(this.userInput);
   }
 
@@ -67,23 +71,31 @@ export class InputPanelComponent implements OnInit, OnDestroy {
         this.stt.stop();
       }
     });
-    this.resSub = this.connectionService.displayMessageReceived.subscribe(value => {
+    this.dispSub = this.connectionService.displayMessageReceived.subscribe(value => {
       this.waitingForResult = false;
       this.userInput = null;
 
       if (value != null && JSON.parse(value).type === 'ExitDisplay') {
         this.connectionService.disconnect();
       } else {
-        setTimeout(() => {
-          console.log('displays received');
-          this.inputField.nativeElement.focus();
+        if (!this.showReviseQueryBtn) {
+          setTimeout(() => {
+            this.inputField.nativeElement.focus();
 
-          if (this.stt.autoStart) {
-            this.stt.start();
-          }
-        }, 100);
+            if (this.stt.autoStart) {
+              this.stt.start();
+            }
+          }, 100);
+        }
       }
     });
+    this.resSub = this.connectionService.resultMessageReceived.subscribe(value => {
+      if (value != null && value.trim().length > 0) {
+        this.showReviseQueryBtn = true;
+        this.stt.stop();
+      }
+    });
+
     this.speechStartSub = this.stt.started.subscribe(value => {
       this.recording = true;
       this.changeDetector.detectChanges();
@@ -109,17 +121,20 @@ export class InputPanelComponent implements OnInit, OnDestroy {
     if (this.connSub) {
       this.connSub.unsubscribe();
     }
+    if (this.dispSub) {
+      this.dispSub.unsubscribe();
+    }
     if (this.resSub) {
       this.resSub.unsubscribe();
     }
     if (this.speechStartSub) {
-      this.resSub.unsubscribe();
+      this.dispSub.unsubscribe();
     }
     if (this.speechEndSub) {
-      this.resSub.unsubscribe();
+      this.dispSub.unsubscribe();
     }
     if (this.speechResultSub) {
-      this.resSub.unsubscribe();
+      this.dispSub.unsubscribe();
     }
   }
 
@@ -139,5 +154,15 @@ export class InputPanelComponent implements OnInit, OnDestroy {
     } else {
       this.stt.start();
     }
+  }
+
+  /**
+   * The user clicked the revise query button.
+   */
+  reviseQuery(): void {
+    this.waitingForResult = true;
+    this.tts.stop();
+    this.connectionService.sendReviseQuery();
+    this.showReviseQueryBtn = false;
   }
 }
