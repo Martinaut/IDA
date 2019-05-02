@@ -2,7 +2,9 @@ package at.jku.dke.ida.rules.models;
 
 import at.jku.dke.ida.rules.interfaces.ServiceModel;
 import at.jku.dke.ida.shared.Event;
+import at.jku.dke.ida.shared.models.ComparativeAnalysisSituation;
 import at.jku.dke.ida.shared.models.EngineAnalysisSituation;
+import at.jku.dke.ida.shared.operations.Pattern;
 import at.jku.dke.ida.shared.session.SessionModel;
 
 import java.util.*;
@@ -81,6 +83,14 @@ public abstract class AbstractServiceModel implements ServiceModel {
     }
 
     @Override
+    public ComparativeAnalysisSituation getComparativeAnalysisSituation() {
+        if (additionalDataContainsKey(Pattern.ADD_DATA_COMPARATIVE)) {
+            return getAdditionalData(Pattern.ADD_DATA_COMPARATIVE, ComparativeAnalysisSituation.class);
+        }
+        return null;
+    }
+
+    @Override
     public Event getOperation() {
         return operation;
     }
@@ -102,10 +112,7 @@ public abstract class AbstractServiceModel implements ServiceModel {
 
     @Override
     public <T> T getAdditionalData(String key, Class<T> clazz) {
-        Object value = sessionModel.getAdditionalData().get(key);
-        if (value == null) return null;
-        if (!clazz.isAssignableFrom(value.getClass())) return null;
-        return clazz.cast(value);
+        return sessionModel.getAdditionalData(key, clazz);
     }
 
     @Override

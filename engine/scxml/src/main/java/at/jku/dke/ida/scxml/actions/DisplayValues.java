@@ -49,6 +49,10 @@ public class DisplayValues extends BaseAction {
             display = interceptor.modifyResult(model, display);
 
         // Display
+        if (display == null) {
+            ctx.getInternalIOProcessor().addEvent(new TriggerEvent(Event.ABORT.getEventName(), TriggerEvent.SIGNAL_EVENT));
+            return;
+        }
         if (model.skipValueDisplay()) {
             ctxModel.setDisplayDataWithoutEvent(display);
             ctx.getInternalIOProcessor().addEvent(new TriggerEvent(Event.USER_INPUT.getEventName(), TriggerEvent.SIGNAL_EVENT));

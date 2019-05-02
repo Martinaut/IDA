@@ -38,6 +38,8 @@ public class ValueInterceptor implements DetermineValueInterceptor {
         // Only number?
         if (UserInput.isNumber(valueServiceModel.getUserInput()) || UserInput.isTwoNumberSelection(valueServiceModel.getUserInput()))
             return valueServiceModel;
+        if (valueServiceModel.getUserInput() == null || valueServiceModel.getUserInput().isBlank())
+            return valueServiceModel;
 
         // Possible Values
         Collection<Displayable> possibleValues = getPossibleValues(valueServiceModel.getDisplayData());

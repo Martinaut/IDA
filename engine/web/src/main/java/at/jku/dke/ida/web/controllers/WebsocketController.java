@@ -28,17 +28,11 @@ public class WebsocketController {
 
     private static final Logger LOGGER = LogManager.getLogger(WebsocketController.class);
 
-    private final InitialSentenceHandler sentenceHandler;
-
     /**
      * Instantiates a new instance of class {@linkplain WebsocketController}.
-     *
-     * @param sentenceHandler The sentence handler.
      */
-    @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
     @Autowired
-    public WebsocketController(Optional<InitialSentenceHandler> sentenceHandler) {
-        this.sentenceHandler = sentenceHandler.orElse(null);
+    public WebsocketController() {
     }
 
     /**
@@ -53,13 +47,6 @@ public class WebsocketController {
     public void start(@Payload StartDialogMessage message, SimpMessageHeaderAccessor headerAccessor) throws StateMachineInstantiationException, SessionExpiredException {
         LOGGER.info("{} - Start message received", headerAccessor.getSessionId());
         SessionManager.getInstance().createSession(headerAccessor.getSessionId(), message.getLocale());
-        if (!StringUtils.isBlank(message.getInitialSentence()) && sentenceHandler != null) {
-            Session session = SessionManager.getInstance().getSession(headerAccessor.getSessionId());
-            if (session != null) // This should be always the case
-                sentenceHandler.parseSentence(session.getSessionContextModel(), message.getInitialSentence());
-            else
-                throw new SessionExpiredException("Session " + headerAccessor.getSessionId() + " does not exist.");
-        }
         SessionManager.getInstance().initiateStateMachine(headerAccessor.getSessionId());
     }
 
@@ -127,6 +114,18 @@ public class WebsocketController {
     public ErrorDisplay handleException(SessionExpiredException ex) {
         LOGGER.error("The state chart session does not exist or is already expired (or state chart has finished).", ex);
         return new ErrorDisplay(ResourceBundleHelper.getResourceString("web.ErrorMessages", "SessionExpired") + ex.getLocalizedMessage());
+    }
+
+    /**
+     * Handles {@link IllegalArgumentException}s.
+     *
+     * @param ex The exception.
+     * @return The error display with an error message.
+     */
+    @MessageExceptionHandler
+    public ErrorDisplay handleException(IllegalArgumentException ex) {
+        LOGGER.fatal("Illegal Argument Exception caught. This should not have happened.", ex);
+        return new ErrorDisplay(ResourceBundleHelper.getResourceString("web.ErrorMessages", "ExecuteStateMachine") + ex.getLocalizedMessage());
     }
     // endregion
 }

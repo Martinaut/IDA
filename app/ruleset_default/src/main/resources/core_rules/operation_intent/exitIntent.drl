@@ -10,16 +10,14 @@ import at.jku.dke.ida.app.ruleset.interception.models.OperationInputIntentModel
 // ------------------------------------ RULES ---------------------------------------
 rule "Exit Operation Intent - 'exit' keyword"
     agenda-group "operation-intent-determination"
-    salience 10
 when
     $model : OperationIntentServiceModel(UserInput.userInputContainsExitKeyword(locale, userInput))
 then
-    insert(new EventConfidenceResult(Event.EXIT, 0.4));
+    insert(new EventConfidenceResult(Event.EXIT, 0.41));
 end
 
 rule "Exit Operation Intent - 'exit' similarity"
     agenda-group "operation-intent-determination"
-    salience 10
 when
     $model : OperationInputIntentModel(topSimilarity != null && topSimilarity.getElement().getDisplayableId() == Event.EXIT)
 then
@@ -28,7 +26,6 @@ end
 
 rule "Exit Operation Intent - position"
     agenda-group "operation-intent-determination"
-    salience 10
 when
     $model : OperationInputIntentModel(UserInput.isNumber(userInput), possibleOperations.containsKey(UserInput.toInteger(userInput)), possibleOperations.get(UserInput.toInteger(userInput)).event == Event.EXIT)
 then

@@ -15,7 +15,7 @@ public class ComparativeAnalysisSituation extends GenericComparativeAnalysisSitu
      * Instantiates a new instance of class {@linkplain ComparativeAnalysisSituation}.
      */
     public ComparativeAnalysisSituation() {
-        super();
+        super(new NonComparativeAnalysisSituation(), new NonComparativeAnalysisSituation());
     }
 
     /**

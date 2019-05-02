@@ -3,7 +3,10 @@ package core_rules.operation_display
 // ------------------------- IMPORT ------------------------------
 import at.jku.dke.ida.shared.Event
 import at.jku.dke.ida.shared.models.AnalysisSituation
+import at.jku.dke.ida.shared.models.ComparativeAnalysisSituation
+import at.jku.dke.ida.shared.models.NonComparativeAnalysisSituation
 import at.jku.dke.ida.shared.operations.Operation
+import at.jku.dke.ida.shared.operations.Pattern
 import at.jku.dke.ida.rules.interfaces.OperationDisplayServiceModel
 
 // ------------------- GENERAL OPERATIONS ------------------------
@@ -28,11 +31,56 @@ then
     drools.halt();
 end
 
-rule "'Execute Query' - if there is already a selected cube"
+rule "'Execute Query' - if non-comparative executable"
     agenda-group "operation-display-determination"
 when
-    $as : AnalysisSituation(isExecutable() == true)
-    $model : OperationDisplayServiceModel(analysisSituation == $as)
+    $as : AnalysisSituation(isExecutable())
+    $model : OperationDisplayServiceModel(analysisSituation == $as, sessionModel.isComparativePattern() == false)
 then
     insert(new Operation(Event.EXECUTE_QUERY, $model.getLocale(), Integer.MAX_VALUE - 1));
+end
+
+rule "'Execute Query' - if comparative executable"
+    agenda-group "operation-display-determination"
+when
+    $as : ComparativeAnalysisSituation(isExecutable())
+    $model : OperationDisplayServiceModel(analysisSituation == $as, sessionModel.isComparativePattern())
+then
+    insert(new Operation(Event.EXECUTE_QUERY, $model.getLocale(), Integer.MAX_VALUE - 1));
+end
+
+rule "'Switch to SI' - if comparative and current executable"
+    agenda-group "operation-display-determination"
+when
+    $as : NonComparativeAnalysisSituation(isExecutable())
+    $model : OperationDisplayServiceModel(analysisSituation == $as,
+                                          sessionModel.isComparativePattern(),
+                                          sessionModel.getComparativeActiveAS() == Pattern.SC)
+then
+    insert(new Operation(Event.SWITCH_SI, $model.getLocale(), 500));
+end
+
+rule "'Switch to SC' - if comparative and current executable"
+    agenda-group "operation-display-determination"
+when
+    $as : NonComparativeAnalysisSituation(isExecutable())
+    $model : OperationDisplayServiceModel(analysisSituation == $as,
+                                          sessionModel.isComparativePattern(),
+                                          sessionModel.getComparativeActiveAS() == Pattern.SI)
+then
+    insert(new Operation(Event.SWITCH_SC, $model.getLocale(), 500));
+end
+
+rule "'Switch to comparative' - if comparative and both executable"
+    agenda-group "operation-display-determination"
+when
+    $as : NonComparativeAnalysisSituation()
+    $model : OperationDisplayServiceModel(analysisSituation == $as,
+                                          sessionModel.isComparativePattern(),
+                                          sessionModel.getComparativeActiveAS() == Pattern.SI || sessionModel.getComparativeActiveAS() == Pattern.SC,
+                                          comparativeAnalysisSituation!=null &&
+                                                comparativeAnalysisSituation.getContextOfInterest().isExecutable() &&
+                                                comparativeAnalysisSituation.getContextOfComparison().isExecutable())
+then
+    insert(new Operation(Event.SWITCH_COMP, $model.getLocale(), 501));
 end

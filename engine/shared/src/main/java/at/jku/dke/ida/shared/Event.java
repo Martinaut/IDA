@@ -38,6 +38,28 @@ public enum Event {
      */
     DETERMINED("determined"),
 
+    // region --- SWITCH ---
+    /**
+     * Used to switch the AS.
+     */
+    SWITCH("switch"),
+
+    /**
+     * Used to switch to the set of interest.
+     */
+    SWITCH_SI("switch.toSI"),
+
+    /**
+     * Used to switch to the set of comparison.
+     */
+    SWITCH_SC("switch.toSC"),
+
+    /**
+     * Used to switch to the comparative as.
+     */
+    SWITCH_COMP("switch.toComparative"),
+    // endregion
+
     // region --- QUERY ---
     /**
      * Used for transitions from "Executable" to "Executed".

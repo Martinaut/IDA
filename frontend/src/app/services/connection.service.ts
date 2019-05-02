@@ -29,8 +29,7 @@ export class ConnectionService {
   constructor(private translateService: TranslateService) {
     this.client = null;
     this.initialData = {
-      locale: 'en',
-      initialSentence: null
+      locale: 'en'
     };
   }
 
@@ -88,8 +87,7 @@ export class ConnectionService {
       throw new Error('Client not initialized.');
     }
     if (!this.isConnected()) {
-      this.initialData.initialSentence = input;
-      this.client.activate();
+      throw new Error('Client not connected.');
     } else {
       const bodyData = JSON.stringify({userInput: input});
       console.log('>>> SEND MESSAGE \r\n' + bodyData);
@@ -172,8 +170,7 @@ export class ConnectionService {
     }
 
     this.initialData = {
-      locale: language,
-      initialSentence: null
+      locale: language
     };
     this.client = new Client({
       brokerURL: url,
@@ -187,6 +184,8 @@ export class ConnectionService {
     this.displayMessageReceivedSource.next(null); // reset displays panel
     this.resultMessageReceivedSource.next(null); // reset result-panel panel
     this.initializedStateChangedSource.next(true);
+
+    this.client.activate();
   }
 
   private onConnected(frame: IFrame): void {

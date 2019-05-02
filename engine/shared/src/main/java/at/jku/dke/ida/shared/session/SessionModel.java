@@ -21,6 +21,7 @@ public class SessionModel {
     private final String sessionId;
     private final Locale locale;
 
+    private String comparativeActiveAS;
     private EngineAnalysisSituation analysisSituation;
     private Display displayData;
     private String queryResult;
@@ -43,9 +44,10 @@ public class SessionModel {
         this.sessionId = sessionId;
         this.locale = new Locale(locale);
 
-        this.analysisSituation = new NonComparativeAnalysisSituation();
+        this.analysisSituation = null;
         this.displayData = null;
         this.queryResult = null;
+        this.comparativeActiveAS = null;
 
         this.userInput = null;
         this.operation = Event.NAVIGATE_CUBE_SELECT;
@@ -180,4 +182,47 @@ public class SessionModel {
         this.additionalData = Objects.requireNonNullElseGet(additionalData, HashMap::new);
     }
 
+    /**
+     * Returns the value to which the specified key is mapped,
+     * or {@code null} if this map contains no mapping for the key.
+     *
+     * @param <T>   The type of the data to return. Tries to cast the value to this type.
+     * @param key   The key whose associated value is to be returned.
+     * @param clazz The type of the return type.
+     * @return The value to which the specified key is mapped,
+     * or {@code null} if the additional data contains no mapping for the key or if the value is not assignable to the specified class.
+     */
+    public <T> T getAdditionalData(String key, Class<T> clazz) {
+        Object value = getAdditionalData().get(key);
+        if (value == null) return null;
+        if (!clazz.isAssignableFrom(value.getClass())) return null;
+        return clazz.cast(value);
+    }
+
+    /**
+     * Returns whether the user wants to perform a comparison.
+     *
+     * @return {@code true} if use comparative pattern; {@code false} otherwise.
+     */
+    public boolean isComparativePattern() {
+        return comparativeActiveAS != null;
+    }
+
+    /**
+     * Gets the active analysis situation of the comparative AS to be edited.
+     *
+     * @return The active AS (returns {@code null} when using NonComparative AS).
+     */
+    public String getComparativeActiveAS() {
+        return comparativeActiveAS;
+    }
+
+    /**
+     * Sets the active analysis situation of the comparative AS to be edited.
+     *
+     * @param comparativeActiveAS The active AS.
+     */
+    public void setComparativeActiveAS(String comparativeActiveAS) {
+        this.comparativeActiveAS = comparativeActiveAS;
+    }
 }

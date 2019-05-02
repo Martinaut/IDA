@@ -10,16 +10,14 @@ import at.jku.dke.ida.app.ruleset.interception.models.OperationInputIntentModel
 // ------------------------------------ RULES ---------------------------------------
 rule "ExecuteQuery Intent - 'execute' keyword"
     agenda-group "operation-intent-determination"
-    salience 10
 when
     $model : OperationIntentServiceModel(UserInput.userInputContainsExecuteQueryKeyword(locale, userInput))
 then
-    insert(new EventConfidenceResult(Event.EXECUTE_QUERY, 0.4));
+    insert(new EventConfidenceResult(Event.EXECUTE_QUERY, 0.41));
 end
 
 rule "ExecuteQuery Intent - 'execute' similarity"
     agenda-group "operation-intent-determination"
-    salience 10
 when
     $model : OperationInputIntentModel(topSimilarity != null && topSimilarity.getElement().getDisplayableId() == Event.EXECUTE_QUERY)
 then
@@ -28,7 +26,6 @@ end
 
 rule "ExecuteQuery Intent - position"
     agenda-group "operation-intent-determination"
-    salience 10
 when
     $model : OperationInputIntentModel(UserInput.isNumber(userInput), possibleOperations.containsKey(UserInput.toInteger(userInput)), possibleOperations.get(UserInput.toInteger(userInput)).event == Event.EXECUTE_QUERY)
 then

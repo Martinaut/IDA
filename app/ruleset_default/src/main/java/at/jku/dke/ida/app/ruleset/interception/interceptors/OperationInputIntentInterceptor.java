@@ -3,7 +3,9 @@ package at.jku.dke.ida.app.ruleset.interception.interceptors;
 import at.jku.dke.ida.app.ruleset.interception.models.OperationInputIntentModel;
 import at.jku.dke.ida.data.models.Similarity;
 import at.jku.dke.ida.rules.interfaces.OperationIntentServiceModel;
+import at.jku.dke.ida.rules.results.EventConfidenceResult;
 import at.jku.dke.ida.scxml.interceptors.DetermineOperationInputIntentInterceptor;
+import at.jku.dke.ida.shared.Event;
 import at.jku.dke.ida.shared.display.Displayable;
 import at.jku.dke.ida.shared.operations.Operation;
 import org.springframework.stereotype.Service;
@@ -29,6 +31,9 @@ public class OperationInputIntentInterceptor implements DetermineOperationInputI
      */
     @Override
     public OperationIntentServiceModel modifyModel(OperationIntentServiceModel operationIntentServiceModel) {
+        if (operationIntentServiceModel.getUserInput() == null || operationIntentServiceModel.getUserInput().isBlank())
+            return operationIntentServiceModel;
+
         Collection<Operation> possibleOperations = new HashSet<>(operationIntentServiceModel.getPossibleOperations().values());
         possibleOperations.addAll(possibleOperations.stream()
                 .flatMap(o -> Arrays.stream(o.getEvent().getSynonyms(operationIntentServiceModel.getLocale()))
@@ -52,4 +57,14 @@ public class OperationInputIntentInterceptor implements DetermineOperationInputI
         );
     }
 
+    @Override
+    public Event modifyResult(OperationIntentServiceModel model, Collection<EventConfidenceResult> result) {
+        Event evt = DetermineOperationInputIntentInterceptor.super.modifyResult(model, result);
+
+        if (evt != Event.NAVIGATE && evt != Event.INVALID_INPUT) {
+            model.getSessionModel().setOperation(evt);
+        }
+
+        return evt;
+    }
 }

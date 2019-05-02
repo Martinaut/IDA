@@ -78,7 +78,7 @@ public class Session {
      * @see Event#USER_INPUT
      */
     public void triggerUserInputEvent(String userInput) throws ModelException {
-        if (userInput == null) throw new IllegalArgumentException("userInput must not be null");
+        // if (userInput == null) throw new IllegalArgumentException("userInput must not be null");
 
         LOGGER.info("Triggering user-input event.");
         sessionContextModel.setUserInput(userInput);
@@ -119,6 +119,7 @@ public class Session {
             executor.getStateMachine().getDatamodel().addData(data);
         }
         data.setExpr(Boolean.toString(set));
+        executor.getRootContext().set("cubeSelected", set);
 
         if (set)
             sessionContextModel.setOperation(null);

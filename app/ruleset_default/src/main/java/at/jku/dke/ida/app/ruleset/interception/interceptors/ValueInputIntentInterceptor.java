@@ -37,6 +37,8 @@ public class ValueInputIntentInterceptor implements DetermineValueInputIntentInt
         if (UserInput.isNumber(valueIntentServiceModel.getUserInput()) || UserInput.isTwoNumberSelection(valueIntentServiceModel.getUserInput()))
             return valueIntentServiceModel;
         if (!(valueIntentServiceModel.getDisplayData() instanceof ListDisplay)) return valueIntentServiceModel;
+        if (valueIntentServiceModel.getUserInput() == null || valueIntentServiceModel.getUserInput().isBlank())
+            return valueIntentServiceModel;
 
         Collection<Displayable> possibleValues = ((ListDisplay) valueIntentServiceModel.getDisplayData())
                 .getData().stream()
