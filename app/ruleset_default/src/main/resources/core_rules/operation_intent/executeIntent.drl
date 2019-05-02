@@ -12,7 +12,7 @@ rule "ExecuteQuery Intent - 'execute' keyword"
     agenda-group "operation-intent-determination"
     salience 10
 when
-    $model : OperationIntentServiceModel(UserInput.userInputContainsExitKeyword(locale, userInput))
+    $model : OperationIntentServiceModel(UserInput.userInputContainsExecuteQueryKeyword(locale, userInput))
 then
     insert(new EventConfidenceResult(Event.EXECUTE_QUERY, 0.4));
 end

@@ -12,7 +12,7 @@ rule "Exit Operation Intent - 'exit' keyword"
     agenda-group "operation-intent-determination"
     salience 10
 when
-    $model : OperationIntentServiceModel(userInput.toLowerCase() contains "exit")
+    $model : OperationIntentServiceModel(UserInput.userInputContainsExitKeyword(locale, userInput))
 then
     insert(new EventConfidenceResult(Event.EXIT, 0.4));
 end

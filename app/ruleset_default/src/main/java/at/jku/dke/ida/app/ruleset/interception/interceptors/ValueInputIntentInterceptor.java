@@ -55,8 +55,8 @@ public class ValueInputIntentInterceptor implements DetermineValueInputIntentInt
         Set<Operation> possibleOperations = new HashSet<>();
         possibleOperations.add(new Operation(Event.ABORT, valueIntentServiceModel.getLocale(), 1));
         possibleOperations.add(new Operation(Event.EXIT, valueIntentServiceModel.getLocale(), 1));
-        Arrays.stream(UserInput.getAbortKeywords(valueIntentServiceModel.getLocale())).forEach(k -> possibleOperations.add(new Operation(Event.ABORT, k, 1)));
-        Arrays.stream(UserInput.getExitKeywords(valueIntentServiceModel.getLocale())).forEach(k -> possibleOperations.add(new Operation(Event.EXIT, k, 1)));
+        Arrays.stream(Event.ABORT.getSynonyms(valueIntentServiceModel.getLocale())).forEach(k -> possibleOperations.add(new Operation(Event.ABORT, k, 1)));
+        Arrays.stream(Event.EXIT.getSynonyms(valueIntentServiceModel.getLocale())).forEach(k -> possibleOperations.add(new Operation(Event.EXIT, k, 1)));
         result.addAll(InterceptionHelper.computeOperationStringSimilarities(
                 valueIntentServiceModel.getCurrentState(),
                 valueIntentServiceModel.getSessionModel(),

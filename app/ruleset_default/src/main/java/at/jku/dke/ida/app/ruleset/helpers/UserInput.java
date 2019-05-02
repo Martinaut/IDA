@@ -1,5 +1,6 @@
 package at.jku.dke.ida.app.ruleset.helpers;
 
+import at.jku.dke.ida.shared.Event;
 import at.jku.dke.ida.shared.ResourceBundleHelper;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.commons.lang3.tuple.ImmutablePair;
@@ -80,17 +81,6 @@ public final class UserInput {
     // region --- Keywords ---
 
     /**
-     * Returns the keywords for the {@link at.jku.dke.ida.shared.Event#EXIT} event.
-     *
-     * @param locale The locale.
-     * @return Array with keywords
-     */
-    public static String[] getExitKeywords(Locale locale) {
-        String keywords = ResourceBundleHelper.getResourceString("ruleset.Keywords", locale, "Exit");
-        return keywords == null ? new String[0] : keywords.split(",");
-    }
-
-    /**
      * Returns whether the user input contains one of the specified exit keywords.
      *
      * @param locale    The locale.
@@ -98,27 +88,7 @@ public final class UserInput {
      * @return {@code true} if the user input contains the exit keyword; {@code false} otherwise.
      */
     public static boolean userInputContainsExitKeyword(Locale locale, String userInput) {
-        String[] keywwords = getExitKeywords(locale);
-        userInput = userInput.toLowerCase();
-
-        for (String kw : keywwords) {
-            kw = kw.toLowerCase();
-            if (userInput.contains(kw))
-                return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * Returns the keywords for the {@link at.jku.dke.ida.shared.Event#ABORT} event.
-     *
-     * @param locale The locale.
-     * @return Array with keywords
-     */
-    public static String[] getAbortKeywords(Locale locale) {
-        String keywords = ResourceBundleHelper.getResourceString("ruleset.Keywords", locale, "Abort");
-        return keywords == null ? new String[0] : keywords.split(",");
+        return userInputContainsKeyword(userInput, Event.EXIT.getSynonyms(locale));
     }
 
     /**
@@ -129,27 +99,31 @@ public final class UserInput {
      * @return {@code true} if the user input contains the abort keyword; {@code false} otherwise.
      */
     public static boolean userInputContainsAbortKeyword(Locale locale, String userInput) {
-        String[] keywwords = getAbortKeywords(locale);
+        return userInputContainsKeyword(userInput, Event.ABORT.getSynonyms(locale));
+    }
+
+    /**
+     * Returns whether the user input contains one of the specified execute query keywords.
+     *
+     * @param locale    The locale.
+     * @param userInput The user input.
+     * @return {@code true} if the user input contains the abort keyword; {@code false} otherwise.
+     */
+    public static boolean userInputContainsExecuteQueryKeyword(Locale locale, String userInput) {
+        return userInputContainsKeyword(userInput, Event.EXECUTE_QUERY.getSynonyms(locale));
+    }
+
+    private static boolean userInputContainsKeyword(String userInput, String[] keywords) {
+        if (userInput == null) userInput = "";
         userInput = userInput.toLowerCase();
 
-        for (String kw : keywwords) {
+        for (String kw : keywords) {
             kw = kw.toLowerCase();
             if (userInput.contains(kw))
                 return true;
         }
 
         return false;
-    }
-
-    /**
-     * Returns the keywords for dividing a sentence into parts.
-     *
-     * @param locale The locale.
-     * @return Array with keywords
-     */
-    public static String[] getTwoPartDividerKeywords(Locale locale) {
-        String keywords = ResourceBundleHelper.getResourceString("ruleset.Keywords", locale, "Divider");
-        return keywords == null ? new String[0] : keywords.split(",");
     }
     // endregion
 }

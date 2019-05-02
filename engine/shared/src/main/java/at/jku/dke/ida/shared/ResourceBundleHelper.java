@@ -15,7 +15,7 @@ public final class ResourceBundleHelper {
     private static final Logger LOG = LogManager.getLogger(ResourceBundleHelper.class);
 
     /**
-     * Returns the resource string for the resource with the specified name from the given bundle for the current locale.
+     * Returns the resource string for the resource with the specified name from the given bundle for the english locale.
      *
      * @param bundleName   The name of the bundle.
      * @param resourceName The name of the resource.
@@ -25,7 +25,7 @@ public final class ResourceBundleHelper {
     public static String getResourceString(String bundleName, String resourceName) {
         try {
             LOG.debug("Getting value {} from bundle {}.", resourceName, bundleName);
-            ResourceBundle bundle = ResourceBundle.getBundle(bundleName);
+            ResourceBundle bundle = ResourceBundle.getBundle(bundleName, Locale.ENGLISH, ResourceBundle.Control.getNoFallbackControl(ResourceBundle.Control.FORMAT_DEFAULT));
             return bundle.getString(resourceName);
         } catch (MissingResourceException ex) {
             LOG.fatal("Could not load resource-bundle " + bundleName, ex);
@@ -45,7 +45,7 @@ public final class ResourceBundleHelper {
     public static String getResourceString(String bundleName, Locale locale, String resourceName) {
         try {
             LOG.debug("Getting value {} from bundle {} for locale {}.", resourceName, bundleName, locale);
-            ResourceBundle bundle = ResourceBundle.getBundle(bundleName, locale);
+            ResourceBundle bundle = ResourceBundle.getBundle(bundleName, locale, ResourceBundle.Control.getNoFallbackControl(ResourceBundle.Control.FORMAT_DEFAULT));
             return bundle.getString(resourceName);
         } catch (MissingResourceException ex) {
             LOG.fatal("Could not load resource-bundle " + bundleName, ex);

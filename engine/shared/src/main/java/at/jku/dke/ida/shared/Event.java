@@ -1,5 +1,8 @@
 package at.jku.dke.ida.shared;
 
+import java.util.Locale;
+import java.util.Objects;
+
 /**
  * This enum contains all possible events.
  */
@@ -160,4 +163,29 @@ public enum Event {
     public String getEventName() {
         return eventName;
     }
+
+    /**
+     * Get the synonyms of the event.
+     *
+     * @param locale The locale.
+     * @return The synonyms.
+     */
+    public String[] getSynonyms(Locale locale) {
+        locale = Objects.requireNonNullElse(locale, Locale.getDefault());
+        String keywords = ResourceBundleHelper.getResourceString(BUNDLE_NAME, locale, this.getEventName());
+        return keywords == null || keywords.isBlank() ? new String[0] : keywords.split(",");
+    }
+
+    // region --- STATIC ---
+    private static String BUNDLE_NAME = "shared.Synonyms";
+
+    /**
+     * Overrides the default bundle name ({@code shared.Synonyms}) for operation synonyms.
+     *
+     * @param bundleName The bundle base name to use.
+     */
+    public static void setBundleName(String bundleName) {
+        BUNDLE_NAME = bundleName;
+    }
+    // endregion
 }
