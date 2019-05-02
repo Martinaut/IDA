@@ -32,10 +32,10 @@ when
 then
     insert(new EventConfidenceResult(Event.NAVIGATE, 0.5));
 end
-// TODO: two value intent similarity
+// two value intent similarity sowieso über selectvaluenothing
 
 rule "SelectValue Nothing matched"
-    agenda-group "operation-intent-determination"
+    agenda-group "value-intent-determination"
     salience -1
 when
     not EventConfidenceResult()

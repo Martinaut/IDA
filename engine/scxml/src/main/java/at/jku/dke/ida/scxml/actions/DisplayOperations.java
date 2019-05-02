@@ -57,7 +57,7 @@ public class DisplayOperations extends BaseAction {
                         Collections.emptyList()
                 );
             }
-            // TODO: Non Comparative
+            // TODO: Comparative
         } catch (QueryException ex) {
             logger.fatal("Could not load required data for OperationDisplayServiceModel.", ex);
             ctxModel.setDisplayData(new ErrorDisplay("errorLoadData", ctxModel.getLocale()));
@@ -89,7 +89,7 @@ public class DisplayOperations extends BaseAction {
         Set<Triple<String, String, String>> diceNodes = BeanUtil.getBean(LevelMemberRepository.class).getAllByCube(cube); // TODO
 
         var repo = BeanUtil.getBean(LevelPredicateRepository.class);
-        Graph<String> sliceConditions = repo.getDependencyGraph(cube);
+        Graph<String> sliceConditions = repo.getDependencyGraph(cube);  // TODO
         Set<Pair<String, String>> allSCs = repo.getAllByCube(cube);
 
         // Build model

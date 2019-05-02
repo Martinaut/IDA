@@ -24,11 +24,11 @@ public class NLPProcessorTest {
 //        NLPProcessor.executeTregex(doc, pattern);
 
 
-        String pattern = "{}=A >/nmod.*/ {}=C :  {}=C >case {}=B";
-        SemgrexPattern.compile(pattern);
-        CoreDocument doc = NLPProcessor.annotate("en", "Add the measure sum of costs.");
-        System.out.println(doc.sentences().get(0).constituencyParse());
-        NLPProcessor.executeSemgrex(doc, pattern);
+//        String pattern = "{}=A >/nmod.*/ {}=C :  {}=C >case {}=B";
+//        SemgrexPattern.compile(pattern);
+//        CoreDocument doc = NLPProcessor.annotate("en", "Add the measure sum of costs.");
+//        System.out.println(doc.sentences().get(0).constituencyParse());
+//        NLPProcessor.executeSemgrex(doc, pattern);
 
         //NLPProcessor.executeTregex(doc, "NP < /NN.?/=A");
         //NLPProcessor.executeTregex(doc, "/NN.?/=A $+ /NN.?/=B");
@@ -48,8 +48,8 @@ public class NLPProcessorTest {
 
     @Test
     void testAnnotateEnglish() {
-        // CoreDocument doc = NLPProcessor.annotate("en", "I am interested in the total sale numbers per year and customer.");
-        CoreDocument doc = NLPProcessor.annotate("en", "Add the measure sum of costs.");
+         CoreDocument doc = NLPProcessor.annotate("en", "I am interested in the total costs per doctor district and insurant province.");
+//        CoreDocument doc = NLPProcessor.annotate("en", "Add the measure sum of costs.");
 
         // list of the part-of-speech tags for the second sentence
         List<String> posTags = doc.sentences().get(0).posTags();

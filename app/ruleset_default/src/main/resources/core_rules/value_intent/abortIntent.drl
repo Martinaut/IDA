@@ -12,7 +12,7 @@ import at.jku.dke.ida.app.ruleset.interception.models.OperationInputIntentModel
 rule "Abort Value Intent - 'abort' keyword"
     agenda-group "value-intent-determination"
 when
-    $model : ValueIntentServiceModel(userInput.toLowerCase() contains "abort")
+    $model : ValueIntentServiceModel(UserInput.userInputContainsAbortKeyword(locale, userInput))
 then
     insert(new EventConfidenceResult(Event.ABORT, 0.4));
 end

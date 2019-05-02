@@ -12,7 +12,7 @@ import at.jku.dke.ida.app.ruleset.interception.models.OperationInputIntentModel
 rule "Exit Value Intent - 'exit' keyword"
     agenda-group "value-intent-determination"
 when
-    $model : ValueIntentServiceModel(userInput.toLowerCase() contains "exit")
+    $model : ValueIntentServiceModel(UserInput.userInputContainsExitKeyword(locale, userInput))
 then
     insert(new EventConfidenceResult(Event.EXIT, 0.4));
 end

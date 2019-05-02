@@ -4,6 +4,7 @@ import at.jku.dke.ida.app.ruleset.helpers.UserInput;
 import at.jku.dke.ida.app.ruleset.interception.models.ValueInputIntentModel;
 import at.jku.dke.ida.data.models.Similarity;
 import at.jku.dke.ida.rules.interfaces.ValueIntentServiceModel;
+import at.jku.dke.ida.rules.results.EventConfidenceResult;
 import at.jku.dke.ida.scxml.interceptors.DetermineValueInputIntentInterceptor;
 import at.jku.dke.ida.shared.Event;
 import at.jku.dke.ida.shared.display.Displayable;
@@ -11,6 +12,7 @@ import at.jku.dke.ida.shared.display.ListDisplay;
 import at.jku.dke.ida.shared.operations.Operation;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -30,13 +32,11 @@ public class ValueInputIntentInterceptor implements DetermineValueInputIntentInt
      * @return The modified model (may also be a new instance or an instance of a subclass).
      */
     @Override
-    @SuppressWarnings("Duplicates") // TODO: remove duplicates in whole code
     public ValueIntentServiceModel modifyModel(ValueIntentServiceModel valueIntentServiceModel) {
         // Only number?
         if (UserInput.isNumber(valueIntentServiceModel.getUserInput()) || UserInput.isTwoNumberSelection(valueIntentServiceModel.getUserInput()))
             return valueIntentServiceModel;
         if (!(valueIntentServiceModel.getDisplayData() instanceof ListDisplay)) return valueIntentServiceModel;
-        // TODO: make also to work with other types (twolistdisplay)
 
         Collection<Displayable> possibleValues = ((ListDisplay) valueIntentServiceModel.getDisplayData())
                 .getData().stream()
@@ -55,6 +55,8 @@ public class ValueInputIntentInterceptor implements DetermineValueInputIntentInt
         Set<Operation> possibleOperations = new HashSet<>();
         possibleOperations.add(new Operation(Event.ABORT, valueIntentServiceModel.getLocale(), 1));
         possibleOperations.add(new Operation(Event.EXIT, valueIntentServiceModel.getLocale(), 1));
+        Arrays.stream(UserInput.getAbortKeywords(valueIntentServiceModel.getLocale())).forEach(k -> possibleOperations.add(new Operation(Event.ABORT, k, 1)));
+        Arrays.stream(UserInput.getExitKeywords(valueIntentServiceModel.getLocale())).forEach(k -> possibleOperations.add(new Operation(Event.EXIT, k, 1)));
         result.addAll(InterceptionHelper.computeOperationStringSimilarities(
                 valueIntentServiceModel.getCurrentState(),
                 valueIntentServiceModel.getSessionModel(),
@@ -69,5 +71,4 @@ public class ValueInputIntentInterceptor implements DetermineValueInputIntentInt
                 result
         );
     }
-
 }

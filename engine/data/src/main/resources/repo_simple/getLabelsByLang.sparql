@@ -4,17 +4,18 @@ PREFIX qbx: <http://dke.jku.at/inga/cubes#>
 
 SELECT DISTINCT ?element ?label ?description
 WHERE {
-    VALUES(?type){
-        (qbx:AggregateMeasure)
-        (qbx:BaseMeasurePredicate)
-        (qbx:AggregateMeasurePredicate)
-        (qbx:LevelPredicate)
-        (qbx:ConjunctiveLevelPredicate)
-        (qbx:Level)
-    }
-# TODO check types
-	?element rdf:type ?type ;
-	         rdfs:label ?label .
+#    VALUES(?type){
+#        (qbx:AggregateMeasure)
+#        (qbx:BaseMeasurePredicate)
+#        (qbx:AggregateMeasurePredicate)
+#        (qbx:LevelPredicate)
+#        (qbx:ConjunctiveLevelPredicate)
+#        (qbx:Level)
+#    }
+##  check types
+#	?element rdf:type ?type ;
+#	         rdfs:label ?label .
+    ?element rdfs:label ?label .
     FILTER (lang(?label) = "###LANG###") .
 
     OPTIONAL {

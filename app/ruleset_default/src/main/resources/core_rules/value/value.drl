@@ -25,6 +25,15 @@ when
 then
     insert(new DisplayableConfidenceResult($display.getData().get(UserInput.toInteger($model.getUserInput()) - 1), 1.0));
 end
+rule "Resolve Value - ListDisplay Similarity"
+    agenda-group "value-determination"
+    salience 100
+when
+    $display : ListDisplay()
+    $model : ValueModel(topSimilarity != null, displayData == $display)
+then
+    insert(new DisplayableConfidenceResult($model.getTopSimilarity().getElement(), $model.getTopSimilarity().getScore()));
+end
 
 rule "Resolve Value - TwoListDisplay"
     agenda-group "value-determination"
@@ -42,16 +51,18 @@ then
                     $display.getDataRight().get(UserInput.toTwoNumberSelectionInteger($model.getUserInput()).getRight() - 1),
                      1.0));
 end
-
-rule "Resolve Value - Similarity"
+rule "Resolve Value - TwoListDisplay Similarity"
     agenda-group "value-determination"
     salience 100
 when
-    $model : ValueModel(topSimilarity != null)
+    $display : TwoListDisplay()
+    $model : ValueModel(topSimilarity != null, rightTopSimilarity != null, displayData == $display)
 then
-    insert(new DisplayableConfidenceResult($model.getTopSimilarity().getElement(), $model.getTopSimilarity().getScore()));
+    insert(new DualDisplayableConfidenceResult(
+                    $model.getTopSimilarity().getElement(),
+                    $model.getRightTopSimilarity().getElement(),
+                    $model.getTopSimilarity().getScore() * $model.getRightTopSimilarity().getScore()));
 end
-// TODO twolist similarity??
 
 rule "Invalid Value"
     agenda-group "value-determination"

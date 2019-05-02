@@ -74,6 +74,7 @@ end
 
 rule "String Similarity - Min 0.5"
     agenda-group "string-similarity"
+    salience -1
 when
     $similarity: Similarity(score < 0.5)
 then

@@ -50,14 +50,18 @@ final class InterceptionHelper {
     /**
      * Creates a list of numbered operations.
      * <p>
-     * The list creates operations with labels e.g. Option 1, Option 2, ... and first option, second option, ...
+     * The list creates operations with labels
+     * <ul>
+     * <li>Option one, Option two, ... and first option, second option, ...
+     * <li>first option, second option, ...
+     * <li>first, second, ...
      *
      * @param locale             The locale.
      * @param possibleOperations The list with possible operations.
      * @return List with possible operations as numbered labels
      */
     private static Collection<Operation> createNumberedOperations(Locale locale, Collection<Operation> possibleOperations) {
-        final String optionText = ResourceBundleHelper.getResourceString("ruleset.Translation", locale, "Option");
+        final String optionText = ResourceBundleHelper.getResourceString("ruleset.Keywords", locale, "Option");
         List<Operation> numbered = new ArrayList<>();
 
         int i = 1;
@@ -69,6 +73,11 @@ final class InterceptionHelper {
         i = 1;
         for (Operation op : possibleOperations) {
             numbered.add(new Operation(op.getEvent(), nf.format(i++, "%spellout-ordinal") + ' ' + optionText, op.getPosition()));
+        }
+
+        i = 1;
+        for (Operation op : possibleOperations) {
+            numbered.add(new Operation(op.getEvent(), nf.format(i++, "%spellout-ordinal"), op.getPosition()));
         }
 
         return numbered;
@@ -100,14 +109,17 @@ final class InterceptionHelper {
     /**
      * Creates a list of numbered operations.
      * <p>
-     * The list creates displayables with labels e.g. Option 1, Option 2, ... and first option, second option, ...
+     * <ul>
+     * <li>Option one, Option two, ... and first option, second option, ...
+     * <li>first option, second option, ...
+     * <li>first, second, ...
      *
      * @param locale         The locale.
      * @param possibleValues The list with possible values.
      * @return List with possible values as numbered labels
      */
     private static Collection<Displayable> createNumberedValues(Locale locale, Collection<Displayable> possibleValues) {
-        final String optionText = ResourceBundleHelper.getResourceString("ruleset.Translation", locale, "Option");
+        final String optionText = ResourceBundleHelper.getResourceString("ruleset.Keywords", locale, "Option");
         List<Displayable> numbered = new ArrayList<>();
 
         int i = 1;
@@ -119,6 +131,11 @@ final class InterceptionHelper {
         i = 1;
         for (Displayable op : possibleValues) {
             numbered.add(new SimpleDisplayable(op.getDisplayableId(), nf.format(i++, "%spellout-ordinal") + ' ' + optionText, op.getDetails()));
+        }
+
+        i = 1;
+        for (Displayable op : possibleValues) {
+            numbered.add(new SimpleDisplayable(op.getDisplayableId(), nf.format(i++, "%spellout-ordinal"), op.getDetails()));
         }
 
         return numbered;

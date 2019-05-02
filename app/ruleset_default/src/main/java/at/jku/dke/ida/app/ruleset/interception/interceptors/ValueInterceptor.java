@@ -10,21 +10,17 @@ import at.jku.dke.ida.app.nlp.models.WordGroupsServiceModel;
 import at.jku.dke.ida.app.ruleset.helpers.Constants;
 import at.jku.dke.ida.app.ruleset.helpers.UserInput;
 import at.jku.dke.ida.app.ruleset.interception.models.ValueModel;
-import at.jku.dke.ida.data.models.CubeSimilarity;
 import at.jku.dke.ida.data.models.Similarity;
 import at.jku.dke.ida.rules.interfaces.ValueServiceModel;
 import at.jku.dke.ida.scxml.interceptors.DetermineValueInterceptor;
 import at.jku.dke.ida.shared.display.Display;
 import at.jku.dke.ida.shared.display.Displayable;
 import at.jku.dke.ida.shared.display.ListDisplay;
+import at.jku.dke.ida.shared.display.TwoListDisplay;
 import at.jku.dke.ida.shared.models.NonComparativeAnalysisSituation;
 import org.springframework.stereotype.Service;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.*;
 
 /**
  * Intercepts the creation of the model when determining the value.
@@ -38,19 +34,15 @@ public class ValueInterceptor implements DetermineValueInterceptor {
      * @return The modified model (may also be a new instance or an instance of a subclass).
      */
     @Override
-    @SuppressWarnings("Duplicates")
     public ValueServiceModel modifyModel(ValueServiceModel valueServiceModel) {
         // Only number?
         if (UserInput.isNumber(valueServiceModel.getUserInput()) || UserInput.isTwoNumberSelection(valueServiceModel.getUserInput()))
             return valueServiceModel;
-        if (!(valueServiceModel.getDisplayData() instanceof ListDisplay)) return valueServiceModel;
-        // TODO: make also to work with other types (twolistdisplay)
 
         // Possible Values
-        Collection<Displayable> possibleValues = ((ListDisplay) valueServiceModel.getDisplayData())
-                .getData().stream()
-                .map(x -> (Displayable) x)
-                .collect(Collectors.toSet());
+        Collection<Displayable> possibleValues = getPossibleValues(valueServiceModel.getDisplayData());
+        if(possibleValues.isEmpty())
+            return valueServiceModel;
 
         // Word Groups
         Set<WordGroup> wordGroups = null;
@@ -109,5 +101,26 @@ public class ValueInterceptor implements DetermineValueInterceptor {
                 valueServiceModel.getSessionModel(),
                 similarities
         );
+    }
+
+    private Collection<Displayable> getPossibleValues(Display display) {
+        ArrayList<Displayable> possibleValues = new ArrayList<>();
+        if (display instanceof ListDisplay) {
+            ((ListDisplay) display)
+                    .getData().stream()
+                    .map(x -> (Displayable) x)
+                    .forEach((possibleValues)::add);
+        }
+        if (display instanceof TwoListDisplay) {
+            ((TwoListDisplay) display)
+                    .getDataLeft().stream()
+                    .map(x -> (Displayable) x)
+                    .forEach((possibleValues)::add);
+            ((TwoListDisplay) display)
+                    .getDataRight().stream()
+                    .map(x -> (Displayable) x)
+                    .forEach((possibleValues)::add);
+        }
+        return possibleValues;
     }
 }

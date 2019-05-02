@@ -11,7 +11,7 @@ public enum Event {
     EXIT("exit"),
 
     /**
-     * Used to abort the changing state and go back to executable state. TODO: add to state chart diagram and scxml
+     * Used to abort the changing state and go back to executable state.
      */
     ABORT("abort"),
 

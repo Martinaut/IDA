@@ -5,6 +5,7 @@ import at.jku.dke.ida.rules.models.DefaultValueServiceModel;
 import at.jku.dke.ida.shared.Event;
 import at.jku.dke.ida.shared.display.Display;
 import at.jku.dke.ida.shared.display.Displayable;
+import at.jku.dke.ida.shared.display.TwoListDisplay;
 import at.jku.dke.ida.shared.models.AnalysisSituation;
 import at.jku.dke.ida.shared.models.EngineAnalysisSituation;
 import at.jku.dke.ida.shared.session.SessionModel;
@@ -67,11 +68,44 @@ public class ValueModel extends DefaultValueServiceModel {
     /**
      * Gets similarity with the highest score.
      * If there are no similarities available, {@code null} will be returned.
+     * <p>
+     * If the display is an instance of {@link at.jku.dke.ida.shared.display.TwoListDisplay}, similarities of the
+     * left part will be returned.
      *
      * @return the top similarity
      */
     public Similarity<Displayable> getTopSimilarity() {
         if (this.similarities == null) return null;
+        if (getDisplayData() instanceof TwoListDisplay) {
+            TwoListDisplay disp = (TwoListDisplay) getDisplayData();
+            return this.similarities
+                    .stream()
+                    .filter(x -> disp.getDataLeft().stream()
+                            .anyMatch(d -> d.getDisplayableId().equals(x.getElement().getDisplayableId())))
+                    .sorted()
+                    .findFirst().orElse(null);
+        }
         return this.similarities.stream().sorted().findFirst().orElse(null);
+    }
+
+    /**
+     * Gets similarity with the highest score.
+     * If there are no similarities available, {@code null} will be returned.
+     * <p>
+     * If the display is an instance of {@link at.jku.dke.ida.shared.display.TwoListDisplay}, similarities of the
+     * right part will be returned; {@code null} otherwise.
+     *
+     * @return the top similarity
+     */
+    public Similarity<Displayable> getRightTopSimilarity() {
+        if (this.similarities == null) return null;
+        if (!(getDisplayData() instanceof TwoListDisplay)) return null;
+        TwoListDisplay disp = (TwoListDisplay) getDisplayData();
+        return this.similarities
+                .stream()
+                .filter(x -> disp.getDataRight().stream()
+                        .anyMatch(d -> d.getDisplayableId().equals(x.getElement().getDisplayableId())))
+                .sorted()
+                .findFirst().orElse(null);
     }
 }
