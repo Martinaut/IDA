@@ -10,6 +10,7 @@ import at.jku.dke.ida.scxml.session.SessionContextModel;
 import at.jku.dke.ida.shared.IRIConstants;
 import at.jku.dke.ida.shared.display.ErrorDisplay;
 import at.jku.dke.ida.shared.display.ListDisplay;
+import at.jku.dke.ida.shared.models.ComparativeAnalysisSituation;
 import at.jku.dke.ida.shared.models.NonComparativeAnalysisSituation;
 import at.jku.dke.ida.shared.operations.Operation;
 import at.jku.dke.ida.shared.spring.BeanUtil;
@@ -39,25 +40,30 @@ public class DisplayOperations extends BaseAction {
     @Override
     protected void execute(ActionExecutionContext ctx, SessionContextModel ctxModel) throws ModelException {
         // Build model
-        OperationDisplayServiceModel model = null;
+        OperationDisplayServiceModel model;
         try {
             if (ctxModel.getAnalysisSituation() instanceof NonComparativeAnalysisSituation && ctxModel.getAnalysisSituation().isCubeDefined()) {
                 String cube = ((NonComparativeAnalysisSituation) ctxModel.getAnalysisSituation()).getCube();
                 model = buildNonComparativeModel(ctxModel, cube);
             } else {
-                model = new DefaultOperationDisplayServiceModel(
-                        getCurrentState(),
-                        ctxModel,
-                        Collections.emptyList(),
-                        Collections.emptyList(),
-                        Collections.emptyList(),
-                        GraphBuilder.directed().build(),
-                        GraphBuilder.directed().build(),
-                        Collections.emptySet(),
-                        Collections.emptyList()
-                );
+                if (ctxModel.getAnalysisSituation() instanceof ComparativeAnalysisSituation) {
+                    model = buildComparativeModel(ctxModel, ((ComparativeAnalysisSituation) ctxModel.getAnalysisSituation()).getContextOfInterest().getCube());
+                } else {
+                    model = new DefaultOperationDisplayServiceModel(
+                            getCurrentState(),
+                            ctxModel,
+                            Collections.emptyList(),
+                            Collections.emptyList(),
+                            Collections.emptyList(),
+                            GraphBuilder.directed().build(),
+                            GraphBuilder.directed().build(),
+                            Collections.emptySet(),
+                            Collections.emptyList(),
+                            Collections.emptyList(),
+                            Collections.emptyList()
+                    );
+                }
             }
-            // TODO: Comparative
         } catch (QueryException ex) {
             logger.fatal("Could not load required data for OperationDisplayServiceModel.", ex);
             ctxModel.setDisplayData(new ErrorDisplay("errorLoadData", ctxModel.getLocale()));
@@ -76,6 +82,29 @@ public class DisplayOperations extends BaseAction {
 
         // Send to display
         ctxModel.setDisplayData(new ListDisplay("selectOperation", ctxModel.getLocale(), List.copyOf(operations)));
+    }
+
+    private OperationDisplayServiceModel buildComparativeModel(SessionContextModel ctxModel, String cube) throws QueryException, ModelException {
+        ComparativeAnalysisSituation as = (ComparativeAnalysisSituation) ctxModel.getAnalysisSituation();
+
+        // Load data
+        Set<String> joinConditions = BeanUtil.getBean(JoinConditionPredicateRepository.class).getAllByCube(cube, as.getJoinConditions());
+        Set<String> scores = BeanUtil.getBean(ComparativeMeasureRepository.class).getAllByCube(cube, as.getScores());
+
+        // Build model
+        return new DefaultOperationDisplayServiceModel(
+                getCurrentState(),
+                ctxModel,
+                Collections.emptyList(),
+                Collections.emptyList(),
+                Collections.emptyList(),
+                GraphBuilder.directed().build(),
+                GraphBuilder.directed().build(),
+                Collections.emptySet(),
+                Collections.emptyList(),
+                joinConditions,
+                scores
+        );
     }
 
     private OperationDisplayServiceModel buildNonComparativeModel(SessionContextModel ctxModel, String cube) throws QueryException, ModelException {
@@ -102,7 +131,9 @@ public class DisplayOperations extends BaseAction {
                 granularityLevels,
                 sliceConditions,
                 allSCs,
-                diceNodes
+                diceNodes,
+                Collections.emptyList(),
+                Collections.emptyList()
         );
     }
 

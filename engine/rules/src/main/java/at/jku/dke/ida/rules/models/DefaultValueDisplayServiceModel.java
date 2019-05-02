@@ -21,6 +21,9 @@ public class DefaultValueDisplayServiceModel extends AbstractServiceModel implem
     private final BaseMeasurePredicateRepository baseMeasurePredicateRepository;
     private final AggregateMeasurePredicateRepository aggregateMeasurePredicateRepository;
     private final LevelMemberRepository levelMemberRepository;
+    private final JoinConditionPredicateRepository joinConditionPredicateRepository;
+    private final ComparativeMeasureRepository comparativeMeasureRepository;
+    private final ComparativeMeasurePredicateRepository comparativeMeasurePredicateRepository;
     private boolean skipDisplay;
 
     /**
@@ -42,7 +45,9 @@ public class DefaultValueDisplayServiceModel extends AbstractServiceModel implem
                                            CubeRepository cubeRepository, AggregateMeasureRepository aggregateMeasureRepository,
                                            LevelRepository granularityLevelRepository, LevelPredicateRepository levelPredicateRepository,
                                            BaseMeasurePredicateRepository baseMeasurePredicateRepository,
-                                           AggregateMeasurePredicateRepository aggregateMeasurePredicateRepository, LevelMemberRepository levelMemberRepository) {
+                                           AggregateMeasurePredicateRepository aggregateMeasurePredicateRepository, LevelMemberRepository levelMemberRepository,
+                                           JoinConditionPredicateRepository joinConditionPredicateRepository,
+                                           ComparativeMeasureRepository comparativeMeasureRepository, ComparativeMeasurePredicateRepository comparativeMeasurePredicateRepository) {
         super(currentState, sessionModel);
 
         if (simpleRepository == null)
@@ -61,6 +66,12 @@ public class DefaultValueDisplayServiceModel extends AbstractServiceModel implem
             throw new IllegalArgumentException("aggregateMeasurePredicateRepository must not be null");
         if (levelMemberRepository == null)
             throw new IllegalArgumentException("levelMemberRepository must not be null");
+        if (joinConditionPredicateRepository == null)
+            throw new IllegalArgumentException("joinConditionPredicateRepository must not be null");
+        if (comparativeMeasureRepository == null)
+            throw new IllegalArgumentException("comparativeMeasureRepository must not be null");
+        if (comparativeMeasurePredicateRepository == null)
+            throw new IllegalArgumentException("comparativeMeasurePredicateRepository must not be null");
 
         this.simpleRepository = simpleRepository;
         this.cubeRepository = cubeRepository;
@@ -70,6 +81,9 @@ public class DefaultValueDisplayServiceModel extends AbstractServiceModel implem
         this.baseMeasurePredicateRepository = baseMeasurePredicateRepository;
         this.aggregateMeasurePredicateRepository = aggregateMeasurePredicateRepository;
         this.levelMemberRepository = levelMemberRepository;
+        this.joinConditionPredicateRepository = joinConditionPredicateRepository;
+        this.comparativeMeasureRepository = comparativeMeasureRepository;
+        this.comparativeMeasurePredicateRepository = comparativeMeasurePredicateRepository;
         this.skipDisplay = false;
     }
 
@@ -95,7 +109,8 @@ public class DefaultValueDisplayServiceModel extends AbstractServiceModel implem
                                            SimpleRepository simpleRepository, CubeRepository cubeRepository, AggregateMeasureRepository aggregateMeasureRepository,
                                            LevelRepository granularityLevelRepository, LevelPredicateRepository levelPredicateRepository,
                                            BaseMeasurePredicateRepository baseMeasurePredicateRepository, AggregateMeasurePredicateRepository aggregateMeasurePredicateRepository,
-                                           LevelMemberRepository levelMemberRepository) {
+                                           LevelMemberRepository levelMemberRepository, JoinConditionPredicateRepository joinConditionPredicateRepository,
+                                           ComparativeMeasureRepository comparativeMeasureRepository, ComparativeMeasurePredicateRepository comparativeMeasurePredicateRepository) {
         super(currentState, locale, analysisSituation, operation, sessionModel);
 
         if (operation == null)
@@ -116,6 +131,12 @@ public class DefaultValueDisplayServiceModel extends AbstractServiceModel implem
             throw new IllegalArgumentException("aggregateMeasurePredicateRepository must not be null");
         if (levelMemberRepository == null)
             throw new IllegalArgumentException("levelMemberRepository must not be null");
+        if (joinConditionPredicateRepository == null)
+            throw new IllegalArgumentException("joinConditionPredicateRepository must not be null");
+        if (comparativeMeasureRepository == null)
+            throw new IllegalArgumentException("comparativeMeasureRepository must not be null");
+        if (comparativeMeasurePredicateRepository == null)
+            throw new IllegalArgumentException("comparativeMeasurePredicateRepository must not be null");
 
         this.simpleRepository = simpleRepository;
         this.cubeRepository = cubeRepository;
@@ -125,6 +146,9 @@ public class DefaultValueDisplayServiceModel extends AbstractServiceModel implem
         this.baseMeasurePredicateRepository = baseMeasurePredicateRepository;
         this.aggregateMeasurePredicateRepository = aggregateMeasurePredicateRepository;
         this.levelMemberRepository = levelMemberRepository;
+        this.joinConditionPredicateRepository = joinConditionPredicateRepository;
+        this.comparativeMeasureRepository = comparativeMeasureRepository;
+        this.comparativeMeasurePredicateRepository = comparativeMeasurePredicateRepository;
         this.skipDisplay = false;
     }
 
@@ -166,6 +190,21 @@ public class DefaultValueDisplayServiceModel extends AbstractServiceModel implem
     @Override
     public LevelMemberRepository getLevelMemberRepository() {
         return levelMemberRepository;
+    }
+
+    @Override
+    public JoinConditionPredicateRepository getJoinConditionPredicateRepository() {
+        return joinConditionPredicateRepository;
+    }
+
+    @Override
+    public ComparativeMeasureRepository getComparativeMeasureRepository() {
+        return comparativeMeasureRepository;
+    }
+
+    @Override
+    public ComparativeMeasurePredicateRepository getComparativeMeasurePredicateRepository() {
+        return comparativeMeasurePredicateRepository;
     }
 
     @Override

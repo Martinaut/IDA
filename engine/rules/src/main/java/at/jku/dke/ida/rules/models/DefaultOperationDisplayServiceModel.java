@@ -28,6 +28,8 @@ public class DefaultOperationDisplayServiceModel extends AbstractServiceModel im
     private final Graph<String> sliceConditionHierarchy;
     private final Set<Pair<String, String>> sliceConditions;
     private final Collection<Triple<String, String, String>> diceNodes;
+    private final Collection<String> notSelectedJoinConditions;
+    private final Collection<String> notSelectedScores;
 
     /**
      * Instantiates a new instance of class {@link AbstractServiceModel}.
@@ -41,12 +43,15 @@ public class DefaultOperationDisplayServiceModel extends AbstractServiceModel im
      * @param sliceConditionHierarchy          The slice condition hierarchy.
      * @param sliceConditions                  The slice conditions.
      * @param diceNodes                        The dice nodes.
+     * @param notSelectedJoinConditions        The not selected join conditions.
+     * @param notSelectedScores                The not selected scores.
      * @throws IllegalArgumentException If the any of the parameters is {@code null} or empty.
      */
     public DefaultOperationDisplayServiceModel(String currentState, SessionModel sessionModel, Collection<String> notSelectedMeasures,
                                                Collection<String> notSelectedFilters, Collection<String> notSelectedBaseMeasureConditions,
                                                Graph<String> granularityLevelHierarchy, Graph<String> sliceConditionHierarchy,
-                                               Set<Pair<String, String>> sliceConditions, Collection<Triple<String, String, String>> diceNodes) {
+                                               Set<Pair<String, String>> sliceConditions, Collection<Triple<String, String, String>> diceNodes,
+                                               Collection<String> notSelectedJoinConditions, Collection<String> notSelectedScores) {
         super(currentState, sessionModel);
 
         if (notSelectedFilters == null) throw new IllegalArgumentException("notSelectedFilters must not be null");
@@ -60,6 +65,10 @@ public class DefaultOperationDisplayServiceModel extends AbstractServiceModel im
             throw new IllegalArgumentException("notSelectedBaseMeasureConditions must not be null");
         if (diceNodes == null)
             throw new IllegalArgumentException("diceNodes must not be null");
+        if (notSelectedJoinConditions == null)
+            throw new IllegalArgumentException("notSelectedJoinConditions must not be null");
+        if (notSelectedScores == null)
+            throw new IllegalArgumentException("notSelectedScores must not be null");
 
         this.notSelectedMeasures = notSelectedMeasures;
         this.notSelectedFilters = notSelectedFilters;
@@ -68,6 +77,8 @@ public class DefaultOperationDisplayServiceModel extends AbstractServiceModel im
         this.sliceConditionHierarchy = sliceConditionHierarchy;
         this.sliceConditions = sliceConditions;
         this.diceNodes = diceNodes;
+        this.notSelectedJoinConditions = notSelectedJoinConditions;
+        this.notSelectedScores = notSelectedScores;
     }
 
     /**
@@ -85,13 +96,16 @@ public class DefaultOperationDisplayServiceModel extends AbstractServiceModel im
      * @param sliceConditionHierarchy          The slice condition hierarchy.
      * @param sliceConditions                  The slice conditions.
      * @param diceNodes                        The dice nodes.
+     * @param notSelectedJoinConditions        The not selected join conditions.
+     * @param notSelectedScores                The not selected scores.
      * @throws IllegalArgumentException If the any of the parameters (except {@code locale} and {@code operation}) is {@code null} or empty.
      */
     public DefaultOperationDisplayServiceModel(String currentState, Locale locale, EngineAnalysisSituation analysisSituation,
                                                Event operation, SessionModel sessionModel, Collection<String> notSelectedMeasures,
                                                Collection<String> notSelectedFilters, Collection<String> notSelectedBaseMeasureConditions,
                                                Graph<String> granularityLevelHierarchy, Graph<String> sliceConditionHierarchy,
-                                               Set<Pair<String, String>> sliceConditions, Collection<Triple<String, String, String>> diceNodes) {
+                                               Set<Pair<String, String>> sliceConditions, Collection<Triple<String, String, String>> diceNodes,
+                                               Collection<String> notSelectedJoinConditions, Collection<String> notSelectedScores) {
         super(currentState, locale, analysisSituation, operation, sessionModel);
 
         if (notSelectedFilters == null) throw new IllegalArgumentException("notSelectedFilters must not be null");
@@ -105,6 +119,10 @@ public class DefaultOperationDisplayServiceModel extends AbstractServiceModel im
             throw new IllegalArgumentException("notSelectedBaseMeasureConditions must not be null");
         if (diceNodes == null)
             throw new IllegalArgumentException("diceNodes must not be null");
+        if (notSelectedJoinConditions == null)
+            throw new IllegalArgumentException("notSelectedJoinConditions must not be null");
+        if (notSelectedScores == null)
+            throw new IllegalArgumentException("notSelectedScores must not be null");
 
         this.notSelectedMeasures = notSelectedMeasures;
         this.notSelectedFilters = notSelectedFilters;
@@ -113,6 +131,8 @@ public class DefaultOperationDisplayServiceModel extends AbstractServiceModel im
         this.sliceConditionHierarchy = sliceConditionHierarchy;
         this.sliceConditions = sliceConditions;
         this.diceNodes = diceNodes;
+        this.notSelectedJoinConditions = notSelectedJoinConditions;
+        this.notSelectedScores = notSelectedScores;
     }
 
     // region --- DICE NODES ---
@@ -309,14 +329,14 @@ public class DefaultOperationDisplayServiceModel extends AbstractServiceModel im
                 .flatMap(x -> x.getRight().stream()
                         .map(p -> new ImmutablePair<>(x.getLeft(), p)))
                 .collect(Collectors.toSet());
-        var addDims  = sliceConditions.stream()
+        var addDims = sliceConditions.stream()
                 .filter(x -> {
                     DimensionQualification dq = as.getDimensionQualification(x.getLeft());
                     if (dq == null) return false;
                     return !dq.getSliceConditions().contains(x.getRight());
                 }).collect(Collectors.toSet());
 
-        addDims.retainAll(dropDims );
+        addDims.retainAll(dropDims);
 
         return !addDims.isEmpty();
     }
@@ -329,5 +349,15 @@ public class DefaultOperationDisplayServiceModel extends AbstractServiceModel im
     @Override
     public boolean isNotSelectedFilterConditionAvailable() {
         return !notSelectedFilters.isEmpty();
+    }
+
+    @Override
+    public boolean isNotSelectedJoinConditionAvailable() {
+        return !notSelectedJoinConditions.isEmpty();
+    }
+
+    @Override
+    public boolean isNotSelectedScoreAvailable() {
+        return !notSelectedScores.isEmpty();
     }
 }

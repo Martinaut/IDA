@@ -167,7 +167,40 @@ public enum Event {
     /**
      * Triggers replacing a base measure condition.
      */
-    NAVIGATE_BMC_REFOCUS("navigate.refocusBaseMeasureCondition");
+    NAVIGATE_BMC_REFOCUS("navigate.refocusBaseMeasureCondition"),
+    // endregion
+    // region --- JOIN CONDITION ---
+    /**
+     * Triggers adding a join condition.
+     */
+    NAVIGATE_JOIN_CONDITION_ADD("navigate.addJoinCondition"),
+
+    /**
+     * Triggers dropping a join condition.
+     */
+    NAVIGATE_JOIN_CONDITION_DROP("navigate.dropJoinCondition"),
+    // endregion
+    // region --- SCORE ---
+    /**
+     * Triggers adding a score.
+     */
+    NAVIGATE_SCORE_ADD("navigate.addScore"),
+
+    /**
+     * Triggers dropping a score.
+     */
+    NAVIGATE_SCORE_DROP("navigate.dropScore"),
+    // endregion
+    // region --- SCORE FILTER ---
+    /**
+     * Triggers adding a score filter.
+     */
+    NAVIGATE_SCORE_FILTER_ADD("navigate.addScoreFilter"),
+
+    /**
+     * Triggers dropping a score filter.
+     */
+    NAVIGATE_SCORE_FILTER_DROP("navigate.dropScoreFilter");
     // endregion
     // endregion
 
