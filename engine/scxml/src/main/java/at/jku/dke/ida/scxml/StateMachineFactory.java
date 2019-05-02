@@ -96,10 +96,10 @@ public class StateMachineFactory {
      * @throws ModelException        If an error occurred while loading the state chart model.
      */
     private static SCXML loadSCXML() throws FileNotFoundException, IOException, XMLStreamException, ModelException {
-        LOG.debug("Loading resource analysisgraph.scxml from classpath");
-        URL url = StateMachineFactory.class.getClassLoader().getResource("analysisgraph.scxml");
+        LOG.debug("Loading resource analysissituation.scxml from classpath");
+        URL url = StateMachineFactory.class.getClassLoader().getResource("analysissituation.scxml");
         if (url == null) {
-            throw new FileNotFoundException("SCXML-file 'analysisgraph.scxml' not found");
+            throw new FileNotFoundException("SCXML-file 'analysissituation.scxml' not found");
         }
         return SCXMLReader.read(url, new SCXMLReader.Configuration(null, null, getCustomActions()));
     }
