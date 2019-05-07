@@ -15,6 +15,7 @@ rule "SelectLevel Intent"
     agenda-group "value-intent-determination"
     salience 1
 when
+    not EventConfidenceResult()
     $as : NonComparativeAnalysisSituation()
     $display : ListDisplay()
     $model : ValueIntentServiceModel(UserInput.isNumber(userInput) &&
@@ -32,8 +33,9 @@ end
 
 rule "SelectLevel Intent Similarity"
     agenda-group "value-intent-determination"
-    salience 2
+    salience 1
 when
+    not EventConfidenceResult()
     $as : NonComparativeAnalysisSituation()
     $display : ListDisplay()
     $model : ValueInputIntentModel(topSimilarity != null,
@@ -42,8 +44,6 @@ when
                                    additionalDataContainsKey(Constants.ADD_DATA_DIMENSION),
                                    additionalDataContainsKey(Constants.ADD_DATA_LEVEL) == false)
     eval($model.getOperation() == Event.NAVIGATE_DICE_NODE_MOVE_DOWN)
-    eval($model.getTopSimilarity().getElement().getDisplayableId() != Event.EXIT.getEventName() &&
-         $model.getTopSimilarity().getElement().getDisplayableId() != Event.ABORT.getEventName())
 then
     $model.addAdditionalData(Constants.ADD_DATA_LEVEL, $model.getTopSimilarity().getElement().getDisplayableId());
     insert(new EventConfidenceResult(Event.MORE_INFORMATION, $model.getTopSimilarity().getScore()));

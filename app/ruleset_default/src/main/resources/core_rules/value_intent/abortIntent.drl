@@ -11,6 +11,7 @@ import at.jku.dke.ida.app.ruleset.interception.models.OperationInputIntentModel
 // ------------------------------------ RULES ---------------------------------------
 rule "Abort Value Intent - 'abort' similarity"
     agenda-group "value-intent-determination"
+    salience 9
 when
     $model : ValueInputIntentModel(topSimilarity != null && topSimilarity.getElement().getDisplayableId() == Event.ABORT.getEventName())
 then

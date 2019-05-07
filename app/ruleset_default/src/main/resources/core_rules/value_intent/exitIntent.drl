@@ -11,6 +11,7 @@ import at.jku.dke.ida.app.ruleset.interception.models.OperationInputIntentModel
 // ------------------------------------ RULES ---------------------------------------
 rule "Exit Value Intent - 'exit' similarity"
     agenda-group "value-intent-determination"
+    salience 10
 when
     $model : ValueInputIntentModel(topSimilarity != null && topSimilarity.getElement().getDisplayableId() == Event.EXIT.getEventName())
 then
