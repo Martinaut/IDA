@@ -5,6 +5,7 @@ import at.jku.dke.ida.data.QueryException;
 import at.jku.dke.ida.data.models.Label;
 import at.jku.dke.ida.data.repositories.SimpleRepository;
 import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVPrinter;
 import org.apache.commons.csv.CSVRecord;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -13,6 +14,8 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.io.StringReader;
+import java.io.StringWriter;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -46,7 +49,7 @@ public class CSVPrettifier {
     public String prettify(String language, String csv) {
         LOG.info("Prettifying CSV");
         try {
-            Iterable<CSVRecord> records = CSVFormat.RFC4180.withDelimiter(';').parse(new StringReader(csv));
+            Iterable<CSVRecord> records = CSVFormat.RFC4180.withDelimiter(';').parse(new StringReader(csv)).getRecords();
 
             // Load labels for items
             Set<String> items = new HashSet<>();
@@ -59,11 +62,18 @@ public class CSVPrettifier {
             Map<String, Label> labels = repo.getLabelsByLangAndIris(language, items);
 
             // Replace
-            String tmp = csv;
-            for (Label lbl : labels.values()) {
-                tmp = tmp.replaceAll(lbl.getUri(), '"' + lbl.getLabel() + '"');
+            StringWriter writer = new StringWriter();
+            CSVPrinter printer = new CSVPrinter(writer, CSVFormat.DEFAULT.withDelimiter(';'));
+            for (CSVRecord record : records) {
+                for (int i = 0; i < record.size(); i++) {
+                    printer.print(labels.getOrDefault(record.get(i), new Label(record.get(i))).getLabel());
+                }
+                printer.println();
             }
-            return tmp;
+            printer.flush();
+
+            String csvOutput = writer.toString();
+            return csvOutput.substring(0, csvOutput.lastIndexOf(System.lineSeparator()));
         } catch (IOException ex) {
             LOG.error("Could not parse CSV.", ex);
             return null;

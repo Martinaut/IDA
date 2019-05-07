@@ -77,7 +77,6 @@ public class DetermineValue extends BaseAction {
 
         // Execute
         new SetValueService().executeRules(model);
-        ctxModel.setAdditionalData(new HashMap<>(model.getAdditionalData()));
 
         if (interceptor != null)
             interceptor.modifyResult(model, null);

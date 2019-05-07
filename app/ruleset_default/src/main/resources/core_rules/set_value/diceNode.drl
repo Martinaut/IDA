@@ -7,6 +7,7 @@ import at.jku.dke.ida.data.models.Label
 import at.jku.dke.ida.data.models.DimensionLevelLabel
 import at.jku.dke.ida.rules.interfaces.SetValueServiceModel
 import org.apache.commons.lang3.tuple.Pair
+import at.jku.dke.ida.app.ruleset.helpers.Constants
 
 // ------------------------------------ RULES ---------------------------------------
 rule "Add Dice Node"
@@ -17,6 +18,8 @@ when
 then
     $as.getDimensionQualification(((DimensionLevelLabel)$model.getValue()).getDimensionUri()).setDiceNode(((DimensionLevelLabel)$model.getValue()).getUri());
     $as.getDimensionQualification(((DimensionLevelLabel)$model.getValue()).getDimensionUri()).setDiceLevel(((DimensionLevelLabel)$model.getValue()).getLevelUri());
+    $model.removeAdditionalData(Constants.ADD_DATA_DIMENSION);
+    $model.removeAdditionalData(Constants.ADD_DATA_LEVEL);
 end
 
 rule "Drop Dice Node"
@@ -27,4 +30,6 @@ when
 then
     $as.getDimensionQualification(((Label)$model.getValue()).getUri()).setDiceLevel(null);
     $as.getDimensionQualification(((Label)$model.getValue()).getUri()).setDiceNode(null);
+    $model.removeAdditionalData(Constants.ADD_DATA_DIMENSION);
+    $model.removeAdditionalData(Constants.ADD_DATA_LEVEL);
 end

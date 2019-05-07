@@ -5,6 +5,7 @@ import at.jku.dke.ida.shared.models.NonComparativeAnalysisSituation
 import at.jku.dke.ida.shared.Event
 import at.jku.dke.ida.data.models.DimensionLabel
 import at.jku.dke.ida.rules.interfaces.SetValueServiceModel
+import at.jku.dke.ida.app.ruleset.helpers.Constants
 
 // ------------------------------------ RULES ---------------------------------------
 rule "Roll Up"
@@ -14,6 +15,7 @@ when
     $model : SetValueServiceModel(operation == Event.NAVIGATE_GL_ROLL_UP, analysisSituation == $as, value instanceof DimensionLabel)
 then
     $as.getDimensionQualification(((DimensionLabel)$model.getValue()).getDimensionUri()).setGranularityLevel(((DimensionLabel)$model.getValue()).getUri());
+    $model.removeAdditionalData(Constants.ADD_DATA_DIMENSION);
 end
 
 rule "Drill Down"
@@ -23,4 +25,5 @@ when
     $model : SetValueServiceModel(operation == Event.NAVIGATE_GL_DRILL_DOWN, analysisSituation == $as, value instanceof DimensionLabel)
 then
     $as.getDimensionQualification(((DimensionLabel)$model.getValue()).getDimensionUri()).setGranularityLevel(((DimensionLabel)$model.getValue()).getUri());
+    $model.removeAdditionalData(Constants.ADD_DATA_DIMENSION);
 end

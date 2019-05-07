@@ -11,6 +11,7 @@ import at.jku.dke.ida.app.ruleset.interception.models.OperationInputIntentModel
 rule "ExecuteOperation Intent Number"
     agenda-group "operation-intent-determination"
 when
+    not EventConfidenceResult()
     $model : OperationIntentServiceModel(UserInput.isNumber(userInput))
 then
     insert(new EventConfidenceResult(Event.NAVIGATE, 0.5));
@@ -19,16 +20,8 @@ end
 rule "ExecuteOperation Intent Similarity"
     agenda-group "operation-intent-determination"
 when
+    not EventConfidenceResult()
     $model : OperationInputIntentModel(topSimilarity != null)
 then
     insert(new EventConfidenceResult(Event.NAVIGATE, $model.getTopSimilarity().getScore()));
-end
-
-rule "ExecuteOperation Nothing matched"
-    agenda-group "operation-intent-determination"
-    salience -1
-when
-    not EventConfidenceResult()
-then
-    insert(new EventConfidenceResult(Event.NAVIGATE, 1.0));
 end

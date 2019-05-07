@@ -8,20 +8,12 @@ import at.jku.dke.ida.shared.Event
 import at.jku.dke.ida.app.ruleset.interception.models.OperationInputIntentModel
 
 // ------------------------------------ RULES ---------------------------------------
-rule "ExecuteQuery Intent - 'execute' keyword"
-    agenda-group "operation-intent-determination"
-    salience 10
-when
-    $model : OperationIntentServiceModel(UserInput.userInputContainsExecuteQueryKeyword(locale, userInput))
-then
-    insert(new EventConfidenceResult(Event.EXECUTE_QUERY, 0.4));
-end
-
 rule "ExecuteQuery Intent - 'execute' similarity"
     agenda-group "operation-intent-determination"
     salience 10
 when
-    $model : OperationInputIntentModel(topSimilarity != null && topSimilarity.getElement().getDisplayableId() == Event.EXECUTE_QUERY)
+    not EventConfidenceResult()
+    $model : OperationInputIntentModel(topSimilarity != null && topSimilarity.getElement().getDisplayableId() == Event.EXECUTE_QUERY.getEventName())
 then
     insert(new EventConfidenceResult(Event.EXECUTE_QUERY, $model.getTopSimilarity().getScore()));
 end
@@ -30,7 +22,10 @@ rule "ExecuteQuery Intent - position"
     agenda-group "operation-intent-determination"
     salience 10
 when
-    $model : OperationInputIntentModel(UserInput.isNumber(userInput), possibleOperations.containsKey(UserInput.toInteger(userInput)), possibleOperations.get(UserInput.toInteger(userInput)).event == Event.EXECUTE_QUERY)
+    not EventConfidenceResult()
+    $model : OperationIntentServiceModel(UserInput.isNumber(userInput),
+                                         possibleOperations.containsKey(UserInput.toInteger(userInput)),
+                                         possibleOperations.get(UserInput.toInteger(userInput)).getEvent() == Event.EXECUTE_QUERY)
 then
     insert(new EventConfidenceResult(Event.EXECUTE_QUERY, 1.0));
 end

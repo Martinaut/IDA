@@ -2,12 +2,12 @@ PREFIX qbx: <http://dke.jku.at/inga/cubes#>
 
 SELECT DISTINCT ?dimension ?level ?element
 WHERE {
-    VALUES (?level) { (<###LEVEL###>) }
     ?element qbx:inLevel ?level .
 
     {
         SELECT DISTINCT ?dimension ?level
         WHERE {
+            VALUES (?level) { (<###LEVEL###>) }
             {
                 <###CUBE###> qbx:dimension ?dimension .
     			?dimension qbx:hasHierarchy ?hier .

@@ -2,6 +2,9 @@ package at.jku.dke.ida.app.ruleset.interception.interceptors;
 
 import at.jku.dke.ida.app.nlp.drools.StringSimilarityService;
 import at.jku.dke.ida.app.nlp.models.StringSimilarityServiceModel;
+import at.jku.dke.ida.data.models.DimensionLabel;
+import at.jku.dke.ida.data.models.DimensionLevelLabel;
+import at.jku.dke.ida.data.models.Label;
 import at.jku.dke.ida.data.models.Similarity;
 import at.jku.dke.ida.shared.ResourceBundleHelper;
 import at.jku.dke.ida.shared.display.Displayable;
@@ -33,9 +36,24 @@ final class InterceptionHelper {
      * @return List with operation similarities
      */
     static Set<Similarity<Displayable>> computeOperationStringSimilarities(String currentState, SessionModel sessionModel, Locale locale, Collection<Operation> possibleOperations) {
+        return computeOperationStringSimilarities(currentState, sessionModel, locale, possibleOperations, true);
+    }
+
+    /**
+     * Calculates the string similarity for the operations.
+     *
+     * @param currentState       The current state.
+     * @param sessionModel       The session model.
+     * @param locale             The locale.
+     * @param possibleOperations The list with possible operations.
+     * @param withNumbered       Flag, whether to add numbered operations to the possible operations
+     * @return List with operation similarities
+     */
+    static Set<Similarity<Displayable>> computeOperationStringSimilarities(String currentState, SessionModel sessionModel, Locale locale, Collection<Operation> possibleOperations, boolean withNumbered) {
         // Add numbered operations
         Collection<Operation> coll = new ArrayList<>(possibleOperations);
-        coll.addAll(createNumberedOperations(locale, possibleOperations));
+        if (withNumbered)
+            coll.addAll(createNumberedOperations(locale, possibleOperations));
 
         // Build Model
         StringSimilarityServiceModel model = new StringSimilarityServiceModel(
@@ -78,6 +96,11 @@ final class InterceptionHelper {
         i = 1;
         for (Operation op : possibleOperations) {
             numbered.add(new Operation(op.getEvent(), nf.format(i++, "%spellout-ordinal"), op.getPosition()));
+        }
+
+        i = 1;
+        for (Operation op : possibleOperations) {
+            numbered.add(new Operation(op.getEvent(), optionText + ' ' + (i++), op.getPosition()));
         }
 
         return numbered;
@@ -125,19 +148,40 @@ final class InterceptionHelper {
         int i = 1;
         RuleBasedNumberFormat nf = new RuleBasedNumberFormat(locale, RuleBasedNumberFormat.SPELLOUT);
         for (Displayable op : possibleValues) {
-            numbered.add(new SimpleDisplayable(op.getDisplayableId(), optionText + ' ' + nf.format(i++), op.getDetails()));
+            numbered.add(clone(op, optionText + ' ' + nf.format(i++)));
         }
 
         i = 1;
         for (Displayable op : possibleValues) {
-            numbered.add(new SimpleDisplayable(op.getDisplayableId(), nf.format(i++, "%spellout-ordinal") + ' ' + optionText, op.getDetails()));
+            numbered.add(clone(op, nf.format(i++, "%spellout-ordinal") + ' ' + optionText));
         }
 
         i = 1;
         for (Displayable op : possibleValues) {
-            numbered.add(new SimpleDisplayable(op.getDisplayableId(), nf.format(i++, "%spellout-ordinal"), op.getDetails()));
+            numbered.add(clone(op, nf.format(i++, "%spellout-ordinal")));
+        }
+
+        i = 1;
+        for (Displayable op : possibleValues) {
+            numbered.add(clone(op, optionText + ' ' + (i++)));
         }
 
         return numbered;
+    }
+
+    private static Displayable clone(Displayable value, String label) {
+        if (value instanceof DimensionLevelLabel) {
+            DimensionLevelLabel lbl = (DimensionLevelLabel) value;
+            return new DimensionLevelLabel(lbl.getLang(), lbl.getDimensionUri(), lbl.getDimensionLabel(), lbl.getLevelUri(), lbl.getLevelLabel(), lbl.getUri(), label, lbl.getDescription());
+        }
+        if (value instanceof DimensionLabel) {
+            DimensionLabel lbl = (DimensionLabel) value;
+            return new DimensionLabel(lbl.getLang(), lbl.getDimensionUri(), lbl.getDimensionLabel(), lbl.getUri(), label, lbl.getDescription());
+        }
+        if (value instanceof Label) {
+            Label lbl = (Label) value;
+            return new Label(lbl.getUri(), lbl.getLang(), label, lbl.getDescription());
+        }
+        return new SimpleDisplayable(value.getDisplayableId(), label, value.getDetails());
     }
 }

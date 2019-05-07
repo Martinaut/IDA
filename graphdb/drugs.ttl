@@ -722,3 +722,13 @@ drugs:DrDolillte a qbx:LevelMember ;
   rdfs:label "Dr. Dolittle"@en ;
   rdfs:comment "Dr. Dolittle"@en ;
   qbx:inLevel drugs:DoctorDimensionDoctorLevel .
+
+drugs:DrStrange a qbx:LevelMember ;
+  rdfs:label "Dr. Strange"@en ;
+  rdfs:comment "Dr. Strange"@en ;
+  qbx:inLevel drugs:DoctorDimensionDoctorLevel .
+
+drugs:DrMeier a qbx:LevelMember ;
+  rdfs:label "Dr. Meier"@en ;
+  rdfs:comment "Dr. Meier"@en ;
+  qbx:inLevel drugs:DoctorDimensionDoctorLevel .

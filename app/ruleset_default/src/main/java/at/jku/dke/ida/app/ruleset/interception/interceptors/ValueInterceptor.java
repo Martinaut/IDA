@@ -88,12 +88,12 @@ public class ValueInterceptor implements DetermineValueInterceptor {
         }
 
         // String Similarities for full sentence
-        InterceptionHelper.computeValueStringSimilarities(
+        similarities.addAll(InterceptionHelper.computeValueStringSimilarities(
                 valueServiceModel.getCurrentState(),
                 valueServiceModel.getSessionModel(),
                 valueServiceModel.getLocale(),
                 possibleValues
-        );
+        ));
 
         // Return
         return new ValueModel(
@@ -109,17 +109,17 @@ public class ValueInterceptor implements DetermineValueInterceptor {
             ((ListDisplay) display)
                     .getData().stream()
                     .map(x -> (Displayable) x)
-                    .forEach((possibleValues)::add);
+                    .forEachOrdered((possibleValues)::add);
         }
         if (display instanceof TwoListDisplay) {
             ((TwoListDisplay) display)
                     .getDataLeft().stream()
                     .map(x -> (Displayable) x)
-                    .forEach((possibleValues)::add);
+                    .forEachOrdered((possibleValues)::add);
             ((TwoListDisplay) display)
                     .getDataRight().stream()
                     .map(x -> (Displayable) x)
-                    .forEach((possibleValues)::add);
+                    .forEachOrdered((possibleValues)::add);
         }
         return possibleValues;
     }

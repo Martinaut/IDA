@@ -50,35 +50,3 @@ then
     $model.addAdditionalData(Constants.ADD_DATA_DIMENSION, $as.getDimensionQualification($model.getTopSimilarity().getElement().getDisplayableId()));
     insert(new EventConfidenceResult(Event.MORE_INFORMATION, $model.getTopSimilarity().getScore()));
 end
-
-rule "SelectDimensionValue Intent"
-    agenda-group "value-intent-determination"
-    salience 0
-when
-    $as : NonComparativeAnalysisSituation()
-    $display : ListDisplay()
-    $model : ValueIntentServiceModel(UserInput.isNumber(userInput) &&
-                                     UserInput.toInteger(userInput) > 0 &&
-                                     UserInput.toInteger(userInput) <= $display.data.size(),
-                                     analysisSituation == $as,
-                                     displayData == $display,
-                                     additionalDataContainsKey(Constants.ADD_DATA_DIMENSION))
-    eval($model.getOperation() == Event.NAVIGATE_GL_DRILL_DOWN || $model.getOperation() == Event.NAVIGATE_GL_ROLL_UP
-        || $model.getOperation() == Event.NAVIGATE_SLICE_CONDITION_BROADEN || $model.getOperation() == Event.NAVIGATE_SLICE_CONDITION_NARROW || $model.getOperation() == Event.NAVIGATE_SLICE_CONDITION_REFOCUS)
-then
-    $model.removeAdditionalData(Constants.ADD_DATA_DIMENSION);
-end
-
-rule "SelectDimensionValue Intent Similarity"
-    agenda-group "value-intent-determination"
-    salience 0
-when
-    $model : ValueInputIntentModel(topSimilarity != null,
-                                   additionalDataContainsKey(Constants.ADD_DATA_DIMENSION))
-    eval($model.getOperation() == Event.NAVIGATE_GL_DRILL_DOWN || $model.getOperation() == Event.NAVIGATE_GL_ROLL_UP
-        || $model.getOperation() == Event.NAVIGATE_SLICE_CONDITION_BROADEN || $model.getOperation() == Event.NAVIGATE_SLICE_CONDITION_NARROW || $model.getOperation() == Event.NAVIGATE_SLICE_CONDITION_REFOCUS)
-    eval($model.getTopSimilarity().getElement().getDisplayableId() != Event.EXIT.getEventName() &&
-         $model.getTopSimilarity().getElement().getDisplayableId() != Event.ABORT.getEventName())
-then
-    $model.removeAdditionalData(Constants.ADD_DATA_DIMENSION);
-end

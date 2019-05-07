@@ -7,15 +7,14 @@ import at.jku.dke.ida.rules.interfaces.ValueIntentServiceModel;
 import at.jku.dke.ida.rules.results.EventConfidenceResult;
 import at.jku.dke.ida.scxml.interceptors.DetermineValueInputIntentInterceptor;
 import at.jku.dke.ida.shared.Event;
+import at.jku.dke.ida.shared.display.Display;
 import at.jku.dke.ida.shared.display.Displayable;
 import at.jku.dke.ida.shared.display.ListDisplay;
+import at.jku.dke.ida.shared.display.TwoListDisplay;
 import at.jku.dke.ida.shared.operations.Operation;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -36,12 +35,8 @@ public class ValueInputIntentInterceptor implements DetermineValueInputIntentInt
         // Only number?
         if (UserInput.isNumber(valueIntentServiceModel.getUserInput()) || UserInput.isTwoNumberSelection(valueIntentServiceModel.getUserInput()))
             return valueIntentServiceModel;
-        if (!(valueIntentServiceModel.getDisplayData() instanceof ListDisplay)) return valueIntentServiceModel;
 
-        Collection<Displayable> possibleValues = ((ListDisplay) valueIntentServiceModel.getDisplayData())
-                .getData().stream()
-                .map(x -> (Displayable) x)
-                .collect(Collectors.toSet());
+        Collection<Displayable> possibleValues = getPossibleValues(valueIntentServiceModel.getDisplayData());
 
         // Execute value string similarity
         Set<Similarity<Displayable>> result = InterceptionHelper.computeValueStringSimilarities(
@@ -61,7 +56,8 @@ public class ValueInputIntentInterceptor implements DetermineValueInputIntentInt
                 valueIntentServiceModel.getCurrentState(),
                 valueIntentServiceModel.getSessionModel(),
                 valueIntentServiceModel.getLocale(),
-                possibleOperations
+                possibleOperations,
+                false
         ));
 
         // Return
@@ -70,5 +66,27 @@ public class ValueInputIntentInterceptor implements DetermineValueInputIntentInt
                 valueIntentServiceModel.getSessionModel(),
                 result
         );
+    }
+
+
+    private Collection<Displayable> getPossibleValues(Display display) {
+        ArrayList<Displayable> possibleValues = new ArrayList<>();
+        if (display instanceof ListDisplay) {
+            ((ListDisplay) display)
+                    .getData().stream()
+                    .map(x -> (Displayable) x)
+                    .forEachOrdered((possibleValues)::add);
+        }
+        if (display instanceof TwoListDisplay) {
+            ((TwoListDisplay) display)
+                    .getDataLeft().stream()
+                    .map(x -> (Displayable) x)
+                    .forEachOrdered((possibleValues)::add);
+            ((TwoListDisplay) display)
+                    .getDataRight().stream()
+                    .map(x -> (Displayable) x)
+                    .forEachOrdered((possibleValues)::add);
+        }
+        return possibleValues;
     }
 }
