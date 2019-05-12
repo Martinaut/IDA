@@ -118,8 +118,8 @@ class EmbeddedGraphDB implements Closeable {
 
             // Materialization and Indizes
             try {
-                loadMaterialization(connection);
                 loadIndizes(connection);
+                loadMaterialization(connection);
             } catch (IOException ex) {
                 LOGGER.error("An error occurred while loading materialization and indizes.", ex);
             }

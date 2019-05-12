@@ -16,13 +16,13 @@ INSERT {
 	    {
 	        SELECT DISTINCT ?term ?text WHERE {
 	            GRAPH sim:wordnet {
-	                ?term ontolex:canonicalForm ?canonicalForm .
 	                ?term wordnet:partOfSpeech wordnet:noun .
-	                ?term ontolex:sense ?lexicalizedSense .
-	                ?lexicalizedSense ontolex:isLexicalizedSenseOf ?sense .
+	                ?term ontolex:canonicalForm ?canonicalForm .
 	                {
 	                    ?canonicalForm ontolex:writtenRep ?text .
 	                } UNION {
+	                    ?term ontolex:sense ?lexicalizedSense .
+	                    ?lexicalizedSense ontolex:isLexicalizedSenseOf ?sense .
 	                    ?sense wordnet:definition ?definition .
 	                    ?definition rdf:value ?text .
 	                }
@@ -31,8 +31,8 @@ INSERT {
 	    } UNION {
 	        SELECT DISTINCT ?term ?text WHERE {
 	            GRAPH sim:wordnet {
-	                ?term ontolex:canonicalForm?canonicalForm .
 	                ?term wordnet:partOfSpeech wordnet:noun .
+	                ?term ontolex:canonicalForm?canonicalForm .
 	                ?term ontolex:sense ?lexicalizedSense .
 	                ?lexicalizedSense ontolex:isLexicalizedSenseOf ?sense .
 	                ?sense wordnet:hyponym ?hyponym .
