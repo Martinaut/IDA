@@ -37,12 +37,13 @@ export class ListDisplayComponent implements OnChanges {
     let text = display.displayMessage + '\r\n';
 
     let i = 1;
+    const option = this.translateService.instant('display.option');
     for (const d of display.data) {
-      text += this.translateService.instant('display.option') + i + ': '; // option
+      text += option + i + ': ';
       text += d.title + '\r\n';
       i++;
     }
 
-    this.tts.speak(text);
+    setTimeout(() => this.tts.speak(text), 600);
   }
 }

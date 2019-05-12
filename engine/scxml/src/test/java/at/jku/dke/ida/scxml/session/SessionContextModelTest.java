@@ -14,37 +14,37 @@ import static org.junit.jupiter.api.Assertions.*;
 class SessionContextModelTest {
     @Test
     void testConstructorWithNullSessionId() {
-        Throwable ex = assertThrows(IllegalArgumentException.class, () -> new SessionContextModel(null, "en", null, null));
+        Throwable ex = assertThrows(IllegalArgumentException.class, () -> new SessionContextModel(null, "en", null, null, null));
         assertTrue(ex.getMessage().contains("sessionId"));
     }
 
     @Test
     void testConstructorWithEmptySessionId() {
-        Throwable ex = assertThrows(IllegalArgumentException.class, () -> new SessionContextModel("", "en", null, null));
+        Throwable ex = assertThrows(IllegalArgumentException.class, () -> new SessionContextModel("", "en", null, null, null));
         assertTrue(ex.getMessage().contains("sessionId"));
     }
 
     @Test
     void testConstructorWithWhitespaceSessionId() {
-        Throwable ex = assertThrows(IllegalArgumentException.class, () -> new SessionContextModel("  ", "en", null, null));
+        Throwable ex = assertThrows(IllegalArgumentException.class, () -> new SessionContextModel("  ", "en", null, null, null));
         assertTrue(ex.getMessage().contains("sessionId"));
     }
 
     @Test
     void testConstructorWithNullLocale() {
-        Throwable ex = assertThrows(IllegalArgumentException.class, () -> new SessionContextModel("ABC", null, null, null));
+        Throwable ex = assertThrows(IllegalArgumentException.class, () -> new SessionContextModel("ABC", null, null, null, null));
         assertTrue(ex.getMessage().contains("locale"));
     }
 
     @Test
     void testConstructorWithEmptyLocale() {
-        Throwable ex = assertThrows(IllegalArgumentException.class, () -> new SessionContextModel("ABC", "", null, null));
+        Throwable ex = assertThrows(IllegalArgumentException.class, () -> new SessionContextModel("ABC", "", null, null, null));
         assertTrue(ex.getMessage().contains("locale"));
     }
 
     @Test
     void testConstructorWithWhitespaceLocale() {
-        Throwable ex = assertThrows(IllegalArgumentException.class, () -> new SessionContextModel("ABC", "  ", null, null));
+        Throwable ex = assertThrows(IllegalArgumentException.class, () -> new SessionContextModel("ABC", "  ", null, null, null));
         assertTrue(ex.getMessage().contains("locale"));
     }
 
@@ -59,7 +59,7 @@ class SessionContextModelTest {
         };
 
         // Execute
-        SessionContextModel s = new SessionContextModel(sessionId, locale, dListener, asListener);
+        SessionContextModel s = new SessionContextModel(sessionId, locale, dListener, asListener, null);
 
         // Assert
         assertEquals(sessionId, s.getSessionId());
@@ -85,7 +85,7 @@ class SessionContextModelTest {
             assertEquals(locale, evt.getLanguage());
             assertEquals(sessionId, evt.getSessionId());
         };
-        final SessionContextModel s = new SessionContextModel(sessionId, locale, null, asListener);
+        final SessionContextModel s = new SessionContextModel(sessionId, locale, null, asListener, null);
 
         // Execute
         s.setAnalysisSituation(as);
@@ -102,7 +102,7 @@ class SessionContextModelTest {
             assertEquals(d, evt.getDisplay());
             assertEquals(sessionId, evt.getSessionId());
         };
-        final SessionContextModel s = new SessionContextModel(sessionId, locale, dListener, null);
+        final SessionContextModel s = new SessionContextModel(sessionId, locale, dListener, null, null);
 
         // Execute
         s.setDisplayData(d);

@@ -67,6 +67,8 @@ export class InputPanelComponent implements OnInit, OnDestroy {
     this.sttSupported = SpeechToTextService.isSupported();
     this.connSub = this.connectionService.connectionStateChanged.subscribe(value => {
       this.connected = value;
+      this.waitingForResult = false;
+      this.showReviseQueryBtn = false;
       if (!value) {
         this.stt.stop();
       }
@@ -152,6 +154,7 @@ export class InputPanelComponent implements OnInit, OnDestroy {
     if (this.recording) {
       this.stt.stop();
     } else {
+      this.tts.stop();
       this.stt.start();
     }
   }

@@ -1,5 +1,7 @@
 package at.jku.dke.ida.app.ruleset.interception.interceptors;
 
+import at.jku.dke.ida.app.ruleset.helpers.Constants;
+import at.jku.dke.ida.app.ruleset.helpers.UserInput;
 import at.jku.dke.ida.app.ruleset.interception.models.OperationInputIntentModel;
 import at.jku.dke.ida.data.models.Similarity;
 import at.jku.dke.ida.rules.interfaces.OperationIntentServiceModel;
@@ -30,8 +32,14 @@ public class OperationInputIntentInterceptor implements DetermineOperationInputI
      * @return The modified model.
      */
     @Override
-    public OperationIntentServiceModel modifyModel(OperationIntentServiceModel operationIntentServiceModel) {
+    public OperationIntentServiceModel modifyModel(OperationIntentServiceModel operationIntentServiceModel) {// Delete possibly present additional data
+        operationIntentServiceModel.removeAdditionalData(Constants.ADD_DATA_DIMENSION);
+        operationIntentServiceModel.removeAdditionalData(Constants.ADD_DATA_LEVEL);
+
+        // Only number or empty input?
         if (operationIntentServiceModel.getUserInput() == null || operationIntentServiceModel.getUserInput().isBlank())
+            return operationIntentServiceModel;
+        if (UserInput.isNumber(operationIntentServiceModel.getUserInput()) || UserInput.isTwoNumberSelection(operationIntentServiceModel.getUserInput()))
             return operationIntentServiceModel;
 
         Collection<Operation> possibleOperations = new HashSet<>(operationIntentServiceModel.getPossibleOperations().values());

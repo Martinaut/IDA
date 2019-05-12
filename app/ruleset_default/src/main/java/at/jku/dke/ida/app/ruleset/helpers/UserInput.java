@@ -1,12 +1,8 @@
 package at.jku.dke.ida.app.ruleset.helpers;
 
-import at.jku.dke.ida.shared.Event;
-import at.jku.dke.ida.shared.ResourceBundleHelper;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
-
-import java.util.Locale;
 
 /**
  * Contains some helper methods used in the rules for parsing the user input.
@@ -75,55 +71,6 @@ public final class UserInput {
 
         String[] split = input.split(",");
         return new ImmutablePair<>(toInteger(split[0]), toInteger(split[1]));
-    }
-    // endregion
-
-    // region --- Keywords ---
-
-    /**
-     * Returns whether the user input contains one of the specified exit keywords.
-     *
-     * @param locale    The locale.
-     * @param userInput The user input.
-     * @return {@code true} if the user input contains the exit keyword; {@code false} otherwise.
-     */
-    public static boolean userInputContainsExitKeyword(Locale locale, String userInput) {
-        return userInputContainsKeyword(userInput, Event.EXIT.getSynonyms(locale));
-    }
-
-    /**
-     * Returns whether the user input contains one of the specified abort keywords.
-     *
-     * @param locale    The locale.
-     * @param userInput The user input.
-     * @return {@code true} if the user input contains the abort keyword; {@code false} otherwise.
-     */
-    public static boolean userInputContainsAbortKeyword(Locale locale, String userInput) {
-        return userInputContainsKeyword(userInput, Event.ABORT.getSynonyms(locale));
-    }
-
-    /**
-     * Returns whether the user input contains one of the specified execute query keywords.
-     *
-     * @param locale    The locale.
-     * @param userInput The user input.
-     * @return {@code true} if the user input contains the abort keyword; {@code false} otherwise.
-     */
-    public static boolean userInputContainsExecuteQueryKeyword(Locale locale, String userInput) {
-        return userInputContainsKeyword(userInput, Event.EXECUTE_QUERY.getSynonyms(locale));
-    }
-
-    private static boolean userInputContainsKeyword(String userInput, String[] keywords) {
-        if (userInput == null) userInput = "";
-        userInput = userInput.toLowerCase();
-
-        for (String kw : keywords) {
-            kw = kw.toLowerCase();
-            if (userInput.contains(kw))
-                return true;
-        }
-
-        return false;
     }
     // endregion
 }

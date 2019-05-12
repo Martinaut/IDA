@@ -8,26 +8,22 @@ import at.jku.dke.ida.shared.Event
 import at.jku.dke.ida.app.ruleset.interception.models.OperationInputIntentModel
 
 // ------------------------------------ RULES ---------------------------------------
-rule "Exit Operation Intent - 'exit' keyword"
-    agenda-group "operation-intent-determination"
-when
-    $model : OperationIntentServiceModel(UserInput.userInputContainsExitKeyword(locale, userInput))
-then
-    insert(new EventConfidenceResult(Event.EXIT, 0.41));
-end
-
 rule "Exit Operation Intent - 'exit' similarity"
     agenda-group "operation-intent-determination"
+    salience 20
 when
-    $model : OperationInputIntentModel(topSimilarity != null && topSimilarity.getElement().getDisplayableId() == Event.EXIT)
+    $model : OperationInputIntentModel(topSimilarity != null && topSimilarity.getElement().getDisplayableId() == Event.EXIT.getEventName())
 then
     insert(new EventConfidenceResult(Event.EXIT, $model.getTopSimilarity().getScore()));
 end
 
 rule "Exit Operation Intent - position"
     agenda-group "operation-intent-determination"
+    salience 20
 when
-    $model : OperationInputIntentModel(UserInput.isNumber(userInput), possibleOperations.containsKey(UserInput.toInteger(userInput)), possibleOperations.get(UserInput.toInteger(userInput)).event == Event.EXIT)
+    $model : OperationIntentServiceModel(UserInput.isNumber(userInput),
+                                         possibleOperations.containsKey(UserInput.toInteger(userInput)),
+                                         possibleOperations.get(UserInput.toInteger(userInput)).getEvent() == Event.EXIT)
 then
     insert(new EventConfidenceResult(Event.EXIT, 1.0));
 end

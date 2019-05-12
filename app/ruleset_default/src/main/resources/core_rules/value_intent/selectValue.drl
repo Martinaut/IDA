@@ -11,6 +11,7 @@ import at.jku.dke.ida.app.ruleset.interception.models.ValueInputIntentModel
 rule "SelectValue Intent"
     agenda-group "value-intent-determination"
 when
+    not EventConfidenceResult()
     $model : ValueIntentServiceModel(UserInput.isNumber(userInput))
 then
     insert(new EventConfidenceResult(Event.NAVIGATE, 0.5));
@@ -18,9 +19,8 @@ end
 rule "SelectValue Intent Similarity"
     agenda-group "value-intent-determination"
 when
+    not EventConfidenceResult()
     $model : ValueInputIntentModel(topSimilarity != null)
-    eval($model.getTopSimilarity().getElement().getDisplayableId() != Event.EXIT.getEventName() &&
-         $model.getTopSimilarity().getElement().getDisplayableId() != Event.ABORT.getEventName())
 then
     insert(new EventConfidenceResult(Event.NAVIGATE, $model.getTopSimilarity().getScore()));
 end
@@ -28,17 +28,9 @@ end
 rule "SelectValue Two values Intent"
     agenda-group "value-intent-determination"
 when
+    not EventConfidenceResult()
     $model : ValueIntentServiceModel(UserInput.isTwoNumberSelection(userInput))
 then
     insert(new EventConfidenceResult(Event.NAVIGATE, 0.5));
 end
 // two value intent similarity sowieso über selectvaluenothing
-
-rule "SelectValue Nothing matched"
-    agenda-group "value-intent-determination"
-    salience -1
-when
-    not EventConfidenceResult()
-then
-    insert(new EventConfidenceResult(Event.NAVIGATE, 1.0));
-end

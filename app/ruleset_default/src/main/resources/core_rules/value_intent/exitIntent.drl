@@ -9,16 +9,9 @@ import at.jku.dke.ida.shared.Event
 import at.jku.dke.ida.app.ruleset.interception.models.OperationInputIntentModel
 
 // ------------------------------------ RULES ---------------------------------------
-rule "Exit Value Intent - 'exit' keyword"
-    agenda-group "value-intent-determination"
-when
-    $model : ValueIntentServiceModel(UserInput.userInputContainsExitKeyword(locale, userInput))
-then
-    insert(new EventConfidenceResult(Event.EXIT, 0.4));
-end
-
 rule "Exit Value Intent - 'exit' similarity"
     agenda-group "value-intent-determination"
+    salience 10
 when
     $model : ValueInputIntentModel(topSimilarity != null && topSimilarity.getElement().getDisplayableId() == Event.EXIT.getEventName())
 then

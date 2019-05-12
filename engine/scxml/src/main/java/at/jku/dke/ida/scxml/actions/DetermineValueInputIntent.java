@@ -44,7 +44,7 @@ public class DetermineValueInputIntent extends BaseAction {
             operation = interceptor.modifyResult(model, operations);
         else
             operation = operations.stream().sorted()
-                    .findFirst().orElse(new EventConfidenceResult(Event.INVALID_INPUT)).getValue();
+                    .findFirst().orElse(new EventConfidenceResult(Event.NAVIGATE)).getValue();
 
         // Trigger event
         ctx.getInternalIOProcessor().addEvent(new TriggerEvent(operation.getEventName(), TriggerEvent.SIGNAL_EVENT));

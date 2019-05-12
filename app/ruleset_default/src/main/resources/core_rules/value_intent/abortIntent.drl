@@ -9,16 +9,9 @@ import at.jku.dke.ida.shared.Event
 import at.jku.dke.ida.app.ruleset.interception.models.OperationInputIntentModel
 
 // ------------------------------------ RULES ---------------------------------------
-rule "Abort Value Intent - 'abort' keyword"
-    agenda-group "value-intent-determination"
-when
-    $model : ValueIntentServiceModel(UserInput.userInputContainsAbortKeyword(locale, userInput))
-then
-    insert(new EventConfidenceResult(Event.ABORT, 0.4));
-end
-
 rule "Abort Value Intent - 'abort' similarity"
     agenda-group "value-intent-determination"
+    salience 9
 when
     $model : ValueInputIntentModel(topSimilarity != null && topSimilarity.getElement().getDisplayableId() == Event.ABORT.getEventName())
 then
