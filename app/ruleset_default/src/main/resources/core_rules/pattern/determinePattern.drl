@@ -11,14 +11,6 @@ import at.jku.dke.ida.app.ruleset.helpers.UserInput
 import at.jku.dke.ida.app.ruleset.interception.models.PatternModel
 
 // ------------------------------------ RULES ---------------------------------------
-rule "Exit Pattern Intent - 'exit' keyword"
-    agenda-group "pattern-determination"
-when
-    $model : PatternServiceModel(UserInput.userInputContainsExitKeyword(locale, userInput))
-then
-    insert(new EventConfidenceResult(Event.EXIT, 0.4));
-end
-
 rule "Exit Pattern Intent - 'exit' similarity"
     agenda-group "pattern-determination"
 when

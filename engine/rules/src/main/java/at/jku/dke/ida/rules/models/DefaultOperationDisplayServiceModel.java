@@ -1,6 +1,5 @@
 package at.jku.dke.ida.rules.models;
 
-import at.jku.dke.ida.data.GraphHelper;
 import at.jku.dke.ida.rules.interfaces.OperationDisplayServiceModel;
 import at.jku.dke.ida.shared.Event;
 import at.jku.dke.ida.shared.IRIConstants;
@@ -30,6 +29,7 @@ public class DefaultOperationDisplayServiceModel extends AbstractServiceModel im
     private final Collection<Triple<String, String, String>> diceNodes;
     private final Collection<String> notSelectedJoinConditions;
     private final Collection<String> notSelectedScores;
+    private final Collection<String> notSelectedScoreFilters;
 
     /**
      * Instantiates a new instance of class {@link AbstractServiceModel}.
@@ -45,13 +45,15 @@ public class DefaultOperationDisplayServiceModel extends AbstractServiceModel im
      * @param diceNodes                        The dice nodes.
      * @param notSelectedJoinConditions        The not selected join conditions.
      * @param notSelectedScores                The not selected scores.
+     * @param notSelectedScoreFilters          The not selected score filters.
      * @throws IllegalArgumentException If the any of the parameters is {@code null} or empty.
      */
     public DefaultOperationDisplayServiceModel(String currentState, SessionModel sessionModel, Collection<String> notSelectedMeasures,
                                                Collection<String> notSelectedFilters, Collection<String> notSelectedBaseMeasureConditions,
                                                Graph<String> granularityLevelHierarchy, Graph<String> sliceConditionHierarchy,
                                                Set<Pair<String, String>> sliceConditions, Collection<Triple<String, String, String>> diceNodes,
-                                               Collection<String> notSelectedJoinConditions, Collection<String> notSelectedScores) {
+                                               Collection<String> notSelectedJoinConditions, Collection<String> notSelectedScores,
+                                               Collection<String> notSelectedScoreFilters) {
         super(currentState, sessionModel);
 
         if (notSelectedFilters == null) throw new IllegalArgumentException("notSelectedFilters must not be null");
@@ -69,6 +71,8 @@ public class DefaultOperationDisplayServiceModel extends AbstractServiceModel im
             throw new IllegalArgumentException("notSelectedJoinConditions must not be null");
         if (notSelectedScores == null)
             throw new IllegalArgumentException("notSelectedScores must not be null");
+        if (notSelectedScoreFilters == null)
+            throw new IllegalArgumentException("notSelectedScoreFilters must not be null");
 
         this.notSelectedMeasures = notSelectedMeasures;
         this.notSelectedFilters = notSelectedFilters;
@@ -79,6 +83,7 @@ public class DefaultOperationDisplayServiceModel extends AbstractServiceModel im
         this.diceNodes = diceNodes;
         this.notSelectedJoinConditions = notSelectedJoinConditions;
         this.notSelectedScores = notSelectedScores;
+        this.notSelectedScoreFilters = notSelectedScoreFilters;
     }
 
     /**
@@ -98,6 +103,7 @@ public class DefaultOperationDisplayServiceModel extends AbstractServiceModel im
      * @param diceNodes                        The dice nodes.
      * @param notSelectedJoinConditions        The not selected join conditions.
      * @param notSelectedScores                The not selected scores.
+     * @param notSelectedScoreFilters          The not selected score filters.
      * @throws IllegalArgumentException If the any of the parameters (except {@code locale} and {@code operation}) is {@code null} or empty.
      */
     public DefaultOperationDisplayServiceModel(String currentState, Locale locale, EngineAnalysisSituation analysisSituation,
@@ -105,7 +111,8 @@ public class DefaultOperationDisplayServiceModel extends AbstractServiceModel im
                                                Collection<String> notSelectedFilters, Collection<String> notSelectedBaseMeasureConditions,
                                                Graph<String> granularityLevelHierarchy, Graph<String> sliceConditionHierarchy,
                                                Set<Pair<String, String>> sliceConditions, Collection<Triple<String, String, String>> diceNodes,
-                                               Collection<String> notSelectedJoinConditions, Collection<String> notSelectedScores) {
+                                               Collection<String> notSelectedJoinConditions, Collection<String> notSelectedScores,
+                                               Collection<String> notSelectedScoreFilters) {
         super(currentState, locale, analysisSituation, operation, sessionModel);
 
         if (notSelectedFilters == null) throw new IllegalArgumentException("notSelectedFilters must not be null");
@@ -123,6 +130,8 @@ public class DefaultOperationDisplayServiceModel extends AbstractServiceModel im
             throw new IllegalArgumentException("notSelectedJoinConditions must not be null");
         if (notSelectedScores == null)
             throw new IllegalArgumentException("notSelectedScores must not be null");
+        if (notSelectedScoreFilters == null)
+            throw new IllegalArgumentException("notSelectedScoreFilters must not be null");
 
         this.notSelectedMeasures = notSelectedMeasures;
         this.notSelectedFilters = notSelectedFilters;
@@ -133,6 +142,7 @@ public class DefaultOperationDisplayServiceModel extends AbstractServiceModel im
         this.diceNodes = diceNodes;
         this.notSelectedJoinConditions = notSelectedJoinConditions;
         this.notSelectedScores = notSelectedScores;
+        this.notSelectedScoreFilters = notSelectedScoreFilters;
     }
 
     // region --- DICE NODES ---
@@ -359,5 +369,10 @@ public class DefaultOperationDisplayServiceModel extends AbstractServiceModel im
     @Override
     public boolean isNotSelectedScoreAvailable() {
         return !notSelectedScores.isEmpty();
+    }
+
+    @Override
+    public boolean isNotSelectedScoreFilterAvailable() {
+        return !notSelectedScoreFilters.isEmpty();
     }
 }

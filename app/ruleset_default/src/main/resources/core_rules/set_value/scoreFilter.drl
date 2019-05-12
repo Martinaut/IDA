@@ -1,0 +1,28 @@
+package core_rules.set_value
+
+// ------------------------------------ IMPORT --------------------------------------
+import at.jku.dke.ida.shared.models.ComparativeAnalysisSituation
+import at.jku.dke.ida.shared.Event
+import at.jku.dke.ida.shared.display.Displayable
+import at.jku.dke.ida.rules.interfaces.SetValueServiceModel
+import org.apache.commons.lang3.tuple.Pair
+
+// ------------------------------------ RULES ---------------------------------------
+rule "Add score filter"
+    agenda-group "set-value"
+when
+    $as : ComparativeAnalysisSituation()
+    $model : SetValueServiceModel(operation == Event.NAVIGATE_SCORE_FILTER_ADD, analysisSituation == $as, value instanceof Displayable)
+then
+    $as.addScoreFilter(((Displayable)$model.getValue()).getDisplayableId());
+    // TODO:
+end
+
+rule "Drop score filter"
+    agenda-group "set-value"
+when
+    $as : ComparativeAnalysisSituation()
+    $model : SetValueServiceModel(operation == Event.NAVIGATE_SCORE_FILTER_DROP, analysisSituation == $as, value instanceof Displayable)
+then
+    $as.removeScoreFilter(((Displayable)$model.getValue()).getDisplayableId());
+end

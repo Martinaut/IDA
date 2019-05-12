@@ -112,4 +112,13 @@ public interface OperationDisplayServiceModel extends ServiceModel {
     boolean isNotSelectedScoreAvailable();
     // endregion
 
+    // region --- SCORE FILTER ---
+
+    /**
+     * Returns whether there are score filters in the cube which are not already selected in the analysis situation.
+     *
+     * @return {@code true} if there are score filters available for selection; {@code false} otherwise.
+     */
+    boolean isNotSelectedScoreFilterAvailable();
+    // endregion
 }

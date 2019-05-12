@@ -24,7 +24,6 @@ import org.apache.commons.scxml2.ActionExecutionContext;
 import org.apache.commons.scxml2.model.ModelException;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * This action identifies operations from which the user can select one.
@@ -60,6 +59,7 @@ public class DisplayOperations extends BaseAction {
                             Collections.emptySet(),
                             Collections.emptyList(),
                             Collections.emptyList(),
+                            Collections.emptyList(),
                             Collections.emptyList()
                     );
                 }
@@ -90,6 +90,7 @@ public class DisplayOperations extends BaseAction {
         // Load data
         Set<String> joinConditions = BeanUtil.getBean(JoinConditionPredicateRepository.class).getAllByCube(cube, as.getJoinConditions());
         Set<String> scores = BeanUtil.getBean(ComparativeMeasureRepository.class).getAllByCube(cube, as.getScores());
+        Set<String> scoreFilters = BeanUtil.getBean(ComparativeMeasurePredicateRepository.class).getAllByCube(cube, as.getScoreFilters());
 
         // Build model
         return new DefaultOperationDisplayServiceModel(
@@ -103,7 +104,8 @@ public class DisplayOperations extends BaseAction {
                 Collections.emptySet(),
                 Collections.emptyList(),
                 joinConditions,
-                scores
+                scores,
+                scoreFilters
         );
     }
 
@@ -132,6 +134,7 @@ public class DisplayOperations extends BaseAction {
                 sliceConditions,
                 allSCs,
                 diceNodes,
+                Collections.emptyList(),
                 Collections.emptyList(),
                 Collections.emptyList()
         );

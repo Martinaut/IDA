@@ -20,9 +20,9 @@ end
 rule "SwitchIntent Intent - position"
     agenda-group "operation-intent-determination"
 when
-    $model : OperationInputIntentModel(UserInput.isNumber(userInput),
-                                       possibleOperations.containsKey(UserInput.toInteger(userInput)),
-                                       possibleOperations.get(UserInput.toInteger(userInput)).event.getEventName().startsWith(Event.SWITCH.getEventName()))
+    $model : OperationIntentServiceModel(UserInput.isNumber(userInput),
+                                         possibleOperations.containsKey(UserInput.toInteger(userInput)),
+                                         possibleOperations.get(UserInput.toInteger(userInput)).event.getEventName().startsWith(Event.SWITCH.getEventName()))
 then
     insert(new EventConfidenceResult($model.getPossibleOperations().get(UserInput.toInteger($model.getUserInput())).getEvent(), 1.0));
 end
