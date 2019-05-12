@@ -2,7 +2,7 @@ package at.jku.dke.ida.data.repositories;
 
 import at.jku.dke.ida.data.IRIValidator;
 import at.jku.dke.ida.data.QueryException;
-import at.jku.dke.ida.data.configuration.GraphDbConnection;
+import at.jku.dke.ida.data.GraphDbConnection;
 import at.jku.dke.ida.data.repositories.base.DimensionCubeElementRepository;
 import at.jku.dke.ida.shared.IRIConstants;
 import com.google.common.graph.Graph;

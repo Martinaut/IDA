@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Configuration;
  * Spring Configuration with services from data-library.
  */
 @Configuration
-@ComponentScan({"at.jku.dke.ida.data.repositories", "at.jku.dke.ida.data.configuration"})
+@ComponentScan({"at.jku.dke.ida.data.repositories", "at.jku.dke.ida.data.configuration", "at.jku.dke.ida.data"})
 @EnableConfigurationProperties(GraphDbConfig.class)
 public class DataSpringConfiguration {
     /**

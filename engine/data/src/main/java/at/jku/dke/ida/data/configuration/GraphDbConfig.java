@@ -14,8 +14,8 @@ import javax.validation.constraints.NotBlank;
 @ConfigurationProperties(prefix = "graphdb")
 public class GraphDbConfig {
 
-    private String serverUrl;
-    private String repositoryId;
+    private GraphDbEmbeddedConfig embedded;
+    private GraphDbRemoteConfig remote;
 
     /**
      * Instantiates a new instance of class {@linkplain GraphDbConfig}.
@@ -24,40 +24,38 @@ public class GraphDbConfig {
     }
 
     /**
-     * Gets the server url.
+     * Gets the embedded connection configuration.
      *
-     * @return the server url
+     * @return the embedded connection configuration.
      */
-    @NotBlank
-    public String getServerUrl() {
-        return serverUrl;
+    public GraphDbEmbeddedConfig getEmbedded() {
+        return embedded;
     }
 
     /**
-     * Sets the server url.
+     * Sets the embedded connection configuration.
      *
-     * @param serverUrl the server url
+     * @param embedded the connection configuration
      */
-    public void setServerUrl(String serverUrl) {
-        this.serverUrl = serverUrl;
+    public void setEmbedded(GraphDbEmbeddedConfig embedded) {
+        this.embedded = embedded;
     }
 
     /**
-     * Gets the repository id.
+     * Gets the remote connection configuration.
      *
-     * @return the repository id
+     * @return the remote
      */
-    @NotBlank
-    public String getRepositoryId() {
-        return repositoryId;
+    public GraphDbRemoteConfig getRemote() {
+        return remote;
     }
 
     /**
-     * Sets the repository id.
+     * Sets the remote connection configuration.
      *
-     * @param repositoryId the repository id
+     * @param remote the connection configuration
      */
-    public void setRepositoryId(String repositoryId) {
-        this.repositoryId = repositoryId;
+    public void setRemote(GraphDbRemoteConfig remote) {
+        this.remote = remote;
     }
 }

@@ -1,6 +1,6 @@
 package at.jku.dke.ida.data.repositories.base;
 
-import at.jku.dke.ida.data.configuration.GraphDbConnection;
+import at.jku.dke.ida.data.GraphDbConnection;
 import at.jku.dke.ida.data.models.Label;
 import at.jku.dke.ida.data.repositories.RepositoryHelpers;
 import org.eclipse.rdf4j.query.BindingSet;

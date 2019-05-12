@@ -2,7 +2,7 @@ package at.jku.dke.ida.data.repositories;
 
 import at.jku.dke.ida.data.IRIValidator;
 import at.jku.dke.ida.data.QueryException;
-import at.jku.dke.ida.data.configuration.GraphDbConnection;
+import at.jku.dke.ida.data.GraphDbConnection;
 import at.jku.dke.ida.data.models.Label;
 import at.jku.dke.ida.data.repositories.base.BaseRepository;
 import org.springframework.beans.factory.annotation.Autowired;

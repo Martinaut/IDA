@@ -2,6 +2,8 @@ version '1.0.0-SNAPSHOT'
 
 dependencies {
     implementation 'com.ontotext.graphdb:graphdb-free-runtime:8.8.1'
+    implementation 'com.codahale.metrics:metrics-core:3.0.2' // Needed for embedded GraphDB, I dont know why
+
     implementation 'org.hibernate:hibernate-validator:6.0.15.Final'
     implementation 'org.springframework.boot:spring-boot-configuration-processor'
     api 'com.google.guava:guava:27.1-jre'

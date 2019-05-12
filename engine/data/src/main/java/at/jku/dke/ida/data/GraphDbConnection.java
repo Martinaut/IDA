@@ -1,6 +1,6 @@
-package at.jku.dke.ida.data.configuration;
+package at.jku.dke.ida.data;
 
-import at.jku.dke.ida.data.QueryException;
+import at.jku.dke.ida.data.configuration.GraphDbConfig;
 import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -9,6 +9,7 @@ import org.eclipse.rdf4j.query.QueryEvaluationException;
 import org.eclipse.rdf4j.query.TupleQuery;
 import org.eclipse.rdf4j.repository.Repository;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
+import org.eclipse.rdf4j.repository.config.RepositoryConfigException;
 import org.eclipse.rdf4j.repository.http.HTTPRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -30,6 +31,7 @@ public final class GraphDbConnection {
 
     private static final Logger LOGGER = LogManager.getLogger(GraphDbConnection.class);
     private final GraphDbConfig config;
+    private EmbeddedGraphDB embedded;
 
     /**
      * Instantiates a new instance of class {@linkplain GraphDbConnection}.
@@ -41,18 +43,45 @@ public final class GraphDbConnection {
         this.config = config;
     }
 
+    // region --- CONNECTION ---
+
     /**
      * Creates a new connection to the GraphDB repository.
+     * Created connections need to be closed to make sure that any resources they keep hold of are
+     * released. The best way to do this is to use a try-finally-block.
      *
      * @return A new GraphDB connection.
      */
     public RepositoryConnection createConnection() {
-        LOGGER.debug("Creating a new HTTP-connection to repository {} at {}.", config.getRepositoryId(), config.getServerUrl());
+        LOGGER.debug("Creating a new GraphDB-connection.");
+        if (config.getEmbedded() == null && config.getRemote() == null)
+            throw new RepositoryConfigException("GraphDB connection configuration is invalid.");
 
-        Repository repo = new HTTPRepository(config.getServerUrl(), config.getRepositoryId());
+        return config.getEmbedded() == null ?
+                getRemoteConnection() :
+                getEmbeddedConnection();
+    }
+
+    private RepositoryConnection getRemoteConnection() {
+        if (config.getRemote() == null)
+            throw new IllegalArgumentException("GraphDB connection configuration does not contain remote connection settings.");
+        LOGGER.debug("Creating a new HTTP-connection to repository {} at {}.", config.getRemote().getRepositoryId(), config.getRemote().getServerUrl());
+
+        Repository repo = new HTTPRepository(config.getRemote().getServerUrl(), config.getRemote().getRepositoryId());
         repo.initialize();
         return repo.getConnection();
     }
+
+    private RepositoryConnection getEmbeddedConnection() {
+        if (config.getEmbedded() == null)
+            throw new IllegalArgumentException("GraphDB connection configuration does not contain embedded connection settings.");
+        LOGGER.debug("Creating a new embedded connection to repository at path {}.", config.getEmbedded().getDirectory());
+        if (embedded == null)
+            embedded = new EmbeddedGraphDB(config.getEmbedded());
+        return embedded.getConnection();
+    }
+    // endregion
+
 
     /**
      * Executes the query and returns the result.

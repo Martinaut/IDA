@@ -2,13 +2,11 @@ package at.jku.dke.ida.data.repositories;
 
 import at.jku.dke.ida.data.IRIValidator;
 import at.jku.dke.ida.data.QueryException;
-import at.jku.dke.ida.data.configuration.GraphDbConnection;
-import at.jku.dke.ida.data.models.DimensionSimilarity;
+import at.jku.dke.ida.data.GraphDbConnection;
 import at.jku.dke.ida.data.models.CubeSimilarity;
 import at.jku.dke.ida.data.repositories.base.BaseRepository;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.eclipse.rdf4j.model.Literal;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;

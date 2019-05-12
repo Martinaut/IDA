@@ -1,0 +1,60 @@
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX ontolex: <http://www.w3.org/ns/lemon/ontolex#>
+PREFIX wordnet: <http://wordnet-rdf.princeton.edu/ontology#>
+PREFIX sim: <http://dke.jku.at/ida/similarity#>
+
+CONSTRUCT {
+    ?term ontolex:canonicalForm ?canonicalForm .
+    ?term wordnet:partOfSpeech wordnet:noun .
+    ?term ontolex:sense ?lexicalizedSense .
+    ?lexicalizedSense ontolex:isLexicalizedSenseOf ?sense .
+    ?canonicalForm ontolex:writtenRep ?text .
+    ?sense wordnet:definition ?definition .
+    ?definition rdf:value ?text .
+} WHERE {
+    GRAPH sim:wordnet {
+        ?term ontolex:canonicalForm ?canonicalForm .
+        ?term wordnet:partOfSpeech wordnet:noun .
+        ?term ontolex:sense ?lexicalizedSense .
+        ?lexicalizedSense ontolex:isLexicalizedSenseOf ?sense .
+        {
+            ?canonicalForm ontolex:writtenRep ?text .
+        } UNION {
+            ?sense wordnet:definition ?definition .
+            ?definition rdf:value ?text .
+        }
+    }
+}
+
+
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX ontolex: <http://www.w3.org/ns/lemon/ontolex#>
+PREFIX wordnet: <http://wordnet-rdf.princeton.edu/ontology#>
+PREFIX sim: <http://dke.jku.at/ida/similarity#>
+
+CONSTRUCT {
+    ?sense wordnet:hyponym ?hyponym .
+    ?hyponymLexicalizedSense ontolex:isLexicalizedSenseOf ?hyponym .
+    ?hyponymTerm ontolex:sense ?hyponymLexicalizedSense .
+    ?hyponymTerm ontolex:canonicalForm ?hyponymCanonicalForm .
+    ?hyponymCanonicalForm  ontolex:writtenRep ?text .
+    ?hyponym wordnet:definition ?hyponymDefinition .
+    ?hyponymDefinition rdf:value ?text .
+} WHERE {
+    GRAPH sim:wordnet {
+        ?term ontolex:canonicalForm?canonicalForm .
+        ?term wordnet:partOfSpeech wordnet:noun .
+        ?term ontolex:sense ?lexicalizedSense .
+        ?lexicalizedSense ontolex:isLexicalizedSenseOf ?sense .
+        ?sense wordnet:hyponym ?hyponym .
+        {
+            ?hyponymLexicalizedSense ontolex:isLexicalizedSenseOf ?hyponym .
+            ?hyponymTerm ontolex:sense ?hyponymLexicalizedSense .
+            ?hyponymTerm ontolex:canonicalForm ?hyponymCanonicalForm .
+            ?hyponymCanonicalForm  ontolex:writtenRep ?text .
+        } UNION {
+            ?hyponym wordnet:definition ?hyponymDefinition .
+            ?hyponymDefinition rdf:value ?text .
+        }
+    }
+}
