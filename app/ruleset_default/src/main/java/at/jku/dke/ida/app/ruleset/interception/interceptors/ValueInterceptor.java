@@ -35,7 +35,9 @@ public class ValueInterceptor implements DetermineValueInterceptor {
      */
     @Override
     public ValueServiceModel modifyModel(ValueServiceModel valueServiceModel) {
-        // Only number?
+        // Only number or empty input?
+        if (valueServiceModel.getUserInput() == null || valueServiceModel.getUserInput().isBlank())
+            return valueServiceModel;
         if (UserInput.isNumber(valueServiceModel.getUserInput()) || UserInput.isTwoNumberSelection(valueServiceModel.getUserInput()))
             return valueServiceModel;
 

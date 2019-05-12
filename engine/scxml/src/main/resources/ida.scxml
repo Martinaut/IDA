@@ -1,5 +1,5 @@
 <scxml xmlns="http://www.w3.org/2005/07/scxml"
-       version="1.0" datamodel="jexl" initial="AnalysisSituation"
+       version="1.0" datamodel="jexl" initial="PatternSelection"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:ida="http://dke.jku.at/2019/ida"
        xsi:schemaLocation="http://www.w3.org/2005/07/scxml https://www.w3.org/2011/04/SCXML/scxml.xsd">
@@ -9,12 +9,47 @@
         <data id="cubeSelected" expr="false"/>
     </datamodel>
 
-    <initial>
-        <transition target="AnalysisSituation"/>
-    </initial>
+    <!-- Pattern Selection -->
+    <state id="PatternSelection" initial="DisplayingPatterns">
+        <state id="DisplayingPatterns">
+            <onentry>
+                <ida:DisplayPatterns />
+            </onentry>
+            <transition event="userInput" target="DeterminingSelectPattern" />
+        </state>
 
-    <!-- Global State -->
-    <state id="AnalysisSituation" initial="InitialDecision">
+        <state id="DeterminingSelectPattern">
+            <onentry>
+                <ida:DeterminePatternSelection />
+            </onentry>
+            <transition event="invalidInput" target="DisplayingPatterns"/>
+            <transition event="determined" target="UserQuery" />
+        </state>
+
+        <transition event="exit" target="Finished"/>
+    </state>
+
+    <!-- FreeInput -->
+    <state id="UserQuery" initial="WaitingForFreeText">
+        <state id="WaitingForFreeText">
+            <onentry>
+                <ida:DisplayFreeText />
+            </onentry>
+            <transition event="userInput" target="ParsingFreeText" />
+        </state>
+
+        <state id="ParsingFreeText">
+            <onentry>
+                <ida:ParseFreeText />
+            </onentry>
+            <transition event="determined" target="GuidedInstantiation" />
+        </state>
+
+        <transition event="exit" target="Finished"/>
+    </state>
+
+    <!-- Guided Instantiation -->
+    <state id="GuidedInstantiation" initial="InitialDecision">
         <state id="InitialDecision">
             <transition target="Changing" cond="cubeSelected == false" />
             <transition target="Executable" cond="cubeSelected == true" />
@@ -68,6 +103,7 @@
                 <transition event="moreInformation" target="DisplayingOperations"/>
                 <transition event="navigate" target="DeterminingOperation"/>
                 <transition event="executeQuery" target="Executed"/>
+                <transition event="switch" target="SwitchingAnalysisSituation"/>
             </state>
         </state>
 
@@ -90,6 +126,16 @@
 
         <!-- Global State Transitions -->
         <transition event="exit" target="Finished"/>
+    </state>
+
+    <!-- Switch -->
+    <state id="SwitchingAnalysisSituation">
+        <onentry>
+            <ida:SwitchAnalysisSituation />
+        </onentry>
+
+        <transition event="switch" target="GuidedInstantiation" />
+        <transition event="invalidInput" target="GuidedInstantiation" />
     </state>
 
     <!-- Finished -->

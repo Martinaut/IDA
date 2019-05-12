@@ -62,7 +62,6 @@ public class DetermineOperation extends BaseAction {
         }
     }
 
-    @SuppressWarnings("Duplicates")
     private Map<Integer, Operation> convertDisplayToOperationsMap(Display display) {
         if (display == null) {
             logger.fatal("Display is null, but should have value.");

@@ -32,7 +32,9 @@ public class ValueInputIntentInterceptor implements DetermineValueInputIntentInt
      */
     @Override
     public ValueIntentServiceModel modifyModel(ValueIntentServiceModel valueIntentServiceModel) {
-        // Only number?
+        // Only number or empty input?
+        if (valueIntentServiceModel.getUserInput() == null || valueIntentServiceModel.getUserInput().isBlank())
+            return valueIntentServiceModel;
         if (UserInput.isNumber(valueIntentServiceModel.getUserInput()) || UserInput.isTwoNumberSelection(valueIntentServiceModel.getUserInput()))
             return valueIntentServiceModel;
 

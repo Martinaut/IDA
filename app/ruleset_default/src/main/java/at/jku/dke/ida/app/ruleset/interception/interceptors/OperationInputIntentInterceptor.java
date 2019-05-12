@@ -5,7 +5,9 @@ import at.jku.dke.ida.app.ruleset.helpers.UserInput;
 import at.jku.dke.ida.app.ruleset.interception.models.OperationInputIntentModel;
 import at.jku.dke.ida.data.models.Similarity;
 import at.jku.dke.ida.rules.interfaces.OperationIntentServiceModel;
+import at.jku.dke.ida.rules.results.EventConfidenceResult;
 import at.jku.dke.ida.scxml.interceptors.DetermineOperationInputIntentInterceptor;
+import at.jku.dke.ida.shared.Event;
 import at.jku.dke.ida.shared.display.Displayable;
 import at.jku.dke.ida.shared.operations.Operation;
 import org.springframework.stereotype.Service;
@@ -30,12 +32,13 @@ public class OperationInputIntentInterceptor implements DetermineOperationInputI
      * @return The modified model.
      */
     @Override
-    public OperationIntentServiceModel modifyModel(OperationIntentServiceModel operationIntentServiceModel) {
-        // Delete possibly present additional data
+    public OperationIntentServiceModel modifyModel(OperationIntentServiceModel operationIntentServiceModel) {// Delete possibly present additional data
         operationIntentServiceModel.removeAdditionalData(Constants.ADD_DATA_DIMENSION);
         operationIntentServiceModel.removeAdditionalData(Constants.ADD_DATA_LEVEL);
 
-        // Only number?
+        // Only number or empty input?
+        if (operationIntentServiceModel.getUserInput() == null || operationIntentServiceModel.getUserInput().isBlank())
+            return operationIntentServiceModel;
         if (UserInput.isNumber(operationIntentServiceModel.getUserInput()) || UserInput.isTwoNumberSelection(operationIntentServiceModel.getUserInput()))
             return operationIntentServiceModel;
 
@@ -62,4 +65,14 @@ public class OperationInputIntentInterceptor implements DetermineOperationInputI
         );
     }
 
+    @Override
+    public Event modifyResult(OperationIntentServiceModel model, Collection<EventConfidenceResult> result) {
+        Event evt = DetermineOperationInputIntentInterceptor.super.modifyResult(model, result);
+
+        if (evt != Event.NAVIGATE && evt != Event.INVALID_INPUT) {
+            model.getSessionModel().setOperation(evt);
+        }
+
+        return evt;
+    }
 }

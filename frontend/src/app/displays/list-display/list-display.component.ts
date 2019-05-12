@@ -44,6 +44,6 @@ export class ListDisplayComponent implements OnChanges {
       i++;
     }
 
-    setTimeout(() => this.tts.speak(text), 500);
+    setTimeout(() => this.tts.speak(text), 600);
   }
 }

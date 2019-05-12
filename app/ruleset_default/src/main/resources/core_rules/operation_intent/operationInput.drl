@@ -14,7 +14,7 @@ when
     not EventConfidenceResult()
     $model : OperationIntentServiceModel(UserInput.isNumber(userInput))
 then
-    insert(new EventConfidenceResult(Event.NAVIGATE, 0.5));
+    insert(new EventConfidenceResult(Event.NAVIGATE, 0.4));
 end
 
 rule "ExecuteOperation Intent Similarity"

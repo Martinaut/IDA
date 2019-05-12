@@ -49,10 +49,10 @@ export class InputPanelComponent implements OnInit, OnDestroy {
    * Sends a message with the user input to the server.
    */
   sendMessage(): void {
-    if ((this.userInput == null || this.userInput.trim().length === 0) && this.connectionService.isConnected()) {
-      this.inputError = true;
-      return;
-    }
+    // if ((this.userInput == null || this.userInput.trim().length === 0) && this.connectionService.isConnected()) {
+    //   this.inputError = true;
+    //   return;
+    // }
     this.inputError = false;
     this.waitingForResult = true;
     this.tts.stop();
@@ -65,7 +65,7 @@ export class InputPanelComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     this.sttSupported = SpeechToTextService.isSupported();
-    this.connSub = this.connectionService.initializedStateChanged.subscribe(value => {
+    this.connSub = this.connectionService.connectionStateChanged.subscribe(value => {
       this.connected = value;
       this.waitingForResult = false;
       this.showReviseQueryBtn = false;

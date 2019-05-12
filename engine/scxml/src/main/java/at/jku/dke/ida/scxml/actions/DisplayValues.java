@@ -37,7 +37,10 @@ public class DisplayValues extends BaseAction {
                 BeanUtil.getBean(LevelPredicateRepository.class),
                 BeanUtil.getBean(BaseMeasurePredicateRepository.class),
                 BeanUtil.getBean(AggregateMeasurePredicateRepository.class),
-                BeanUtil.getBean(LevelMemberRepository.class)
+                BeanUtil.getBean(LevelMemberRepository.class),
+                BeanUtil.getBean(JoinConditionPredicateRepository.class),
+                BeanUtil.getBean(ComparativeMeasureRepository.class),
+                BeanUtil.getBean(ComparativeMeasurePredicateRepository.class)
         );
         var interceptor = BeanUtil.getOptionalBean(DisplayValuesInterceptor.class);
         if (interceptor != null)
@@ -49,6 +52,10 @@ public class DisplayValues extends BaseAction {
             display = interceptor.modifyResult(model, display);
 
         // Display
+        if (display == null) {
+            ctx.getInternalIOProcessor().addEvent(new TriggerEvent(Event.ABORT.getEventName(), TriggerEvent.SIGNAL_EVENT));
+            return;
+        }
         if (model.skipValueDisplay()) {
             ctxModel.setDisplayDataWithoutEvent(display);
             ctx.getInternalIOProcessor().addEvent(new TriggerEvent(Event.USER_INPUT.getEventName(), TriggerEvent.SIGNAL_EVENT));

@@ -91,4 +91,25 @@ public interface OperationDisplayServiceModel extends ServiceModel {
      */
     boolean isNotSelectedFilterConditionAvailable();
     // endregion
+
+    // region --- JOIN CONDITION ---
+
+    /**
+     * Returns whether there are join conditions in the cube which are not already selected in the analysis situation.
+     *
+     * @return {@code true} if there are join conditions available for selection; {@code false} otherwise.
+     */
+    boolean isNotSelectedJoinConditionAvailable();
+    // endregion
+
+    // region --- SCORE ---
+
+    /**
+     * Returns whether there are scores in the cube which are not already selected in the analysis situation.
+     *
+     * @return {@code true} if there are scores available for selection; {@code false} otherwise.
+     */
+    boolean isNotSelectedScoreAvailable();
+    // endregion
+
 }

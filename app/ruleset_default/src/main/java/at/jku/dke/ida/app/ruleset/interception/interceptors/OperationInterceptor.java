@@ -32,6 +32,8 @@ public class OperationInterceptor implements DetermineOperationInterceptor {
         // Only number?
         if (UserInput.isNumber(operationServiceModel.getUserInput()) || UserInput.isTwoNumberSelection(operationServiceModel.getUserInput()))
             return operationServiceModel;
+        if (operationServiceModel.getUserInput() == null || operationServiceModel.getUserInput().isBlank())
+            return operationServiceModel;
 
         Set<WordGroup> wordGroups = new WordGroupsService()
                 .executeRules(new WordGroupsServiceModel(

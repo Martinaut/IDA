@@ -21,8 +21,6 @@ rule "SelectValue Intent Similarity"
 when
     not EventConfidenceResult()
     $model : ValueInputIntentModel(topSimilarity != null)
-    eval($model.getTopSimilarity().getElement().getDisplayableId() != Event.EXIT.getEventName() &&
-         $model.getTopSimilarity().getElement().getDisplayableId() != Event.ABORT.getEventName())
 then
     insert(new EventConfidenceResult(Event.NAVIGATE, $model.getTopSimilarity().getScore()));
 end

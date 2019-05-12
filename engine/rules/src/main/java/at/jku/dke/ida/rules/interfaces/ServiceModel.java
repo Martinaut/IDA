@@ -1,6 +1,7 @@
 package at.jku.dke.ida.rules.interfaces;
 
 import at.jku.dke.ida.shared.Event;
+import at.jku.dke.ida.shared.models.ComparativeAnalysisSituation;
 import at.jku.dke.ida.shared.models.EngineAnalysisSituation;
 import at.jku.dke.ida.shared.session.SessionModel;
 
@@ -33,6 +34,13 @@ public interface ServiceModel {
      * @return the analysis situation
      */
     EngineAnalysisSituation getAnalysisSituation();
+
+    /**
+     * Gets the comparative analysis situation from the additional data, if present.
+     *
+     * @return the comparative analysis situation
+     */
+    ComparativeAnalysisSituation getComparativeAnalysisSituation();
 
     /**
      * Returns the display language.

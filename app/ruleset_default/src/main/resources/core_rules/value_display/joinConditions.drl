@@ -1,0 +1,32 @@
+package core_rules.value_display
+
+// ------------------------------------ IMPORT --------------------------------------
+import at.jku.dke.ida.shared.Event
+import at.jku.dke.ida.shared.models.ComparativeAnalysisSituation
+import at.jku.dke.ida.shared.display.ListDisplay
+import at.jku.dke.ida.rules.interfaces.ValueDisplayServiceModel
+
+// ------------------------------------ RULES ---------------------------------------
+rule "Add Join Condition - Select all join conditions, except the already selected ones"
+    agenda-group "value-display-determination"
+when
+    $as : ComparativeAnalysisSituation()
+    $model : ValueDisplayServiceModel(operation == Event.NAVIGATE_JOIN_CONDITION_ADD, analysisSituation == $as)
+then
+    insert(new ListDisplay(
+        "addJoinCondition",
+        $model.getLocale(),
+        $model.getJoinConditionPredicateRepository().getLabelsByLangAndCube($model.getLanguage(), $as.getContextOfInterest().getCube(), $as.getJoinConditions())));
+end
+
+rule "Drop Join Condition - Select all selected join conditions"
+    agenda-group "value-display-determination"
+when
+    $as : ComparativeAnalysisSituation()
+    $model : ValueDisplayServiceModel(operation == Event.NAVIGATE_JOIN_CONDITION_DROP, analysisSituation == $as)
+then
+    insert(new ListDisplay(
+        "dropJoinCondition",
+        $model.getLocale(),
+        $model.getJoinConditionPredicateRepository().getLabelsByLangAndIris($model.getLanguage(), $as.getJoinConditions())));
+end

@@ -9,4 +9,6 @@ WHERE {
 	         qbx:derivedFrom+ ?bmeasure .
     ?element rdf:type qbx:ComparativeMeasure ;
              (qbx:setOfInterestMeasure | qbx:setOfComparisonMeasure) ?measure .
+
+    FILTER (?element NOT IN (###NOTIN###)) .
 }

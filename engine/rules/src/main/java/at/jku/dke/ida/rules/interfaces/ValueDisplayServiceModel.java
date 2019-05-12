@@ -64,6 +64,27 @@ public interface ValueDisplayServiceModel extends ServiceModel {
     LevelMemberRepository getLevelMemberRepository();
 
     /**
+     * Gets the join condition predicate repository.
+     *
+     * @return the join condition predicate repository
+     */
+    JoinConditionPredicateRepository getJoinConditionPredicateRepository();
+
+    /**
+     * Gets the comparative measure repository.
+     *
+     * @return the comparative measure repository
+     */
+    ComparativeMeasureRepository getComparativeMeasureRepository();
+
+    /**
+     * Gets the comparative measure predicate repository.
+     *
+     * @return the comparative measure predicate repository
+     */
+    ComparativeMeasurePredicateRepository getComparativeMeasurePredicateRepository();
+
+    /**
      * A flag whether to skip displaying the values and to go directly to "DeterminingValueInputIntent".
      *
      * @return {@code true} if display values should be skipped; {@code false otherwise}.

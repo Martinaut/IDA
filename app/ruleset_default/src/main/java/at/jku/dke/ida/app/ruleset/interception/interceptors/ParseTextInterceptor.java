@@ -1,4 +1,4 @@
-package at.jku.dke.ida.app.ruleset;
+package at.jku.dke.ida.app.ruleset.interception.interceptors;
 
 import at.jku.dke.ida.app.nlp.drools.GraphDBSimilarityService;
 import at.jku.dke.ida.app.nlp.drools.WordGroupsService;
@@ -12,20 +12,23 @@ import at.jku.dke.ida.data.models.CubeSimilarity;
 import at.jku.dke.ida.data.models.Label;
 import at.jku.dke.ida.data.models.Similarity;
 import at.jku.dke.ida.data.repositories.SimpleRepository;
+import at.jku.dke.ida.scxml.interceptors.ParseFreeTextInterceptor;
 import at.jku.dke.ida.shared.session.SessionModel;
 import at.jku.dke.ida.shared.spring.BeanUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.stereotype.Service;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- * This class provides a method to fill the analysis situation based on the initial sentence.
+ * Parses the user input and sets the values in the analysis situation.
  */
-public final class InitialSentenceService {
+@Service
+public class ParseTextInterceptor implements ParseFreeTextInterceptor {
 
-    private static Logger LOGGER = LogManager.getLogger(InitialSentenceService.class);
+    private static Logger LOGGER = LogManager.getLogger(ParseTextInterceptor.class);
     private static final ConstraintSatisfactionService service;
 
     static {
@@ -33,25 +36,22 @@ public final class InitialSentenceService {
     }
 
     /**
-     * Prevents creation of instances of this class.
-     */
-    private InitialSentenceService() {
-    }
-
-    /**
-     * Fills the analysis situation in the {@code sessionModel} with elements detected in the {@code initialSentence}.
+     * Use this method to parse the user input and set the values appropriately.
      *
-     * @param sessionModel    The session model.
-     * @param initialSentence The initial sentence.
+     * @param sessionModel The basic model.
+     * @param result       Nothing
+     * @return Nothing
      */
-    public static void fillAnalysisSituation(SessionModel sessionModel, String initialSentence) {
-        if (sessionModel == null) throw new IllegalArgumentException("sessionModel must not be null");
-        if (initialSentence == null || initialSentence.isBlank()) return;
+    @Override
+    public Void modifyResult(SessionModel sessionModel, Void result) {
+        if (sessionModel == null || sessionModel.getUserInput() == null || sessionModel.getUserInput().isBlank())
+            return null;
 
         LOGGER.info("Filling analysis situation");
-        Set<WordGroup> wordGroups = getWordGroups(sessionModel, initialSentence);
+        Set<WordGroup> wordGroups = getWordGroups(sessionModel, sessionModel.getUserInput());
         Set<CubeSimilarity> similarities = getSimilarities(sessionModel, wordGroups);
         service.fillAnalysisSituation(sessionModel.getLocale().getLanguage(), sessionModel.getAnalysisSituation(), similarities);
+        return null;
     }
 
     private static Set<WordGroup> getWordGroups(SessionModel sessionModel, String initialSentence) {

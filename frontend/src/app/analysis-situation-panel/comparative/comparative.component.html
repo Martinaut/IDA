@@ -6,6 +6,16 @@
 
 <table class="table table-bordered">
   <tbody>
+  <!-- JoinConditions -->
+  <tr class="d-flex">
+    <th scope="row" class="col-3" [translate]="'as.joinConditions'">Join Conditions</th>
+    <td class="col-9">
+      <ul class="list-unstyled mb-0">
+        <li *ngFor="let jc of analysisSituation.joinConditions" title="{{ jc.displayableId }}">{{ jc.title }}</li>
+      </ul>
+    </td>
+  </tr>
+
   <!-- Scores -->
   <tr class="d-flex">
     <th scope="row" class="col-3" [translate]="'as.scores'">Scores</th>
@@ -25,16 +35,5 @@
       </ul>
     </td>
   </tr>
-
-  <!-- JoinConditions -->
-  <tr class="d-flex">
-    <th scope="row" class="col-3" [translate]="'as.joinConditions'">Join Conditions</th>
-    <td class="col-9">
-      <ul class="list-unstyled mb-0">
-        <li *ngFor="let jc of analysisSituation.joinConditions" title="{{ jc.displayableId }}">{{ jc.title }}</li>
-      </ul>
-    </td>
-  </tr>
-
   </tbody>
 </table>

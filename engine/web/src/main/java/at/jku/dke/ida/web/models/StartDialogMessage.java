@@ -6,7 +6,6 @@ package at.jku.dke.ida.web.models;
 public class StartDialogMessage {
 
     private String locale;
-    private String initialSentence;
 
     /**
      * Instantiates a new instance of class {@linkplain StartDialogMessage}.
@@ -18,11 +17,9 @@ public class StartDialogMessage {
      * Instantiates a new instance of class {@linkplain StartDialogMessage}.
      *
      * @param locale          The locale.
-     * @param initialSentence The initial sentence.
      */
-    public StartDialogMessage(String locale, String initialSentence) {
+    public StartDialogMessage(String locale) {
         this.locale = locale;
-        this.initialSentence = initialSentence;
     }
 
     /**
@@ -43,21 +40,4 @@ public class StartDialogMessage {
         this.locale = locale;
     }
 
-    /**
-     * Gets the initial sentence.
-     *
-     * @return the initial sentence
-     */
-    public String getInitialSentence() {
-        return initialSentence;
-    }
-
-    /**
-     * Sets the initial sentence.
-     *
-     * @param initialSentence the initial sentence
-     */
-    public void setInitialSentence(String initialSentence) {
-        this.initialSentence = initialSentence;
-    }
 }

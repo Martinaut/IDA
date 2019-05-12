@@ -1,5 +1,8 @@
 package at.jku.dke.ida.shared.display;
 
+import at.jku.dke.ida.shared.ResourceBundleHelper;
+
+import java.util.Locale;
 import java.util.Objects;
 import java.util.StringJoiner;
 
@@ -23,6 +26,20 @@ public class SimpleDisplayable implements Displayable {
         this.displayableId = displayableId;
         this.title = title;
         this.details = details;
+    }
+
+    /**
+     * Instantiates a new instance of class {@linkplain SimpleDisplayable}.
+     *
+     * @param displayableId The displayable id.
+     * @param locale        The locale.
+     * @param bundleName    The bundle name.
+     * @param resourceName  The resource name.
+     */
+    public SimpleDisplayable(String displayableId, Locale locale, String bundleName, String resourceName) {
+        this.displayableId = displayableId;
+        this.title = ResourceBundleHelper.getResourceString(bundleName, locale, resourceName);
+        this.details = null;
     }
 
     /**
