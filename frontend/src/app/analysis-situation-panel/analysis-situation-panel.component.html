@@ -1,4 +1,4 @@
-<div class="card shadow mb-4" *ngIf="analysisSituation != null && result == null">
+<div class="card shadow mb-4" *ngIf="analysisSituation != null">
   <div class="card-header py-3">
     <h6 class="m-0 font-weight-bold text-primary" [translate]="'as.title'">Current Analysis Situation</h6>
   </div>
@@ -13,7 +13,7 @@
   </div>
 </div>
 
-<div style="display: flex; height: 100%;" class="text-center" *ngIf="analysisSituation == null && result == null">
+<div style="display: flex; height: 100%;" class="text-center" *ngIf="analysisSituation == null">
   <div class="text-center" style="margin: auto;">
     <span class="text-muted h5" [translate]="'as.noData'">No data available.</span>
   </div>

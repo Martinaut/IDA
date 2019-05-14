@@ -1,6 +1,9 @@
 apply plugin: 'org.springframework.boot'
+apply plugin: 'application'
 
 version '1.0.0-SNAPSHOT'
+
+mainClassName = 'at.jku.dke.ida.app.IdaApplication'
 
 dependencies {
     implementation project(':engine:web')

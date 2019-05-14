@@ -1,5 +1,6 @@
 package at.jku.dke.ida.scxml.configuration;
 
+import at.jku.dke.ida.scxml.query.QueryMockExecutor;
 import org.hibernate.validator.constraints.URL;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Primary;
@@ -21,6 +22,7 @@ public class SCXMLConfig {
      * Instantiates a new instance of class {@linkplain SCXMLConfig}.
      */
     public SCXMLConfig() {
+        queryEndpoint = QueryMockExecutor.MOCK_URL;
     }
 
     /**
