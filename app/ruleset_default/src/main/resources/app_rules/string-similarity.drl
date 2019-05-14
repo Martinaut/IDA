@@ -27,50 +27,50 @@ then
     insert(SimilarityHelper.getJaroWinklerSimilarity($model.getInput(), $displayable));
 end
 
-rule "String Similarity - Metric LCS Similarity"
-    agenda-group "string-similarity"
-when
-    $model : StringSimilarityServiceModel(!UserInput.isNumber(input))
-    $displayable : Displayable()
-then
-    insert(SimilarityHelper.getMetricLCSSimilarity($model.getInput(), $displayable));
-end
+//rule "String Similarity - Metric LCS Similarity"
+//    agenda-group "string-similarity"
+//when
+//    $model : StringSimilarityServiceModel(!UserInput.isNumber(input))
+//    $displayable : Displayable()
+//then
+//    insert(SimilarityHelper.getMetricLCSSimilarity($model.getInput(), $displayable));
+//end
 
-rule "String Similarity - NGram Similarity"
-    agenda-group "string-similarity"
-when
-    $model : StringSimilarityServiceModel(!UserInput.isNumber(input))
-    $displayable : Displayable()
-then
-    insert(SimilarityHelper.getNGramSimilarity($model.getInput(), $displayable));
-end
+//rule "String Similarity - NGram Similarity"
+//    agenda-group "string-similarity"
+//when
+//    $model : StringSimilarityServiceModel(!UserInput.isNumber(input))
+//    $displayable : Displayable()
+//then
+//    insert(SimilarityHelper.getNGramSimilarity($model.getInput(), $displayable));
+//end
 
-rule "String Similarity - Cosine Similarity"
-    agenda-group "string-similarity"
-when
-    $model : StringSimilarityServiceModel(!UserInput.isNumber(input))
-    $displayable : Displayable()
-then
-    insert(SimilarityHelper.getCosineSimilarity($model.getInput(), $displayable));
-end
+//rule "String Similarity - Cosine Similarity"
+//    agenda-group "string-similarity"
+//when
+//    $model : StringSimilarityServiceModel(!UserInput.isNumber(input))
+//    $displayable : Displayable()
+//then
+//    insert(SimilarityHelper.getCosineSimilarity($model.getInput(), $displayable));
+//end
 
-rule "String Similarity - Jaccard Similarity"
-    agenda-group "string-similarity"
-when
-    $model : StringSimilarityServiceModel(!UserInput.isNumber(input))
-    $displayable : Displayable()
-then
-    insert(SimilarityHelper.getJaccardSimilarity($model.getInput(), $displayable));
-end
+//rule "String Similarity - Jaccard Similarity"
+//    agenda-group "string-similarity"
+//when
+//    $model : StringSimilarityServiceModel(!UserInput.isNumber(input))
+//    $displayable : Displayable()
+//then
+//    insert(SimilarityHelper.getJaccardSimilarity($model.getInput(), $displayable));
+//end
 
-rule "String Similarity - Sorensen Dice Similarity"
-    agenda-group "string-similarity"
-when
-    $model : StringSimilarityServiceModel(!UserInput.isNumber(input))
-    $displayable : Displayable()
-then
-    insert(SimilarityHelper.getSorensenDiceSimilarity($model.getInput(), $displayable));
-end
+//rule "String Similarity - Sorensen Dice Similarity"
+//    agenda-group "string-similarity"
+//when
+//    $model : StringSimilarityServiceModel(!UserInput.isNumber(input))
+//    $displayable : Displayable()
+//then
+//    insert(SimilarityHelper.getSorensenDiceSimilarity($model.getInput(), $displayable));
+//end
 
 rule "String Similarity - Min 0.5"
     agenda-group "string-similarity"
