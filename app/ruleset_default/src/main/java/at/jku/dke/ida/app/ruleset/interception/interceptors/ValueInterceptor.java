@@ -21,6 +21,7 @@ import at.jku.dke.ida.shared.models.NonComparativeAnalysisSituation;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Intercepts the creation of the model when determining the value.
@@ -43,7 +44,7 @@ public class ValueInterceptor implements DetermineValueInterceptor {
 
         // Possible Values
         Collection<Displayable> possibleValues = getPossibleValues(valueServiceModel.getDisplayData());
-        if(possibleValues.isEmpty())
+        if (possibleValues.isEmpty())
             return valueServiceModel;
 
         // Word Groups
@@ -90,12 +91,22 @@ public class ValueInterceptor implements DetermineValueInterceptor {
         }
 
         // String Similarities for full sentence
-        similarities.addAll(InterceptionHelper.computeValueStringSimilarities(
-                valueServiceModel.getCurrentState(),
-                valueServiceModel.getSessionModel(),
-                valueServiceModel.getLocale(),
-                possibleValues
-        ));
+        if (valueServiceModel.getDisplayData() instanceof TwoListDisplay) {
+            similarities.addAll(InterceptionHelper.computeValueStringSimilarities(
+                    valueServiceModel.getCurrentState(),
+                    valueServiceModel.getSessionModel(),
+                    valueServiceModel.getLocale(),
+                    ((TwoListDisplay) valueServiceModel.getDisplayData()).getDataLeft().stream().map(x -> (Displayable) x).collect(Collectors.toList()),
+                    ((TwoListDisplay) valueServiceModel.getDisplayData()).getDataRight().stream().map(x -> (Displayable) x).collect(Collectors.toList())
+            ));
+        } else {
+            similarities.addAll(InterceptionHelper.computeValueStringSimilarities(
+                    valueServiceModel.getCurrentState(),
+                    valueServiceModel.getSessionModel(),
+                    valueServiceModel.getLocale(),
+                    possibleValues
+            ));
+        }
 
         // Return
         return new ValueModel(

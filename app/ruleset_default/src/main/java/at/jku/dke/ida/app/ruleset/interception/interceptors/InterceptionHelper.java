@@ -26,6 +26,8 @@ final class InterceptionHelper {
     private InterceptionHelper() {
     }
 
+    // region --- Operations ---
+
     /**
      * Calculates the string similarity for the operations.
      *
@@ -105,6 +107,9 @@ final class InterceptionHelper {
 
         return numbered;
     }
+    // endregion
+
+    // region --- Value ---
 
     /**
      * Calculates the string similarity for the values.
@@ -115,9 +120,40 @@ final class InterceptionHelper {
      * @param possibleValues The list with possible values.
      * @return List with value similarities
      */
-    static Set<Similarity<Displayable>> computeValueStringSimilarities(String currentState, SessionModel sessionModel, Locale locale, Collection<Displayable> possibleValues) {
+    static Set<Similarity<Displayable>> computeValueStringSimilarities(String currentState, SessionModel sessionModel,
+                                                                       Locale locale, Collection<Displayable> possibleValues) {
         // Add numbered operations
         possibleValues.addAll(createNumberedValues(locale, possibleValues));
+
+        // Build Model
+        StringSimilarityServiceModel model = new StringSimilarityServiceModel(
+                currentState,
+                sessionModel,
+                possibleValues
+        );
+
+        return new StringSimilarityService().executeRules(model);
+    }
+
+    /**
+     * Calculates the string similarity for the values.
+     *
+     * @param currentState The current state.
+     * @param sessionModel The session model.
+     * @param locale       The locale.
+     * @param leftValues   The list with possible values on the left side.
+     * @param rightValues  The list with possible values on the right side.
+     * @return List with value similarities
+     */
+    static Set<Similarity<Displayable>> computeValueStringSimilarities(String currentState, SessionModel sessionModel, Locale locale,
+                                                                       Collection<Displayable> leftValues, Collection<Displayable> rightValues) {
+        Collection<Displayable> possibleValues = new HashSet<>();
+        possibleValues.addAll(leftValues);
+        possibleValues.addAll(rightValues);
+
+        // Add numbered operations
+        possibleValues.addAll(createNumberedValues(locale, leftValues, "left"));
+        possibleValues.addAll(createNumberedValues(locale, rightValues, "right"));
 
         // Build Model
         StringSimilarityServiceModel model = new StringSimilarityServiceModel(
@@ -142,7 +178,30 @@ final class InterceptionHelper {
      * @return List with possible values as numbered labels
      */
     private static Collection<Displayable> createNumberedValues(Locale locale, Collection<Displayable> possibleValues) {
-        final String optionText = ResourceBundleHelper.getResourceString("ruleset.Keywords", locale, "Option");
+        return createNumberedValues(locale, possibleValues, null);
+    }
+
+    /**
+     * Creates a list of numbered operations.
+     * <p>
+     * <ul>
+     * <li>Option one, Option two, ... and first option, second option, ...
+     * <li>first option, second option, ...
+     * <li>first, second, ...
+     *
+     * @param locale         The locale.
+     * @param possibleValues The list with possible values.
+     * @return List with possible values as numbered labels
+     */
+    private static Collection<Displayable> createNumberedValues(Locale locale, Collection<Displayable> possibleValues, String prefixResourceName) {
+        String optionText = ResourceBundleHelper.getResourceString("ruleset.Keywords", locale, "Option");
+        String prefix = "";
+        if (prefixResourceName != null) {
+            prefix = ResourceBundleHelper.getResourceString("ruleset.Keywords", locale, prefixResourceName);
+            optionText = prefix + ' ' + optionText;
+            prefix = ' ' + prefix;
+        }
+
         List<Displayable> numbered = new ArrayList<>();
 
         int i = 1;
@@ -158,7 +217,7 @@ final class InterceptionHelper {
 
         i = 1;
         for (Displayable op : possibleValues) {
-            numbered.add(clone(op, nf.format(i++, "%spellout-ordinal")));
+            numbered.add(clone(op, nf.format(i++, "%spellout-ordinal") + prefix));
         }
 
         i = 1;
@@ -168,6 +227,7 @@ final class InterceptionHelper {
 
         return numbered;
     }
+    // endregion
 
     private static Displayable clone(Displayable value, String label) {
         if (value instanceof DimensionLevelLabel) {
