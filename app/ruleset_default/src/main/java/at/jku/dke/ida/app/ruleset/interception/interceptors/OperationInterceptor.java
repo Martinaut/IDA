@@ -14,8 +14,10 @@ import at.jku.dke.ida.rules.results.EventConfidenceResult;
 import at.jku.dke.ida.scxml.interceptors.DetermineOperationInterceptor;
 import at.jku.dke.ida.shared.Event;
 import at.jku.dke.ida.shared.display.Displayable;
+import at.jku.dke.ida.shared.operations.Operation;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -35,6 +37,13 @@ public class OperationInterceptor implements DetermineOperationInterceptor {
         if (operationServiceModel.getUserInput() == null || operationServiceModel.getUserInput().isBlank())
             return operationServiceModel;
 
+        Collection<Operation> possibleOperations = new HashSet<>(operationServiceModel.getPossibleOperations().values());
+        possibleOperations.addAll(possibleOperations.stream()
+                .flatMap(o -> Arrays.stream(o.getEvent().getSynonyms(operationServiceModel.getLocale()))
+                        .map(x -> new Operation(o.getEvent(), x, 1))
+                )
+                .collect(Collectors.toList()));
+
         Set<WordGroup> wordGroups = new WordGroupsService()
                 .executeRules(new WordGroupsServiceModel(
                         operationServiceModel.getSessionModel(),
@@ -50,7 +59,7 @@ public class OperationInterceptor implements DetermineOperationInterceptor {
                     operationServiceModel.getCurrentState(),
                     operationServiceModel.getSessionModel(),
                     wg.getText(),
-                    operationServiceModel.getPossibleOperations().values().stream().map(x -> (Displayable) x).collect(Collectors.toList())
+                    possibleOperations.stream().map(x -> (Displayable) x).collect(Collectors.toList())
             )));
         }
 
@@ -59,7 +68,7 @@ public class OperationInterceptor implements DetermineOperationInterceptor {
                 operationServiceModel.getCurrentState(),
                 operationServiceModel.getSessionModel(),
                 operationServiceModel.getLocale(),
-                operationServiceModel.getPossibleOperations().values()
+                possibleOperations
         ));
 
         // Return

@@ -1,6 +1,6 @@
 <div class="card shadow mb-4" *ngIf="ttsSupported">
   <div class="card-header py-3">
-    <a class="h6 m-0 font-weight-bold text-primary" (click)="isCollapsed = !isCollapsed" href="#"
+    <a class="h6 m-0 font-weight-bold text-primary" (click)="toggle($event)" style="cursor: pointer;"
        [attr.aria-expanded]="!isCollapsed" aria-controls="voice-settings-panel-body" [translate]="'tts.title'">
       Voice Settings
     </a>

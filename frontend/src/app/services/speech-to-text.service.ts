@@ -9,6 +9,8 @@ import { Observable, Subject } from 'rxjs';
 })
 export class SpeechToTextService {
 
+  private static permissionError = false;
+
   private startedSource = new Subject<Event>();
   private endedSource = new Subject<Event>();
   private resultAvailableSource = new Subject<SpeechRecognitionEvent>();
@@ -36,18 +38,32 @@ export class SpeechToTextService {
         this.endedSource.next(evt);
       };
       this.speechRecognition.onresult = evt => this.resultAvailableSource.next(evt);
-      this.speechRecognition.onerror = evt => console.log('Error during speech recognition: ' + evt);
-      this.autoStart = this.getValueFromStorage('ida.voice.autoStart', 'yes') === 'yes';
+      this.speechRecognition.onerror = evt => {
+        console.log('Error during speech recognition: ', evt);
+        if (evt.error === 'not-allowed') {
+          SpeechToTextService.permissionError = true;
+        }
+      };
+      this.autoStart = this.getValueFromStorage('ida.voice.autoStart', 'no') === 'yes';
       this.setLanguage(this.getValueFromStorage('ida.lang', 'en'));
     }
     this.recogActive = false;
+
+    const navig = (window.navigator as any);
+    if (navig.permissions) {
+      navig.permissions.query({name: 'microphone'}).then(res => {
+        if (res.state !== 'granted' && res.state !== 'prompt') {
+          SpeechToTextService.permissionError = true;
+        }
+      });
+    }
   }
 
   /**
    * Returns whether speech to text is supported in current browser.
    */
   static isSupported(): boolean {
-    return 'SpeechRecognition' in window;
+    return 'SpeechRecognition' in window && !SpeechToTextService.permissionError;
   }
 
   /**

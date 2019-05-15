@@ -1,8 +1,8 @@
 {
 	"as": {
 		"baseMeasureConds": "Base Measure Conditions",
-		"cc": "Context of Comparison",
-		"ci": "Context of Interest",
+		"cc": "Set of Comparison",
+		"ci": "Set of Interest",
 		"cube": "Cube",
 		"diceLevel": "Dice Level",
 		"diceNode": "Dice Node",

@@ -131,6 +131,6 @@ public final class SimilarityHelper {
     }
 
     private static Similarity buildSimilarity(String input, Displayable option, BiFunction<String, String, Double> scoringFunction) {
-        return new Similarity<>(input, option, scoringFunction.apply(input, option.getTitle()));
+        return new Similarity<>(input, option, scoringFunction.apply(input.toLowerCase(), option.getTitle().toLowerCase()));
     }
 }

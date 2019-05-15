@@ -1,7 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { ConnectionService, SpeechToTextService, TextToSpeechService } from '../services';
 import { Subscription } from 'rxjs';
+import { ConnectionService, SpeechToTextService, TextToSpeechService } from '../services';
+import { environment } from '../../environments/environment';
 
 /**
  * Panel used to connect to the websocket.
@@ -72,11 +73,28 @@ export class ConnectionPanelComponent implements OnInit, OnDestroy {
     this.tts.stop();
   }
 
+  /**
+   * Sets the selected language.
+   *
+   * @param lang The selected language.
+   */
   setLanguage(lang): void {
     this.selectedLanguage = lang;
     this.tts.language = this.selectedLanguage;
     this.stt.setLanguage(this.selectedLanguage);
     this.translateService.use(lang);
+  }
+
+  /**
+   * Shows/hides the component.
+   *
+   * @param event The click-event.
+   */
+  toggle(event: MouseEvent): void {
+    if (event) {
+      event.preventDefault();
+    }
+    this.isCollapsed = !this.isCollapsed;
   }
 
   // region --- SETTINGS ---
@@ -98,7 +116,7 @@ export class ConnectionPanelComponent implements OnInit, OnDestroy {
     if (lang) {
       return lang;
     }
-    return 'ws://localhost:8080/ws';
+    return environment.defaultUrl;
   }
 
   // endregion

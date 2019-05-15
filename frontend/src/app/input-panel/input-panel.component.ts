@@ -151,6 +151,9 @@ export class InputPanelComponent implements OnInit, OnDestroy {
    * Start speech recognition.
    */
   toggleSpeechRecognition(): void {
+    if (!SpeechToTextService.isSupported()) {
+      this.sttSupported = false;
+    }
     if (this.recording) {
       this.stt.stop();
     } else {

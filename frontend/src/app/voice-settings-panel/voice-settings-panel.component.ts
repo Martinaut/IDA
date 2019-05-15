@@ -10,7 +10,6 @@ export class VoiceSettingsPanelComponent implements OnInit, OnDestroy {
 
   isCollapsed: boolean;
   ttsSupported: boolean;
-  autoStartListening: boolean;
 
   voices: SpeechSynthesisVoice[];
   sub: Subscription;
@@ -39,5 +38,17 @@ export class VoiceSettingsPanelComponent implements OnInit, OnDestroy {
     if (this.sub) {
       this.sub.unsubscribe();
     }
+  }
+
+  /**
+   * Shows/hides the component.
+   *
+   * @param event The click-event.
+   */
+  toggle(event: MouseEvent): void {
+    if (event) {
+      event.preventDefault();
+    }
+    this.isCollapsed = !this.isCollapsed;
   }
 }
