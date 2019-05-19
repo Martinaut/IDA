@@ -1,0 +1,61 @@
+{
+	"as": {
+		"baseMeasureConds": "Kennzahleneinschränkungen",
+		"cc": "Vergleichskontext",
+		"ci": "Kontext von Interesse",
+		"cube": "Würfel",
+		"diceLevel": "Würfel Level",
+		"diceNode": "Würfel Knoten",
+		"dimQualis": "Dimensionseigenschaften",
+		"filterConds": "Filterbedingungen",
+		"granLevel": "Granularitätsstufe",
+		"invalidData": "Ungültige Daten. Das hätte nicht passieren sollen.",
+		"joinConditions": "Verknüpfungsbedingungen",
+		"measures": "Kennzahlen",
+		"noData": "Keine Daten vorhanden.",
+		"scoreFilters": "Ergebnisfilter",
+		"scores": "Ergebnis",
+		"sliceConds": "Schnittbedingungen",
+		"title": "Aktuelle Analysesituation"
+	},
+	"conn": {
+		"connect": "Verbinden",
+		"disconnect": "Trennen",
+		"title": "IDA Verbindung",
+		"url": "Server URL"
+	},
+	"input": {
+		"placeholder": "Frag mich etwas ...",
+		"send": "SENDEN",
+		"title": "Ihre Eingabe",
+    "reviseQuery": "Abfrage überarbeiten",
+		"validation": "Bitte geben Sie einen Text ein, bevor Sie die Nachricht versenden."
+	},
+	"display": {
+		"leftOption": "Linke Option",
+		"leftSide": "Auf der linken Seite",
+		"option": "Option",
+		"rightOption": "Rechte Option",
+		"rightSide": "Auf der rechten Seite"
+	},
+	"site": {
+		"header": "IDA Sprachschnittstelle",
+		"websocketError": "Entschuldigung, aber IDA funktioniert ohne Websockets und TextEncoder nicht. Ihr Browser unterstützt diese Funktionen nicht. Bitte aktualisieren Sie Ihren Browser."
+	},
+	"tts": {
+		"autoStart": "Automatisch zuhören",
+		"local": "Lokal",
+		"pitch": "Höhe",
+		"rate": "Geschwindigkeit",
+		"standardVoice": "Standardstimme verwenden",
+		"title": "Sprachausgabe Einstellungen",
+		"voice": "Stimme",
+		"volume": "Lautstärke",
+    "true": "Ja",
+    "false": "Nein"
+	},
+  "result": {
+    "title": "Ergebnis",
+    "resultMessage": "Hier ist das Ergebnis."
+  }
+}

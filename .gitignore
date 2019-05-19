@@ -95,6 +95,6 @@ nbdist/
 
 ### CUSTOM
 \.idea/dataSources\.xml
-/app/server/src/main/resources/static/frontend/
-!/app/server/src/main/resources/static/frontend/index.html
+#/app/server/src/main/resources/static/frontend/
+#!/app/server/src/main/resources/static/frontend/index.html
 /graphdb/repository

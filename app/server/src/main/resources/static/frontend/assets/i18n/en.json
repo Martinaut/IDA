@@ -1,0 +1,61 @@
+{
+	"as": {
+		"baseMeasureConds": "Base Measure Conditions",
+		"cc": "Set of Comparison",
+		"ci": "Set of Interest",
+		"cube": "Cube",
+		"diceLevel": "Dice Level",
+		"diceNode": "Dice Node",
+		"dimQualis": "Dimension Qualifications",
+		"filterConds": "Filter Conditions",
+		"granLevel": "Granularity level",
+		"invalidData": "Invalid data. This should not have happened.",
+		"joinConditions": "Join Conditions",
+		"measures": "Measures",
+		"noData": "No data available.",
+		"scoreFilters": "Score Filters",
+		"scores": "Scores",
+		"sliceConds": "Slice Conditions",
+		"title": "Current Analysis Situation"
+	},
+	"conn": {
+		"connect": "Connect",
+		"disconnect": "Disconnect",
+		"title": "IDA Connection",
+		"url": "Server URL"
+	},
+	"input": {
+		"placeholder": "Ask me something ...",
+		"send": "SEND",
+		"title": "Your Input",
+    "reviseQuery": "Revise Query",
+		"validation": "Please enter a text before sending the message."
+	},
+	"display": {
+		"leftOption": "Left Option",
+		"leftSide": "On the left side",
+		"option": "Option",
+		"rightOption": "Right Option",
+		"rightSide": "On the right side"
+	},
+	"site": {
+		"header": "IDA Voice User Interface",
+		"websocketError": "We're sorry but IDA doesn't work without Websockets and TextEncoder. Your browser does not support Websockets. Please use an up-to-date browser."
+	},
+	"tts": {
+		"autoStart": "Auto Start Listening",
+		"local": "Local",
+		"pitch": "Pitch",
+		"rate": "Rate",
+		"standardVoice": "Use standard voice",
+		"title": "Voice Settings",
+		"voice": "Voice",
+		"volume": "Volume",
+    "true": "Yes",
+    "false": "No"
+	},
+  "result": {
+    "title": "Result",
+    "resultMessage": "Here is the result."
+  }
+}
