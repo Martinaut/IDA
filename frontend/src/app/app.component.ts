@@ -16,14 +16,7 @@ export class AppComponent {
    * Initializes a new instance of class AppComponent.
    */
   constructor(private translate: TranslateService) {
-    translate.setDefaultLang(this.getLangFromStorage());
+    translate.setDefaultLang('en');
   }
 
-  private getLangFromStorage(): string {
-    const lang = localStorage.getItem('ida.lang');
-    if (lang) {
-      return lang;
-    }
-    return 'en';
-  }
 }

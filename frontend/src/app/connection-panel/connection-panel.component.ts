@@ -33,7 +33,7 @@ export class ConnectionPanelComponent implements OnInit, OnDestroy {
    * A lifecycle hook that is called after Angular has initialized  all data-bound properties of a directive.
    */
   ngOnInit(): void {
-    this.selectedLanguage = this.getLangFromStorage();
+    this.setLanguage(this.getLangFromStorage());
     this.serverUrl = this.getUrlFromStorage();
     this.isConnected = false;
     this.isCollapsed = false;

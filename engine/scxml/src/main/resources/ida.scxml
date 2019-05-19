@@ -15,10 +15,10 @@
             <onentry>
                 <ida:DisplayPatterns />
             </onentry>
-            <transition event="userInput" target="DeterminingSelectPattern" />
+            <transition event="userInput" target="DeterminingPatternSelection" />
         </state>
 
-        <state id="DeterminingSelectPattern">
+        <state id="DeterminingPatternSelection">
             <onentry>
                 <ida:DeterminePatternSelection />
             </onentry>
