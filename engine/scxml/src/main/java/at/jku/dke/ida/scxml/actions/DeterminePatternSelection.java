@@ -60,12 +60,12 @@ public class DeterminePatternSelection extends BaseAction {
                 case Pattern.COMPARATIVE:
                     ComparativeAnalysisSituation comp = new ComparativeAnalysisSituation();
 
-                    ctxModel.setAnalysisSituation(comp.getContextOfInterest());
+                    ctxModel.setAnalysisSituationWithoutEvent(comp.getContextOfInterest());
                     ctxModel.setComparativeActiveAS(Pattern.SI);
                     ctxModel.getAdditionalData().put(Pattern.ADD_DATA_COMPARATIVE, comp);
                     break;
                 case Pattern.NONCOMPARATIVE:
-                    ctxModel.setAnalysisSituation(new NonComparativeAnalysisSituation());
+                    ctxModel.setAnalysisSituationWithoutEvent(new NonComparativeAnalysisSituation());
                     break;
             }
             ctx.getInternalIOProcessor().addEvent(new TriggerEvent(Event.DETERMINED.getEventName(), TriggerEvent.SIGNAL_EVENT));

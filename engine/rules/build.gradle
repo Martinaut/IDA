@@ -3,7 +3,7 @@ version = '1.0.0-SNAPSHOT'
 dependencies {
     implementation 'org.drools:drools-core:7.20.0.Final'
     implementation 'org.drools:drools-compiler:7.20.0.Final'
-    api 'org.kie:kie-api:7.18.0.Final'
+    api 'org.kie:kie-api:7.20.0.Final'
 
     api 'com.google.guava:guava:27.1-jre'
 

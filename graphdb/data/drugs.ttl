@@ -40,7 +40,7 @@ drugs:CostsMeasure a qbx:BaseMeasure ;
 drugs:SumQuantityMeasure a qbx:AggregateMeasure ;
   rdfs:label "Sum of Quantity"@en ;
   rdfs:label "Summe der Menge"@de ;
-  rdfs:comment "Sum of Quantity; Expression: a+b+c; aggregationfunction: sum;explanation explanation explanation explanation explanation explanation explanation explanation explanation explanation explanation explanation explanation explanation explanation explanation explanation explanation explanation explanation "@en ;
+  rdfs:comment "Sum of Quantity; Expression: a+b+c; aggregationfunction: sum"@en ;
   qbx:aggregationFunction qbx:Sum ;
   qbx:derivedFrom drugs:QuantityMeasure .
 
@@ -59,14 +59,6 @@ drugs:CostsPerUnitMeasure a qbx:AggregateMeasure ;
   qbx:aggregationFunction qbx:Sum ;
   qbx:derivedFrom drugs:SumQuantityMeasure ;
   qbx:derivedFrom drugs:SumCostsMeasure .
-
-
-drugs:TestMeasure a qbx:AggregateMeasure ;
-  rdfs:label "TestMeasure"@en ;
-  rdfs:label "Testkennzahl"@de ;
-  rdfs:comment "Test Measure; Expression: a+b+c; aggregationfunction: sum"@en ;
-  qbx:aggregationFunction qbx:Avg ;
-  qbx:derivedFrom drugs:CostsPerUnitMeasure .
 
 #-----------------------------------------------------------------------------------------------------
 # Measure Predicate: BASE
@@ -327,10 +319,6 @@ drugs:InsurantDimensionMainHierarchy a qbx:Hierarchy ;
   rdfs:label "Versicherungsnehmer"@de ;
   rdfs:label "Insurant"@en .
 
-drugs:InsurantDimensionRegionHierarchy a qbx:Hierarchy ;
-  rdfs:label "Regional"@de ;
-  rdfs:label "Regional"@en .
-
 drugs:InsurantDimensionInsurantLevel a qbx:Level ;
   rdfs:label "Insurant"@en ;
   rdfs:label "Versicherungsnehmer"@de ;
@@ -348,14 +336,8 @@ drugs:InsurantDimensionInsProvinceLevel a qbx:Level ;
   rdfs:label "Insurant Province"@en ;
   rdfs:comment "Insurant Province"@en .
 
-drugs:InsurantDimensionInsRegionLevel a qbx:Level ;
-  rdfs:label "Versicherungsnehmer-Region"@de ;
-  rdfs:label "Insurant Region"@en ;
-  rdfs:comment "Insurant Region"@en .
-
 drugs:InsurantDimensionInsurantToInsDistrict a qbx:HierarchyStep ;
   qbx:inHierarchy drugs:InsurantDimensionMainHierarchy ;
-  qbx:inHierarchy drugs:InsurantDimensionRegionHierarchy ;
   qbx:pcCardinality qbx:OneToMany ;
   qbx:childLevel drugs:InsurantDimensionInsurantLevel ;
   qbx:parentLevel drugs:InsurantDimensionInsDistrictLevel .
@@ -375,12 +357,6 @@ drugs:InsurantDimensionInsDistrictLevelInhPerSqkmInInsDistrictAttribute a qbx:At
   rdfs:label "Einwohner pro m² im Versicherungsnehmer-Bezirk"@de ;
   rdfs:label "Inhabitants Per Sqkm In Insurant District"@en ;
   qbx:dataType xsd:number .
-
-drugs:InsurantDimensionInsDistrictToInsRegion a qbx:HierarchyStep ;
-  qbx:inHierarchy drugs:InsurantDimensionRegionHierarchy ;
-  qbx:pcCardinality qbx:OneToMany ;
-  qbx:childLevel drugs:InsurantDimensionInsDistrictLevel ;
-  qbx:parentLevel drugs:InsurantDimensionInsRegionLevel .
 
 #-----------------------------------------------------------------------------------------------------
 # INSTANCE

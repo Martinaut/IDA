@@ -74,6 +74,16 @@ public class SessionContextModel extends SessionModel {
     }
 
     /**
+     * Sets the analysis situation and does NOT trigger an event.
+     *
+     * @param analysisSituation the analysis situation
+     * @throws IllegalArgumentException analysisSituation must not be null
+     */
+    public void setAnalysisSituationWithoutEvent(EngineAnalysisSituation analysisSituation) {
+        super.setAnalysisSituation(analysisSituation);
+    }
+
+    /**
      * Sets the display data and triggers an event if a listener is registered.
      *
      * @param displayData the display data
