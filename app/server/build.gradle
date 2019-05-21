@@ -6,6 +6,7 @@ version '1.0.0-SNAPSHOT'
 mainClassName = 'at.jku.dke.ida.app.IdaApplication'
 
 dependencies {
+    implementation project(':engine:csp')
     implementation project(':engine:web')
-    implementation project(':app:ruleset_default')
+    implementation project(':app:ruleset')
 }

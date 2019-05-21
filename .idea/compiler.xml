@@ -5,10 +5,18 @@
       <profile default="true" name="Default" enabled="true" />
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="at.jku.dke.at.jku.dke.ida.nlp.main" target="11" />
+      <module name="at.jku.dke.at.jku.dke.ida.nlp.test" target="11" />
       <module name="at.jku.dke.data.main" target="11" />
       <module name="at.jku.dke.data.test" target="11" />
+      <module name="at.jku.dke.ida.nlp.at.jku.dke.at.jku.dke.ida.nlp.main" target="11" />
+      <module name="at.jku.dke.ida.nlp.at.jku.dke.at.jku.dke.ida.nlp.test" target="11" />
+      <module name="at.jku.dke.nlp.main" target="11" />
+      <module name="at.jku.dke.nlp.test" target="11" />
       <module name="at.jku.dke.rules.main" target="11" />
       <module name="at.jku.dke.rules.test" target="11" />
+      <module name="at.jku.dke.ruleset_default.main" target="11" />
+      <module name="at.jku.dke.ruleset_default.test" target="11" />
       <module name="at.jku.dke.scxml.main" target="11" />
       <module name="at.jku.dke.scxml.test" target="11" />
       <module name="at.jku.dke.shared.main" target="11" />

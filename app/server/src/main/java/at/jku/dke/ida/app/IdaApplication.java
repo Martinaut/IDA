@@ -1,6 +1,6 @@
 package at.jku.dke.ida.app;
 
-import at.jku.dke.ida.app.ruleset.csp.ConstraintSatisfactionSpringConfiguration;
+import at.jku.dke.ida.csp.ConstraintSatisfactionSpringConfiguration;
 import at.jku.dke.ida.data.configuration.DataSpringConfiguration;
 import at.jku.dke.ida.scxml.configuration.SCXMLSpringConfiguration;
 import at.jku.dke.ida.shared.spring.SharedSpringConfiguration;
