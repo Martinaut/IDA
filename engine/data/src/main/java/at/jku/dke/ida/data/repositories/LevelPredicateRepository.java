@@ -68,7 +68,6 @@ public class LevelPredicateRepository extends DimensionCubeElementRepository {
      * @throws IllegalArgumentException If {@code cubeIri} is {@code null}, blank or an invalid IRI.
      * @throws QueryException           If an exception occurred while executing the query.
      */
-    @SuppressWarnings("Duplicates")
     public Graph<String> getDependencyGraph(String cubeIri) throws QueryException {
         var deps = getAllRelationshipsByCube(cubeIri);
 

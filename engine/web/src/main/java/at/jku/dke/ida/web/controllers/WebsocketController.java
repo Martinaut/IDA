@@ -1,14 +1,12 @@
 package at.jku.dke.ida.web.controllers;
 
 import at.jku.dke.ida.scxml.exceptions.*;
-import at.jku.dke.ida.scxml.session.Session;
 import at.jku.dke.ida.scxml.session.SessionManager;
 import at.jku.dke.ida.shared.Event;
 import at.jku.dke.ida.shared.ResourceBundleHelper;
 import at.jku.dke.ida.shared.display.ErrorDisplay;
 import at.jku.dke.ida.web.models.InputMessage;
 import at.jku.dke.ida.web.models.StartDialogMessage;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,8 +15,6 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.stereotype.Controller;
-
-import java.util.Optional;
 
 /**
  * This controller defines the websocket endpoints.

@@ -2,7 +2,6 @@ package at.jku.dke.ida.shared.models.generic;
 
 import at.jku.dke.ida.shared.models.AnalysisSituation;
 import at.jku.dke.ida.shared.models.DimensionQualification;
-import org.apache.commons.lang3.StringUtils;
 
 import java.util.*;
 import java.util.function.Function;

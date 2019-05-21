@@ -1,10 +1,6 @@
 package at.jku.dke.ida.shared.models;
 
 import at.jku.dke.ida.shared.models.generic.GenericComparativeAnalysisSituation;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.tuple.Pair;
-
-import java.util.*;
 
 /**
  * A comparative analysis situation allows to model comparison. It joins two analysis situations and relates

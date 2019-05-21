@@ -15,13 +15,6 @@ then
     insert(new Operation(Event.NAVIGATE_FILTER_NARROW, $model.getLocale(), 60));
 end
 
-//rule "'Narrow Filter' - if "
-//    agenda-group "operation-display-determination"
-//    enabled false
-//when
-//then
-//end
-
 rule "'Drop Filter' - if at least one filter is selected"
     agenda-group "operation-display-determination"
 when
@@ -30,13 +23,6 @@ when
 then
     insert(new Operation(Event.NAVIGATE_FILTER_BROADEN, $model.getLocale(), 62));
 end
-
-//rule "'Broaden Filter' - if "
-//    agenda-group "operation-display-determination"
-//    enabled false
-//when
-//then
-//end
 
 rule "'Refocus Filter' - if at least one filter is selected and one available"
     agenda-group "operation-display-determination"
