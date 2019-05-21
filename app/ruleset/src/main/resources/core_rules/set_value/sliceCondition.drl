@@ -15,7 +15,6 @@ when
     $as : NonComparativeAnalysisSituation()
     $model : SetValueServiceModel(operation == Event.NAVIGATE_SLICE_CONDITION_NARROW, analysisSituation == $as, value instanceof DimensionLabel)
 then
-    //ValueSetter.addSliceCondition($as, (DimensionLabel)$model.getValue());
     $as.getDimensionQualification(((DimensionLabel)$model.getValue()).getDimensionUri()).addSliceCondition(((DimensionLabel)$model.getValue()).getUri());
 end
 

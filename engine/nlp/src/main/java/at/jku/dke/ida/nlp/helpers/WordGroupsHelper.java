@@ -1,7 +1,7 @@
 package at.jku.dke.ida.nlp.helpers;
 
-import at.jku.dke.ida.app.nlp.NLPProcessor;
-import at.jku.dke.ida.app.nlp.models.WordGroup;
+import at.jku.dke.ida.nlp.NLPProcessor;
+import at.jku.dke.ida.nlp.models.WordGroup;
 import edu.stanford.nlp.pipeline.CoreDocument;
 
 import java.util.Set;

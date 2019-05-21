@@ -1,9 +1,9 @@
 package app_rules
 
 // ------------------------------------ IMPORT --------------------------------------
-import at.jku.dke.ida.app.nlp.models.GraphDBSimilarityServiceModel
-import at.jku.dke.ida.app.nlp.helpers.SimilarityHelper
-import at.jku.dke.ida.app.nlp.models.WordGroup
+import at.jku.dke.ida.nlp.models.GraphDBSimilarityServiceModel
+import at.jku.dke.ida.nlp.helpers.SimilarityHelper
+import at.jku.dke.ida.nlp.models.WordGroup
 import at.jku.dke.ida.data.models.CubeSimilarity
 
 // ------------------------------------ RULES ---------------------------------------

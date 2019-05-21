@@ -15,7 +15,6 @@ when
     $model : SetValueServiceModel(operation == Event.NAVIGATE_JOIN_CONDITION_ADD, analysisSituation == $as, value instanceof Displayable)
 then
     $as.addJoinCondition(((Displayable)$model.getValue()).getDisplayableId());
-    // TODO: add levels
 end
 
 rule "Drop join condition"

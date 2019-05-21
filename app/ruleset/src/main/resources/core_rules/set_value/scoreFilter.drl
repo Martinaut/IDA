@@ -15,7 +15,6 @@ when
     $model : SetValueServiceModel(operation == Event.NAVIGATE_SCORE_FILTER_ADD, analysisSituation == $as, value instanceof Displayable)
 then
     $as.addScoreFilter(((Displayable)$model.getValue()).getDisplayableId());
-    // TODO:
 end
 
 rule "Drop score filter"

@@ -1,9 +1,9 @@
 package app_rules
 
 // ------------------------------------ IMPORT --------------------------------------
-import at.jku.dke.ida.app.nlp.models.WordGroupsServiceModel
-import at.jku.dke.ida.app.nlp.helpers.WordGroupsHelper
-import at.jku.dke.ida.app.nlp.models.WordGroup
+import at.jku.dke.ida.nlp.models.WordGroupsServiceModel
+import at.jku.dke.ida.nlp.helpers.WordGroupsHelper
+import at.jku.dke.ida.nlp.models.WordGroup
 
 // ------------------------------------ RULES ---------------------------------------
 rule "Word Groups - Find Noun Compounds"

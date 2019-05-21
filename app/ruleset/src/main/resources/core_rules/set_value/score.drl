@@ -15,7 +15,6 @@ when
     $model : SetValueServiceModel(operation == Event.NAVIGATE_SCORE_ADD, analysisSituation == $as, value instanceof Displayable)
 then
     $as.addScore(((Displayable)$model.getValue()).getDisplayableId());
-    // TODO: add measures
 end
 
 rule "Drop score"
