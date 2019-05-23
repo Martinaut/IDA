@@ -3,7 +3,6 @@ package at.jku.dke.ida.scxml.actions;
 import at.jku.dke.ida.rules.interfaces.OperationIntentServiceModel;
 import at.jku.dke.ida.rules.models.DefaultOperationIntentServiceModel;
 import at.jku.dke.ida.rules.results.EventConfidenceResult;
-import at.jku.dke.ida.rules.results.StringConfidenceResult;
 import at.jku.dke.ida.rules.services.OperationIntentService;
 import at.jku.dke.ida.scxml.interceptors.DetermineOperationInputIntentInterceptor;
 import at.jku.dke.ida.scxml.session.SessionContextModel;

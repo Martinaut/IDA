@@ -37,14 +37,14 @@ drugs:CostsMeasure a qbx:BaseMeasure ;
 drugs:SumQuantityMeasure a qbx:AggregateMeasure ;
   rdfs:label "Sum of Quantity"@en ;
   rdfs:label "Summe der Menge"@de ;
-  rdfs:comment "Sum of Quantity; Expression: a+b+c; aggregationfunction: sum"@en ;
+  rdfs:comment "Sum of Quantity; Expression: SUM(Quantity); aggregationfunction: sum"@en ;
   qbx:aggregationFunction qbx:Sum ;
   qbx:derivedFrom drugs:QuantityMeasure .
 
 drugs:SumCostsMeasure a qbx:AggregateMeasure ;
   rdfs:label "Sum of Costs"@en ;
   rdfs:label "Summe der Kosten"@de ;
-  rdfs:comment "Sum of Costs; Expression: a+b+c; aggregationfunction: sum"@en ;
+  rdfs:comment "Sum of Costs; Expression: SUM(Costs); aggregationfunction: sum"@en ;
   qbx:aggregationFunction qbx:Sum ;
   qbx:derivedFrom drugs:CostsMeasure .
 
@@ -52,7 +52,6 @@ drugs:SumCostsMeasure a qbx:AggregateMeasure ;
 drugs:CostsPerUnitMeasure a qbx:AggregateMeasure ;
   rdfs:label "Costs per Unit"@en ;
   rdfs:label "Kosten pro Einheit"@de ;
-  rdfs:comment "Costs per Unit; Expression: a+b+c; aggregationfunction: sum"@en ;
   qbx:aggregationFunction qbx:Sum ;
   qbx:derivedFrom drugs:SumQuantityMeasure ;
   qbx:derivedFrom drugs:SumCostsMeasure .
@@ -83,8 +82,8 @@ drugs:ChangeOfCostsMeasure a qbx:ComparativeMeasure ;
   qbx:setOfComparisonMeasure drugs:SumCostsMeasure .
 
 drugs:SignificantChange a qbx:ComparativeMeasurePredicate ;
-  rdfs:label "Change of costs"@en ;
-  rdfs:label "Änderung der Kosten"@de ;
+  rdfs:label "Significant Change of Costs"@en ;
+  rdfs:label "Signifikante Änderung der Kosten"@de ;
   rdfs:comment "Change over 10%"@en ;
   qbx:over drugs:ChangeOfCostsMeasure .
 
@@ -290,7 +289,7 @@ drugs:DoctorDimensionDoctorLevelDocAgeAttribute a qbx:Attribute ;
 
 drugs:DoctorDimensionDocDistrictLevelInhPerSqkmInDocDistrictAttribute a qbx:Attribute ;
   rdfs:label "Inhabitants per square-km in doctor district"@en ;
-  rdfs:label "Einwohner pro m² im Arzt-Bezirk"@de ;
+  rdfs:label "Einwohner pro km² im Arzt-Bezirk"@de ;
   qbx:dataType xsd:number .
 
 #-----------------------------------------------------------------------------------------------------

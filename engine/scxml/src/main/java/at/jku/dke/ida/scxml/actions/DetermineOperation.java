@@ -3,7 +3,6 @@ package at.jku.dke.ida.scxml.actions;
 import at.jku.dke.ida.rules.interfaces.OperationServiceModel;
 import at.jku.dke.ida.rules.models.DefaultOperationServiceModel;
 import at.jku.dke.ida.rules.results.EventConfidenceResult;
-import at.jku.dke.ida.rules.results.StringConfidenceResult;
 import at.jku.dke.ida.rules.services.OperationService;
 import at.jku.dke.ida.scxml.interceptors.DetermineOperationInterceptor;
 import at.jku.dke.ida.scxml.session.SessionContextModel;
