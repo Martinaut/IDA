@@ -200,7 +200,7 @@ public class DefaultOperationDisplayServiceModel extends AbstractServiceModel im
         int count = 0;
         for (DimensionQualification dq : as.getDimensionQualifications()) {
             var preds = new HashSet<>(this.granularityLevelHierarchy.predecessors(dq.getGranularityLevel()));
-            preds.remove(IRIConstants.RESOURCE_TOP_LEVEL); // TODO: brauche ich hier überhaupt top-level, kann ich die nicht sowieso aus dem graph entfernen, (wegen einfach levels?)
+            preds.remove(IRIConstants.RESOURCE_TOP_LEVEL);
             count += preds.size();
         }
 
@@ -264,31 +264,6 @@ public class DefaultOperationDisplayServiceModel extends AbstractServiceModel im
             if (dq == null) return false;
             return !dq.getSliceConditions().contains(x.getRight());
         });
-
-//        if (sliceConditionHierarchy.nodes().isEmpty())
-//            return false;
-//        if (!(getAnalysisSituation() instanceof NonComparativeAnalysisSituation)) return false;
-//
-//        NonComparativeAnalysisSituation as = (NonComparativeAnalysisSituation) getAnalysisSituation();
-//        int count = 0;
-//        for (DimensionQualification dq : as.getDimensionQualifications()) {
-//            Set<String> scs = new HashSet<>(dq.getSliceConditions());
-//            scs.add(IRIConstants.RESOURCE_TOP_LEVEL);
-//            for (String sc : scs) {
-//                count += GraphHelper.getAllSuccessors(this.sliceConditionHierarchy, sc)
-//                        .stream()
-//                        .mapToLong(x -> this.sliceConditions.stream()
-//                                .filter(y -> y.getLeft().equals(dq.getDimension()) && y.getRight().equals(x))
-//                                .count())
-//                        .sum();
-//            }
-//
-//            for (String sc : dq.getSliceConditions()) {
-//                count -= GraphHelper.getAllPredecessors(this.sliceConditionHierarchy, sc).size();
-//            }
-//        }
-//
-//        return count > 0;
     }
 
     @Override
@@ -303,29 +278,6 @@ public class DefaultOperationDisplayServiceModel extends AbstractServiceModel im
                 .flatMap(x -> x.getRight().stream()
                         .map(p -> new ImmutablePair<>(x.getLeft(), p)))
                 .count() > 0;
-
-//        if (sliceConditionHierarchy.nodes().isEmpty())
-//            return false;
-//        if (!(getAnalysisSituation() instanceof NonComparativeAnalysisSituation)) return false;
-//
-//        NonComparativeAnalysisSituation as = (NonComparativeAnalysisSituation) getAnalysisSituation(); // TODO: stimmt alles nicht
-//        int count = 0;
-//        for (DimensionQualification dq : as.getDimensionQualifications()) {
-//            for (String sc : dq.getSliceConditions()) {
-//                count += GraphHelper.getAllPredecessors(this.sliceConditionHierarchy, sc)
-//                        .stream()
-//                        .mapToLong(x -> this.sliceConditions.stream()
-//                                .filter(y -> y.getLeft().equals(dq.getDimension()) && y.getRight().equals(x))
-//                                .count())
-//                        .sum();
-//            }
-//
-//            for (String sc : dq.getSliceConditions()) {
-//                count -= GraphHelper.getAllSuccessors(this.sliceConditionHierarchy, sc).size();
-//            }
-//        }
-//
-//        return count > 0;
     }
 
     @Override

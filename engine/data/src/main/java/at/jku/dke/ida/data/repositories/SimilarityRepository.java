@@ -134,8 +134,6 @@ public class SimilarityRepository extends BaseRepository {
         if (StringUtils.isBlank(lang)) throw new IllegalArgumentException("lang must not be null or empty");
         if (cubeIri != null && !IRIValidator.isValidAbsoluteIRI(cubeIri))
             throw new IllegalArgumentException("cubeIri must be an absolute IRI");
-        if (!lang.equals("en"))
-            throw new UnsupportedOperationException("This method currently only supports english language.");
 
         final String queryFile = "/repo_nlp/similarity_multiple_" + lang + ".sparql";
 

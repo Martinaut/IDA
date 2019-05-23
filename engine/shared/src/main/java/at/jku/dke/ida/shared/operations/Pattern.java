@@ -44,7 +44,7 @@ public class Pattern extends SimpleDisplayable {
     /**
      * The set of interest comparison.
      */
-    public static final String SC = "set-of-comparison"; // TODO: better place for constants?
+    public static final String SC = "set-of-comparison";
     // endregion
 
     /**

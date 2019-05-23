@@ -117,10 +117,10 @@ public class DisplayOperations extends BaseAction {
         Set<String> bmcs = BeanUtil.getBean(BaseMeasurePredicateRepository.class).getAllByCube(cube, as.getBaseMeasureConditions());
         Set<String> filters = BeanUtil.getBean(AggregateMeasurePredicateRepository.class).getAllByCube(cube, as.getFilterConditions());
         Graph<String> granularityLevels = buildDependencyGraph(BeanUtil.getBean(LevelRepository.class).getAllRelationshipsByCube(cube));
-        Set<Triple<String, String, String>> diceNodes = BeanUtil.getBean(LevelMemberRepository.class).getAllByCube(cube); // TODO
+        Set<Triple<String, String, String>> diceNodes = BeanUtil.getBean(LevelMemberRepository.class).getAllByCube(cube);
 
         var repo = BeanUtil.getBean(LevelPredicateRepository.class);
-        Graph<String> sliceConditions = repo.getDependencyGraph(cube);  // TODO
+        Graph<String> sliceConditions = repo.getDependencyGraph(cube);
         Set<Pair<String, String>> allSCs = repo.getAllByCube(cube);
 
         // Build model
