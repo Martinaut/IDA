@@ -4,6 +4,7 @@ import at.jku.dke.ida.data.IRIValidator;
 import at.jku.dke.ida.data.QueryException;
 import at.jku.dke.ida.data.GraphDbConnection;
 import at.jku.dke.ida.data.models.DimensionLabel;
+import at.jku.dke.ida.data.models.Label;
 import at.jku.dke.ida.data.repositories.base.DimensionCubeElementRepository;
 import at.jku.dke.ida.shared.models.DimensionQualification;
 import org.apache.commons.lang3.StringUtils;
@@ -131,5 +132,67 @@ public class LevelRepository extends DimensionCubeElementRepository {
                         .replaceAll("###DIMENSION###", dimension.getDimension())
                         .replaceAll("###LEVEL###", dimension.getGranularityLevel())
         ).stream());
+    }
+
+    /**
+     * Returns the labels of the dimensions of the specified cube where a roll up operation can be performed.
+     * <p>
+     * This is the case when the granularity level is not set to the top most granularity level.
+     *
+     * @param lang                    The requested language.
+     * @param cubeIri                 The absolute IRI of the cube.
+     * @param dimensionQualifications The dimensions qualifications of the analysis situation.
+     * @return List with dimension labels in the requested language
+     * @throws IllegalArgumentException If {@code lang} or {@code cubeIri} is {@code null} or blank or {@code dimensionQualifications} is {@code null}.
+     * @throws QueryException           If an exception occurred while executing the query.
+     */
+    public List<Label> getDimensionsWhereRollUpPossible(String lang, String cubeIri, Collection<DimensionQualification> dimensionQualifications) throws QueryException { // TODO: check if works correctly
+        if (StringUtils.isBlank(lang)) throw new IllegalArgumentException("lang must not be null or empty");
+        if (StringUtils.isBlank(cubeIri)) throw new IllegalArgumentException("cubeIri must not be null or empty");
+        if (!IRIValidator.isValidAbsoluteIRI(cubeIri))
+            throw new IllegalArgumentException("cubeIri must be an absolute IRI");
+        if (dimensionQualifications == null)
+            throw new IllegalArgumentException("dimensionQualifications must not be null");
+
+        logger.debug("Querying labels of dimension of cube {} in language {} for dimensions {} where rollup is possible.", cubeIri, lang, dimensionQualifications);
+        return getLabelsByLang(
+                "/" + queryFolder + "/getDimensionsWhereRollUpPossible.sparql",
+                lang,
+                s -> s.replaceAll("###CUBE###", cubeIri)
+                        .replace("###LEVELS###", dimensionQualifications.stream()
+                                .map(x -> '(' + convertToFullIriString(x.getGranularityLevel()) + ')')
+                                .collect(Collectors.joining(" "))
+                        ));
+    }
+
+    /**
+     * Returns the labels of the dimensions of the specified cube where a drill down operation can be performed.
+     * <p>
+     * This is the case when the granularity level is not set to the base granularity level.
+     *
+     * @param lang                    The requested language.
+     * @param cubeIri                 The absolute IRI of the cube.
+     * @param dimensionQualifications The dimensions qualifications of the analysis situation.
+     * @return List with dimension labels in the requested language
+     * @throws IllegalArgumentException If {@code lang} or {@code cubeIri} is {@code null} or blank or {@code dimensionQualifications} is {@code null}.
+     * @throws QueryException           If an exception occurred while executing the query.
+     */
+    public List<Label> getDimensionsWhereDrillDownPossible(String lang, String cubeIri, Collection<DimensionQualification> dimensionQualifications) throws QueryException { // TODO: check if works correctly
+        if (StringUtils.isBlank(lang)) throw new IllegalArgumentException("lang must not be null or empty");
+        if (StringUtils.isBlank(cubeIri)) throw new IllegalArgumentException("cubeIri must not be null or empty");
+        if (!IRIValidator.isValidAbsoluteIRI(cubeIri))
+            throw new IllegalArgumentException("cubeIri must be an absolute IRI");
+        if (dimensionQualifications == null)
+            throw new IllegalArgumentException("dimensionQualifications must not be null");
+
+        logger.debug("Querying labels of dimension of cube {} in language {} for dimensions {} where drill-down is possible.", cubeIri, lang, dimensionQualifications);
+        return getLabelsByLang(
+                "/" + queryFolder + "/getDimensionsWhereDrillDownPossible.sparql",
+                lang,
+                s -> s.replaceAll("###CUBE###", cubeIri)
+                        .replace("###LEVELS###", dimensionQualifications.stream()
+                                .map(x -> '(' + convertToFullIriString(x.getGranularityLevel()) + ')')
+                                .collect(Collectors.joining(" "))
+                        ));
     }
 }
