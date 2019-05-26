@@ -60,6 +60,16 @@ then
     insert(new Operation(Event.SWITCH_SI, $model.getLocale(), 500));
 end
 
+rule "'Switch to SI' - from comparativeif comparative and current executable"
+    agenda-group "operation-display-determination"
+when
+    $as : ComparativeAnalysisSituation()
+    $model : OperationDisplayServiceModel(analysisSituation == $as,
+                                          sessionModel.isComparativePattern())
+then
+    insert(new Operation(Event.SWITCH_SI, $model.getLocale(), 500));
+end
+
 rule "'Switch to SC' - if comparative and current executable"
     agenda-group "operation-display-determination"
 when
@@ -67,6 +77,16 @@ when
     $model : OperationDisplayServiceModel(analysisSituation == $as,
                                           sessionModel.isComparativePattern(),
                                           sessionModel.getComparativeActiveAS() == Pattern.SI)
+then
+    insert(new Operation(Event.SWITCH_SC, $model.getLocale(), 500));
+end
+
+rule "'Switch to SC' - from comparative if comparative and current executable"
+    agenda-group "operation-display-determination"
+when
+    $as : ComparativeAnalysisSituation()
+    $model : OperationDisplayServiceModel(analysisSituation == $as,
+                                          sessionModel.isComparativePattern())
 then
     insert(new Operation(Event.SWITCH_SC, $model.getLocale(), 500));
 end

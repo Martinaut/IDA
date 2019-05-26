@@ -1,6 +1,6 @@
 package at.jku.dke.ida.app.ruleset.csp;
 
-import at.jku.dke.ida.app.ruleset.csp.domain.AnalysisSituationSolution;
+import at.jku.dke.ida.csp.domain.AnalysisSituationSolution;
 import at.jku.dke.ida.data.models.CubeSimilarity;
 import at.jku.dke.ida.data.models.DimensionSimilarity;
 import org.junit.jupiter.api.Test;
