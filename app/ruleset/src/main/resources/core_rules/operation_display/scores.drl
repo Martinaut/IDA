@@ -10,6 +10,7 @@ import at.jku.dke.ida.rules.interfaces.OperationDisplayServiceModel
 rule "'Add Score' - if at least one score is available"
     agenda-group "operation-display-determination"
 when
+    $as : ComparativeAnalysisSituation()
     $model : OperationDisplayServiceModel(isNotSelectedScoreAvailable())
 then
     insert(new Operation(Event.NAVIGATE_SCORE_ADD, $model.getLocale(), 20));

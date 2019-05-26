@@ -10,6 +10,7 @@ import at.jku.dke.ida.rules.interfaces.OperationDisplayServiceModel
 rule "'Add Join Condition' - if at least one join condition is available"
     agenda-group "operation-display-determination"
 when
+    $as : ComparativeAnalysisSituation()
     $model : OperationDisplayServiceModel(isNotSelectedJoinConditionAvailable())
 then
     insert(new Operation(Event.NAVIGATE_JOIN_CONDITION_ADD, $model.getLocale(), 10));

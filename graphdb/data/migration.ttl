@@ -1,9 +1,6 @@
 @prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
-
-@prefix qb:   <http://purl.org/linked-data/cube#> .
-@prefix qb4o: <http://purl.org/qb4olap/cubes#> .
 @prefix qbx:  <http://dke.jku.at/inga/cubes#> .
 
 @prefix migr: <http://www.example.org/migration#> .
@@ -60,7 +57,9 @@ migr:AgeDimensionAgeLevel a qbx:Level ;
     rdfs:label "Age class"@en ;
     rdfs:label "Altersklasse"@de .
 
-# TODO: HierarchyStep
+migr:AgeDimensionAge a qbx:HierarchyStep ;
+    qbx:inHierarchy migr:AgeDimensionMainHierarchy ;
+    qbx:childLevel migr:AgeDimensionAgeLevel .
 
 #-----------------------------------------------------------------------------------------------------
 # Dimension TIME
@@ -101,7 +100,9 @@ migr:SexDimensionSexLevel a qbx:Level ;
     rdfs:label "Sex"@en ;
     rdfs:label "Geschlecht"@de .
 
-# TODO: HierarchyStep
+migr:SexDimensionSex a qbx:HierarchyStep ;
+    qbx:inHierarchy migr:SexDimensionMainHierarchy ;
+    qbx:childLevel migr:SexDimensionSexLevel .
 
 #-----------------------------------------------------------------------------------------------------
 # Dimension DESTINATION
@@ -147,8 +148,8 @@ migr:DestinationDimensionCountryToContinent a qbx:HierarchyStep ;
 migr:CitizenshipDimension a qbx:Dimension ;
     rdfs:label "Citizenship"@en ;
     rdfs:label "Staatsangehörigkeit"@de ;
-    qbx:hasHierarchy migr:DestinationDimensionGeoHierarchy ;
-    qbx:hasHierarchy migr:DestinationDimensionGovHierarchy .
+    qbx:hasHierarchy migr:CitizenshipDimensionGeoHierarchy ;
+    qbx:hasHierarchy migr:CitizenshipDimensionGovHierarchy .
 
 migr:CitizenshipDimensionGeoHierarchy a qbx:Hierarchy ;
     rdfs:label "Citizenship Geography"@en ;
@@ -163,29 +164,39 @@ migr:CitizenshipDimensionCountryLevel a qbx:Level ;
     rdfs:label "Land"@de ;
     rdfs:comment "Country of citizenship"@en .
 
+migr:CitizenshipDimensionContinentLevel a qbx:Level ;
+    rdfs:label "Continent"@en ;
+    rdfs:label "Kontinent"@de .
+
+migr:CitizenshipDimensionGovernmentLevel a qbx:Level ;
+    rdfs:label "Government Type"@en ;
+    rdfs:label "Regierungsart"@de .
+
 migr:CitizenshipDimensionCountryToContinent a qbx:HierarchyStep ;
     qbx:inHierarchy migr:CitizenshipDimensionGeoHierarchy ;
     qbx:childLevel migr:CitizenshipDimensionCountryLevel ;
-    qbx:parentLevel migr:DestinationDimensionContinentLevel .
+    qbx:parentLevel migr:CitizenshipDimensionContinentLevel .
 
 migr:CitizenshipDimensionCountryToContinent a qbx:HierarchyStep ;
-    qbx:inHierarchy migr:DestinationDimensionGovHierarchy ;
+    qbx:inHierarchy migr:CitizenshipDimensionGovHierarchy ;
     qbx:childLevel migr:CitizenshipDimensionCountryLevel ;
-    qbx:parentLevel migr:DestinationDimensionGovernmentLevel .
+    qbx:parentLevel migr:CitizenshipDimensionGovernmentLevel .
 
 #-----------------------------------------------------------------------------------------------------
 # Dimension TYPE
 migr:TypeDimension a qbx:Dimension ;
     rdfs:label "Type of applicant"@en ;
     rdfs:label "Art des Antragstellers"@de ;
-    qbx:hasHierarchy migr:SexDimensionMainHierarchy .
+    qbx:hasHierarchy migr:TypeDimensionMainHierarchy .
 
-migr:SexDimensionMainHierarchy a qbx:Hierarchy ;
+migr:TypeDimensionMainHierarchy a qbx:Hierarchy ;
     rdfs:label "Type of applicant"@en ;
     rdfs:label "Art des Antragstellers"@de .
 
-migr:SexDimensionSexLevel a qbx:Level ;
+migr:TypeDimensionTypeLevel a qbx:Level ;
     rdfs:label "Type of applicant"@en ;
     rdfs:label "Art des Antragstellers"@de .
 
-# TODO: HierarchyStep
+migr:TypeDimensionType a qbx:HierarchyStep ;
+    qbx:inHierarchy migr:TypeDimensionMainHierarchy ;
+    qbx:childLevel migr:TypeDimensionTypeLevel .

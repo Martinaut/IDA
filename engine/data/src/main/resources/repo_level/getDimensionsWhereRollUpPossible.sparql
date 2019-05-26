@@ -9,7 +9,8 @@ WHERE {
     <###CUBE###> qbx:dimension ?element .
     ?element qbx:hasHierarchy ?hier .
     ?hs qbx:inHierarchy ?hier ;
-        qbx:childLevel ?level .
+        qbx:childLevel ?level ;
+        qbx:parentLevel ?parent .
 
     ?element rdfs:label ?label .
     FILTER (lang(?label) = "###LANG###") .
