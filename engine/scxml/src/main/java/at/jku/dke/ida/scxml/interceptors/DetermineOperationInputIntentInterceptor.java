@@ -14,6 +14,6 @@ public interface DetermineOperationInputIntentInterceptor extends Interceptor<Op
     default Event modifyResult(OperationIntentServiceModel model, Collection<EventConfidenceResult> result) {
         return result.stream()
                 .sorted()
-                .findFirst().orElse(new EventConfidenceResult(Event.INVALID_INPUT)).getValue();
+                .findFirst().orElse(new EventConfidenceResult(Event.NAVIGATE)).getValue();
     }
 }

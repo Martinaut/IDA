@@ -14,6 +14,6 @@ public interface DetermineValueInputIntentInterceptor extends Interceptor<ValueI
     default Event modifyResult(ValueIntentServiceModel model, Collection<EventConfidenceResult> result) {
         return result.stream()
                 .sorted()
-                .findFirst().orElse(new EventConfidenceResult(Event.INVALID_INPUT)).getValue();
+                .findFirst().orElse(new EventConfidenceResult(Event.NAVIGATE)).getValue();
     }
 }

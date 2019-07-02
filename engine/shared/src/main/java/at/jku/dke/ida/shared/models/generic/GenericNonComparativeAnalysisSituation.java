@@ -177,12 +177,12 @@ public class GenericNonComparativeAnalysisSituation<TValue extends Comparable<? 
      * Adds the specified dimension qualification if it is not already present.
      *
      * @param qualification The dimension qualification to be added to the set.
-     * @throws IllegalArgumentException If the {@code qualification} is {@code null} or if there exists already an
-     *                                  entry with the same {@link DimensionQualification#getDimension()} value.
+     * //@throws IllegalArgumentException If the {@code qualification} is {@code null} or if there exists already an
+     * //                                 entry with the same {@link DimensionQualification#getDimension()} value.
      */
     public void addDimensionQualification(TDimQual qualification) {
         if (qualification == null || dimensionQualifications.containsKey(qualification.getDimension()))
-            throw new IllegalArgumentException("qualification must not be null and the dimension has to be unique.");
+            return;//throw new IllegalArgumentException("qualification must not be null and the dimension has to be unique.");
         dimensionQualifications.put(qualification.getDimension(), qualification);
     }
 
