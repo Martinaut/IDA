@@ -72,7 +72,11 @@ public class CSVPrettifier {
             printer.flush();
 
             String csvOutput = writer.toString();
-            return csvOutput.substring(0, csvOutput.lastIndexOf(System.lineSeparator()));
+
+            if (csvOutput.contains(System.lineSeparator()))
+                return csvOutput.substring(0, csvOutput.lastIndexOf(System.lineSeparator()));
+            else
+                return csvOutput;
         } catch (IOException ex) {
             LOG.error("Could not parse CSV.", ex);
             return null;
