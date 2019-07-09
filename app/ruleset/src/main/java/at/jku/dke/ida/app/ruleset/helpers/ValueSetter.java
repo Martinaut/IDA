@@ -33,7 +33,7 @@ public final class ValueSetter {
         as.setCube(cube);
 
         try {
-            var baseLevels = BeanUtil.getBean(LevelRepository.class).getBaseLevelLabelsByLangAndCube(lang, cube);
+            var baseLevels = BeanUtil.getBean(LevelRepository.class).getTopLevelLabelsByLangAndCube(lang, cube);
             for (DimensionLabel lvl : baseLevels) {
                 var dq = new DimensionQualification(lvl.getDimensionUri());
                 dq.setGranularityLevel(lvl.getUri());

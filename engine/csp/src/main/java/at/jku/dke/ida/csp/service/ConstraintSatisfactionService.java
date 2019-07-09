@@ -97,7 +97,7 @@ public class ConstraintSatisfactionService {
             as.setCube(solution.getCube());
 
             try {
-                var baseLevels = BeanUtil.getBean(LevelRepository.class).getBaseLevelLabelsByLangAndCube(language, solution.getCube());
+                var baseLevels = BeanUtil.getBean(LevelRepository.class).getTopLevelLabelsByLangAndCube(language, solution.getCube());
                 for (DimensionLabel lvl : baseLevels) {
                     var dq = new DimensionQualification(lvl.getDimensionUri());
                     dq.setGranularityLevel(lvl.getUri());

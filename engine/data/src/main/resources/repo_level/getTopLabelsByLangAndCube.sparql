@@ -1,0 +1,26 @@
+PREFIX qbx: <http://dke.jku.at/inga/cubes#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT DISTINCT ?dimension ?dimensionLabel ?element ?label ?description
+WHERE {
+	<###CUBE###> qbx:dimension ?dimension .
+    ?dimension qbx:hasHierarchy ?hier .
+    ?hierStep qbx:inHierarchy ?hier ;
+              qbx:parentLevel ?element .
+
+    FILTER NOT EXISTS {
+        ?tmpHierStep qbx:childLevel ?element
+    } .
+
+    ?element rdfs:label ?label .
+    FILTER (lang(?label) = "###LANG###") .
+    OPTIONAL {
+        ?element rdfs:comment ?description .
+    	FILTER (lang(?description) = "###LANG###") .
+    }
+
+    ?dimension rdfs:label ?dimensionLabel .
+    FILTER (lang(?dimensionLabel) = "###LANG###") .
+}
+ORDER BY ?dimensionLabel ?label

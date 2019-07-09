@@ -81,6 +81,29 @@ public class LevelRepository extends DimensionCubeElementRepository {
     }
 
     /**
+     * Returns the labels of all top granularity levels of the specified cube.
+     *
+     * @param lang    The requested language.
+     * @param cubeIri The absolute IRI of the cube.
+     * @return List with top aggregate measure labels of the cube in the requested language
+     * @throws IllegalArgumentException If {@code lang} or {@code cubeIri} is {@code null} or blank.
+     * @throws QueryException           If an exception occurred while executing the query.
+     */
+    public List<DimensionLabel> getTopLevelLabelsByLangAndCube(String lang, String cubeIri) throws QueryException {
+        if (StringUtils.isBlank(lang)) throw new IllegalArgumentException("lang must not be null or empty");
+        if (StringUtils.isBlank(cubeIri)) throw new IllegalArgumentException("cubeIri must not be null or empty");
+        if (!IRIValidator.isValidAbsoluteIRI(cubeIri))
+            throw new IllegalArgumentException("cubeIri must be an absolute IRI");
+
+        logger.debug("Querying labels of base granularity levels of cube {} in language {}.", cubeIri, lang);
+
+        return mapResultToLabel(lang, connection.getQueryResult(
+                "/repo_level/getTopLabelsByLangAndCube.sparql",
+                s -> s.replaceAll("###LANG###", lang).replaceAll("###CUBE###", cubeIri)
+        ).stream());
+    }
+
+    /**
      * Returns the labels of all direct and transitive parents for the selected granularity level of the specified dimension.
      * <p>
      * If the dimension qualification has an invalid granularity level IRI or dimension IRI, an empty list will be returned.
