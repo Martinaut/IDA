@@ -6,6 +6,7 @@ import at.jku.dke.ida.data.models.DimensionLevelLabel;
 import at.jku.dke.ida.data.models.Label;
 import at.jku.dke.ida.data.repositories.LevelRepository;
 import at.jku.dke.ida.rules.interfaces.ValueDisplayServiceModel;
+import at.jku.dke.ida.shared.IRIConstants;
 import at.jku.dke.ida.shared.models.DimensionQualification;
 import at.jku.dke.ida.shared.models.NonComparativeAnalysisSituation;
 import org.apache.commons.lang3.tuple.Pair;
@@ -145,7 +146,7 @@ public final class QueryHelper {
                 .getLabelsByLangAndIris(
                         model.getLanguage(),
                         as.getDimensionQualifications().stream()
-                                .filter(x -> x.getDiceNode() != null)
+                                .filter(x -> x.getDiceNode() != null && !x.getDiceNode().equals(IRIConstants.RESOURCE_ALL_NODES))
                                 .map(DimensionQualification::getDimension)
                                 .collect(Collectors.toSet())
                 )
