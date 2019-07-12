@@ -82,7 +82,9 @@ export class InputPanelComponent implements OnInit, OnDestroy {
       } else {
         if (!this.showReviseQueryBtn) {
           setTimeout(() => {
-            this.inputField.nativeElement.focus();
+            if (!!this.inputField) {
+              this.inputField.nativeElement.focus();
+            }
 
             if (this.stt.autoStart) {
               this.stt.start();
