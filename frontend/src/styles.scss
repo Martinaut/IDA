@@ -11,3 +11,57 @@ label.voice-range {
 tr.display-clickable-row {
   cursor: pointer;
 }
+
+
+/* Pivot Table */
+.pvtUi {
+  color: #3A3B45;
+}
+
+table.pvtTable {
+  font-size: 1rem;
+}
+
+table.pvtTable thead tr th, table.pvtTable tbody tr th {
+  background-color: #EDF1FB;
+  border: 1px solid #D1D3E2;
+  font-size: 1rem;
+}
+
+table.pvtTable tbody tr td {
+  color: #3A3B45;
+  background-color: #FFF;
+  border: 1px solid #D1D3E2;
+}
+
+.pvtAxisContainer, .pvtVals {
+  border: 1px solid #6E707E;
+  background: #F8F9FC;
+}
+
+.pvtAxisContainer li.pvtPlaceholder {
+  border: 1px dashed #EAECF4;
+}
+
+.pvtAxisContainer li span.pvtAttr {
+  background: #F8F9FC;
+  border: 1px solid #EAECF4;
+}
+
+.pvtTriangle {
+  color: #3A3B45;
+}
+
+.pvtFilterBox {
+  border: 1px solid #6E707E;
+  background-color: #fff;
+}
+
+.pvtFilterBox .count {
+  color: #D1D3E2;
+}
+
+.pvtCheckContainer {
+  border-top: 1px solid #EDF1FB;
+  border-bottom: 1px solid #EDF1FB;
+}
