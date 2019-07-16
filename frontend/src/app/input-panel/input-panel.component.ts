@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { ConnectionService, SpeechToTextService, TextToSpeechService } from '../services';
+import { ConnectionService, DisplayItemClickService, SpeechToTextService, TextToSpeechService } from '../services';
 
 /**
  * Displays an input field for the user query.
@@ -19,6 +19,9 @@ export class InputPanelComponent implements OnInit, OnDestroy {
   private speechEndSub: Subscription;
   private speechResultSub: Subscription;
 
+  private clickValSub: Subscription;
+  private clickSendSub: Subscription;
+
   connected: boolean;
   waitingForResult: boolean;
   inputError: boolean;
@@ -36,6 +39,7 @@ export class InputPanelComponent implements OnInit, OnDestroy {
   constructor(private connectionService: ConnectionService,
               private stt: SpeechToTextService,
               private tts: TextToSpeechService,
+              private clickService: DisplayItemClickService,
               private changeDetector: ChangeDetectorRef) {
     this.connected = false;
     this.waitingForResult = false;
@@ -116,6 +120,9 @@ export class InputPanelComponent implements OnInit, OnDestroy {
       this.userInput = value.results[value.results.length - 1][0].transcript;
       this.changeDetector.detectChanges();
     });
+
+    this.clickValSub = this.clickService.inputChanged.subscribe(value => this.userInput = value);
+    this.clickSendSub = this.clickService.sendRequested.subscribe(() => this.sendMessage());
   }
 
   /**
@@ -139,6 +146,12 @@ export class InputPanelComponent implements OnInit, OnDestroy {
     }
     if (this.speechResultSub) {
       this.dispSub.unsubscribe();
+    }
+    if (this.clickValSub) {
+      this.clickValSub.unsubscribe();
+    }
+    if (this.clickSendSub) {
+      this.clickSendSub.unsubscribe();
     }
   }
 

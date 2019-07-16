@@ -1,6 +1,6 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { TextToSpeechService } from '../../services';
+import { DisplayItemClickService, TextToSpeechService } from '../../services';
 
 interface ListDisplay {
   displayMessage: string;
@@ -19,7 +19,8 @@ export class ListDisplayComponent implements OnChanges {
    * Initializes a new instance of class ListDisplayComponent.
    */
   constructor(private tts: TextToSpeechService,
-              private translateService: TranslateService) {
+              private translateService: TranslateService,
+              private clickService: DisplayItemClickService) {
   }
 
   /**
@@ -45,5 +46,9 @@ export class ListDisplayComponent implements OnChanges {
     }
 
     setTimeout(() => this.tts.speak(text), 600);
+  }
+
+  rowClicked(num: number): void {
+    this.clickService.listItemClicked(num);
   }
 }

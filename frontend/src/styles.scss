@@ -7,3 +7,7 @@ label.voice-range {
   display: flex;
   justify-content: space-between;
 }
+
+tr.display-clickable-row {
+  cursor: pointer;
+}

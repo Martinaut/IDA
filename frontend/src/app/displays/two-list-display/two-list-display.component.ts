@@ -1,6 +1,6 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { TextToSpeechService } from '../../services';
+import { DisplayItemClickService, TextToSpeechService } from '../../services';
 
 interface TwoListDisplay {
   displayMessage: string;
@@ -20,7 +20,8 @@ export class TwoListDisplayComponent implements OnChanges {
    * Initializes a new instance of class TwoListDisplayComponent.
    */
   constructor(private tts: TextToSpeechService,
-              private translateService: TranslateService) {
+              private translateService: TranslateService,
+              private clickService: DisplayItemClickService) {
   }
 
   /**
@@ -54,5 +55,13 @@ export class TwoListDisplayComponent implements OnChanges {
     }
 
     this.tts.speak(text);
+  }
+
+  leftRowClicked(num: number): void {
+    this.clickService.leftListItemClicked(num);
+  }
+
+  rightRowClicked(num: number): void {
+    this.clickService.rightListItemClicked(num);
   }
 }
