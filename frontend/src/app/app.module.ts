@@ -19,7 +19,6 @@ import { ComparativeComponent } from './analysis-situation-panel/comparative/com
 import { ErrorDisplayComponent } from './displays/error-display/error-display.component';
 import { ResultPanelComponent } from './result-panel/result-panel.component';
 import { MessageDisplayComponent } from './displays/message-display/message-display.component';
-import { SortableColumnComponent } from './result-panel/sortable-column.component';
 
 /**
  * The application module with all components.
@@ -38,8 +37,7 @@ import { SortableColumnComponent } from './result-panel/sortable-column.componen
     ComparativeComponent,
     ErrorDisplayComponent,
     MessageDisplayComponent,
-    ResultPanelComponent,
-    SortableColumnComponent
+    ResultPanelComponent
   ],
   imports: [
     BrowserModule,

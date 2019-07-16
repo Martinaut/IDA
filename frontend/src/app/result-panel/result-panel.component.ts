@@ -1,8 +1,9 @@
-import { Component, ElementRef, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Subscription } from 'rxjs';
 import * as Papa from 'papaparse';
 import { ConnectionService } from '../services';
-import { Subscription } from 'rxjs';
-import { SortableColumnComponent } from './sortable-column.component';
+
+declare var $: any;
 
 /**
  * Panel used to display the result-panel of the executed query.
@@ -13,19 +14,15 @@ import { SortableColumnComponent } from './sortable-column.component';
 })
 export class ResultPanelComponent implements OnInit, OnDestroy {
 
-  private resultTableElement: ElementRef;
   private sub: Subscription;
-  parsed: Array<any>;
-  sorted: Array<any>;
-
-  @ViewChildren(SortableColumnComponent) columns: QueryList<SortableColumnComponent>;
+  private resultTableElement: ElementRef;
+  parsed: Array<Array<any>>;
 
   /**
    * Initializes a new instance of class ResultPanelComponent.
    */
   constructor(private connectionService: ConnectionService) {
     this.parsed = null;
-    this.sorted = null;
   }
 
   /**
@@ -35,13 +32,15 @@ export class ResultPanelComponent implements OnInit, OnDestroy {
     this.sub = this.connectionService.resultMessageReceived.subscribe(value => {
       if (value == null) {
         this.parsed = null;
-        this.sorted = null;
       } else {
-        const pr = Papa.parse(value, {});
+        const pr = Papa.parse(value, {skipEmptyLines: true});
         this.parsed = pr.data;
-        this.sorted = pr.data;
 
         setTimeout(() => {
+          // Create
+          this.createPivotTable();
+
+          // Scroll
           if (this.resultTableElement && this.resultTableElement.nativeElement) {
             this.resultTableElement.nativeElement.scrollIntoView({left: 0, block: 'start', behavior: 'smooth'});
           }
@@ -59,34 +58,56 @@ export class ResultPanelComponent implements OnInit, OnDestroy {
     }
   }
 
-  /**
-   * Sorts the table.
-   * @param evt The sort event.
-   */
-  onSort(evt: { column: number, direction: 'asc' | 'desc' | 'none' }): void {
-    // reset other columns
-    this.columns.forEach(col => {
-      if (col.index !== evt.column) {
-        col.direction = 'none';
-      }
-    });
-
-    // Sort
-    if (evt.direction === 'none') {
-      this.sorted = this.parsed;
-    } else {
-      const tmp = this.parsed.slice(1);
-      tmp.sort((a, b) => {
-        const compare = a[evt.column] < b[evt.column] ? -1 :
-          a[evt.column] > b[evt.column] ? 1 : 0;
-        return evt.direction === 'asc' ? compare : compare * -1;
-      });
-      this.sorted = this.parsed.slice(0, 1).concat(tmp);
-    }
+  @ViewChild('pivotTable') set content(content: ElementRef) {
+    this.resultTableElement = content;
   }
 
+  private createPivotTable(): void {
+    if (!this.parsed) {
+      return;
+    }
+    if (!this.resultTableElement) {
+      return;
+    }
 
-  @ViewChild('resultTable') set resultTable(element: ElementRef) {
-    this.resultTableElement = element;
+    // Prepare rows
+    let rows = this.parsed[0];
+
+    // Find numeric columns
+    let tmp = [];
+    for (let i = 0; i < rows.length; i++) {
+      if (isNaN(this.parsed[1][i])) {
+        tmp = [];
+      } else {
+        tmp.push(rows[i]);
+      }
+    }
+    rows = rows.filter(el => !tmp.includes(el));
+
+    // Find all columns
+    const allCol = [];
+    for (let i = 0; i < rows.length; i++) {
+      if (this.parsed[1][i] === '(All)') {
+        allCol.push(rows[i]);
+      }
+    }
+    rows = rows.filter((el) => !allCol.includes(el));
+
+    // Create aggreagators
+    const tpl = $.pivotUtilities.aggregatorTemplates;
+    const aggregators = {};
+    for (const m of tmp) {
+      aggregators['Sum of ' + m] = () => tpl.sum()([m]);
+    }
+
+    // Create
+    const div = $(this.resultTableElement.nativeElement);
+    while (div.firstChild) {
+      div.removeChild(div.firstChild);
+    }
+    div.pivotUI(this.parsed, {
+      rows,
+      aggregators
+    });
   }
 }
