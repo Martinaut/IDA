@@ -1,8 +1,8 @@
 package at.jku.dke.ida.scxml.query;
 
 import at.jku.dke.ida.scxml.configuration.SCXMLConfig;
-import at.jku.dke.ida.shared.display.ErrorDisplay;
-import at.jku.dke.ida.shared.display.MessageDisplay;
+import at.jku.dke.ida.shared.display.ResultErrorDisplay;
+import at.jku.dke.ida.shared.display.WaitMessageDisplay;
 import at.jku.dke.ida.shared.session.SessionModel;
 import at.jku.dke.ida.shared.spring.BeanUtil;
 import okhttp3.*;
@@ -53,10 +53,10 @@ public class QueryExecutor {
      */
     public String executeQuery(SessionModel model) {
         LOG.info("Executing query");
-        model.setDisplayData(new MessageDisplay("pleaseWaitQuery", model.getLocale()));
+        model.setDisplayData(new WaitMessageDisplay("pleaseWaitQuery", model.getLocale()));
 
         if (!model.getAnalysisSituation().isExecutable()) {
-            model.setDisplayData(new ErrorDisplay("errorNotExecutable", model.getLocale()));
+            model.setDisplayData(new ResultErrorDisplay("errorNotExecutable", model.getLocale()));
             return null;
         }
 

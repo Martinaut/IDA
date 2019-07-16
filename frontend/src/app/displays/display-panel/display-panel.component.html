@@ -2,6 +2,8 @@
   <app-list-display *ngSwitchCase="'ListDisplay'" [display]="display"></app-list-display>
   <app-two-list-display *ngSwitchCase="'TwoListDisplay'" [display]="display"></app-two-list-display>
   <app-error-display *ngSwitchCase="'ErrorDisplay'" [display]="display"></app-error-display>
+  <app-error-display *ngSwitchCase="'ResultErrorDisplay'" [display]="display"></app-error-display>
   <app-message-display *ngSwitchCase="'MessageDisplay'" [display]="display"></app-message-display>
+  <app-message-display *ngSwitchCase="'WaitMessageDisplay'" [display]="display"></app-message-display>
   <div *ngSwitchDefault></div>
 </div>

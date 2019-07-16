@@ -78,23 +78,29 @@ export class InputPanelComponent implements OnInit, OnDestroy {
       }
     });
     this.dispSub = this.connectionService.displayMessageReceived.subscribe(value => {
+      if (value != null) {
+        if (JSON.parse(value).type === 'ExitDisplay') {
+          this.connectionService.disconnect();
+        } else if (JSON.parse(value).type === 'WaitMessageDisplay') {
+          return;
+        } else if (JSON.parse(value).type === 'ResultErrorDisplay') {
+          this.showReviseQueryBtn = true;
+        }
+      }
+
       this.waitingForResult = false;
       this.userInput = null;
 
-      if (value != null && JSON.parse(value).type === 'ExitDisplay') {
-        this.connectionService.disconnect();
-      } else {
-        if (!this.showReviseQueryBtn) {
-          setTimeout(() => {
-            if (!!this.inputField) {
-              this.inputField.nativeElement.focus();
-            }
+      if (!this.showReviseQueryBtn) {
+        setTimeout(() => {
+          if (!!this.inputField) {
+            this.inputField.nativeElement.focus();
+          }
 
-            if (this.stt.autoStart) {
-              this.stt.start();
-            }
-          }, 100);
-        }
+          if (this.stt.autoStart) {
+            this.stt.start();
+          }
+        }, 100);
       }
     });
     this.resSub = this.connectionService.resultMessageReceived.subscribe(value => {

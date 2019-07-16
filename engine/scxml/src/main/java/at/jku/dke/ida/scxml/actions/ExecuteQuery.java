@@ -3,7 +3,7 @@ package at.jku.dke.ida.scxml.actions;
 import at.jku.dke.ida.scxml.query.CSVPrettifier;
 import at.jku.dke.ida.scxml.query.QueryExecutor;
 import at.jku.dke.ida.scxml.session.SessionContextModel;
-import at.jku.dke.ida.shared.display.ErrorDisplay;
+import at.jku.dke.ida.shared.display.ResultErrorDisplay;
 import at.jku.dke.ida.shared.spring.BeanUtil;
 import org.apache.commons.scxml2.ActionExecutionContext;
 
@@ -22,14 +22,14 @@ public class ExecuteQuery extends BaseAction {
     protected void execute(ActionExecutionContext ctx, SessionContextModel ctxModel) {
         String csv = BeanUtil.getBean(QueryExecutor.class).executeQuery(ctxModel);
         if (csv == null) {
-            ctxModel.setDisplayData(new ErrorDisplay("errorExecuteQuery", ctxModel.getLocale()));
+            ctxModel.setDisplayData(new ResultErrorDisplay("errorExecuteQuery", ctxModel.getLocale()));
             return;
         }
 
         // Request pretty labels
         csv = BeanUtil.getBean(CSVPrettifier.class).prettify(ctxModel.getLocale().getLanguage(), csv);
         if (csv == null) {
-            ctxModel.setDisplayData(new ErrorDisplay("errorExecuteQuery", ctxModel.getLocale()));
+            ctxModel.setDisplayData(new ResultErrorDisplay("errorExecuteQuery", ctxModel.getLocale()));
             return;
         }
 
