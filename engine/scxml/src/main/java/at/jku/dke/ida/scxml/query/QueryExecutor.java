@@ -39,8 +39,8 @@ public class QueryExecutor {
     public QueryExecutor(SCXMLConfig config) {
         this.config = config;
         this.client = new OkHttpClient.Builder()
-                .connectTimeout(10, TimeUnit.SECONDS)
-                .writeTimeout(10, TimeUnit.SECONDS)
+                .connectTimeout(20, TimeUnit.SECONDS)
+                .writeTimeout(30, TimeUnit.SECONDS)
                 .readTimeout(30, TimeUnit.SECONDS)
                 .build();
     }
@@ -76,44 +76,44 @@ public class QueryExecutor {
 
         return csv;
     }
-// TODO
-//    /**
-//     * Sends a request to the query endpoint and returns the result as csv.
-//     *
-//     * @param model The session model.
-//     * @return CSV received from endpoint
-//     * @throws IOException If an error occurred while executing the query.
-//     */
-//    private String sendRequest(SessionModel model) throws IOException {
-//        // Send Analysis Situation
-//        String sitName = sendAnalysisSituation(model);
-//
-//        // Request result
-//        return requestResult(sitName);
-//    }
-//
-//    /**
-//     * Sends the analysis situation to the query backend.
-//     *
-//     * @param model The session model.
-//     * @return The situation name.
-//     * @throws IOException If an error occurred while sending the analysis situation.
-//     */
-//    private String sendAnalysisSituation(SessionModel model) throws IOException {
-//        final String sessionId = "urn:ida:" + model.getSessionId();
-//        final String situationName = "IDA Analysis Situation: " + sessionId + '_' + UUID.randomUUID();
-//
-//        post(config.getQueryEndpoint() + String.format("analysis/situations/%s/add", sessionId),
-//                convertAnalysisSituationToJsonLD(situationName, model.getAnalysisSituation(), () -> {
-//                    try {
-//                        return requestAnalysisSituationIRI();
-//                    } catch (IOException e) {
-//                        return "urn:uuid:" + UUID.randomUUID();
-//                    }
-//                }));
-//
-//        return situationName;
-//    }
+
+    /**
+     * Sends a request to the query endpoint and returns the result as csv.
+     *
+     * @param model The session model.
+     * @return CSV received from endpoint
+     * @throws IOException If an error occurred while executing the query.
+     */
+    private String sendRequest(SessionModel model) throws IOException {
+        // Send Analysis Situation
+        String sitName = sendAnalysisSituation(model);
+
+        // Request result
+        return requestResult(sitName);
+    }
+
+    /**
+     * Sends the analysis situation to the query backend.
+     *
+     * @param model The session model.
+     * @return The situation name.
+     * @throws IOException If an error occurred while sending the analysis situation.
+     */
+    private String sendAnalysisSituation(SessionModel model) throws IOException {
+        final String sessionId = "urn:ida:" + model.getSessionId();
+        final String situationName = "IDA Analysis Situation: " + sessionId + '_' + UUID.randomUUID();
+
+        post(config.getQueryEndpoint() + String.format("analysis/situations/%s/add", sessionId),
+                convertAnalysisSituationToJsonLD(situationName, model.getAnalysisSituation(), () -> {
+                    try {
+                        return requestAnalysisSituationIRI();
+                    } catch (IOException e) {
+                        return "urn:uuid:" + UUID.randomUUID();
+                    }
+                }));
+
+        return situationName;
+    }
 
     /**
      * Requests a new Analysis Situation IRI from the backend.
@@ -155,6 +155,50 @@ public class QueryExecutor {
         }
     }
 
+    /**
+     * Requests the result of the created analysis situation.
+     *
+     * @param situationName The name of the situation.
+     * @return The CSV-result.
+     * @throws IOException If an error occurred while executing the query.
+     */
+    private String requestResult(String situationName) throws IOException {
+        Request request = new Request.Builder()
+                .url(config.getQueryEndpoint() + "analysis/situations/" + situationName + ".csv")
+                .get()
+                .addHeader("Accept", CSV.toString())
+                .build();
+
+        LOG.debug("Sending result request to {}.", request.url());
+        try (Response response = client.newCall(request).execute()) {
+            if (!response.isSuccessful()) throw new IOException("Unexpected HTTP status code: " + response);
+            if (response.body() == null) throw new IOException("Body is null");
+            // TODO if (!CSV.equals(response.body().contentType())) throw new IOException("Invalid content type");
+            return response.body().string();
+        }
+    }
+
+
+//    /**
+//     * Sends a request to the query endpoint and returns the result as csv.
+//     *
+//     * @param model The session model.
+//     * @return CSV received from endpoint
+//     * @throws IOException If an error occurred while executing the query.
+//     */
+//    private String sendRequest(SessionModel model) throws IOException {
+//        String json = convertAnalysisSituationToJsonLD("TEST", model.getAnalysisSituation(), () -> {
+//            try {
+//                return requestAnalysisSituationIRI();
+//            } catch (IOException e) {
+//                return "urn:uuid:" + UUID.randomUUID();
+//            }
+//        });
+//
+//        // Request result
+//        return requestResult(json);
+//    }
+//
 //    /**
 //     * Requests the result of the created analysis situation.
 //     *
@@ -163,9 +207,10 @@ public class QueryExecutor {
 //     * @throws IOException If an error occurred while executing the query.
 //     */
 //    private String requestResult(String situationName) throws IOException {
+//        RequestBody body = RequestBody.create(JSON, situationName);
 //        Request request = new Request.Builder()
-//                .url(config.getQueryEndpoint() + "analysis/situations/" + situationName + ".csv")
-//                .get()
+//                .url(config.getQueryEndpoint() + "query")
+//                .post(body)
 //                //.addHeader("Accept", CSV.toString())
 //                .build();
 //
@@ -177,49 +222,4 @@ public class QueryExecutor {
 //            return response.body().string();
 //        }
 //    }
-
-
-    /**
-     * Sends a request to the query endpoint and returns the result as csv.
-     *
-     * @param model The session model.
-     * @return CSV received from endpoint
-     * @throws IOException If an error occurred while executing the query.
-     */
-    private String sendRequest(SessionModel model) throws IOException {
-        String json = convertAnalysisSituationToJsonLD("TEST", model.getAnalysisSituation(), () -> {
-            try {
-                return requestAnalysisSituationIRI();
-            } catch (IOException e) {
-                return "urn:uuid:" + UUID.randomUUID();
-            }
-        });
-
-        // Request result
-        return requestResult(json);
-    }
-
-    /**
-     * Requests the result of the created analysis situation.
-     *
-     * @param situationName The name of the situation.
-     * @return The CSV-result.
-     * @throws IOException If an error occurred while executing the query.
-     */
-    private String requestResult(String situationName) throws IOException {
-        RequestBody body = RequestBody.create(JSON, situationName);
-        Request request = new Request.Builder()
-                .url(config.getQueryEndpoint() + "query")
-                .post(body)
-                //.addHeader("Accept", CSV.toString())
-                .build();
-
-        LOG.debug("Sending result request to {}.", request.url());
-        try (Response response = client.newCall(request).execute()) {
-            if (!response.isSuccessful()) throw new IOException("Unexpected HTTP status code: " + response);
-            if (response.body() == null) throw new IOException("Body is null");
-            // TODO: check content type
-            return response.body().string();
-        }
-    }
 }

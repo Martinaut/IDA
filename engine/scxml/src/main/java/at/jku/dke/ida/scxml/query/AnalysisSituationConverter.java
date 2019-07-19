@@ -91,8 +91,9 @@ class AnalysisSituationConverter {
                         VALUE_FACTORY.createIRI(fc)));
 
         // Dimension qualifications
+        String uid = iri.substring(iri.lastIndexOf(':') + 1);
         as.getDimensionQualifications().forEach(dq -> {
-            IRI dqIri = VALUE_FACTORY.createIRI(dq.getDimension() + "_spec");
+            IRI dqIri = VALUE_FACTORY.createIRI(dq.getDimension() + "_spec_" + uid);
 
             rdf.subject(iri).add(VALUE_FACTORY.createIRI(NS_QBX, "hasDimSpec"), dqIri);
             rdf.subject(dqIri)
@@ -148,7 +149,7 @@ class AnalysisSituationConverter {
 
         // CoC
         nasIri = iriGenerator.get();
-        convertNonComparativeAS(situationName + "CoC", nasIri, rdf, as.getContextOfComparison());
+        convertNonComparativeAS(situationName + " CoC", nasIri, rdf, as.getContextOfComparison());
         rdf.subject(iri)
                 .add(VALUE_FACTORY.createIRI(NS_QBX, "hasContextOfComparison"), VALUE_FACTORY.createIRI(nasIri));
     }
