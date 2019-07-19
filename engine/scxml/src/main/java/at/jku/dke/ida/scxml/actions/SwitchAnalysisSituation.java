@@ -37,7 +37,7 @@ public class SwitchAnalysisSituation extends BaseAction {
             switch (ctxModel.getOperation()) {
                 case SWITCH_SC:
                     if (!as.getContextOfComparison().isCubeDefined()) {
-                        var baseLevels = BeanUtil.getBean(LevelRepository.class).getBaseLevelLabelsByLangAndCube(ctxModel.getLocale().getLanguage(), as.getContextOfInterest().getCube());
+                        var baseLevels = BeanUtil.getBean(LevelRepository.class).getTopLevelLabelsByLangAndCube(ctxModel.getLocale().getLanguage(), as.getContextOfInterest().getCube());
                         for (DimensionLabel lvl : baseLevels) {
                             var dq = new DimensionQualification(lvl.getDimensionUri());
                             dq.setGranularityLevel(lvl.getUri());
