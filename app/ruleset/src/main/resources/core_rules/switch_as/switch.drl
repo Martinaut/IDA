@@ -1,0 +1,57 @@
+package core_rules.set_value
+
+// ------------------------------------ IMPORT --------------------------------------
+import at.jku.dke.ida.shared.models.ComparativeAnalysisSituation
+import at.jku.dke.ida.shared.models.PatternType
+import at.jku.dke.ida.shared.Event
+import at.jku.dke.ida.rules.interfaces.SwitchAnalysisSituationServiceModel
+import at.jku.dke.ida.rules.results.AnalysisSituationConfidenceResult
+import at.jku.dke.ida.app.ruleset.helpers.ValueSetter
+
+// ----------------------------- RULES: SET-TO-BASE ---------------------------------
+rule "Switch to SC - Set To Base"
+    agenda-group "switch-as"
+when
+    $as : ComparativeAnalysisSituation(patternType == PatternType.SetToBase)
+    $model : SwitchAnalysisSituationServiceModel(operation == Event.SWITCH_SC, comparativeAnalysisSituation == $as)
+then
+    $as.getContextOfComparison().setCube($as.getContextOfInterest().getCube());
+    $as.getContextOfComparison().setMeasures($as.getContextOfInterest().getMeasures());
+    ValueSetter.setSetToBaseDimensions($as.getContextOfInterest(), $as.getContextOfComparison());
+    insert(new AnalysisSituationConfidenceResult($as.getContextOfComparison()));
+end
+rule "Switch to SI - Set To Base"
+    agenda-group "switch-as"
+when
+    $as : ComparativeAnalysisSituation(patternType == PatternType.SetToBase)
+    $model : SwitchAnalysisSituationServiceModel(operation == Event.SWITCH_SI, comparativeAnalysisSituation == $as)
+then
+    $as.getContextOfInterest().setCube($as.getContextOfComparison().getCube());
+    $as.getContextOfInterest().setMeasures($as.getContextOfComparison().getMeasures());
+    ValueSetter.setSetToBaseDimensions($as.getContextOfComparison(), $as.getContextOfInterest());
+    insert(new AnalysisSituationConfidenceResult($as.getContextOfInterest()));
+end
+rule "Switch to Comp From SI - Set To Base"
+    agenda-group "switch-as"
+when
+    $as : ComparativeAnalysisSituation(patternType == PatternType.SetToBase)
+    $model : SwitchAnalysisSituationServiceModel(operation == Event.SWITCH_COMP, comparativeAnalysisSituation == $as, analysisSituation == $as.getContextOfInterest())
+then
+    $as.getContextOfComparison().setCube($as.getContextOfInterest().getCube());
+    $as.getContextOfComparison().setMeasures($as.getContextOfInterest().getMeasures());
+    ValueSetter.setSetToBaseDimensions($as.getContextOfInterest(), $as.getContextOfComparison());
+    insert(new AnalysisSituationConfidenceResult($as));
+end
+rule "Switch to Comp From SC - Set To Base"
+    agenda-group "switch-as"
+when
+    $as : ComparativeAnalysisSituation(patternType == PatternType.SetToBase)
+    $model : SwitchAnalysisSituationServiceModel(operation == Event.SWITCH_COMP, comparativeAnalysisSituation == $as, analysisSituation == $as.getContextOfComparison())
+then
+    $as.getContextOfInterest().setCube($as.getContextOfComparison().getCube());
+    $as.getContextOfInterest().setMeasures($as.getContextOfComparison().getMeasures());
+    ValueSetter.setSetToBaseDimensions($as.getContextOfComparison(), $as.getContextOfInterest());
+    insert(new AnalysisSituationConfidenceResult($as));
+end
+
+// ----------------------------- RULES: HOMOGENEOUS ---------------------------------

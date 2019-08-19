@@ -10,6 +10,7 @@ import at.jku.dke.ida.scxml.session.SessionContextModel;
 import at.jku.dke.ida.shared.Event;
 import at.jku.dke.ida.shared.models.ComparativeAnalysisSituation;
 import at.jku.dke.ida.shared.models.NonComparativeAnalysisSituation;
+import at.jku.dke.ida.shared.models.PatternType;
 import at.jku.dke.ida.shared.operations.Pattern;
 import at.jku.dke.ida.shared.spring.BeanUtil;
 import org.apache.commons.scxml2.ActionExecutionContext;
@@ -56,9 +57,31 @@ public class DeterminePatternSelection extends BaseAction {
             return;
         }
         if (result.getValue() instanceof Pattern) {
-            switch (((Pattern) result.getValue()).getDisplayableId()) {
+            ComparativeAnalysisSituation comp;
+            switch (((Pattern) result.getValue()).getDisplayableId()) { // TODO: comp
                 case Pattern.COMPARATIVE:
-                    ComparativeAnalysisSituation comp = new ComparativeAnalysisSituation();
+                    comp = new ComparativeAnalysisSituation();
+
+                    ctxModel.setAnalysisSituationWithoutEvent(comp.getContextOfInterest());
+                    ctxModel.setComparativeActiveAS(Pattern.SI);
+                    ctxModel.getAdditionalData().put(Pattern.ADD_DATA_COMPARATIVE, comp);
+                    break;
+                case Pattern.COMPARATIVE_SETTOBASE:
+                    comp = new ComparativeAnalysisSituation(PatternType.SetToBase);
+
+                    ctxModel.setAnalysisSituationWithoutEvent(comp.getContextOfInterest());
+                    ctxModel.setComparativeActiveAS(Pattern.SI);
+                    ctxModel.getAdditionalData().put(Pattern.ADD_DATA_COMPARATIVE, comp);
+                    break;
+                case Pattern.COMPARATIVE_HOMOGENOUSINDEPENDENT:
+                    comp = new ComparativeAnalysisSituation(PatternType.HomogeneousIndependentSet);
+
+                    ctxModel.setAnalysisSituationWithoutEvent(comp.getContextOfInterest());
+                    ctxModel.setComparativeActiveAS(Pattern.SI);
+                    ctxModel.getAdditionalData().put(Pattern.ADD_DATA_COMPARATIVE, comp);
+                    break;
+                case Pattern.COMPARATIVE_HETEROGENOUSINDEPENDENT:
+                    comp = new ComparativeAnalysisSituation(PatternType.HeterogeneousIndependentSet);
 
                     ctxModel.setAnalysisSituationWithoutEvent(comp.getContextOfInterest());
                     ctxModel.setComparativeActiveAS(Pattern.SI);

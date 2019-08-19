@@ -28,7 +28,9 @@ public class DisplayPatterns extends BaseAction {
     protected void execute(ActionExecutionContext ctx, SessionContextModel ctxModel) throws ModelException, SCXMLExpressionException {
         List<Displayable> list = new ArrayList<>();
         list.add(new Pattern(Pattern.NONCOMPARATIVE, ctxModel.getLocale()));
-        list.add(new Pattern(Pattern.COMPARATIVE, ctxModel.getLocale()));
+        list.add(new Pattern(Pattern.COMPARATIVE_SETTOBASE, ctxModel.getLocale())); // TODO: comp
+        list.add(new Pattern(Pattern.COMPARATIVE_HOMOGENOUSINDEPENDENT, ctxModel.getLocale()));
+        list.add(new Pattern(Pattern.COMPARATIVE_HETEROGENOUSINDEPENDENT, ctxModel.getLocale()));
         ctxModel.setDisplayData(new ListDisplay("selectPattern", ctxModel.getLocale(), list));
     }
 }

@@ -26,6 +26,13 @@ public class Pattern extends SimpleDisplayable {
      */
     public static final String COMPARATIVE = "comparative";
 
+    @Deprecated
+    public static final String COMPARATIVE_SETTOBASE = "comparative_settobase"; // TODO: comp
+    @Deprecated
+    public static final String COMPARATIVE_HOMOGENOUSINDEPENDENT = "comparative_homogen";
+    @Deprecated
+    public static final String COMPARATIVE_HETEROGENOUSINDEPENDENT = "comparative_heterogen";
+
     /**
      * The constant NON-COMPARATIVE.
      */
@@ -54,7 +61,8 @@ public class Pattern extends SimpleDisplayable {
      */
     public Pattern(String pattern, Locale locale) {
         super(pattern, locale, BUNDLE_NAME, pattern);
-        if (pattern == null || !pattern.equals(COMPARATIVE) && !pattern.equals(NONCOMPARATIVE))
+        if (pattern == null || !pattern.equals(COMPARATIVE) && !pattern.equals(NONCOMPARATIVE) &&
+                !pattern.equals(COMPARATIVE_SETTOBASE) && !pattern.equals(COMPARATIVE_HOMOGENOUSINDEPENDENT) && !pattern.equals(COMPARATIVE_HETEROGENOUSINDEPENDENT))  // TODO: comp
             throw new IllegalArgumentException("pattern is invalid");
     }
 
