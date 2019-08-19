@@ -103,6 +103,7 @@ public class QueryExecutor {
         final String sessionId = "urn:ida:" + model.getSessionId();
         final String situationName = "IDA Analysis Situation: " + sessionId + '_' + UUID.randomUUID();
 
+        LOG.debug("Sending analysis situation '{}' ", situationName);
         post(config.getQueryEndpoint() + String.format("analysis/situations/%s/add", sessionId),
                 convertAnalysisSituationToJsonLD(situationName, model.getAnalysisSituation(), () -> {
                     try {
@@ -177,49 +178,4 @@ public class QueryExecutor {
             return response.body().string();
         }
     }
-
-
-//    /**
-//     * Sends a request to the query endpoint and returns the result as csv.
-//     *
-//     * @param model The session model.
-//     * @return CSV received from endpoint
-//     * @throws IOException If an error occurred while executing the query.
-//     */
-//    private String sendRequest(SessionModel model) throws IOException {
-//        String json = convertAnalysisSituationToJsonLD("TEST", model.getAnalysisSituation(), () -> {
-//            try {
-//                return requestAnalysisSituationIRI();
-//            } catch (IOException e) {
-//                return "urn:uuid:" + UUID.randomUUID();
-//            }
-//        });
-//
-//        // Request result
-//        return requestResult(json);
-//    }
-//
-//    /**
-//     * Requests the result of the created analysis situation.
-//     *
-//     * @param situationName The name of the situation.
-//     * @return The CSV-result.
-//     * @throws IOException If an error occurred while executing the query.
-//     */
-//    private String requestResult(String situationName) throws IOException {
-//        RequestBody body = RequestBody.create(JSON, situationName);
-//        Request request = new Request.Builder()
-//                .url(config.getQueryEndpoint() + "query")
-//                .post(body)
-//                //.addHeader("Accept", CSV.toString())
-//                .build();
-//
-//        LOG.debug("Sending result request to {}.", request.url());
-//        try (Response response = client.newCall(request).execute()) {
-//            if (!response.isSuccessful()) throw new IOException("Unexpected HTTP status code: " + response);
-//            if (response.body() == null) throw new IOException("Body is null");
-//            // TODO: check content type
-//            return response.body().string();
-//        }
-//    }
 }

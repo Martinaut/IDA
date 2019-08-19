@@ -58,7 +58,6 @@ public interface ServiceModel {
      */
     Event getOperation();
 
-
     /**
      * Gets the additional data (unmodifiable).
      *

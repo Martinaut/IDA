@@ -3,12 +3,13 @@ package at.jku.dke.ida.shared.models;
 import at.jku.dke.ida.shared.IRIConstants;
 import at.jku.dke.ida.shared.models.generic.GenericDimensionQualification;
 
+import java.util.HashSet;
 import java.util.Objects;
 
 /**
  * Represents a dimension qualification.
  */
-public class DimensionQualification extends GenericDimensionQualification<String> {
+public class DimensionQualification extends GenericDimensionQualification<String> implements Cloneable {
 
     /**
      * Instantiates a new instance of class {@linkplain DimensionQualification}.
@@ -77,4 +78,16 @@ public class DimensionQualification extends GenericDimensionQualification<String
                 !getGranularityLevel().isBlank();
     }
 
+    /**
+     * Creates and returns a copy of this object.
+     *
+     * @return a clone of this instance.
+     * @see Cloneable
+     */
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        DimensionQualification dq = (DimensionQualification) super.clone();
+        dq.setSliceConditions(new HashSet<>(getSliceConditions()));
+        return dq;
+    }
 }

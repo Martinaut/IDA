@@ -170,6 +170,8 @@ class AnalysisSituationConverter {
             writer.close();
         } catch (IOException ignored) {
         }
+
+        LOG.debug(jsonld);
         return jsonld;
     }
 }
