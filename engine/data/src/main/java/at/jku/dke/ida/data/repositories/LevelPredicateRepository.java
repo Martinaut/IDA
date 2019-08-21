@@ -32,7 +32,7 @@ public class LevelPredicateRepository extends DimensionCubeElementRepository {
      */
     @Autowired
     public LevelPredicateRepository(GraphDbConnection connection) {
-        super(connection, "repo_levelpred", "level predicates");
+        super(connection, IRIConstants.TYPE_LEVEL_PREDICATE, "repo_levelpred", "level predicates");
     }
 
     /**

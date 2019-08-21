@@ -2,6 +2,7 @@ package at.jku.dke.ida.data.repositories;
 
 import at.jku.dke.ida.data.GraphDbConnection;
 import at.jku.dke.ida.data.repositories.base.SimpleCubeElementRepository;
+import at.jku.dke.ida.shared.IRIConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,7 +19,7 @@ public class ComparativeMeasureRepository extends SimpleCubeElementRepository {
      */
     @Autowired
     public ComparativeMeasureRepository(GraphDbConnection connection) {
-        super(connection, "repo_compmeasure", "comparative measures");
+        super(connection, IRIConstants.TYPE_COMPARATIVE_MEASURE, "repo_compmeasure", "comparative measures");
     }
 
 }

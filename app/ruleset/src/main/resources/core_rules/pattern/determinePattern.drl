@@ -2,49 +2,24 @@ package core_rules.pattern
 
 // ------------------------------------ IMPORT --------------------------------------
 import at.jku.dke.ida.rules.interfaces.PatternServiceModel
-import at.jku.dke.ida.rules.results.ConfidenceResult
-import at.jku.dke.ida.rules.results.EventConfidenceResult
-import at.jku.dke.ida.rules.results.DisplayableConfidenceResult
-import at.jku.dke.ida.shared.display.ListDisplay
-import at.jku.dke.ida.shared.Event
-import at.jku.dke.ida.app.ruleset.helpers.UserInput
-import at.jku.dke.ida.app.ruleset.interception.models.PatternModel
+import at.jku.dke.ida.rules.results.StringConfidenceResult
+import at.jku.dke.ida.shared.operations.Pattern
 
 // ------------------------------------ RULES ---------------------------------------
-rule "Exit Pattern Intent - 'exit' similarity"
+rule "Comparative Pattern - keyword"
     agenda-group "pattern-determination"
+    salience 10
 when
-    $model : PatternModel(topSimilarity != null && topSimilarity.getElement().getDisplayableId() == Event.EXIT.getEventName())
+    $model : PatternServiceModel(userInput != null, getUserInput().toLowerCase().contains("compare"))
 then
-    insert(new EventConfidenceResult(Event.EXIT, $model.getTopSimilarity().getScore()));
+    insert(new StringConfidenceResult(Pattern.COMPARATIVE));
 end
 
-rule "Resolve Pattern"
+rule "Non comparative pattern"
     agenda-group "pattern-determination"
+    salience 0
 when
-    $display : ListDisplay()
-    $model : PatternServiceModel(UserInput.isNumber(userInput) &&
-                                UserInput.toInteger($model.getUserInput()) > 0 &&
-                                UserInput.toInteger($model.getUserInput()) <= $display.data.size(), displayData == $display)
+    not StringConfidenceResult()
 then
-    insert(new DisplayableConfidenceResult($display.getData().get(UserInput.toInteger($model.getUserInput()) - 1), 1.0));
-end
-
-rule "ResolvePattern Similarity"
-    agenda-group "pattern-determination"
-when
-    $display : ListDisplay()
-    $model : PatternModel(topSimilarity != null, displayData == $display)
-then
-    insert(new DisplayableConfidenceResult($model.getTopSimilarity().getElement(), $model.getTopSimilarity().getScore()));
-end
-
-rule "Invalid Pattern"
-    agenda-group "pattern-determination"
-    salience -1
-when
-    $model : PatternServiceModel()
-    not ConfidenceResult()
-then
-    insert(new EventConfidenceResult(Event.INVALID_INPUT, 1.0));
+    insert(new StringConfidenceResult(Pattern.NONCOMPARATIVE));
 end

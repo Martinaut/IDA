@@ -57,7 +57,7 @@ public class ConstraintSatisfactionService {
         if (as == null) throw new IllegalArgumentException("as must not be null");
         if (StringUtils.isBlank(language)) throw new IllegalArgumentException("language must not be empty.");
         if (!(as instanceof NonComparativeAnalysisSituation))
-            throw new IllegalArgumentException("Only NonComparativeAnalysisSituations are supported.");
+            return;// TODO throw new IllegalArgumentException("Only NonComparativeAnalysisSituations are supported.");
         if (similarities == null || similarities.isEmpty()) return;
         if (this.solver == null) initSolver();
 

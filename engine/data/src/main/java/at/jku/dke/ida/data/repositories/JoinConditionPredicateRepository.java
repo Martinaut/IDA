@@ -2,6 +2,7 @@ package at.jku.dke.ida.data.repositories;
 
 import at.jku.dke.ida.data.GraphDbConnection;
 import at.jku.dke.ida.data.repositories.base.SimpleCubeElementRepository;
+import at.jku.dke.ida.shared.IRIConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,7 +19,7 @@ public class JoinConditionPredicateRepository extends SimpleCubeElementRepositor
      */
     @Autowired
     public JoinConditionPredicateRepository(GraphDbConnection connection) {
-        super(connection, "repo_joinpred", "join condition predicates");
+        super(connection, IRIConstants.TYPE_JOIN_CONDITION_PREDICATE, "repo_joinpred", "join condition predicates");
     }
 
 }

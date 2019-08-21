@@ -5,6 +5,7 @@ import at.jku.dke.ida.data.QueryException;
 import at.jku.dke.ida.data.GraphDbConnection;
 import at.jku.dke.ida.data.models.DimensionLevelLabel;
 import at.jku.dke.ida.data.repositories.base.CubeElementRepository;
+import at.jku.dke.ida.shared.IRIConstants;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.ImmutableTriple;
 import org.apache.commons.lang3.tuple.Triple;
@@ -31,7 +32,7 @@ public class LevelMemberRepository extends CubeElementRepository<Triple<String, 
      */
     @Autowired
     public LevelMemberRepository(GraphDbConnection connection) {
-        super(connection, "repo_levelmem", "level members");
+        super(connection, IRIConstants.TYPE_LEVEL_MEMBER, "repo_levelmem", "level members");
     }
 
     @Override

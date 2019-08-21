@@ -25,12 +25,13 @@ public abstract class DimensionCubeElementRepository extends CubeElementReposito
      * Instantiates a new instance of class {@linkplain DimensionCubeElementRepository}.
      *
      * @param connection    The GraphDB connection service class.
+     * @param typeIri       The IRI of the type.
      * @param queryFolder   The folder-name for the folder containing the query files of this repository.
      * @param pluralLogName The plural name of the type used for log-messages.
      * @throws IllegalArgumentException If {@code queryFolder} is {@code null} or empty.
      */
-    protected DimensionCubeElementRepository(GraphDbConnection connection, String queryFolder, String pluralLogName) {
-        super(connection, queryFolder, pluralLogName);
+    public DimensionCubeElementRepository(GraphDbConnection connection, String typeIri, String queryFolder, String pluralLogName) {
+        super(connection, typeIri, queryFolder, pluralLogName);
     }
 
     @Override

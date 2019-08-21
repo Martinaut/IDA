@@ -24,7 +24,7 @@ rule "'Select Cube' - if there is not already a selected cube"
     salience Integer.MAX_VALUE - 1
     agenda-group "operation-display-determination"
 when
-    $as : AnalysisSituation(isCubeDefined() == false)
+    $as : NonComparativeAnalysisSituation(isCubeDefined() == false)
     $model : OperationDisplayServiceModel(analysisSituation == $as)
 then
     insert(new Operation(Event.NAVIGATE_CUBE_SELECT, $model.getLocale(), Integer.MAX_VALUE));
@@ -49,10 +49,10 @@ then
     insert(new Operation(Event.EXECUTE_QUERY, $model.getLocale(), Integer.MAX_VALUE - 1));
 end
 
-rule "'Switch to SI' - if comparative and current executable"
+rule "'Switch to SI' - if comparative"
     agenda-group "operation-display-determination"
 when
-    $as : NonComparativeAnalysisSituation(isExecutable())
+    $as : NonComparativeAnalysisSituation()
     $model : OperationDisplayServiceModel(analysisSituation == $as,
                                           sessionModel.isComparativePattern(),
                                           sessionModel.getComparativeActiveAS() == Pattern.SC)
@@ -60,7 +60,7 @@ then
     insert(new Operation(Event.SWITCH_SI, $model.getLocale(), 500));
 end
 
-rule "'Switch to SI' - from comparativeif comparative and current executable"
+rule "'Switch to SI' - from comparative if comparative"
     agenda-group "operation-display-determination"
 when
     $as : ComparativeAnalysisSituation()
@@ -70,10 +70,10 @@ then
     insert(new Operation(Event.SWITCH_SI, $model.getLocale(), 500));
 end
 
-rule "'Switch to SC' - if comparative and current executable"
+rule "'Switch to SC' - if comparative"
     agenda-group "operation-display-determination"
 when
-    $as : NonComparativeAnalysisSituation(isExecutable())
+    $as : NonComparativeAnalysisSituation()
     $model : OperationDisplayServiceModel(analysisSituation == $as,
                                           sessionModel.isComparativePattern(),
                                           sessionModel.getComparativeActiveAS() == Pattern.SI)
@@ -81,7 +81,7 @@ then
     insert(new Operation(Event.SWITCH_SC, $model.getLocale(), 500));
 end
 
-rule "'Switch to SC' - from comparative if comparative and current executable"
+rule "'Switch to SC' - from comparative if comparative"
     agenda-group "operation-display-determination"
 when
     $as : ComparativeAnalysisSituation()
@@ -91,16 +91,14 @@ then
     insert(new Operation(Event.SWITCH_SC, $model.getLocale(), 500));
 end
 
-rule "'Switch to comparative' - if comparative and both executable"
+rule "'Switch to comparative' - if comparative"
     agenda-group "operation-display-determination"
 when
     $as : NonComparativeAnalysisSituation()
     $model : OperationDisplayServiceModel(analysisSituation == $as,
                                           sessionModel.isComparativePattern(),
                                           sessionModel.getComparativeActiveAS() == Pattern.SI || sessionModel.getComparativeActiveAS() == Pattern.SC,
-                                          comparativeAnalysisSituation!=null &&
-                                                comparativeAnalysisSituation.getContextOfInterest().isExecutable() &&
-                                                comparativeAnalysisSituation.getContextOfComparison().isExecutable())
+                                          comparativeAnalysisSituation!=null)
 then
     insert(new Operation(Event.SWITCH_COMP, $model.getLocale(), 501));
 end

@@ -88,9 +88,9 @@ public class DisplayOperations extends BaseAction {
         ComparativeAnalysisSituation as = (ComparativeAnalysisSituation) ctxModel.getAnalysisSituation();
 
         // Load data
-        Set<String> joinConditions = BeanUtil.getBean(JoinConditionPredicateRepository.class).getAllByCube(cube, as.getJoinConditions());
-        Set<String> scores = BeanUtil.getBean(ComparativeMeasureRepository.class).getAllByCube(cube, as.getScores());
-        Set<String> scoreFilters = BeanUtil.getBean(ComparativeMeasurePredicateRepository.class).getAllByCube(cube, as.getScoreFilters());
+        Set<String> joinConditions = BeanUtil.getBean(JoinConditionPredicateRepository.class).getAll(as.getJoinConditions());
+        Set<String> scores = BeanUtil.getBean(ComparativeMeasureRepository.class).getAll(as.getScores());
+        Set<String> scoreFilters = BeanUtil.getBean(ComparativeMeasurePredicateRepository.class).getAll(as.getScoreFilters());
 
         // Build model
         return new DefaultOperationDisplayServiceModel(

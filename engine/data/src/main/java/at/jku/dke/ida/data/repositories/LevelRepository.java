@@ -6,6 +6,7 @@ import at.jku.dke.ida.data.GraphDbConnection;
 import at.jku.dke.ida.data.models.DimensionLabel;
 import at.jku.dke.ida.data.models.Label;
 import at.jku.dke.ida.data.repositories.base.DimensionCubeElementRepository;
+import at.jku.dke.ida.shared.IRIConstants;
 import at.jku.dke.ida.shared.models.DimensionQualification;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.ImmutableTriple;
@@ -29,7 +30,7 @@ public class LevelRepository extends DimensionCubeElementRepository {
      */
     @Autowired
     public LevelRepository(GraphDbConnection connection) {
-        super(connection, "repo_level", "granularity levels");
+        super(connection, IRIConstants.TYPE_LEVEL, "repo_level", "granularity levels");
     }
 
     /**

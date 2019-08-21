@@ -4,9 +4,11 @@ import at.jku.dke.ida.rules.interfaces.PatternServiceModel;
 import at.jku.dke.ida.rules.models.DefaultPatternServiceModel;
 import at.jku.dke.ida.rules.results.ConfidenceResult;
 import at.jku.dke.ida.rules.results.EventConfidenceResult;
+import at.jku.dke.ida.rules.results.StringConfidenceResult;
 import at.jku.dke.ida.rules.services.PatternService;
-import at.jku.dke.ida.scxml.interceptors.DeterminePatternSelectionInterceptor;
+import at.jku.dke.ida.scxml.interceptors.DeterminePatternInterceptor;
 import at.jku.dke.ida.scxml.session.SessionContextModel;
+import at.jku.dke.ida.scxml.session.SessionManager;
 import at.jku.dke.ida.shared.Event;
 import at.jku.dke.ida.shared.models.ComparativeAnalysisSituation;
 import at.jku.dke.ida.shared.models.NonComparativeAnalysisSituation;
@@ -17,7 +19,7 @@ import org.apache.commons.scxml2.SCXMLExpressionException;
 import org.apache.commons.scxml2.TriggerEvent;
 import org.apache.commons.scxml2.model.ModelException;
 
-public class DeterminePatternSelection extends BaseAction {
+public class DeterminePattern extends BaseAction {
     /**
      * Executes the action operations.
      *
@@ -33,7 +35,7 @@ public class DeterminePatternSelection extends BaseAction {
                 getCurrentState(),
                 ctxModel
         );
-        var interceptor = BeanUtil.getOptionalBean(DeterminePatternSelectionInterceptor.class);
+        var interceptor = BeanUtil.getOptionalBean(DeterminePatternInterceptor.class);
         if (interceptor != null)
             model = interceptor.modifyModel(model);
 
@@ -44,25 +46,23 @@ public class DeterminePatternSelection extends BaseAction {
             result = interceptor.modifyResult(model, values);
         else
             result = values.stream().sorted()
-                    .findFirst().orElse(new EventConfidenceResult(Event.INVALID_INPUT));
+                    .findFirst().orElse(new EventConfidenceResult(Event.DETERMINED));
 
         // Check type of result and trigger event
         if (result == null) {
-            ctx.getInternalIOProcessor().addEvent(new TriggerEvent(Event.INVALID_INPUT.getEventName(), TriggerEvent.SIGNAL_EVENT));
+            ctxModel.setAnalysisSituationWithoutEvent(new NonComparativeAnalysisSituation());
+            ctx.getInternalIOProcessor().addEvent(new TriggerEvent(Event.DETERMINED.getEventName(), TriggerEvent.SIGNAL_EVENT));
             return;
         }
-        if (result instanceof EventConfidenceResult) {
-            ctx.getInternalIOProcessor().addEvent(new TriggerEvent(((EventConfidenceResult) result).getValue().getEventName(), TriggerEvent.SIGNAL_EVENT));
-            return;
-        }
-        if (result.getValue() instanceof Pattern) {
-            switch (((Pattern) result.getValue()).getDisplayableId()) {
+        if (result.getValue() instanceof String) {
+            switch (((String) result.getValue())) {
                 case Pattern.COMPARATIVE:
                     ComparativeAnalysisSituation comp = new ComparativeAnalysisSituation();
 
-                    ctxModel.setAnalysisSituationWithoutEvent(comp.getContextOfInterest());
-                    ctxModel.setComparativeActiveAS(Pattern.SI);
+                    ctxModel.setAnalysisSituationWithoutEvent(comp);
+                    ctxModel.setComparativeActiveAS("");
                     ctxModel.getAdditionalData().put(Pattern.ADD_DATA_COMPARATIVE, comp);
+                    SessionManager.getInstance().getSession(ctxModel.getSessionId()).setCubeSetFlag(true);
                     break;
                 case Pattern.NONCOMPARATIVE:
                     ctxModel.setAnalysisSituationWithoutEvent(new NonComparativeAnalysisSituation());
@@ -70,7 +70,8 @@ public class DeterminePatternSelection extends BaseAction {
             }
             ctx.getInternalIOProcessor().addEvent(new TriggerEvent(Event.DETERMINED.getEventName(), TriggerEvent.SIGNAL_EVENT));
         } else {
-            ctx.getInternalIOProcessor().addEvent(new TriggerEvent(Event.INVALID_INPUT.getEventName(), TriggerEvent.SIGNAL_EVENT));
+            ctxModel.setAnalysisSituationWithoutEvent(new NonComparativeAnalysisSituation());
+            ctx.getInternalIOProcessor().addEvent(new TriggerEvent(Event.DETERMINED.getEventName(), TriggerEvent.SIGNAL_EVENT));
         }
     }
 }
