@@ -36,7 +36,6 @@ public class PatternService extends DroolsService<PatternServiceModel, Collectio
 
         // Add data
         session.insert(model);
-        session.insert(model.getDisplayData());
 
         // Execute rules
         session.fireAllRules();

@@ -14,11 +14,4 @@ public interface PatternServiceModel extends ServiceModel {
      */
     String getUserInput();
 
-    /**
-     * Gets the display data.
-     *
-     * @return the display data
-     */
-    Display getDisplayData();
-
 }

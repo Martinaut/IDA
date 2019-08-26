@@ -14,7 +14,6 @@ import java.util.Locale;
 public class DefaultPatternServiceModel extends AbstractServiceModel implements PatternServiceModel {
 
     private final String userInput;
-    private final Display displayData;
 
     /**
      * Instantiates a new instance of class {@link DefaultPatternServiceModel}.
@@ -26,7 +25,6 @@ public class DefaultPatternServiceModel extends AbstractServiceModel implements 
     public DefaultPatternServiceModel(String currentState, SessionModel sessionModel) {
         super(currentState, sessionModel);
         this.userInput = sessionModel.getUserInput();
-        this.displayData = sessionModel.getDisplayData();
     }
 
     /**
@@ -38,29 +36,20 @@ public class DefaultPatternServiceModel extends AbstractServiceModel implements 
      * @param operation         The operation the user wants to perform.
      * @param sessionModel      The session model.
      * @param userInput         The user input.
-     * @param displayData       The data displayed to the user.
      * @throws IllegalArgumentException If the any of the parameters (except {@code locale} and {@code operation}) is {@code null} or empty.
      */
-    public DefaultPatternServiceModel(String currentState, Locale locale, EngineAnalysisSituation analysisSituation, Event operation, SessionModel sessionModel,
-                                      String userInput, Display displayData) {
+    public DefaultPatternServiceModel(String currentState, Locale locale, EngineAnalysisSituation analysisSituation,
+                                      Event operation, SessionModel sessionModel, String userInput) {
         super(currentState, locale, analysisSituation, operation, sessionModel);
 
-        if (displayData == null)
-            throw new IllegalArgumentException("displayData must not be null");
         if (userInput == null)
             throw new IllegalArgumentException("userInput must not be null");
 
         this.userInput = userInput;
-        this.displayData = displayData;
     }
 
     @Override
     public String getUserInput() {
         return userInput;
-    }
-
-    @Override
-    public Display getDisplayData() {
-        return displayData;
     }
 }

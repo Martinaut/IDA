@@ -31,7 +31,6 @@ public final class GraphDbConnection {
 
     private static final Logger LOGGER = LogManager.getLogger(GraphDbConnection.class);
     private final GraphDbConfig config;
-    private EmbeddedGraphDB embedded;
 
     /**
      * Instantiates a new instance of class {@linkplain GraphDbConnection}.
@@ -54,12 +53,10 @@ public final class GraphDbConnection {
      */
     public RepositoryConnection createConnection() {
         LOGGER.debug("Creating a new GraphDB-connection.");
-        if (config.getEmbedded() == null && config.getRemote() == null)
+        if (config.getRemote() == null)
             throw new RepositoryConfigException("GraphDB connection configuration is invalid.");
 
-        return config.getEmbedded() == null ?
-                getRemoteConnection() :
-                getEmbeddedConnection();
+        return getRemoteConnection();
     }
 
     private RepositoryConnection getRemoteConnection() {
@@ -68,20 +65,10 @@ public final class GraphDbConnection {
         LOGGER.debug("Creating a new HTTP-connection to repository {} at {}.", config.getRemote().getRepositoryId(), config.getRemote().getServerUrl());
 
         Repository repo = new HTTPRepository(config.getRemote().getServerUrl(), config.getRemote().getRepositoryId());
-        repo.initialize();
+        repo.init();
         return repo.getConnection();
     }
-
-    private RepositoryConnection getEmbeddedConnection() {
-        if (config.getEmbedded() == null)
-            throw new IllegalArgumentException("GraphDB connection configuration does not contain embedded connection settings.");
-        LOGGER.debug("Creating a new embedded connection to repository at path {}.", config.getEmbedded().getDirectory());
-        if (embedded == null)
-            embedded = new EmbeddedGraphDB(config.getEmbedded());
-        return embedded.getConnection();
-    }
     // endregion
-
 
     /**
      * Executes the query and returns the result.

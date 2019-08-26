@@ -2,9 +2,7 @@ package at.jku.dke.ida.shared.session;
 
 import at.jku.dke.ida.shared.Event;
 import at.jku.dke.ida.shared.display.Display;
-import at.jku.dke.ida.shared.models.AnalysisSituation;
 import at.jku.dke.ida.shared.models.EngineAnalysisSituation;
-import at.jku.dke.ida.shared.models.NonComparativeAnalysisSituation;
 import at.jku.dke.ida.shared.operations.PatternPart;
 import org.apache.commons.lang3.StringUtils;
 

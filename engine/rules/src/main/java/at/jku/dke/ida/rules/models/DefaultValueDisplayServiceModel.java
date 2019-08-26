@@ -29,16 +29,19 @@ public class DefaultValueDisplayServiceModel extends AbstractServiceModel implem
     /**
      * Instantiates a new instance of class {@link DefaultValueDisplayServiceModel}.
      *
-     * @param currentState                        The current state of the state machine.
-     * @param sessionModel                        The session model.
-     * @param simpleRepository                    The simple repository.
-     * @param cubeRepository                      The cube repository.
-     * @param aggregateMeasureRepository          The aggregate measure repository.
-     * @param granularityLevelRepository          The granularity level repository.
-     * @param levelPredicateRepository            The level predicate repository.
-     * @param baseMeasurePredicateRepository      The base measure predicate repository.
-     * @param aggregateMeasurePredicateRepository The aggregate measure predicate repository.
-     * @param levelMemberRepository               The level member repository.
+     * @param currentState                          The current state of the state machine.
+     * @param sessionModel                          The session model.
+     * @param simpleRepository                      The simple repository.
+     * @param cubeRepository                        The cube repository.
+     * @param aggregateMeasureRepository            The aggregate measure repository.
+     * @param granularityLevelRepository            The granularity level repository.
+     * @param levelPredicateRepository              The level predicate repository.
+     * @param baseMeasurePredicateRepository        The base measure predicate repository.
+     * @param aggregateMeasurePredicateRepository   The aggregate measure predicate repository.
+     * @param levelMemberRepository                 The level member repository.
+     * @param joinConditionPredicateRepository      The join condition predicate repository.
+     * @param comparativeMeasureRepository          The comparative measure repository.
+     * @param comparativeMeasurePredicateRepository The comparative measure predicate repository.
      * @throws IllegalArgumentException If the any of the parameters is {@code null} or empty.
      */
     public DefaultValueDisplayServiceModel(String currentState, SessionModel sessionModel, SimpleRepository simpleRepository,
@@ -90,19 +93,22 @@ public class DefaultValueDisplayServiceModel extends AbstractServiceModel implem
     /**
      * Instantiates a new instance of class {@link DefaultValueDisplayServiceModel}.
      *
-     * @param currentState                        The current state of the state machine.
-     * @param locale                              The display locale.
-     * @param analysisSituation                   The analysis situation.
-     * @param operation                           The operation the user wants to perform.
-     * @param sessionModel                        The session model.
-     * @param simpleRepository                    The simple repository.
-     * @param cubeRepository                      The cube repository.
-     * @param aggregateMeasureRepository          The aggregate measure repository.
-     * @param granularityLevelRepository          The granularity level repository.
-     * @param levelPredicateRepository            The level predicate repository.
-     * @param baseMeasurePredicateRepository      The base measure predicate repository.
-     * @param aggregateMeasurePredicateRepository The aggregate measure predicate repository.
-     * @param levelMemberRepository               The level member repository.
+     * @param currentState                          The current state of the state machine.
+     * @param locale                                The display locale.
+     * @param analysisSituation                     The analysis situation.
+     * @param operation                             The operation the user wants to perform.
+     * @param sessionModel                          The session model.
+     * @param simpleRepository                      The simple repository.
+     * @param cubeRepository                        The cube repository.
+     * @param aggregateMeasureRepository            The aggregate measure repository.
+     * @param granularityLevelRepository            The granularity level repository.
+     * @param levelPredicateRepository              The level predicate repository.
+     * @param baseMeasurePredicateRepository        The base measure predicate repository.
+     * @param aggregateMeasurePredicateRepository   The aggregate measure predicate repository.
+     * @param levelMemberRepository                 The level member repository.
+     * @param joinConditionPredicateRepository      The join condition predicate repository.
+     * @param comparativeMeasureRepository          The comparative measure repository.
+     * @param comparativeMeasurePredicateRepository The comparative measure predicate repository.
      * @throws IllegalArgumentException If any of the parameters is {@code null} (except {@code locale}).
      */
     public DefaultValueDisplayServiceModel(String currentState, Locale locale, EngineAnalysisSituation analysisSituation, Event operation, SessionModel sessionModel,
