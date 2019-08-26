@@ -1,0 +1,27 @@
+package app_rules.pattern
+
+// ------------------------------------ IMPORT --------------------------------------
+import at.jku.dke.ida.rules.interfaces.PatternServiceModel
+import at.jku.dke.ida.rules.results.PatternConfidenceResult
+import at.jku.dke.ida.shared.operations.Pattern
+import at.jku.dke.ida.app.ruleset.helpers.Keyword
+
+// ------------------------------------ RULES ---------------------------------------
+rule "Comparative Pattern - keyword"
+    agenda-group "pattern-determination"
+    salience 10
+when
+    $model : PatternServiceModel(userInput != null)
+    eval($model.getUserInput().toLowerCase().contains(Keyword.COMPARE.getKeywordText($model.getLocale())))
+then
+    insert(new PatternConfidenceResult(Pattern.COMPARATIVE));
+end
+
+rule "Non comparative pattern"
+    agenda-group "pattern-determination"
+    salience 0
+when
+    not PatternConfidenceResult()
+then
+    insert(new PatternConfidenceResult(Pattern.NON_COMPARATIVE));
+end

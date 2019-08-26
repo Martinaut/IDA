@@ -1,0 +1,18 @@
+package app_rules.set_value
+
+// ------------------------------------ IMPORT --------------------------------------
+import at.jku.dke.ida.shared.models.NonComparativeAnalysisSituation
+import at.jku.dke.ida.shared.Event
+import at.jku.dke.ida.shared.display.Displayable
+import at.jku.dke.ida.app.ruleset.helpers.ValueSetter
+import at.jku.dke.ida.rules.interfaces.SetValueServiceModel
+
+// ------------------------------------ RULES ---------------------------------------
+rule "Set cube"
+    agenda-group "set-value"
+when
+    $as : NonComparativeAnalysisSituation()
+    $model : SetValueServiceModel(operation == Event.NAVIGATE_CUBE_SELECT, analysisSituation == $as, value instanceof Displayable)
+then
+    ValueSetter.setCube($model.getLanguage(), $as, ((Displayable)$model.getValue()).getDisplayableId());
+end

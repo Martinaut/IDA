@@ -1,12 +1,9 @@
 package at.jku.dke.ida.scxml.actions;
 
 import at.jku.dke.ida.scxml.session.SessionContextModel;
-import at.jku.dke.ida.shared.Event;
 import at.jku.dke.ida.shared.display.MessageDisplay;
-import at.jku.dke.ida.shared.operations.Pattern;
 import org.apache.commons.scxml2.ActionExecutionContext;
 import org.apache.commons.scxml2.SCXMLExpressionException;
-import org.apache.commons.scxml2.TriggerEvent;
 import org.apache.commons.scxml2.model.ModelException;
 
 /**

@@ -84,8 +84,8 @@ public abstract class AbstractServiceModel implements ServiceModel {
 
     @Override
     public ComparativeAnalysisSituation getComparativeAnalysisSituation() {
-        if (additionalDataContainsKey(Pattern.ADD_DATA_COMPARATIVE)) {
-            return getAdditionalData(Pattern.ADD_DATA_COMPARATIVE, ComparativeAnalysisSituation.class);
+        if (additionalDataContainsKey(Pattern.ADDITIONAL_DATA_COMPARATIVE)) {
+            return getAdditionalData(Pattern.ADDITIONAL_DATA_COMPARATIVE, ComparativeAnalysisSituation.class);
         }
         return null;
     }

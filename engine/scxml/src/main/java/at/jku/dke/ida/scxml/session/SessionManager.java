@@ -146,7 +146,6 @@ public final class SessionManager {
      */
     public void triggerUserInput(String sessionId, String userInput) throws StateMachineExecutionException, SessionExpiredException {
         if (StringUtils.isBlank(sessionId)) throw new IllegalArgumentException("sessionId must not be null empty");
-        // if (userInput == null) throw new IllegalArgumentException("userInput must not be null");
 
         LOGGER.info("Triggering user input for session {}.", sessionId);
 

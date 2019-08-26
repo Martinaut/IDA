@@ -1,0 +1,82 @@
+package nlp_rules
+
+// ------------------------------------ IMPORT --------------------------------------
+import at.jku.dke.ida.nlp.models.StringSimilarityServiceModel
+import at.jku.dke.ida.nlp.helpers.SimilarityHelper
+import at.jku.dke.ida.app.ruleset.helpers.UserInput
+import at.jku.dke.ida.shared.display.Displayable
+import at.jku.dke.ida.data.models.Similarity
+import at.jku.dke.ida.data.models.Similarity
+
+// ------------------------------------ RULES ---------------------------------------
+rule "String Similarity - Normalized Levenshtein Similarity"
+    agenda-group "string-similarity"
+when
+    $model : StringSimilarityServiceModel(!UserInput.isNumber(input))
+    $displayable : Displayable()
+then
+    insert(SimilarityHelper.getNormalizedLevenstheinSimilarity($model.getInput(), $displayable));
+end
+
+rule "String Similarity - Jaro Winkler Similarity"
+    agenda-group "string-similarity"
+when
+    $model : StringSimilarityServiceModel(!UserInput.isNumber(input))
+    $displayable : Displayable()
+then
+    insert(SimilarityHelper.getJaroWinklerSimilarity($model.getInput(), $displayable));
+end
+
+//rule "String Similarity - Metric LCS Similarity"
+//    agenda-group "string-similarity"
+//when
+//    $model : StringSimilarityServiceModel(!UserInput.isNumber(input))
+//    $displayable : Displayable()
+//then
+//    insert(SimilarityHelper.getMetricLCSSimilarity($model.getInput(), $displayable));
+//end
+
+//rule "String Similarity - NGram Similarity"
+//    agenda-group "string-similarity"
+//when
+//    $model : StringSimilarityServiceModel(!UserInput.isNumber(input))
+//    $displayable : Displayable()
+//then
+//    insert(SimilarityHelper.getNGramSimilarity($model.getInput(), $displayable));
+//end
+
+//rule "String Similarity - Cosine Similarity"
+//    agenda-group "string-similarity"
+//when
+//    $model : StringSimilarityServiceModel(!UserInput.isNumber(input))
+//    $displayable : Displayable()
+//then
+//    insert(SimilarityHelper.getCosineSimilarity($model.getInput(), $displayable));
+//end
+
+//rule "String Similarity - Jaccard Similarity"
+//    agenda-group "string-similarity"
+//when
+//    $model : StringSimilarityServiceModel(!UserInput.isNumber(input))
+//    $displayable : Displayable()
+//then
+//    insert(SimilarityHelper.getJaccardSimilarity($model.getInput(), $displayable));
+//end
+
+//rule "String Similarity - Sorensen Dice Similarity"
+//    agenda-group "string-similarity"
+//when
+//    $model : StringSimilarityServiceModel(!UserInput.isNumber(input))
+//    $displayable : Displayable()
+//then
+//    insert(SimilarityHelper.getSorensenDiceSimilarity($model.getInput(), $displayable));
+//end
+
+rule "String Similarity - Min 0.5"
+    agenda-group "string-similarity"
+    salience -1
+when
+    $similarity: Similarity(score < 0.5)
+then
+    delete($similarity);
+end

@@ -1,9 +1,6 @@
 package at.jku.dke.ida.rules.interfaces;
 
 import at.jku.dke.ida.shared.display.Display;
-import at.jku.dke.ida.shared.operations.Operation;
-
-import java.util.Map;
 
 /**
  * Model used by {@link at.jku.dke.ida.rules.services.ValueIntentService}.

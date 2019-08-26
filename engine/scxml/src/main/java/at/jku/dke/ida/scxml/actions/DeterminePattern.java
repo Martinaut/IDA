@@ -4,7 +4,7 @@ import at.jku.dke.ida.rules.interfaces.PatternServiceModel;
 import at.jku.dke.ida.rules.models.DefaultPatternServiceModel;
 import at.jku.dke.ida.rules.results.ConfidenceResult;
 import at.jku.dke.ida.rules.results.EventConfidenceResult;
-import at.jku.dke.ida.rules.results.StringConfidenceResult;
+import at.jku.dke.ida.rules.results.PatternConfidenceResult;
 import at.jku.dke.ida.rules.services.PatternService;
 import at.jku.dke.ida.scxml.interceptors.DeterminePatternInterceptor;
 import at.jku.dke.ida.scxml.session.SessionContextModel;
@@ -13,6 +13,7 @@ import at.jku.dke.ida.shared.Event;
 import at.jku.dke.ida.shared.models.ComparativeAnalysisSituation;
 import at.jku.dke.ida.shared.models.NonComparativeAnalysisSituation;
 import at.jku.dke.ida.shared.operations.Pattern;
+import at.jku.dke.ida.shared.operations.PatternPart;
 import at.jku.dke.ida.shared.spring.BeanUtil;
 import org.apache.commons.scxml2.ActionExecutionContext;
 import org.apache.commons.scxml2.SCXMLExpressionException;
@@ -31,10 +32,7 @@ public class DeterminePattern extends BaseAction {
     @Override
     protected void execute(ActionExecutionContext ctx, SessionContextModel ctxModel) throws ModelException, SCXMLExpressionException {
         // Get data
-        PatternServiceModel model = new DefaultPatternServiceModel(
-                getCurrentState(),
-                ctxModel
-        );
+        PatternServiceModel model = new DefaultPatternServiceModel(getCurrentState(), ctxModel);
         var interceptor = BeanUtil.getOptionalBean(DeterminePatternInterceptor.class);
         if (interceptor != null)
             model = interceptor.modifyModel(model);
@@ -49,22 +47,19 @@ public class DeterminePattern extends BaseAction {
                     .findFirst().orElse(new EventConfidenceResult(Event.DETERMINED));
 
         // Check type of result and trigger event
-        if (result == null) {
-            ctxModel.setAnalysisSituationWithoutEvent(new NonComparativeAnalysisSituation());
-            ctx.getInternalIOProcessor().addEvent(new TriggerEvent(Event.DETERMINED.getEventName(), TriggerEvent.SIGNAL_EVENT));
-            return;
-        }
-        if (result.getValue() instanceof String) {
-            switch (((String) result.getValue())) {
-                case Pattern.COMPARATIVE:
+        if (result instanceof PatternConfidenceResult) {
+            switch (((PatternConfidenceResult) result).getValue()) {
+                case COMPARATIVE:
                     ComparativeAnalysisSituation comp = new ComparativeAnalysisSituation();
 
                     ctxModel.setAnalysisSituationWithoutEvent(comp);
-                    ctxModel.setComparativeActiveAS("");
-                    ctxModel.getAdditionalData().put(Pattern.ADD_DATA_COMPARATIVE, comp);
-                    SessionManager.getInstance().getSession(ctxModel.getSessionId()).setCubeSetFlag(true);
+                    ctxModel.setComparativeActiveAS(PatternPart.PARENT);
+                    ctxModel.getAdditionalData().put(Pattern.ADDITIONAL_DATA_COMPARATIVE, comp);
+
+                    var session = SessionManager.getInstance().getSession(ctxModel.getSessionId());
+                    if (session != null) session.setCubeSetFlag(true);
                     break;
-                case Pattern.NONCOMPARATIVE:
+                case NON_COMPARATIVE:
                     ctxModel.setAnalysisSituationWithoutEvent(new NonComparativeAnalysisSituation());
                     break;
             }

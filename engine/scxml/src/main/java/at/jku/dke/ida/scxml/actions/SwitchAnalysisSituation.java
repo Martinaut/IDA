@@ -7,6 +7,7 @@ import at.jku.dke.ida.scxml.session.SessionManager;
 import at.jku.dke.ida.shared.Event;
 import at.jku.dke.ida.shared.models.ComparativeAnalysisSituation;
 import at.jku.dke.ida.shared.operations.Pattern;
+import at.jku.dke.ida.shared.operations.PatternPart;
 import org.apache.commons.scxml2.ActionExecutionContext;
 import org.apache.commons.scxml2.SCXMLExpressionException;
 import org.apache.commons.scxml2.TriggerEvent;
@@ -27,7 +28,7 @@ public class SwitchAnalysisSituation extends BaseAction {
      */
     @Override
     protected void execute(ActionExecutionContext ctx, SessionContextModel ctxModel) throws ModelException, SCXMLExpressionException {
-        ComparativeAnalysisSituation as = ctxModel.getAdditionalData(Pattern.ADD_DATA_COMPARATIVE, ComparativeAnalysisSituation.class);
+        ComparativeAnalysisSituation as = ctxModel.getAdditionalData(Pattern.ADDITIONAL_DATA_COMPARATIVE, ComparativeAnalysisSituation.class);
 //        try {
         switch (ctxModel.getOperation()) {
             case SWITCH_SC:
@@ -42,12 +43,12 @@ public class SwitchAnalysisSituation extends BaseAction {
 //                    }
                 ctxModel.setAnalysisSituation(as.getContextOfComparison());
                 setCubeSet(ctxModel, as.getContextOfComparison().isCubeDefined());
-                ctxModel.setComparativeActiveAS(Pattern.SC);
+                ctxModel.setComparativeActiveAS(PatternPart.SET_OF_COMPARISON);
                 break;
             case SWITCH_SI:
                 ctxModel.setAnalysisSituation(as.getContextOfInterest());
                 setCubeSet(ctxModel, as.getContextOfInterest().isCubeDefined());
-                ctxModel.setComparativeActiveAS(Pattern.SI);
+                ctxModel.setComparativeActiveAS(PatternPart.SET_OF_INTEREST);
                 break;
             case SWITCH_COMP:
                 ctxModel.setAnalysisSituation(as);

@@ -1,0 +1,24 @@
+package app_rules.operation_display
+
+// ------------------------------------ IMPORT --------------------------------------
+import at.jku.dke.ida.shared.Event
+import at.jku.dke.ida.shared.models.NonComparativeAnalysisSituation
+import at.jku.dke.ida.shared.operations.Operation
+import at.jku.dke.ida.rules.interfaces.OperationDisplayServiceModel
+
+// ----------------------------- DICE NODE OPERATIONS -------------------------------
+rule "'Move Down To Node' - if sub-level of dice node is available"
+    agenda-group "operation-display-determination"
+when
+    $model : OperationDisplayServiceModel(isSubLevelRelationshipForDiceLevelAvailable())
+then
+    insert(new Operation(Event.NAVIGATE_DICE_NODE_MOVE_DOWN, $model.getLocale(), 30));
+end
+
+rule "'Move Up To Node' - if if at least one dice node selected"
+    agenda-group "operation-display-determination"
+when
+    $model : OperationDisplayServiceModel(isParentLevelRelationshipForDiceLevelAvailable())
+then
+    insert(new Operation(Event.NAVIGATE_DICE_NODE_MOVE_UP, $model.getLocale(), 31));
+end

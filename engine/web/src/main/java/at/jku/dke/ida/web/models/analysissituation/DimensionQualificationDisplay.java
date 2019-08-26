@@ -92,4 +92,9 @@ public class DimensionQualificationDisplay extends GenericDimensionQualification
         else
             super.setGranularityLevel(Objects.requireNonNullElse(granularityLevel, lblTop));
     }
+
+    @Override
+    public int compareTo(GenericDimensionQualification<Label> other) {
+        return getDimension().getUri().compareTo(other.getDimension().getUri());
+    }
 }

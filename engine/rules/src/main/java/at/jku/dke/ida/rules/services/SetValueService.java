@@ -8,7 +8,7 @@ import org.kie.api.runtime.KieSession;
  *
  * <p>Executes rules belonging to agenda-group: {@code set-value}</p>
  */
-public class SetValueService extends DroolsService<SetValueServiceModel, Void>  {
+public class SetValueService extends DroolsService<SetValueServiceModel, Void> {
 
     /**
      * Instantiates a new instance of class {@linkplain SetValueService}.

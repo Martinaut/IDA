@@ -1,0 +1,37 @@
+package app_rules.set_value
+
+// ------------------------------------ IMPORT --------------------------------------
+import at.jku.dke.ida.shared.models.NonComparativeAnalysisSituation
+import at.jku.dke.ida.shared.Event
+import at.jku.dke.ida.shared.display.Displayable
+import at.jku.dke.ida.rules.interfaces.SetValueServiceModel
+import org.apache.commons.lang3.tuple.Pair
+
+// ------------------------------------ RULES ---------------------------------------
+rule "Add filter"
+    agenda-group "set-value"
+when
+    $as : NonComparativeAnalysisSituation()
+    $model : SetValueServiceModel(operation == Event.NAVIGATE_FILTER_NARROW, analysisSituation == $as, value instanceof Displayable)
+then
+    $as.addFilterCondition(((Displayable)$model.getValue()).getDisplayableId());
+end
+
+rule "Drop filter"
+    agenda-group "set-value"
+when
+    $as : NonComparativeAnalysisSituation()
+    $model : SetValueServiceModel(operation == Event.NAVIGATE_FILTER_BROADEN, analysisSituation == $as, value instanceof Displayable)
+then
+    $as.removeFilterCondition(((Displayable)$model.getValue()).getDisplayableId());
+end
+
+rule "Refocus filter"
+    agenda-group "set-value"
+when
+    $as : NonComparativeAnalysisSituation()
+    $model : SetValueServiceModel(operation == Event.NAVIGATE_FILTER_REFOCUS, analysisSituation == $as, value instanceof Pair)
+then
+    $as.addFilterCondition(((Pair<Displayable, Displayable>)$model.getValue()).getLeft().getDisplayableId());
+    $as.removeFilterCondition(((Pair<Displayable, Displayable>)$model.getValue()).getRight().getDisplayableId());
+end

@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
  *
  * <p>Executes rules belonging to agenda-group: {@code value-determination}</p>
  */
-public class ValueService extends DroolsService<ValueServiceModel, Collection<ConfidenceResult>>  {
+public class ValueService extends DroolsService<ValueServiceModel, Collection<ConfidenceResult>> {
 
     /**
      * Instantiates a new instance of class {@linkplain ValueService}.

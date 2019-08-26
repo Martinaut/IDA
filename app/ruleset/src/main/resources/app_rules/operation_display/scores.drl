@@ -1,0 +1,26 @@
+package app_rules.operation_display
+
+// ------------------------------------ IMPORT --------------------------------------
+import at.jku.dke.ida.shared.Event
+import at.jku.dke.ida.shared.models.ComparativeAnalysisSituation
+import at.jku.dke.ida.shared.operations.Operation
+import at.jku.dke.ida.rules.interfaces.OperationDisplayServiceModel
+
+// ------------------------------ SCORE OPERATIONS --------------------------------
+rule "'Add Score' - if at least one score is available"
+    agenda-group "operation-display-determination"
+when
+    $as : ComparativeAnalysisSituation()
+    $model : OperationDisplayServiceModel(isNotSelectedScoreAvailable())
+then
+    insert(new Operation(Event.NAVIGATE_SCORE_ADD, $model.getLocale(), 20));
+end
+
+rule "'Drop Score' - if at least one score is selected"
+    agenda-group "operation-display-determination"
+when
+    $as : ComparativeAnalysisSituation(scores.isEmpty() == false)
+    $model : OperationDisplayServiceModel(analysisSituation == $as)
+then
+    insert(new Operation(Event.NAVIGATE_SCORE_DROP, $model.getLocale(), 21));
+end

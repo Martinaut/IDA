@@ -3,12 +3,10 @@ package at.jku.dke.ida.rules.models;
 import at.jku.dke.ida.rules.interfaces.ValueIntentServiceModel;
 import at.jku.dke.ida.shared.Event;
 import at.jku.dke.ida.shared.display.Display;
-import at.jku.dke.ida.shared.models.AnalysisSituation;
 import at.jku.dke.ida.shared.models.EngineAnalysisSituation;
 import at.jku.dke.ida.shared.session.SessionModel;
 
 import java.util.Locale;
-import java.util.Map;
 
 /**
  * Default model used by {@link at.jku.dke.ida.rules.services.ValueIntentService}.

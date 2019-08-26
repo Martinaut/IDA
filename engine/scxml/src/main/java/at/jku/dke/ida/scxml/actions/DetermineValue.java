@@ -18,8 +18,6 @@ import org.apache.commons.scxml2.ActionExecutionContext;
 import org.apache.commons.scxml2.TriggerEvent;
 import org.apache.commons.scxml2.model.ModelException;
 
-import java.util.HashMap;
-
 /**
  * This action determines the selected value and sets the value accordingly in the analysis situation.
  */

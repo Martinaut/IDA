@@ -131,8 +131,10 @@ public class QueryExecutor {
         LOG.debug("Sending get IRI request to {}.", request.url());
         try (Response response = client.newCall(request).execute()) {
             if (!response.isSuccessful()) throw new IOException("Unexpected HTTP status code: " + response);
-            if (response.body() == null) throw new IOException("Body is null");
-            return response.body().string();
+
+            var body = response.body();
+            if (body == null) throw new IOException("Body is null");
+            return body.string();
         }
     }
 
@@ -144,7 +146,7 @@ public class QueryExecutor {
      * @throws IOException If an error occurred while executing the request.
      */
     private void post(String url, String bodyContent) throws IOException {
-        RequestBody body = RequestBody.create(JSON, bodyContent);
+        RequestBody body = RequestBody.create(bodyContent, JSON);
         Request request = new Request.Builder()
                 .url(url)
                 .post(body)

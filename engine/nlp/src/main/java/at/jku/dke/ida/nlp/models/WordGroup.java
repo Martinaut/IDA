@@ -9,6 +9,7 @@ import java.util.StringJoiner;
 public class WordGroup {
 
     private final String text;
+    private final String expression;
 
     /**
      * Instantiates a new instance of class {@link WordGroup}.
@@ -17,6 +18,18 @@ public class WordGroup {
      */
     public WordGroup(String text) {
         this.text = text;
+        this.expression = null;
+    }
+
+    /**
+     * Instantiates a new instance of class {@link WordGroup}.
+     *
+     * @param text       The text.
+     * @param expression The expression used to find this word group.
+     */
+    public WordGroup(String text, String expression) {
+        this.text = text;
+        this.expression = expression;
     }
 
     /**
@@ -28,10 +41,20 @@ public class WordGroup {
         return text;
     }
 
+    /**
+     * Gets the expression.
+     *
+     * @return the expression
+     */
+    public String getExpression() {
+        return expression;
+    }
+
     @Override
     public String toString() {
         return new StringJoiner(", ", WordGroup.class.getSimpleName() + "[", "]")
                 .add("text='" + text + "'")
+                .add("expression='" + expression + "'")
                 .toString();
     }
 

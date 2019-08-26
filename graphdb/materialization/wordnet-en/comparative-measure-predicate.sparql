@@ -1,0 +1,77 @@
+PREFIX : <http://www.ontotext.com/graphdb/similarity/>
+PREFIX inst: <http://www.ontotext.com/graphdb/similarity/instance/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX qbx: <http://dke.jku.at/inga/cubes#>
+PREFIX sim: <http://dke.jku.at/ida/similarity#>
+
+INSERT {
+    GRAPH sim:wordnet-scores-en {
+        ?mapping rdf:type sim:Mapping ;
+                 sim:inCube   ?cube ;
+                 sim:from     ?element ;
+                 sim:to       ?documentID ;
+                 sim:hasScore ?score ;
+                 sim:fromType qbx:ComparativeMeasurePredicate ;
+                 sim:partOf   ?part .
+    }
+}
+WHERE
+{
+    SELECT ?mapping ?cube ?element ?documentID ?score ?part
+    WHERE {
+        ?search a inst:wordnet ;
+                :searchTerm         ?filterText ;
+                :searchParameters   "" ;
+                :documentResult     ?result .
+        ?result :value ?documentID ;
+                :score ?score .
+
+        {
+            SELECT DISTINCT ?cube ?element ?filterText ?part
+            WHERE {
+                ?cube qbx:measure ?bmeasure .
+                ?bmeasure rdf:type qbx:BaseMeasure .
+
+                ?ameasure rdf:type        qbx:AggregateMeasure ;
+                          qbx:derivedFrom ?bmeasure .
+
+                ?cmeasure rdf:type        qbx:ComparativeMeasure ;
+                         qbx:setOfInterestMeasure ?ameasure .
+
+                ?element rdf:type        qbx:ComparativeMeasurePredicate ;
+                         qbx:over 		 ?cmeasure ;
+                         rdfs:label      ?filterText .
+
+                FILTER(isLiteral(?filterText)) .
+                FILTER(lang(?filterText) = "en") .
+
+                BIND('setOfInterest' AS ?part)
+            }
+        }
+        UNION
+        {
+            SELECT DISTINCT ?cube ?element ?filterText ?part
+            WHERE {
+                ?cube qbx:measure ?bmeasure .
+                ?bmeasure rdf:type qbx:BaseMeasure .
+
+                ?ameasure rdf:type        qbx:AggregateMeasure ;
+                          qbx:derivedFrom ?bmeasure .
+
+                ?cmeasure rdf:type        qbx:ComparativeMeasure ;
+                         qbx:setOfComparisonMeasure ?ameasure .
+
+                ?element rdf:type        qbx:ComparativeMeasurePredicate ;
+                         qbx:over 		 ?cmeasure ;
+                         rdfs:label      ?filterText .
+
+                FILTER(isLiteral(?filterText)) .
+                FILTER(lang(?filterText) = "en") .
+
+                BIND('setOfComparison' AS ?part)
+            }
+        }
+        BIND(IRI(CONCAT("sim:mapping_", STRUUID())) AS ?mapping)
+    }
+}
