@@ -1,4 +1,4 @@
-package app_rules.set_value
+package app_rules.switch_as
 
 // ------------------------------------ IMPORT --------------------------------------
 import at.jku.dke.ida.shared.models.ComparativeAnalysisSituation

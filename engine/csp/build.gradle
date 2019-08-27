@@ -4,6 +4,7 @@ version '1.0.0-SNAPSHOT'
 dependencies {
     implementation project(':engine:data')
     implementation project(':engine:shared')
+    implementation project(':engine:rules')
 
     api 'org.optaplanner:optaplanner-core:7.25.0.Final'
     implementation 'org.springframework.boot:spring-boot-configuration-processor'

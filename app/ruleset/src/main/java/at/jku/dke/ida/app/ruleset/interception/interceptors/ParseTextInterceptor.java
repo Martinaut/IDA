@@ -50,7 +50,7 @@ public class ParseTextInterceptor implements ParseFreeTextInterceptor {
         LOGGER.info("Filling analysis situation");
         Set<WordGroup> wordGroups = getWordGroups(sessionModel, sessionModel.getUserInput());
         Set<CubeSimilarity> similarities = getSimilarities(sessionModel, wordGroups);
-        service.fillAnalysisSituation(sessionModel.getLocale().getLanguage(), sessionModel.getAnalysisSituation(), similarities);
+        service.fillAnalysisSituation(sessionModel, similarities);
         return null;
     }
 

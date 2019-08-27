@@ -8,7 +8,7 @@ import java.util.TreeSet;
 /**
  * Used to display the non comparative AS.
  */
-public class NonComparativeAnalysisSituationDisplay extends GenericNonComparativeAnalysisSituation<Label, DimensionQualificationDisplay> {
+public class NonComparativeAnalysisSituationDisplay extends GenericNonComparativeAnalysisSituation<Label, Label, DimensionQualificationDisplay> {
     /**
      * Instantiates a new instance of class {@linkplain NonComparativeAnalysisSituationDisplay}.
      */

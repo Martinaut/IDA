@@ -13,9 +13,9 @@ import java.util.stream.Collectors;
  * @param <TValue>   The type of the schema elements.
  * @param <TDimQual> The type of the dimension qualifications.
  */
-public class GenericNonComparativeAnalysisSituation<TValue extends Comparable<? super TValue>, TDimQual extends GenericDimensionQualification<TValue>> extends AnalysisSituation {
+public class GenericNonComparativeAnalysisSituation<TCube, TValue extends Comparable<? super TValue>, TDimQual extends GenericDimensionQualification<TValue>> extends AnalysisSituation {
 
-    private TValue cube; // 1. a cube instance of cube schema
+    private TCube cube; // 1. a cube instance of cube schema
     private Set<TValue> baseMeasureConditions; // 2. a possibly empty set of base measure conditions
     private Set<TValue> measures; // 3. a non-empty set of measures
     private Map<TValue, TDimQual> dimensionQualifications; // 4. a set of dimension qualifications
@@ -36,7 +36,7 @@ public class GenericNonComparativeAnalysisSituation<TValue extends Comparable<? 
      *
      * @return the cube
      */
-    public TValue getCube() {
+    public TCube getCube() {
         return cube;
     }
 
@@ -45,7 +45,7 @@ public class GenericNonComparativeAnalysisSituation<TValue extends Comparable<? 
      *
      * @param cube the cube
      */
-    public void setCube(TValue cube) {
+    public void setCube(TCube cube) {
         this.cube = cube;
     }
 

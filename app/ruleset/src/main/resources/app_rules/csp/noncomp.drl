@@ -1,0 +1,82 @@
+package app_rules.csp
+
+// ------------------------------------ IMPORT --------------------------------------
+import at.jku.dke.ida.shared.models.NonComparativeAnalysisSituation
+import at.jku.dke.ida.csp.domain.AnalysisSituationEntity
+import at.jku.dke.ida.csp.models.FillDeterminedValuesServiceModel
+import at.jku.dke.ida.app.ruleset.helpers.ValueSetter
+import at.jku.dke.ida.data.models.CubeSimilarity
+import at.jku.dke.ida.data.models.DimensionSimilarity
+import java.util.stream.Collectors
+
+// ------------------------------------ RULES ---------------------------------------
+rule "No cube determined"
+    agenda-group "fill-csp"
+    salience Integer.MAX_VALUE
+when
+    $vals: AnalysisSituationEntity(cube == null || cube.trim().length() == 0)
+then
+    drools.halt();
+end
+
+rule "Set cube"
+    agenda-group "fill-csp"
+    salience Integer.MAX_VALUE - 1
+when
+    $as: NonComparativeAnalysisSituation()
+    $vals: AnalysisSituationEntity()
+    $model: FillDeterminedValuesServiceModel()
+then
+    ValueSetter.setCube($model.getLanguage(), $as, $vals.getCube());
+end
+
+rule "Set measures"
+    agenda-group "fill-csp"
+when
+    $as: NonComparativeAnalysisSituation()
+    $vals: AnalysisSituationEntity(aggregateMeasures != null, !aggregateMeasures.isEmpty())
+then
+    $as.setMeasures($vals.getAggregateMeasures().getElements().stream().map(CubeSimilarity::getElement).collect(Collectors.toSet()));
+end
+
+rule "Set filter conditions"
+    agenda-group "fill-csp"
+when
+    $as: NonComparativeAnalysisSituation()
+    $vals: AnalysisSituationEntity(aggregateMeasurePredicates != null, !aggregateMeasurePredicates.isEmpty())
+then
+    $as.setFilterConditions($vals.getAggregateMeasurePredicates().getElements().stream().map(CubeSimilarity::getElement).collect(Collectors.toSet()));
+end
+
+rule "Set base measure conditions"
+    agenda-group "fill-csp"
+when
+    $as: NonComparativeAnalysisSituation()
+    $vals: AnalysisSituationEntity(baseMeasurePredicates != null, !baseMeasurePredicates.isEmpty())
+then
+    $as.setBaseMeasureConditions($vals.getBaseMeasurePredicates().getElements().stream().map(CubeSimilarity::getElement).collect(Collectors.toSet()));
+end
+
+rule "Set slice conditions"
+    agenda-group "fill-csp"
+when
+    $as: NonComparativeAnalysisSituation()
+    $vals: AnalysisSituationEntity(levelPredicates != null, !levelPredicates.isEmpty())
+then
+    $vals.getLevelPredicates().getElements().stream()
+        .filter(x -> x instanceof DimensionSimilarity)
+        .map(x -> (DimensionSimilarity) x)
+        .forEach(x -> $as.getDimensionQualification(x.getDimension()).addSliceCondition(x.getElement()));
+end
+
+rule "Set granularity levels"
+    agenda-group "fill-csp"
+when
+    $as: NonComparativeAnalysisSituation()
+    $vals: AnalysisSituationEntity(levels != null, !levels.isEmpty())
+then
+    $vals.getLevels().getElements().stream()
+        .filter(x -> x instanceof DimensionSimilarity)
+        .map(x -> (DimensionSimilarity) x)
+        .forEach(x -> $as.getDimensionQualification(x.getDimension()).setGranularityLevel(x.getElement()));
+end

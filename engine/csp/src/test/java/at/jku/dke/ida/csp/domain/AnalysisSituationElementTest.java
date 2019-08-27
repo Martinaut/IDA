@@ -55,6 +55,6 @@ class AnalysisSituationElementTest {
         double score = ase.getScore();
 
         // Assert
-        assertEquals(0.4505, score, 0.0000001);
+        assertEquals(1.38, score, 0.0000001);
     }
 }

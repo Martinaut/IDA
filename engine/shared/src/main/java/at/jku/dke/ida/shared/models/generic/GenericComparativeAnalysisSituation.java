@@ -8,7 +8,11 @@ import java.util.*;
  * A comparative analysis situation allows to model comparison. It joins two analysis situations and relates
  * both by a score definition.
  */
-public class GenericComparativeAnalysisSituation<TValue extends Comparable<? super TValue>, TDimQual extends GenericDimensionQualification<TValue>, TNonComp extends GenericNonComparativeAnalysisSituation<TValue, TDimQual>> extends AnalysisSituation {
+public class GenericComparativeAnalysisSituation<
+        TCube,
+        TValue extends Comparable<? super TValue>,
+        TDimQual extends GenericDimensionQualification<TValue>,
+        TNonComp extends GenericNonComparativeAnalysisSituation<TCube, TValue, TDimQual>> extends AnalysisSituation {
 
     private TNonComp contextOfInterest; // 1. a non-comparative analysis situation as context of interest
     private TNonComp contextOfComparison;  // 2. a non-comparative analysis situation as context of comparison
