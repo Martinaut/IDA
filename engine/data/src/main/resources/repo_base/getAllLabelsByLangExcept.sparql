@@ -1,16 +1,27 @@
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX qbx: <http://dke.jku.at/inga/cubes#>
+PREFIX sim: <http://dke.jku.at/ida/similarity#>
 
-SELECT ?element ?label ?description
+SELECT DISTINCT ?element ?label ?description ?cube
 WHERE {
 	?element rdf:type <###TYPE###> ;
              rdfs:label ?label .
     FILTER (lang(?label) = "###LANG###") .
-    
+
     OPTIONAL {
         ?element rdfs:comment ?description .
     	FILTER (lang(?description) = "###LANG###") .
     }
+
+    OPTIONAL {
+        GRAPH sim:cube-assignment {
+            ?mapping rdf:type sim:CubeAssignment ;
+                     sim:from ?element ;
+                     sim:cube ?cube .
+         }
+    }
+
+    FILTER (?element NOT IN (###NOTIN###)) .
 }
 ORDER BY ?label

@@ -30,7 +30,6 @@ public class FillDeterminedValuesService extends DroolsService<FillDeterminedVal
         logger.info("Filling AS with values from CSP.");
         if (model.getDeterminedValues() == null) return null;
 
-
         // Add data
         session.insert(model);
         session.insert(model.getAnalysisSituation());

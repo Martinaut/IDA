@@ -5,8 +5,41 @@ import at.jku.dke.ida.shared.models.ComparativeAnalysisSituation
 import at.jku.dke.ida.csp.domain.AnalysisSituationEntity
 import at.jku.dke.ida.csp.models.FillDeterminedValuesServiceModel
 import at.jku.dke.ida.app.ruleset.helpers.ValueSetter
-import at.jku.dke.ida.data.models.CubeSimilarity
-import at.jku.dke.ida.data.models.DimensionSimilarity
+import at.jku.dke.ida.data.models.similarity.CubeSimilarity
+import at.jku.dke.ida.data.models.similarity.DimensionSimilarity
 import java.util.stream.Collectors
+import at.jku.dke.ida.data.models.similarity.CubeSimilarity
 
 // ------------------------------------ RULES ---------------------------------------
+rule "Set scores"
+    agenda-group "fill-csp"
+when
+    $model : FillDeterminedValuesServiceModel()
+    $as : ComparativeAnalysisSituation()
+    $vals : AnalysisSituationEntity(comparativeMeasures != null, !comparativeMeasures.isEmpty())
+then
+    $as.setScores($vals.getComparativeMeasures().getElements().stream().map(CubeSimilarity::getElement).collect(Collectors.toSet()));
+    ValueSetter.setScoreMeasures($model.getLanguage(), $as, $vals.getComparativeMeasures().getElements());
+end
+
+rule "Set score filters"
+    agenda-group "fill-csp"
+when
+    $model : FillDeterminedValuesServiceModel()
+    $as : ComparativeAnalysisSituation()
+    $vals : AnalysisSituationEntity(comparativeMeasurePredicates != null, !comparativeMeasurePredicates.isEmpty())
+then
+    $as.setScoreFilters($vals.getComparativeMeasurePredicates().getElements().stream().map(CubeSimilarity::getElement).collect(Collectors.toSet()));
+    ValueSetter.setScoreMeasurePredicates($model.getLanguage(), $as, $vals.getComparativeMeasurePredicates().getElements());
+end
+
+rule "Set join conditions"
+    agenda-group "fill-csp"
+when
+    $model : FillDeterminedValuesServiceModel()
+    $as : ComparativeAnalysisSituation()
+    $vals : AnalysisSituationEntity(joinConditionPredicates != null, !joinConditionPredicates.isEmpty())
+then
+    $as.setJoinConditions($vals.getJoinConditionPredicates().getElements().stream().map(CubeSimilarity::getElement).collect(Collectors.toSet()));
+    ValueSetter.setJoinConditionPredicates($model.getLanguage(), $as, $vals.getJoinConditionPredicates().getElements());
+end

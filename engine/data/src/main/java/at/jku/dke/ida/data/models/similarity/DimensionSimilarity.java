@@ -1,4 +1,4 @@
-package at.jku.dke.ida.data.models;
+package at.jku.dke.ida.data.models.similarity;
 
 import java.util.Objects;
 import java.util.StringJoiner;

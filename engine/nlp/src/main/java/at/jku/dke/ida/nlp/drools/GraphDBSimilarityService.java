@@ -1,6 +1,6 @@
 package at.jku.dke.ida.nlp.drools;
 
-import at.jku.dke.ida.data.models.CubeSimilarity;
+import at.jku.dke.ida.data.models.similarity.CubeSimilarity;
 import at.jku.dke.ida.nlp.models.GraphDBSimilarityServiceModel;
 import at.jku.dke.ida.rules.services.DroolsService;
 import org.kie.api.runtime.KieSession;

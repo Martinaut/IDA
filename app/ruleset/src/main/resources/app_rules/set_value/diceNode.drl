@@ -3,11 +3,13 @@ package app_rules.set_value
 // ------------------------------------ IMPORT --------------------------------------
 import at.jku.dke.ida.shared.models.NonComparativeAnalysisSituation
 import at.jku.dke.ida.shared.Event
-import at.jku.dke.ida.data.models.Label
-import at.jku.dke.ida.data.models.DimensionLevelLabel
+import at.jku.dke.ida.data.models.labels.Label
+import at.jku.dke.ida.data.models.labels.DimensionLevelLabel
 import at.jku.dke.ida.rules.interfaces.SetValueServiceModel
 import org.apache.commons.lang3.tuple.Pair
 import at.jku.dke.ida.app.ruleset.helpers.Constants
+import at.jku.dke.ida.data.models.labels.DimensionLevelLabel
+import at.jku.dke.ida.data.models.labels.Label
 
 // ------------------------------------ RULES ---------------------------------------
 rule "Add Dice Node"

@@ -2,7 +2,7 @@ package at.jku.dke.ida.app.ruleset.interception.interceptors;
 
 import at.jku.dke.ida.app.ruleset.helpers.UserInput;
 import at.jku.dke.ida.app.ruleset.interception.models.ValueInputIntentModel;
-import at.jku.dke.ida.data.models.Similarity;
+import at.jku.dke.ida.data.models.similarity.Similarity;
 import at.jku.dke.ida.rules.interfaces.ValueIntentServiceModel;
 import at.jku.dke.ida.scxml.interceptors.DetermineValueInputIntentInterceptor;
 import at.jku.dke.ida.shared.Event;

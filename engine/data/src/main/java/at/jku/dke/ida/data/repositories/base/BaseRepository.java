@@ -3,7 +3,7 @@ package at.jku.dke.ida.data.repositories.base;
 import at.jku.dke.ida.data.IRIValidator;
 import at.jku.dke.ida.data.QueryException;
 import at.jku.dke.ida.data.GraphDbConnection;
-import at.jku.dke.ida.data.models.Label;
+import at.jku.dke.ida.data.models.labels.Label;
 import at.jku.dke.ida.data.repositories.RepositoryHelpers;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;

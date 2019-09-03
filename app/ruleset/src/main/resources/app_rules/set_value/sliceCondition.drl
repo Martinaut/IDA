@@ -3,10 +3,11 @@ package app_rules.set_value
 // ------------------------------------ IMPORT --------------------------------------
 import at.jku.dke.ida.shared.models.NonComparativeAnalysisSituation
 import at.jku.dke.ida.shared.Event
-import at.jku.dke.ida.data.models.DimensionLabel
+import at.jku.dke.ida.data.models.labels.DimensionLabel
 import at.jku.dke.ida.rules.interfaces.SetValueServiceModel
 import at.jku.dke.ida.app.ruleset.helpers.ValueSetter
 import org.apache.commons.lang3.tuple.Pair
+import at.jku.dke.ida.data.models.labels.DimensionLabel
 
 // ------------------------------------ RULES ---------------------------------------
 rule "Add Slice Condition"

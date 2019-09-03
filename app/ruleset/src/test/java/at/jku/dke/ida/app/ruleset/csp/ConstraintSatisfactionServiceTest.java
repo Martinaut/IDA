@@ -3,7 +3,7 @@ package at.jku.dke.ida.app.ruleset.csp;
 import at.jku.dke.ida.csp.ConstraintSatisfactionSpringConfiguration;
 import at.jku.dke.ida.csp.service.ConstraintSatisfactionService;
 import at.jku.dke.ida.data.configuration.DataSpringConfiguration;
-import at.jku.dke.ida.data.models.CubeSimilarity;
+import at.jku.dke.ida.data.models.similarity.CubeSimilarity;
 import at.jku.dke.ida.shared.models.NonComparativeAnalysisSituation;
 import at.jku.dke.ida.shared.session.SessionModel;
 import at.jku.dke.ida.shared.spring.SharedSpringConfiguration;

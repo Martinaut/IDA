@@ -12,7 +12,7 @@ INSERT {
                  sim:from     ?element ;
                  sim:to       ?documentID ;
                  sim:hasScore ?score ;
-                 sim:fromType qbx:ComparativeMeasure ;
+                 sim:fromType qbx:JoinConditionPredicate ;
                  sim:partOf   ?part .
     }
 }

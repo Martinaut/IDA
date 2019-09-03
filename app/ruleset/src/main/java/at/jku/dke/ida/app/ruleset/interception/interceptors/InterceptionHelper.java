@@ -1,13 +1,12 @@
 package at.jku.dke.ida.app.ruleset.interception.interceptors;
 
 import at.jku.dke.ida.app.ruleset.helpers.Keyword;
-import at.jku.dke.ida.data.models.DimensionLabel;
-import at.jku.dke.ida.data.models.DimensionLevelLabel;
-import at.jku.dke.ida.data.models.Label;
-import at.jku.dke.ida.data.models.Similarity;
+import at.jku.dke.ida.data.models.labels.DimensionLabel;
+import at.jku.dke.ida.data.models.labels.DimensionLevelLabel;
+import at.jku.dke.ida.data.models.labels.Label;
+import at.jku.dke.ida.data.models.similarity.Similarity;
 import at.jku.dke.ida.nlp.drools.StringSimilarityService;
 import at.jku.dke.ida.nlp.models.StringSimilarityServiceModel;
-import at.jku.dke.ida.shared.ResourceBundleHelper;
 import at.jku.dke.ida.shared.display.Displayable;
 import at.jku.dke.ida.shared.display.SimpleDisplayable;
 import at.jku.dke.ida.shared.operations.Operation;

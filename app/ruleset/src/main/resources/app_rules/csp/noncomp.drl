@@ -5,9 +5,11 @@ import at.jku.dke.ida.shared.models.NonComparativeAnalysisSituation
 import at.jku.dke.ida.csp.domain.AnalysisSituationEntity
 import at.jku.dke.ida.csp.models.FillDeterminedValuesServiceModel
 import at.jku.dke.ida.app.ruleset.helpers.ValueSetter
-import at.jku.dke.ida.data.models.CubeSimilarity
-import at.jku.dke.ida.data.models.DimensionSimilarity
+import at.jku.dke.ida.data.models.similarity.CubeSimilarity
+import at.jku.dke.ida.data.models.similarity.DimensionSimilarity
 import java.util.stream.Collectors
+import at.jku.dke.ida.data.models.similarity.CubeSimilarity
+import at.jku.dke.ida.data.models.similarity.DimensionSimilarity
 
 // ------------------------------------ RULES ---------------------------------------
 rule "No cube determined"

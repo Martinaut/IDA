@@ -10,15 +10,16 @@ INSERT {
         ?mapping rdf:type sim:Mapping ;
                  sim:inCube   ?cube ;
                  sim:inDim    ?dimension ;
+                 sim:inLevel  ?level ;
                  sim:from     ?element ;
                  sim:to       ?documentID ;
                  sim:hasScore ?score ;
-                 sim:fromType qbx:LevelMember .
+                 sim:fromType qbx:LevelPredicate.
     }
 }
 WHERE
 {
-    SELECT ?mapping ?cube ?dimension ?element ?documentID ?score
+    SELECT ?mapping ?cube ?dimension ?level ?element ?documentID ?score
     WHERE {
         ?search a inst:wordnet ;
                 :searchTerm         ?filterText ;
@@ -27,18 +28,10 @@ WHERE
         ?result :value ?documentID ;
                 :score ?score .
         {
-            SELECT DISTINCT ?cube ?dimension ?element ?filterText
+            SELECT DISTINCT ?cube ?dimension ?level ?element ?filterText
             WHERE {
-                {
-                    ?element rdf:type qbx:LevelPredicate ;
-                             qbx:over ?level .
-                }
-                UNION
-                {
-                    ?pred qbx:over ?level .
-                    ?element rdf:type qbx:ConjunctiveLevelPredicate ;
-                          	 qbx:conjunct ?pred .
-                }
+                ?element rdf:type qbx:LevelMember ;
+                         qbx:inLevel ?level .
 
                 {
                     SELECT DISTINCT ?cube ?dimension ?level

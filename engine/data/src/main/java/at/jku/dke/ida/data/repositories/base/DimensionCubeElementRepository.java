@@ -3,7 +3,7 @@ package at.jku.dke.ida.data.repositories.base;
 import at.jku.dke.ida.data.IRIValidator;
 import at.jku.dke.ida.data.QueryException;
 import at.jku.dke.ida.data.GraphDbConnection;
-import at.jku.dke.ida.data.models.DimensionLabel;
+import at.jku.dke.ida.data.models.labels.DimensionLabel;
 import at.jku.dke.ida.data.repositories.RepositoryHelpers;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.ImmutablePair;
@@ -47,7 +47,7 @@ public abstract class DimensionCubeElementRepository extends CubeElementReposito
     @Override
     protected List<DimensionLabel> mapResultToLabel(String lang, Stream<BindingSet> stream) {
         return stream
-                .map(x -> RepositoryHelpers.convertToDimensionLabel(lang, x))
+                .map(x -> RepositoryHelpers.convertToDimensionLabel(lang, typeIri, x))
                 .collect(Collectors.toList());
     }
 
@@ -59,14 +59,14 @@ public abstract class DimensionCubeElementRepository extends CubeElementReposito
      * @throws IllegalArgumentException If {@code iris} is {@code null} or contains at least one invalid IRI.
      * @throws QueryException           If an exception occurred while executing the query.
      */
-    public Set<Pair<String, String>> getByIri(Set<String> iris) throws QueryException {
+    public Set<Pair<String, String>> getByIris(Set<String> iris) throws QueryException {
         if (iris == null) throw new IllegalArgumentException("iris must not be null");
         if (iris.stream().map(IRIValidator::isValidAbsoluteIRI).anyMatch(x -> !x))
             throw new IllegalArgumentException("iris contains at least one invalid IRI");
 
         logger.debug("Querying {}: {}.", pluralLogName, iris);
         return mapResultToType(connection.getQueryResult(
-                "/" + queryFolder + "/getbyIris.sparql",
+                "/" + queryFolder + "/getByIris.sparql",
                 s -> s.replaceAll("###IN###", iris.stream()
                         .map(x -> '(' + convertToFullIriString(x) + ')')
                         .collect(Collectors.joining(" ")))).stream());

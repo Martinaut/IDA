@@ -1,17 +1,5 @@
 package at.jku.dke.ida.app.ruleset.csp;
 
-import at.jku.dke.ida.csp.domain.AnalysisSituationSolution;
-import at.jku.dke.ida.data.models.CubeSimilarity;
-import at.jku.dke.ida.data.models.DimensionSimilarity;
-import org.junit.jupiter.api.Test;
-import org.optaplanner.core.api.solver.Solver;
-import org.optaplanner.core.api.solver.SolverFactory;
-
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
-
 class CSPTest {
 //    @Test
 //    void test() {

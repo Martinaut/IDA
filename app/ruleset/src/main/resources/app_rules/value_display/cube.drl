@@ -11,5 +11,5 @@ rule "Select cubes"
 when
     $model : ValueDisplayServiceModel(operation == Event.NAVIGATE_CUBE_SELECT)
 then
-    insert(new ListDisplay("selectCube", $model.getLocale(), $model.getCubeRepository().getLabelsByLang($model.getLanguage())));
+    insert(new ListDisplay("selectCube", $model.getLocale(), $model.getCubeRepository().getAllLabelsByLang($model.getLanguage())));
 end

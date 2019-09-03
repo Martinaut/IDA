@@ -1,6 +1,6 @@
 package at.jku.dke.ida.csp.domain;
 
-import at.jku.dke.ida.data.models.CubeSimilarity;
+import at.jku.dke.ida.data.models.similarity.CubeSimilarity;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

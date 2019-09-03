@@ -3,7 +3,7 @@ package at.jku.dke.ida.csp.service;
 import at.jku.dke.ida.csp.ConstraintSatisfactionSettings;
 import at.jku.dke.ida.csp.domain.AnalysisSituationSolution;
 import at.jku.dke.ida.csp.models.FillDeterminedValuesServiceModel;
-import at.jku.dke.ida.data.models.CubeSimilarity;
+import at.jku.dke.ida.data.models.similarity.CubeSimilarity;
 import at.jku.dke.ida.shared.IRIConstants;
 import at.jku.dke.ida.shared.models.ComparativeAnalysisSituation;
 import at.jku.dke.ida.shared.session.SessionModel;

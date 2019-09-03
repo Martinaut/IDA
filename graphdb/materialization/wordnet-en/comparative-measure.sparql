@@ -13,12 +13,13 @@ INSERT {
                  sim:to       ?documentID ;
                  sim:hasScore ?score ;
                  sim:fromType qbx:ComparativeMeasure ;
-                 sim:partOf   ?part .
+                 sim:partOf   ?part ;
+                 sim:measure  ?measure .
     }
 }
 WHERE
 {
-    SELECT ?mapping ?cube ?element ?documentID ?score ?part
+    SELECT ?mapping ?cube ?element ?documentID ?score ?part (?ameasure AS ?measure)
     WHERE {
         ?search a inst:wordnet ;
                 :searchTerm         ?filterText ;
@@ -28,7 +29,7 @@ WHERE
                 :score ?score .
 
         {
-            SELECT DISTINCT ?cube ?element ?filterText ?part
+            SELECT DISTINCT ?cube ?element ?filterText ?part ?ameasure
             WHERE {
                 ?cube qbx:measure ?bmeasure .
                 ?bmeasure rdf:type qbx:BaseMeasure .
@@ -48,7 +49,7 @@ WHERE
         }
         UNION
         {
-            SELECT DISTINCT ?cube ?element ?filterText ?part
+            SELECT DISTINCT ?cube ?element ?filterText ?part ?ameasure
             WHERE {
                 ?cube qbx:measure ?bmeasure .
                 ?bmeasure rdf:type qbx:BaseMeasure .

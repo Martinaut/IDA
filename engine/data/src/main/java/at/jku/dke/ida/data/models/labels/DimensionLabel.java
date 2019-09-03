@@ -1,11 +1,11 @@
-package at.jku.dke.ida.data.models;
+package at.jku.dke.ida.data.models.labels;
 
 import java.util.StringJoiner;
 
 /**
  * Represents an element with a label and description of a specific language in a dimension.
  */
-public class DimensionLabel extends Label {
+public class DimensionLabel extends CubeLabel {
 
     private String dimensionUri;
     private String dimensionLabel;
@@ -17,7 +17,7 @@ public class DimensionLabel extends Label {
     }
 
     /**
-     * Instantiates a new instance of class {@linkplain Label}.
+     * Instantiates a new instance of class {@linkplain DimensionLabel}.
      *
      * @param lang           The language of this label.
      * @param dimensionUri   The uri of the dimension.
@@ -32,7 +32,7 @@ public class DimensionLabel extends Label {
     }
 
     /**
-     * Instantiates a new instance of class {@linkplain Label}.
+     * Instantiates a new instance of class {@linkplain DimensionLabel}.
      *
      * @param lang           The language of this label and description.
      * @param dimensionUri   The uri of the dimension.
@@ -43,6 +43,41 @@ public class DimensionLabel extends Label {
      */
     public DimensionLabel(String lang, String dimensionUri, String dimensionLabel, String uri, String label, String description) {
         super(uri, lang, label, description);
+        this.dimensionUri = dimensionUri;
+        this.dimensionLabel = dimensionLabel;
+    }
+
+    /**
+     * Instantiates a new instance of class {@linkplain DimensionLabel}.
+     *
+     * @param lang           The language of this label.
+     * @param cubeUri        The uri of the cube.
+     * @param typeUri        The uri if the type of the element.
+     * @param dimensionUri   The uri of the dimension.
+     * @param dimensionLabel The label of the dimension.
+     * @param uri            The uri this label belongs to.
+     * @param label          The label of the element.
+     */
+    public DimensionLabel(String lang, String cubeUri, String typeUri, String dimensionUri, String dimensionLabel, String uri, String label) {
+        super(lang, cubeUri, typeUri, uri, label);
+        this.dimensionUri = dimensionUri;
+        this.dimensionLabel = dimensionLabel;
+    }
+
+    /**
+     * Instantiates a new instance of class {@linkplain DimensionLabel}.
+     *
+     * @param lang           The language of this label and description.
+     * @param cubeUri        The uri of the cube.
+     * @param typeUri        The uri if the type of the element.
+     * @param dimensionUri   The uri of the dimension.
+     * @param dimensionLabel The label of the dimension.
+     * @param uri            The uri this label belongs to.
+     * @param label          The label of the element.
+     * @param description    The description of the element.
+     */
+    public DimensionLabel(String lang, String cubeUri, String typeUri, String dimensionUri, String dimensionLabel, String uri, String label, String description) {
+        super(lang, cubeUri, typeUri, uri, label, description);
         this.dimensionUri = dimensionUri;
         this.dimensionLabel = dimensionLabel;
     }
@@ -87,6 +122,8 @@ public class DimensionLabel extends Label {
     public String toString() {
         return new StringJoiner(", ", DimensionLabel.class.getSimpleName() + "[", "]")
                 .add("lang='" + getLang() + "'")
+                .add("cubeUri='" + getCubeUri() + "'")
+                .add("typeUri='" + getTypeUri() + "'")
                 .add("dimensionUri='" + dimensionUri + "'")
                 .add("dimensionLabel='" + dimensionLabel + "'")
                 .add("uri='" + getUri() + "'")

@@ -16,7 +16,7 @@ IDA ist eine dialogbasierte Benutzungsschnittstelle für interaktive Datenanalys
 3. WordNet herunterladen von http://wordnet-rdf.princeton.edu/static/wordnet.nt.gz
 4. WordNet in Named Graph `http://dke.jku.at/ida/similarity#wordnet` importieren
 5. Text Similarity Index mit dem Namen `wordnet` in GraphDB erstellen. Als Abfrage-Query die Abfrage aus Datei `graphdb/similarity-index.sparql` verwenden.
-6. Materialisierungs-Abfragen aus Ordner `graphdb/materialization/wordnet-en` ausführen
+6. Materialisierungs-Abfragen aus Ordner `graphdb/materialization` ausführen
 
 ### Konfiguration
 

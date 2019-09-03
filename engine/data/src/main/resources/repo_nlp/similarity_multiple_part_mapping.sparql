@@ -5,3 +5,6 @@
           sim:hasScore ?scoreM###NO### ;
           sim:fromType ?type###NO### .
 OPTIONAL { ?mapping###NO### sim:inDim ?dimension###NO### }
+OPTIONAL { ?mapping###NO### sim:inLevel ?level###NO### }
+OPTIONAL { ?mapping###NO### sim:partOf ?part###NO### }
+OPTIONAL { ?mapping###NO### sim:measure ?measure###NO### }

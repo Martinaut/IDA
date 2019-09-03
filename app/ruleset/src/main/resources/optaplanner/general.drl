@@ -1,0 +1,36 @@
+package optaplanner
+
+// ------------------------------------ IMPORT --------------------------------------
+import at.jku.dke.ida.csp.domain.AnalysisSituationEntity
+import at.jku.dke.ida.app.ruleset.helpers.CSPRuleHelpers
+import org.optaplanner.core.api.score.buildin.hardsoftbigdecimal.HardSoftBigDecimalScoreHolder
+import java.math.BigDecimal
+import at.jku.dke.ida.app.ruleset.helpers.CSPRuleHelpers
+
+// ------------------------------------ GLOBAL --------------------------------------
+global HardSoftBigDecimalScoreHolder scoreHolder;
+
+// ------------------------------------ RULES ---------------------------------------
+rule "Maximum one assignment for a term"
+when
+    $as : AnalysisSituationEntity()
+    eval(CSPRuleHelpers.multipleAssignmentsPerTerm($as))
+then
+    scoreHolder.addSoftConstraintMatch(kcontext, CSPRuleHelpers.MINUS_ONE);
+end
+
+rule "No duplicates"
+when
+    $as : AnalysisSituationEntity()
+    eval(CSPRuleHelpers.containsDuplicates($as))
+then
+    scoreHolder.addSoftConstraintMatch(kcontext, CSPRuleHelpers.MINUS_ONE);
+end
+
+// ### SCORE ###
+rule "Similarity Score"
+when
+    $as : AnalysisSituationEntity(cube != null)
+then
+    scoreHolder.addSoftConstraintMatch(kcontext, $as.getScore());
+end

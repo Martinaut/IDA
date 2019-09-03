@@ -107,6 +107,7 @@ public class GenericComparativeAnalysisSituation<
      * @see Set#add(Object)
      */
     public boolean addJoinCondition(TValue cond) {
+        if (cond == null) return false;
         return joinConditions.add(cond);
     }
 
@@ -150,6 +151,7 @@ public class GenericComparativeAnalysisSituation<
      * @see Set#add(Object)
      */
     public boolean addScore(TValue score) {
+        if (score == null) return false;
         return scores.add(score);
     }
 
@@ -193,6 +195,7 @@ public class GenericComparativeAnalysisSituation<
      * @see Set#add(Object)
      */
     public boolean addScoreFilter(TValue scoref) {
+        if (scoref == null) return false;
         return scoreFilters.add(scoref);
     }
 

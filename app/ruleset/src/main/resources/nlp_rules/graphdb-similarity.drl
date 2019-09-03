@@ -4,7 +4,7 @@ package nlp_rules
 import at.jku.dke.ida.nlp.models.GraphDBSimilarityServiceModel
 import at.jku.dke.ida.nlp.helpers.SimilarityHelper
 import at.jku.dke.ida.nlp.models.WordGroup
-import at.jku.dke.ida.data.models.CubeSimilarity
+import at.jku.dke.ida.data.models.similarity.CubeSimilarity
 
 // ------------------------------------ RULES ---------------------------------------
 rule "CubeSimilarity EN - Word Similarity for all Cubes"

@@ -2,8 +2,8 @@ package at.jku.dke.ida.app.ruleset.helpers;
 
 import at.jku.dke.ida.csp.domain.AnalysisSituationElement;
 import at.jku.dke.ida.csp.domain.AnalysisSituationEntity;
-import at.jku.dke.ida.data.models.CubeSimilarity;
-import at.jku.dke.ida.data.models.DimensionSimilarity;
+import at.jku.dke.ida.data.models.similarity.CubeSimilarity;
+import at.jku.dke.ida.data.models.similarity.DimensionSimilarity;
 
 import java.math.BigDecimal;
 import java.util.function.Function;

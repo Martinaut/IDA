@@ -1,6 +1,6 @@
 package at.jku.dke.ida.web.models.analysissituation;
 
-import at.jku.dke.ida.data.models.Label;
+import at.jku.dke.ida.data.models.labels.Label;
 import at.jku.dke.ida.shared.models.generic.GenericNonComparativeAnalysisSituation;
 
 import java.util.TreeSet;

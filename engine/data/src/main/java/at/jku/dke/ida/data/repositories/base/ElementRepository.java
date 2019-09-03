@@ -3,12 +3,10 @@ package at.jku.dke.ida.data.repositories.base;
 import at.jku.dke.ida.data.GraphDbConnection;
 import at.jku.dke.ida.data.IRIValidator;
 import at.jku.dke.ida.data.QueryException;
-import at.jku.dke.ida.data.models.Label;
+import at.jku.dke.ida.data.models.labels.Label;
 import org.apache.commons.lang3.StringUtils;
-import org.eclipse.rdf4j.query.BindingSet;
 
 import java.util.*;
-import java.util.stream.Stream;
 
 /**
  * Base repository for all repositories querying elements.
@@ -107,7 +105,7 @@ public abstract class ElementRepository extends BaseRepository {
     }
     // endregion
 
-    // region --- LABELS BY CUBE ---
+    // region --- ALL LABELS ---
 
     /**
      * Returns the labels of all elements of the type of this repository.
@@ -117,8 +115,8 @@ public abstract class ElementRepository extends BaseRepository {
      * @throws IllegalArgumentException If {@code lang} is {@code null} or blank.
      * @throws QueryException           If an exception occurred while executing the query.
      */
-    public List<Label> getAllLabelsByLang(String lang) throws QueryException {
-        return super.getLabelsByLang("/repo_base/getLabelsByLang.sparql", lang);
+    public List<? extends Label> getAllLabelsByLang(String lang) throws QueryException {
+        return getLabelsByLang("/repo_base/getAllLabelsByLang.sparql", lang, s -> s.replace("###TYPE###", typeIri));
     }
 
     /**
@@ -131,13 +129,13 @@ public abstract class ElementRepository extends BaseRepository {
      * @throws IllegalArgumentException If {@code lang} or {@code exclusion} is {@code null} or blank.
      * @throws QueryException           If an exception occurred while executing the query.
      */
-    public List<Label> getAllLabelsByLang(String lang, Collection<String> exclusion) throws QueryException {
+    public List<? extends Label> getAllLabelsByLang(String lang, Collection<String> exclusion) throws QueryException {
         if (StringUtils.isBlank(lang)) throw new IllegalArgumentException("lang must not be null or empty");
         if (exclusion == null) throw new IllegalArgumentException("excluded must not be null");
         if (exclusion.stream().map(IRIValidator::isValidAbsoluteIRI).anyMatch(x -> !x))
             throw new IllegalArgumentException("exclusion contains at least one invalid IRI");
 
-        return getLabelsByLang("/repo_base/getLabelsByLangExcept.sparql", lang,
+        return getLabelsByLang("/repo_base/getAllLabelsByLangExcept.sparql", lang,
                 s -> s.replace("###TYPE###", typeIri)
                         .replace("###LANG###", lang)
                         .replace("###NOTIN###", convertToFullIriString(exclusion)));

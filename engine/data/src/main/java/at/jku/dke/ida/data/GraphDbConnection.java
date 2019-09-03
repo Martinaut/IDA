@@ -83,6 +83,8 @@ public final class GraphDbConnection {
         try (var conn = createConnection()) {
             String queryString = IOUtils.toString(GraphDbConnection.class.getResourceAsStream(queryFile), StandardCharsets.UTF_8);
             queryString = queryStringManipulator.apply(queryString);
+
+            LOGGER.trace("Executing query: " + queryString);
             TupleQuery query = conn.prepareTupleQuery(queryString);
             try (var result = query.evaluate()) {
                 List<BindingSet> list = new ArrayList<>();

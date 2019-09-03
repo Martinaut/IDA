@@ -1,4 +1,4 @@
-package at.jku.dke.ida.data.models;
+package at.jku.dke.ida.data.models.labels;
 
 import at.jku.dke.ida.shared.display.Displayable;
 

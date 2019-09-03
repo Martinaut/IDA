@@ -175,9 +175,10 @@ public class QueryExecutor {
         LOG.debug("Sending result request to {}.", request.url());
         try (Response response = client.newCall(request).execute()) {
             if (!response.isSuccessful()) throw new IOException("Unexpected HTTP status code: " + response);
-            if (response.body() == null) throw new IOException("Body is null");
-            // TODO if (!CSV.equals(response.body().contentType())) throw new IOException("Invalid content type");
-            return response.body().string();
+
+            ResponseBody body = response.body();
+            if (body == null) throw new IOException("Body is null");
+            return body.string();
         }
     }
 }

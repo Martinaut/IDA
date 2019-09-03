@@ -1,7 +1,7 @@
 package at.jku.dke.ida.nlp.drools;
 
 import at.jku.dke.ida.nlp.models.StringSimilarityServiceModel;
-import at.jku.dke.ida.data.models.Similarity;
+import at.jku.dke.ida.data.models.similarity.Similarity;
 import at.jku.dke.ida.rules.services.DroolsService;
 import at.jku.dke.ida.shared.display.Displayable;
 import org.kie.api.runtime.KieSession;
