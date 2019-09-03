@@ -1,12 +1,9 @@
 package at.jku.dke.ida.scxml.actions;
 
 import at.jku.dke.ida.scxml.session.SessionContextModel;
-import at.jku.dke.ida.shared.Event;
 import at.jku.dke.ida.shared.display.MessageDisplay;
-import at.jku.dke.ida.shared.operations.Pattern;
 import org.apache.commons.scxml2.ActionExecutionContext;
 import org.apache.commons.scxml2.SCXMLExpressionException;
-import org.apache.commons.scxml2.TriggerEvent;
 import org.apache.commons.scxml2.model.ModelException;
 
 /**
@@ -24,20 +21,7 @@ public class DisplayFreeText extends BaseAction {
      */
     @Override
     protected void execute(ActionExecutionContext ctx, SessionContextModel ctxModel) throws ModelException, SCXMLExpressionException {
-        if (ctxModel.isComparativePattern()) {
-            switch (ctxModel.getComparativeActiveAS()) {
-                case Pattern.SI:
-                    ctxModel.setDisplayData(new MessageDisplay("enterQuerySI", ctxModel.getLocale()));
-                    break;
-                case Pattern.SC:
-                    ctxModel.setDisplayData(new MessageDisplay("enterQuerySC", ctxModel.getLocale()));
-                    break;
-                default:
-                    ctx.getInternalIOProcessor().addEvent(new TriggerEvent(Event.EXIT.getEventName(), TriggerEvent.SIGNAL_EVENT));
-                    break;
-            }
-        } else
-            ctxModel.setDisplayData(new MessageDisplay("enterQuery", ctxModel.getLocale()));
+        ctxModel.setDisplayData(new MessageDisplay("enterQuery", ctxModel.getLocale()));
     }
 
 }

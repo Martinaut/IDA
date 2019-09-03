@@ -10,32 +10,19 @@
     </datamodel>
 
     <!-- Pattern Selection -->
-    <state id="PatternSelection" initial="DisplayingPatterns">
-        <state id="DisplayingPatterns">
-            <onentry>
-                <ida:DisplayPatterns />
-            </onentry>
-            <transition event="userInput" target="DeterminingPatternSelection" />
-        </state>
-
-        <state id="DeterminingPatternSelection">
-            <onentry>
-                <ida:DeterminePatternSelection />
-            </onentry>
-            <transition event="invalidInput" target="DisplayingPatterns"/>
-            <transition event="determined" target="UserQuery" />
-        </state>
-
-        <transition event="exit" target="Finished"/>
-    </state>
-
-    <!-- FreeInput -->
-    <state id="UserQuery" initial="WaitingForFreeText">
+    <state id="PatternSelection" initial="WaitingForFreeText">
         <state id="WaitingForFreeText">
             <onentry>
                 <ida:DisplayFreeText />
             </onentry>
-            <transition event="userInput" target="ParsingFreeText" />
+            <transition event="userInput" target="DeterminingPattern" />
+        </state>
+
+        <state id="DeterminingPattern">
+            <onentry>
+                <ida:DeterminePattern />
+            </onentry>
+            <transition event="determined" target="ParsingFreeText" />
         </state>
 
         <state id="ParsingFreeText">

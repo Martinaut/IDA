@@ -3,7 +3,7 @@ package at.jku.dke.ida.data.repositories.base;
 import at.jku.dke.ida.data.IRIValidator;
 import at.jku.dke.ida.data.QueryException;
 import at.jku.dke.ida.data.GraphDbConnection;
-import at.jku.dke.ida.data.models.Label;
+import at.jku.dke.ida.data.models.labels.Label;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.rdf4j.query.BindingSet;
 
@@ -16,7 +16,7 @@ import java.util.stream.Stream;
  * @param <TReturn> The type of the return type for the getAll methods.
  * @param <TLabel>  The type of the label returned by the query methods.
  */
-public abstract class CubeElementRepository<TReturn, TLabel extends Label> extends BaseRepository {
+public abstract class CubeElementRepository<TReturn, TLabel extends Label> extends ElementRepository {
 
     /**
      * The folder-name for the folder containing the query files of this repository.
@@ -32,12 +32,13 @@ public abstract class CubeElementRepository<TReturn, TLabel extends Label> exten
      * Instantiates a new instance of class {@linkplain CubeElementRepository}.
      *
      * @param connection    The GraphDB connection service class.
+     * @param typeIri    The IRI of the type.
      * @param queryFolder   The folder-name for the folder containing the query files of this repository.
      * @param pluralLogName The plural name of the type used for log-messages.
-     * @throws IllegalArgumentException If {@code queryFolder} is {@code null} or empty.
+     * @throws IllegalArgumentException If any of the parameters is {@code null} or empty.
      */
-    protected CubeElementRepository(GraphDbConnection connection, String queryFolder, String pluralLogName) {
-        super(connection);
+    protected CubeElementRepository(GraphDbConnection connection, String typeIri, String queryFolder, String pluralLogName) {
+        super(connection, typeIri);
         if (StringUtils.isBlank(queryFolder))
             throw new IllegalArgumentException("queryFolder must not be null or empty");
 

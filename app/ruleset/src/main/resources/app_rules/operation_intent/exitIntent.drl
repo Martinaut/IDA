@@ -1,0 +1,29 @@
+package app_rules.operation_intent
+
+// ------------------------------------ IMPORT --------------------------------------
+import at.jku.dke.ida.rules.interfaces.OperationIntentServiceModel
+import at.jku.dke.ida.rules.results.EventConfidenceResult
+import at.jku.dke.ida.app.ruleset.helpers.UserInput
+import at.jku.dke.ida.shared.Event
+import at.jku.dke.ida.app.ruleset.interception.models.OperationInputIntentModel
+
+// ------------------------------------ RULES ---------------------------------------
+rule "Exit Operation Intent - 'exit' similarity"
+    agenda-group "operation-intent-determination"
+    salience 20
+when
+    $model : OperationInputIntentModel(topSimilarity != null && topSimilarity.getElement().getDisplayableId() == Event.EXIT.getEventName())
+then
+    insert(new EventConfidenceResult(Event.EXIT, $model.getTopSimilarity().getScore()));
+end
+
+rule "Exit Operation Intent - position"
+    agenda-group "operation-intent-determination"
+    salience 20
+when
+    $model : OperationIntentServiceModel(UserInput.isNumber(userInput),
+                                         possibleOperations.containsKey(UserInput.toInteger(userInput)),
+                                         possibleOperations.get(UserInput.toInteger(userInput)).getEvent() == Event.EXIT)
+then
+    insert(new EventConfidenceResult(Event.EXIT, 1.0));
+end

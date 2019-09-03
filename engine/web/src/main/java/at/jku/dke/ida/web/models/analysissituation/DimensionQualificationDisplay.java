@@ -1,6 +1,6 @@
 package at.jku.dke.ida.web.models.analysissituation;
 
-import at.jku.dke.ida.data.models.Label;
+import at.jku.dke.ida.data.models.labels.Label;
 import at.jku.dke.ida.shared.IRIConstants;
 import at.jku.dke.ida.shared.ResourceBundleHelper;
 import at.jku.dke.ida.shared.models.generic.GenericDimensionQualification;
@@ -91,5 +91,10 @@ public class DimensionQualificationDisplay extends GenericDimensionQualification
             super.setGranularityLevel(lblTop);
         else
             super.setGranularityLevel(Objects.requireNonNullElse(granularityLevel, lblTop));
+    }
+
+    @Override
+    public int compareTo(GenericDimensionQualification<Label> other) {
+        return getDimension().getUri().compareTo(other.getDimension().getUri());
     }
 }

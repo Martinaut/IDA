@@ -1,0 +1,46 @@
+package app_rules.value_display
+
+// ------------------------------------ IMPORT --------------------------------------
+import at.jku.dke.ida.shared.Event
+import at.jku.dke.ida.shared.models.NonComparativeAnalysisSituation
+import at.jku.dke.ida.shared.display.ListDisplay
+import at.jku.dke.ida.shared.display.TwoListDisplay
+import at.jku.dke.ida.rules.interfaces.ValueDisplayServiceModel
+
+// ------------------------------------ RULES ---------------------------------------
+rule "Add base measure condition - Select all base measure conditions, except the already selected ones"
+    agenda-group "value-display-determination"
+when
+    $as : NonComparativeAnalysisSituation()
+    $model : ValueDisplayServiceModel(operation == Event.NAVIGATE_BMC_NARROW, analysisSituation == $as)
+then
+    insert(new ListDisplay(
+        "addBMC",
+        $model.getLocale(),
+        $model.getBaseMeasurePredicateRepository().getLabelsByLangAndCube($model.getLanguage(), $as.getCube(), $as.getBaseMeasureConditions())));
+end
+
+rule "Drop base measure condition - Select all selected base measure conditions"
+    agenda-group "value-display-determination"
+when
+    $as : NonComparativeAnalysisSituation()
+    $model : ValueDisplayServiceModel(operation == Event.NAVIGATE_BMC_BROADEN, analysisSituation == $as)
+then
+    insert(new ListDisplay(
+        "dropBMC",
+        $model.getLocale(),
+        $model.getBaseMeasurePredicateRepository().getLabelsByLangAndIris($model.getLanguage(), $as.getBaseMeasureConditions())));
+end
+
+rule "Refocus base measure condition - Select all selected base measure conditions and all not selected base measure conditions"
+    agenda-group "value-display-determination"
+when
+    $as : NonComparativeAnalysisSituation()
+    $model : ValueDisplayServiceModel(operation == Event.NAVIGATE_BMC_BROADEN, analysisSituation == $as)
+then
+    insert(new TwoListDisplay(
+        "refocusBMC",
+        $model.getLocale(),
+        $model.getBaseMeasurePredicateRepository().getLabelsByLangAndIris($model.getLanguage(), $as.getBaseMeasureConditions()),
+        $model.getBaseMeasurePredicateRepository().getLabelsByLangAndCube($model.getLanguage(), $as.getCube(), $as.getBaseMeasureConditions())));
+end

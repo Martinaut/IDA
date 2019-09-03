@@ -74,12 +74,9 @@ public class Session {
      *
      * @param userInput The user input.
      * @throws ModelException           If an error occurred while triggering an event.
-     * @throws IllegalArgumentException If {@code userInput} is {@code null}.
      * @see Event#USER_INPUT
      */
     public void triggerUserInputEvent(String userInput) throws ModelException {
-        // if (userInput == null) throw new IllegalArgumentException("userInput must not be null");
-
         LOGGER.info("Triggering user-input event.");
         sessionContextModel.setUserInput(userInput);
         executor.triggerEvent(new TriggerEvent(Event.USER_INPUT.getEventName(), TriggerEvent.SIGNAL_EVENT));
@@ -89,7 +86,6 @@ public class Session {
      * Trigger the revise query event.
      *
      * @throws ModelException           If an error occurred while triggering an event.
-     * @throws IllegalArgumentException If {@code userInput} is {@code null}.
      * @see Event#REVISE_QUERY
      */
     public void triggerReviseQuery() throws ModelException {

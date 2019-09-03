@@ -1,6 +1,6 @@
 package at.jku.dke.ida.csp.domain;
 
-import at.jku.dke.ida.data.models.CubeSimilarity;
+import at.jku.dke.ida.data.models.similarity.CubeSimilarity;
 
 import java.util.HashSet;
 import java.util.Objects;
@@ -52,7 +52,7 @@ public class AnalysisSituationElement {
     /**
      * Gets the score of the element.
      * <p>
-     * For this, the scores of all elements are multiplied.
+     * For this, the scores of all elements are summarized.
      * If elements is {@code null} or empty, 0 will be returned.
      *
      * @return the score
@@ -61,7 +61,16 @@ public class AnalysisSituationElement {
         if (elements == null || elements.isEmpty()) return 0;
         return elements.stream()
                 .mapToDouble(CubeSimilarity::getScore)
-                .reduce(0, (left, right) -> left + right);
+                .reduce(0, Double::sum);
+    }
+
+    /**
+     * Returns {@code true} if this set contains no elements.
+     *
+     * @return {@code true} if this set contains no elements
+     */
+    public boolean isEmpty() {
+        return elements.isEmpty();
     }
 
     @Override

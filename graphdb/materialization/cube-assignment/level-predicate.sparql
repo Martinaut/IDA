@@ -1,0 +1,45 @@
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX qbx: <http://dke.jku.at/inga/cubes#>
+PREFIX sim: <http://dke.jku.at/ida/similarity#>
+
+INSERT {
+    GRAPH sim:cube-assignment {
+        ?mapping rdf:type sim:CubeAssignment ;
+                 sim:cube ?cube ;
+                 sim:from ?element .
+    }
+}
+WHERE
+{
+    SELECT ?mapping ?cube ?element
+    WHERE {
+        {
+            ?element rdf:type qbx:LevelPredicate ;
+                     qbx:over ?level .
+        }
+        UNION
+        {
+            ?pred qbx:over ?level .
+            ?element rdf:type qbx:ConjunctiveLevelPredicate ;
+                     qbx:conjunct ?pred .
+        }
+
+        {
+            SELECT DISTINCT ?cube ?dimension ?level
+            WHERE {
+                {
+                    ?cube qbx:dimension ?dimension .
+                    ?dimension qbx:hasHierarchy ?hier .
+                    ?hs qbx:inHierarchy ?hier ;
+                        qbx:childLevel ?level .
+                } UNION {
+                    ?cube qbx:dimension ?dimension .
+                    ?dimension qbx:hasHierarchy ?hier .
+                    ?hs qbx:inHierarchy ?hier ;
+                        qbx:parentLevel ?level .
+                }
+            }
+        }
+        BIND(IRI(CONCAT("sim:mapping_", STRUUID())) AS ?mapping)
+    }
+}

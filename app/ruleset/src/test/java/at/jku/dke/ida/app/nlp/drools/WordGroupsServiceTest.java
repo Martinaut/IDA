@@ -17,12 +17,13 @@ class WordGroupsServiceTest {
                 Locale.ENGLISH,
                 new NonComparativeAnalysisSituation(),
                 new SessionModel("test", "en"),
-                "Show me the total costs per insurant and doctor district.");
+                "Compare the costs from this year with last year.");
 
         // Execute
         var result = new WordGroupsService().executeRules(model);
 
         // Assert
+        System.out.println(result);
         Assertions.assertNotNull(result);
     }
 }

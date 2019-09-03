@@ -8,7 +8,11 @@ import java.util.*;
  * A comparative analysis situation allows to model comparison. It joins two analysis situations and relates
  * both by a score definition.
  */
-public class GenericComparativeAnalysisSituation<TValue extends Comparable<? super TValue>, TDimQual extends GenericDimensionQualification<TValue>, TNonComp extends GenericNonComparativeAnalysisSituation<TValue, TDimQual>> extends AnalysisSituation {
+public class GenericComparativeAnalysisSituation<
+        TCube,
+        TValue extends Comparable<? super TValue>,
+        TDimQual extends GenericDimensionQualification<TValue>,
+        TNonComp extends GenericNonComparativeAnalysisSituation<TCube, TValue, TDimQual>> extends AnalysisSituation {
 
     private TNonComp contextOfInterest; // 1. a non-comparative analysis situation as context of interest
     private TNonComp contextOfComparison;  // 2. a non-comparative analysis situation as context of comparison
@@ -103,6 +107,7 @@ public class GenericComparativeAnalysisSituation<TValue extends Comparable<? sup
      * @see Set#add(Object)
      */
     public boolean addJoinCondition(TValue cond) {
+        if (cond == null) return false;
         return joinConditions.add(cond);
     }
 
@@ -146,6 +151,7 @@ public class GenericComparativeAnalysisSituation<TValue extends Comparable<? sup
      * @see Set#add(Object)
      */
     public boolean addScore(TValue score) {
+        if (score == null) return false;
         return scores.add(score);
     }
 
@@ -189,6 +195,7 @@ public class GenericComparativeAnalysisSituation<TValue extends Comparable<? sup
      * @see Set#add(Object)
      */
     public boolean addScoreFilter(TValue scoref) {
+        if (scoref == null) return false;
         return scoreFilters.add(scoref);
     }
 

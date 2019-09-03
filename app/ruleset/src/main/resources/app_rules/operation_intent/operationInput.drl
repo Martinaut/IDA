@@ -1,0 +1,27 @@
+package app_rules.operation_intent
+
+// ------------------------------------ IMPORT --------------------------------------
+import at.jku.dke.ida.rules.interfaces.OperationIntentServiceModel
+import at.jku.dke.ida.rules.results.EventConfidenceResult
+import at.jku.dke.ida.app.ruleset.helpers.UserInput
+import at.jku.dke.ida.shared.Event
+import at.jku.dke.ida.app.ruleset.interception.models.OperationInputIntentModel
+
+// ------------------------------------ RULES ---------------------------------------
+rule "ExecuteOperation Intent Number"
+    agenda-group "operation-intent-determination"
+when
+    not EventConfidenceResult()
+    $model : OperationIntentServiceModel(UserInput.isNumber(userInput))
+then
+    insert(new EventConfidenceResult(Event.NAVIGATE, 0.4));
+end
+
+rule "ExecuteOperation Intent Similarity"
+    agenda-group "operation-intent-determination"
+when
+    not EventConfidenceResult()
+    $model : OperationInputIntentModel(topSimilarity != null)
+then
+    insert(new EventConfidenceResult(Event.NAVIGATE, $model.getTopSimilarity().getScore()));
+end

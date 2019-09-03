@@ -1,6 +1,6 @@
 package at.jku.dke.ida.app.ruleset.interception.models;
 
-import at.jku.dke.ida.data.models.Similarity;
+import at.jku.dke.ida.data.models.similarity.Similarity;
 import at.jku.dke.ida.rules.models.DefaultOperationIntentServiceModel;
 import at.jku.dke.ida.shared.Event;
 import at.jku.dke.ida.shared.display.Displayable;

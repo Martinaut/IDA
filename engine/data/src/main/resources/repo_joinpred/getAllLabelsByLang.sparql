@@ -1,0 +1,40 @@
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX qbx: <http://dke.jku.at/inga/cubes#>
+PREFIX sim: <http://dke.jku.at/ida/similarity#>
+
+SELECT DISTINCT ?cube ?part ?element ?label ?description ?cube
+WHERE {
+	{
+        SELECT DISTINCT ?cube ?element ?part
+        WHERE {
+            ?element rdf:type qbx:JoinConditionPredicate ;
+                     qbx:overLevelInSetOfInterest ?lvl .
+
+            ?lvl ^(qbx:parentLevel|qbx:childLevel)/qbx:inHierarchy/^qbx:hasHierarchy/^qbx:dimension ?cube .
+
+            BIND('setOfInterest' AS ?part)
+        }
+    }
+    UNION
+    {
+        SELECT DISTINCT ?cube ?element ?part
+        WHERE {
+            ?element rdf:type qbx:JoinConditionPredicate ;
+                     qbx:overLevelInSetOfComparison ?lvl .
+
+            ?lvl ^(qbx:parentLevel|qbx:childLevel)/qbx:inHierarchy/^qbx:hasHierarchy/^qbx:dimension ?cube .
+
+            BIND('setOfComparison' AS ?part)
+        }
+    }
+
+	?element rdfs:label ?label .
+    FILTER (lang(?label) = "###LANG###") .
+
+    OPTIONAL {
+        ?element rdfs:comment ?description .
+    	FILTER (lang(?description) = "###LANG###") .
+    }
+}
+ORDER BY ?label

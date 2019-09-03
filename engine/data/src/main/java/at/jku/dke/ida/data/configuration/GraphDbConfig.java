@@ -12,31 +12,12 @@ import org.springframework.stereotype.Component;
 @ConfigurationProperties(prefix = "graphdb")
 public class GraphDbConfig {
 
-    private GraphDbEmbeddedConfig embedded;
     private GraphDbRemoteConfig remote;
 
     /**
      * Instantiates a new instance of class {@linkplain GraphDbConfig}.
      */
     public GraphDbConfig() {
-    }
-
-    /**
-     * Gets the embedded connection configuration.
-     *
-     * @return the embedded connection configuration.
-     */
-    public GraphDbEmbeddedConfig getEmbedded() {
-        return embedded;
-    }
-
-    /**
-     * Sets the embedded connection configuration.
-     *
-     * @param embedded the connection configuration
-     */
-    public void setEmbedded(GraphDbEmbeddedConfig embedded) {
-        this.embedded = embedded;
     }
 
     /**

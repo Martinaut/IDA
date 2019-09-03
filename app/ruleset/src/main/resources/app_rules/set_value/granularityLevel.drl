@@ -1,0 +1,30 @@
+package app_rules.set_value
+
+// ------------------------------------ IMPORT --------------------------------------
+import at.jku.dke.ida.shared.models.NonComparativeAnalysisSituation
+import at.jku.dke.ida.shared.Event
+import at.jku.dke.ida.data.models.labels.DimensionLabel
+import at.jku.dke.ida.rules.interfaces.SetValueServiceModel
+import at.jku.dke.ida.app.ruleset.helpers.Constants
+import at.jku.dke.ida.data.models.labels.DimensionLabel
+
+// ------------------------------------ RULES ---------------------------------------
+rule "Roll Up"
+    agenda-group "set-value"
+when
+    $as : NonComparativeAnalysisSituation()
+    $model : SetValueServiceModel(operation == Event.NAVIGATE_GL_ROLL_UP, analysisSituation == $as, value instanceof DimensionLabel)
+then
+    $as.getDimensionQualification(((DimensionLabel)$model.getValue()).getDimensionUri()).setGranularityLevel(((DimensionLabel)$model.getValue()).getUri());
+    $model.removeAdditionalData(Constants.ADD_DATA_DIMENSION);
+end
+
+rule "Drill Down"
+    agenda-group "set-value"
+when
+    $as : NonComparativeAnalysisSituation()
+    $model : SetValueServiceModel(operation == Event.NAVIGATE_GL_DRILL_DOWN, analysisSituation == $as, value instanceof DimensionLabel)
+then
+    $as.getDimensionQualification(((DimensionLabel)$model.getValue()).getDimensionUri()).setGranularityLevel(((DimensionLabel)$model.getValue()).getUri());
+    $model.removeAdditionalData(Constants.ADD_DATA_DIMENSION);
+end

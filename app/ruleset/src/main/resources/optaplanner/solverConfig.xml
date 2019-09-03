@@ -7,7 +7,9 @@
 
     <!-- Score configuration -->
     <scoreDirectorFactory>
-        <scoreDrl>optaplanner/csp.drl</scoreDrl>
+        <scoreDrl>optaplanner/comp.drl</scoreDrl>
+        <scoreDrl>optaplanner/general.drl</scoreDrl>
+        <scoreDrl>optaplanner/noncomp.drl</scoreDrl>
     </scoreDirectorFactory>
 
     <!-- Optimization algorithms configuration -->

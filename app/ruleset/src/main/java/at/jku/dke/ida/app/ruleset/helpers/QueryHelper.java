@@ -1,9 +1,9 @@
 package at.jku.dke.ida.app.ruleset.helpers;
 
 import at.jku.dke.ida.data.QueryException;
-import at.jku.dke.ida.data.models.DimensionLabel;
-import at.jku.dke.ida.data.models.DimensionLevelLabel;
-import at.jku.dke.ida.data.models.Label;
+import at.jku.dke.ida.data.models.labels.DimensionLabel;
+import at.jku.dke.ida.data.models.labels.DimensionLevelLabel;
+import at.jku.dke.ida.data.models.labels.Label;
 import at.jku.dke.ida.data.repositories.LevelRepository;
 import at.jku.dke.ida.rules.interfaces.ValueDisplayServiceModel;
 import at.jku.dke.ida.shared.IRIConstants;

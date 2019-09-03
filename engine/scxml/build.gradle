@@ -4,12 +4,12 @@ dependencies {
     api 'org.apache.commons:commons-scxml2:2.0-M1'
     implementation 'org.apache.commons:commons-jexl:2.1.1'
     implementation 'org.reflections:reflections:0.9.11'
-    implementation 'com.squareup.okhttp3:okhttp:3.14.1'
-    implementation 'org.apache.commons:commons-csv:1.6'
+    implementation 'com.squareup.okhttp3:okhttp:4.1.0'
+    implementation 'org.apache.commons:commons-csv:1.7'
 
-    implementation 'org.eclipse.rdf4j:rdf4j-runtime:2.4.2'
+    implementation 'org.eclipse.rdf4j:rdf4j-runtime:2.5.4'
 
-    implementation 'org.hibernate:hibernate-validator:6.0.15.Final'
+    implementation 'org.hibernate:hibernate-validator:6.0.17.Final'
     implementation 'org.springframework.boot:spring-boot-configuration-processor'
 
     api project(':engine:rules')

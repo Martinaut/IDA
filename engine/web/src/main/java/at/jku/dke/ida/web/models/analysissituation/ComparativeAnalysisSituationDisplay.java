@@ -1,6 +1,6 @@
 package at.jku.dke.ida.web.models.analysissituation;
 
-import at.jku.dke.ida.data.models.Label;
+import at.jku.dke.ida.data.models.labels.Label;
 import at.jku.dke.ida.shared.models.generic.GenericComparativeAnalysisSituation;
 
 import java.util.TreeSet;
@@ -8,7 +8,7 @@ import java.util.TreeSet;
 /**
  * Used to display the non comparative AS.
  */
-public class ComparativeAnalysisSituationDisplay extends GenericComparativeAnalysisSituation<Label, DimensionQualificationDisplay, NonComparativeAnalysisSituationDisplay> {
+public class ComparativeAnalysisSituationDisplay extends GenericComparativeAnalysisSituation<Label, Label, DimensionQualificationDisplay, NonComparativeAnalysisSituationDisplay> {
     /**
      * Instantiates a new instance of class {@linkplain ComparativeAnalysisSituationDisplay}.
      */

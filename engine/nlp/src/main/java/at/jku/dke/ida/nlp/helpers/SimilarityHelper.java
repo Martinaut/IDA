@@ -1,8 +1,8 @@
 package at.jku.dke.ida.nlp.helpers;
 
 import at.jku.dke.ida.data.QueryException;
-import at.jku.dke.ida.data.models.CubeSimilarity;
-import at.jku.dke.ida.data.models.Similarity;
+import at.jku.dke.ida.data.models.similarity.CubeSimilarity;
+import at.jku.dke.ida.data.models.similarity.Similarity;
 import at.jku.dke.ida.data.repositories.SimilarityRepository;
 import at.jku.dke.ida.nlp.models.WordGroup;
 import at.jku.dke.ida.shared.display.Displayable;

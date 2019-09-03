@@ -1,0 +1,46 @@
+package app_rules.value_display
+
+// ------------------------------------ IMPORT --------------------------------------
+import at.jku.dke.ida.shared.Event
+import at.jku.dke.ida.shared.models.NonComparativeAnalysisSituation
+import at.jku.dke.ida.shared.display.ListDisplay
+import at.jku.dke.ida.shared.display.TwoListDisplay
+import at.jku.dke.ida.rules.interfaces.ValueDisplayServiceModel
+
+// ------------------------------------ RULES ---------------------------------------
+rule "Add Filter - Select all filters, except the already selected ones"
+    agenda-group "value-display-determination"
+when
+    $as : NonComparativeAnalysisSituation()
+    $model : ValueDisplayServiceModel(operation == Event.NAVIGATE_FILTER_NARROW, analysisSituation == $as)
+then
+    insert(new ListDisplay(
+        "addFilter",
+        $model.getLocale(),
+        $model.getAggregateMeasurePredicateRepository().getLabelsByLangAndCube($model.getLanguage(), $as.getCube(), $as.getFilterConditions())));
+end
+
+rule "Drop Filter - Select all selected filters"
+    agenda-group "value-display-determination"
+when
+    $as : NonComparativeAnalysisSituation()
+    $model : ValueDisplayServiceModel(operation == Event.NAVIGATE_FILTER_BROADEN, analysisSituation == $as)
+then
+    insert(new ListDisplay(
+        "dropFilter",
+        $model.getLocale(),
+        $model.getAggregateMeasurePredicateRepository().getLabelsByLangAndIris($model.getLanguage(), $as.getFilterConditions())));
+end
+
+rule "Refocus Filter - Select all selected filters and all not selected filters"
+    agenda-group "value-display-determination"
+when
+    $as : NonComparativeAnalysisSituation()
+    $model : ValueDisplayServiceModel(operation == Event.NAVIGATE_FILTER_REFOCUS, analysisSituation == $as)
+then
+    insert(new TwoListDisplay(
+        "refocusFilter",
+        $model.getLocale(),
+        $model.getAggregateMeasurePredicateRepository().getLabelsByLangAndIris($model.getLanguage(), $as.getFilterConditions()),
+        $model.getAggregateMeasurePredicateRepository().getLabelsByLangAndCube($model.getLanguage(), $as.getCube(), $as.getFilterConditions())));
+end

@@ -1,0 +1,47 @@
+package app_rules.switch_as
+
+// ------------------------------------ IMPORT --------------------------------------
+import at.jku.dke.ida.shared.models.ComparativeAnalysisSituation
+import at.jku.dke.ida.shared.operations.PatternPart
+import at.jku.dke.ida.shared.Event
+import at.jku.dke.ida.rules.interfaces.SwitchAnalysisSituationServiceModel
+import at.jku.dke.ida.rules.results.AnalysisSituationConfidenceResult
+import at.jku.dke.ida.app.ruleset.helpers.ValueSetter
+
+// ----------------------------- RULES ---------------------------------
+rule "Switch to SC From Comp"
+    agenda-group "switch-as"
+when
+    $as : ComparativeAnalysisSituation()
+    $model : SwitchAnalysisSituationServiceModel(operation == Event.SWITCH_SC, comparativeAnalysisSituation == $as)
+then
+    $model.getSessionModel().setComparativeActiveAS(PatternPart.SET_OF_COMPARISON);
+    insert(new AnalysisSituationConfidenceResult($as.getContextOfComparison()));
+end
+rule "Switch to SI From Comp"
+    agenda-group "switch-as"
+when
+    $as : ComparativeAnalysisSituation()
+    $model : SwitchAnalysisSituationServiceModel(operation == Event.SWITCH_SI, comparativeAnalysisSituation == $as)
+then
+    $model.getSessionModel().setComparativeActiveAS(PatternPart.SET_OF_INTEREST);
+    insert(new AnalysisSituationConfidenceResult($as.getContextOfInterest()));
+end
+rule "Switch to Comp From SI"
+    agenda-group "switch-as"
+when
+    $as : ComparativeAnalysisSituation()
+    $model : SwitchAnalysisSituationServiceModel(operation == Event.SWITCH_COMP, comparativeAnalysisSituation == $as, analysisSituation == $as.getContextOfInterest())
+then
+    $model.getSessionModel().setComparativeActiveAS(PatternPart.PARENT);
+    insert(new AnalysisSituationConfidenceResult($as));
+end
+rule "Switch to Comp From SC"
+    agenda-group "switch-as"
+when
+    $as : ComparativeAnalysisSituation()
+    $model : SwitchAnalysisSituationServiceModel(operation == Event.SWITCH_COMP, comparativeAnalysisSituation == $as, analysisSituation == $as.getContextOfComparison())
+then
+    $model.getSessionModel().setComparativeActiveAS(PatternPart.PARENT);
+    insert(new AnalysisSituationConfidenceResult($as));
+end

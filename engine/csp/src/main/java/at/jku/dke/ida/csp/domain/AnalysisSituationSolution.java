@@ -1,6 +1,6 @@
 package at.jku.dke.ida.csp.domain;
 
-import at.jku.dke.ida.data.models.CubeSimilarity;
+import at.jku.dke.ida.data.models.similarity.CubeSimilarity;
 import com.google.common.collect.Sets;
 import org.optaplanner.core.api.domain.solution.PlanningEntityProperty;
 import org.optaplanner.core.api.domain.solution.PlanningScore;
@@ -21,12 +21,15 @@ import java.util.stream.Collectors;
 public class AnalysisSituationSolution {
 
     private Set<String> cubes;
-    private Set<AnalysisSituationElement> measures;
+    private Set<AnalysisSituationElement> aggregateMeasures;
+    private Set<AnalysisSituationElement> aggregateMeasurePredicates;
+    private Set<AnalysisSituationElement> baseMeasurePredicates;
     private Set<AnalysisSituationElement> levels;
-    private Set<AnalysisSituationElement> sliceConditions;
-    private Set<AnalysisSituationElement> baseMeasureConditions;
-    private Set<AnalysisSituationElement> filterConditions;
-    private AnalysisSituation analysisSituation;
+    private Set<AnalysisSituationElement> levelPredicates;
+    private Set<AnalysisSituationElement> comparativeMeasures;
+    private Set<AnalysisSituationElement> comparativeMeasurePredicates;
+    private Set<AnalysisSituationElement> joinConditionPredicates;
+    private AnalysisSituationEntity analysisSituation;
     private HardSoftBigDecimalScore score;
 
     /**
@@ -34,33 +37,52 @@ public class AnalysisSituationSolution {
      */
     public AnalysisSituationSolution() {
         this.cubes = Collections.emptySet();
-        this.measures = Collections.emptySet();
+        this.aggregateMeasures = Collections.emptySet();
+        this.aggregateMeasurePredicates = Collections.emptySet();
+        this.baseMeasurePredicates = Collections.emptySet();
         this.levels = Collections.emptySet();
-        this.baseMeasureConditions = Collections.emptySet();
-        this.filterConditions = Collections.emptySet();
-        this.analysisSituation = new AnalysisSituation();
+        this.levelPredicates = Collections.emptySet();
+        this.comparativeMeasures = Collections.emptySet();
+        this.comparativeMeasurePredicates = Collections.emptySet();
+        this.joinConditionPredicates = Collections.emptySet();
+        this.analysisSituation = new AnalysisSituationEntity(false);
         this.score = HardSoftBigDecimalScore.ZERO;
     }
 
     /**
-     * Instantiates a new instance of class {@linkplain AnalysisSituationSolution}.
+     * Instantiates a new Analysis situation solution.
      *
-     * @param cubes                 The available cubes.
-     * @param measures              The available measures.
-     * @param levels                The available levels.
-     * @param sliceConditions       The available slice conditions.
-     * @param baseMeasureConditions The available base measure conditions.
-     * @param filterConditions      The available filter conditions.
+     * @param isComparative                Flag, whether the user wants to create a comparative analysis situation or not.
+     * @param cubes                        The cubes.
+     * @param aggregateMeasures            The aggregate measures.
+     * @param aggregateMeasurePredicates   The aggregate measure predicates.
+     * @param baseMeasurePredicates        The base measure predicates.
+     * @param levels                       The levels.
+     * @param levelPredicates              The level predicates.
+     * @param comparativeMeasures          The comparative measures.
+     * @param comparativeMeasurePredicates The comparative measure predicates.
+     * @param joinConditionPredicates      The join condition predicates.
      */
-    public AnalysisSituationSolution(Set<String> cubes, Set<CubeSimilarity> measures, Set<CubeSimilarity> levels, Set<CubeSimilarity> sliceConditions,
-                                     Set<CubeSimilarity> baseMeasureConditions, Set<CubeSimilarity> filterConditions) {
+    public AnalysisSituationSolution(boolean isComparative,
+                                     Set<String> cubes,
+                                     Set<CubeSimilarity> aggregateMeasures,
+                                     Set<CubeSimilarity> aggregateMeasurePredicates,
+                                     Set<CubeSimilarity> baseMeasurePredicates,
+                                     Set<CubeSimilarity> levels,
+                                     Set<CubeSimilarity> levelPredicates,
+                                     Set<CubeSimilarity> comparativeMeasures,
+                                     Set<CubeSimilarity> comparativeMeasurePredicates,
+                                     Set<CubeSimilarity> joinConditionPredicates) {
         this.cubes = cubes;
-        this.measures = createAllPossibleCombinations(measures);
+        this.aggregateMeasures = createAllPossibleCombinations(aggregateMeasures);
+        this.aggregateMeasurePredicates = createAllPossibleCombinations(aggregateMeasurePredicates);
+        this.baseMeasurePredicates = createAllPossibleCombinations(baseMeasurePredicates);
         this.levels = createAllPossibleCombinations(levels);
-        this.sliceConditions = createAllPossibleCombinations(sliceConditions);
-        this.baseMeasureConditions = createAllPossibleCombinations(baseMeasureConditions);
-        this.filterConditions = createAllPossibleCombinations(filterConditions);
-        this.analysisSituation = new AnalysisSituation();
+        this.levelPredicates = createAllPossibleCombinations(levelPredicates);
+        this.comparativeMeasures = createAllPossibleCombinations(comparativeMeasures);
+        this.comparativeMeasurePredicates = createAllPossibleCombinations(comparativeMeasurePredicates);
+        this.joinConditionPredicates = createAllPossibleCombinations(joinConditionPredicates);
+        this.analysisSituation = new AnalysisSituationEntity(isComparative);
         this.score = HardSoftBigDecimalScore.ZERO;
     }
 
@@ -73,7 +95,7 @@ public class AnalysisSituationSolution {
      * @param data The data.
      * @return The set with elements of all possible combinations.
      */
-    public static Set<AnalysisSituationElement> createAllPossibleCombinations(Set<CubeSimilarity> data) {
+    private static Set<AnalysisSituationElement> createAllPossibleCombinations(Set<CubeSimilarity> data) {
         Set<Set<CubeSimilarity>> result = new HashSet<>();
 
         // Group by cube
@@ -94,7 +116,7 @@ public class AnalysisSituationSolution {
     }
 
     /**
-     * Gets the cubes.
+     * Gets cubes.
      *
      * @return the cubes
      */
@@ -105,7 +127,7 @@ public class AnalysisSituationSolution {
     }
 
     /**
-     * Sets the cubes.
+     * Sets cubes.
      *
      * @param cubes the cubes
      */
@@ -114,38 +136,78 @@ public class AnalysisSituationSolution {
     }
 
     /**
-     * Gets all possible measures combinations.
+     * Gets aggregate measures.
      *
-     * @return the measures
+     * @return the aggregate measures
      */
-    @ValueRangeProvider(id = "measures")
+    @ValueRangeProvider(id = "aggregateMeasures")
     @ProblemFactCollectionProperty
-    public Set<AnalysisSituationElement> getMeasures() {
-        return measures;
+    public Set<AnalysisSituationElement> getAggregateMeasures() {
+        return aggregateMeasures;
     }
 
     /**
-     * Sets all possible measures combinations.
+     * Sets aggregate measures.
      *
-     * @param measures the measures
+     * @param aggregateMeasures the aggregate measures
      */
-    public void setMeasures(Set<AnalysisSituationElement> measures) {
-        this.measures = measures;
+    public void setAggregateMeasures(Set<AnalysisSituationElement> aggregateMeasures) {
+        this.aggregateMeasures = aggregateMeasures;
     }
 
     /**
-     * Gets all possible level combinations.
+     * Gets aggregate measure predicates.
+     *
+     * @return the aggregate measure predicates
+     */
+    @ValueRangeProvider(id = "aggregateMeasurePredicates")
+    @ProblemFactCollectionProperty
+    public Set<AnalysisSituationElement> getAggregateMeasurePredicates() {
+        return aggregateMeasurePredicates;
+    }
+
+    /**
+     * Sets aggregate measure predicates.
+     *
+     * @param aggregateMeasurePredicates the aggregate measure predicates
+     */
+    public void setAggregateMeasurePredicates(Set<AnalysisSituationElement> aggregateMeasurePredicates) {
+        this.aggregateMeasurePredicates = aggregateMeasurePredicates;
+    }
+
+    /**
+     * Gets base measure predicates.
+     *
+     * @return the base measure predicates
+     */
+    @ValueRangeProvider(id = "baseMeasurePredicates")
+    @ProblemFactCollectionProperty
+    public Set<AnalysisSituationElement> getBaseMeasurePredicates() {
+        return baseMeasurePredicates;
+    }
+
+    /**
+     * Sets base measure predicates.
+     *
+     * @param baseMeasurePredicates the base measure predicates
+     */
+    public void setBaseMeasurePredicates(Set<AnalysisSituationElement> baseMeasurePredicates) {
+        this.baseMeasurePredicates = baseMeasurePredicates;
+    }
+
+    /**
+     * Gets levels.
      *
      * @return the levels
      */
-    @ValueRangeProvider(id = "granularityLevels")
+    @ValueRangeProvider(id = "levels")
     @ProblemFactCollectionProperty
     public Set<AnalysisSituationElement> getLevels() {
         return levels;
     }
 
     /**
-     * Sets all possible level combinations.
+     * Sets levels.
      *
      * @param levels the levels
      */
@@ -154,63 +216,83 @@ public class AnalysisSituationSolution {
     }
 
     /**
-     * Gets all possible base measure condition combinations.
+     * Gets level predicates.
      *
-     * @return the base measure conditions
+     * @return the level predicates
      */
-    @ValueRangeProvider(id = "baseMeasureConditions")
+    @ValueRangeProvider(id = "levelPredicates")
     @ProblemFactCollectionProperty
-    public Set<AnalysisSituationElement> getBaseMeasureConditions() {
-        return baseMeasureConditions;
+    public Set<AnalysisSituationElement> getLevelPredicates() {
+        return levelPredicates;
     }
 
     /**
-     * Sets all possible base measure condition combinations.
+     * Sets level predicates.
      *
-     * @param baseMeasureConditions the base measure conditions
+     * @param levelPredicates the level predicates
      */
-    public void setBaseMeasureConditions(Set<AnalysisSituationElement> baseMeasureConditions) {
-        this.baseMeasureConditions = baseMeasureConditions;
+    public void setLevelPredicates(Set<AnalysisSituationElement> levelPredicates) {
+        this.levelPredicates = levelPredicates;
     }
 
     /**
-     * Gets all possible filter condition combinations.
+     * Gets comparative measures.
      *
-     * @return the filter conditions
+     * @return the comparative measures
      */
-    @ValueRangeProvider(id = "filterConditions")
+    @ValueRangeProvider(id = "comparativeMeasures")
     @ProblemFactCollectionProperty
-    public Set<AnalysisSituationElement> getFilterConditions() {
-        return filterConditions;
+    public Set<AnalysisSituationElement> getComparativeMeasures() {
+        return comparativeMeasures;
     }
 
     /**
-     * Sets all possible filter condition combinations.
+     * Sets comparative measures.
      *
-     * @param filterConditions the filter conditions
+     * @param comparativeMeasures the comparative measures
      */
-    public void setFilterConditions(Set<AnalysisSituationElement> filterConditions) {
-        this.filterConditions = filterConditions;
+    public void setComparativeMeasures(Set<AnalysisSituationElement> comparativeMeasures) {
+        this.comparativeMeasures = comparativeMeasures;
     }
 
     /**
-     * Gets all possible slice condition combinations.
+     * Gets comparative measure predicates.
      *
-     * @return the slice conditions
+     * @return the comparative measure predicates
      */
-    @ValueRangeProvider(id = "sliceConditions")
+    @ValueRangeProvider(id = "comparativeMeasurePredicates")
     @ProblemFactCollectionProperty
-    public Set<AnalysisSituationElement> getSliceConditions() {
-        return sliceConditions;
+    public Set<AnalysisSituationElement> getComparativeMeasurePredicates() {
+        return comparativeMeasurePredicates;
     }
 
     /**
-     * Sets all possible slice condition combinations.
+     * Sets comparative measure predicates.
      *
-     * @param sliceConditions the slice conditions
+     * @param comparativeMeasurePredicates the comparative measure predicates
      */
-    public void setSliceConditions(Set<AnalysisSituationElement> sliceConditions) {
-        this.sliceConditions = sliceConditions;
+    public void setComparativeMeasurePredicates(Set<AnalysisSituationElement> comparativeMeasurePredicates) {
+        this.comparativeMeasurePredicates = comparativeMeasurePredicates;
+    }
+
+    /**
+     * Gets join condition predicates.
+     *
+     * @return the join condition predicates
+     */
+    @ValueRangeProvider(id = "joinConditionPredicates")
+    @ProblemFactCollectionProperty
+    public Set<AnalysisSituationElement> getJoinConditionPredicates() {
+        return joinConditionPredicates;
+    }
+
+    /**
+     * Sets join condition predicates.
+     *
+     * @param joinConditionPredicates the join condition predicates
+     */
+    public void setJoinConditionPredicates(Set<AnalysisSituationElement> joinConditionPredicates) {
+        this.joinConditionPredicates = joinConditionPredicates;
     }
 
     /**
@@ -219,7 +301,7 @@ public class AnalysisSituationSolution {
      * @return the analysis situation
      */
     @PlanningEntityProperty
-    public AnalysisSituation getAnalysisSituation() {
+    public AnalysisSituationEntity getAnalysisSituation() {
         return analysisSituation;
     }
 
@@ -228,7 +310,7 @@ public class AnalysisSituationSolution {
      *
      * @param analysisSituation the analysis situation
      */
-    public void setAnalysisSituation(AnalysisSituation analysisSituation) {
+    public void setAnalysisSituation(AnalysisSituationEntity analysisSituation) {
         this.analysisSituation = analysisSituation;
     }
 

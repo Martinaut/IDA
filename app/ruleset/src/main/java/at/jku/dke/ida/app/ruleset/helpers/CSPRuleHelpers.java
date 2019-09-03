@@ -1,9 +1,9 @@
 package at.jku.dke.ida.app.ruleset.helpers;
 
-import at.jku.dke.ida.csp.domain.AnalysisSituation;
 import at.jku.dke.ida.csp.domain.AnalysisSituationElement;
-import at.jku.dke.ida.data.models.CubeSimilarity;
-import at.jku.dke.ida.data.models.DimensionSimilarity;
+import at.jku.dke.ida.csp.domain.AnalysisSituationEntity;
+import at.jku.dke.ida.data.models.similarity.CubeSimilarity;
+import at.jku.dke.ida.data.models.similarity.DimensionSimilarity;
 
 import java.math.BigDecimal;
 import java.util.function.Function;
@@ -69,7 +69,7 @@ public final class CSPRuleHelpers {
      * @param as The analysis situation.
      * @return {@code true} if there exists at least one element that is used more than one time; {@code false} otherwise.
      */
-    public static boolean containsDuplicates(AnalysisSituation as) {
+    public static boolean containsDuplicates(AnalysisSituationEntity as) {
         if (as == null) return false;
         return as.getAllSimilarities().stream()
                 .collect(Collectors.groupingBy(CubeSimilarity::getElement, Collectors.counting()))
@@ -87,7 +87,7 @@ public final class CSPRuleHelpers {
      * @param as The analysis situation.
      * @return {@code true} if a term is used multiple times; {@code false} otherwise.
      */
-    public static boolean multipleAssignmentsPerTerm(AnalysisSituation as) {
+    public static boolean multipleAssignmentsPerTerm(AnalysisSituationEntity as) {
         if (as == null) return false;
 
         return as.getAllSimilarities().stream()

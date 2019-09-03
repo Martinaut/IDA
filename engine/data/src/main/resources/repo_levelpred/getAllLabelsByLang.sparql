@@ -1,0 +1,55 @@
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX qbx: <http://dke.jku.at/inga/cubes#>
+PREFIX sim: <http://dke.jku.at/ida/similarity#>
+
+SELECT DISTINCT ?dimension ?dimensionLabel ?level ?levelLabel ?element ?label ?description ?cube
+WHERE {
+    { ?element qbx:over ?level . }
+    UNION
+    {
+        ?pred qbx:over ?level .
+        ?element qbx:conjunct ?pred .
+    }
+
+	{
+	    SELECT ?dimension ?level
+	    WHERE {
+            ?dimension qbx:hasHierarchy ?hier .
+            ?hs qbx:inHierarchy ?hier ;
+                qbx:parentLevel ?level .
+	    }
+	}
+	UNION
+	{
+	    SELECT ?dimension ?level
+	    WHERE {
+            ?dimension qbx:hasHierarchy ?hier .
+            ?hs qbx:inHierarchy ?hier ;
+                qbx:childLevel ?level .
+	    }
+	}
+
+	?element rdfs:label ?label .
+    FILTER (lang(?label) = "###LANG###") .
+
+    ?dimension rdfs:label ?dimensionLabel .
+    FILTER (lang(?dimensionLabel) = "###LANG###") .
+
+    ?level rdfs:label ?levelLabel .
+    FILTER (lang(?levelLabel) = "###LANG###") .
+
+    OPTIONAL {
+        ?element rdfs:comment ?description .
+    	FILTER (lang(?description) = "###LANG###") .
+    }
+
+    OPTIONAL {
+        GRAPH sim:cube-assignment {
+            ?mapping rdf:type sim:CubeAssignment ;
+                     sim:from ?element ;
+                     sim:cube ?cube .
+         }
+    }
+}
+ORDER BY ?label

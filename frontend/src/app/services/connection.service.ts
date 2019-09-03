@@ -22,12 +22,14 @@ export class ConnectionService {
   private resultSub: StompSubscription;
   private asSub: StompSubscription;
   private initialData: any;
+  private connectCalled: boolean;
 
   /**
    * Initializes a new instance of class ConnectionService.
    */
   constructor(private translateService: TranslateService) {
     this.client = null;
+    this.connectCalled = false;
     this.initialData = {
       locale: 'en'
     };
@@ -156,6 +158,7 @@ export class ConnectionService {
       this.connectionStateChangedSource.next(false);
       this.initializedStateChangedSource.next(false);
     }
+    this.connectCalled = false;
   }
 
   /**
@@ -185,10 +188,17 @@ export class ConnectionService {
     this.resultMessageReceivedSource.next(null); // reset result-panel panel
     this.initializedStateChangedSource.next(true);
 
+    this.connectCalled = true;
     this.client.activate();
   }
 
   private onConnected(frame: IFrame): void {
+    if (this.connectCalled) { // reset if connection lost and then connected again automatically
+      this.asMessageReceivedSource.next(null); // reset AS panel
+      this.displayMessageReceivedSource.next(null); // reset displays panel
+      this.resultMessageReceivedSource.next(null); // reset result-panel panel
+    }
+
     this.displaySub = this.client.subscribe('/user/queue/display', message => this.onDisplayMessage(message));
     this.asSub = this.client.subscribe('/user/queue/as', message => this.onASMessage(message));
     this.resultSub = this.client.subscribe('/user/queue/result', message => this.onResultMessage(message));
@@ -200,11 +210,11 @@ export class ConnectionService {
   }
 
   private onWebsocketError(evt: Event): void {
-    console.log('>> ERROR: ' + evt);
+    console.log('>> WEBSOCKET ERROR', evt);
   }
 
   private onStompError(frame: IFrame): void {
-    console.log('>> ERROR: ' + frame);
+    console.log('>> STOMP ERROR: ' + frame);
   }
 
   private onDisplayMessage(msg: IMessage) {

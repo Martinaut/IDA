@@ -1,7 +1,7 @@
 package at.jku.dke.ida.web.listeners;
 
 import at.jku.dke.ida.data.QueryException;
-import at.jku.dke.ida.data.models.Label;
+import at.jku.dke.ida.data.models.labels.Label;
 import at.jku.dke.ida.data.repositories.SimpleRepository;
 import at.jku.dke.ida.shared.models.AnalysisSituation;
 import at.jku.dke.ida.shared.models.ComparativeAnalysisSituation;

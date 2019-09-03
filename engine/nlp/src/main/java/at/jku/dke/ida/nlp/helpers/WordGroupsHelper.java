@@ -20,12 +20,13 @@ public final class WordGroupsHelper {
     /**
      * Converts a set of strings to a set of word groups.
      *
-     * @param words The set with words.
+     * @param words   The set with words.
+     * @param pattern The pattern used to find the word groups.
      * @return Converted set with word groups
      */
-    public static Set<WordGroup> convert(Set<String> words) {
+    public static Set<WordGroup> convert(Set<String> words, String pattern) {
         return words.stream()
-                .map(WordGroup::new)
+                .map(x -> new WordGroup(x, pattern))
                 .collect(Collectors.toSet());
     }
 
@@ -38,7 +39,7 @@ public final class WordGroupsHelper {
      * @see NLPProcessor#executeTregex(CoreDocument, String)
      */
     public static Set<WordGroup> executeTregex(CoreDocument doc, String pattern) {
-        return convert(NLPProcessor.executeTregex(doc, pattern));
+        return convert(NLPProcessor.executeTregex(doc, pattern), pattern);
     }
 
     /**
@@ -50,6 +51,6 @@ public final class WordGroupsHelper {
      * @see NLPProcessor#executeSemgrex(CoreDocument, String)
      */
     public static Set<WordGroup> executeSemgrex(CoreDocument doc, String pattern) {
-        return convert(NLPProcessor.executeSemgrex(doc, pattern));
+        return convert(NLPProcessor.executeSemgrex(doc, pattern), pattern);
     }
 }

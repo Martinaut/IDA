@@ -3,7 +3,7 @@ package at.jku.dke.ida.app.ruleset.interception.interceptors;
 import at.jku.dke.ida.app.ruleset.helpers.Constants;
 import at.jku.dke.ida.app.ruleset.helpers.UserInput;
 import at.jku.dke.ida.app.ruleset.interception.models.OperationInputIntentModel;
-import at.jku.dke.ida.data.models.Similarity;
+import at.jku.dke.ida.data.models.similarity.Similarity;
 import at.jku.dke.ida.rules.interfaces.OperationIntentServiceModel;
 import at.jku.dke.ida.rules.results.EventConfidenceResult;
 import at.jku.dke.ida.scxml.interceptors.DetermineOperationInputIntentInterceptor;

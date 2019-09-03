@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
  *
  * <p>Executes rules belonging to agenda-group: {@code pattern-determination}</p>
  */
-public class PatternService extends DroolsService<PatternServiceModel, Collection<ConfidenceResult>>  {
+public class PatternService extends DroolsService<PatternServiceModel, Collection<ConfidenceResult>> {
 
     /**
      * Instantiates a new instance of class {@linkplain PatternService}.
@@ -36,7 +36,6 @@ public class PatternService extends DroolsService<PatternServiceModel, Collectio
 
         // Add data
         session.insert(model);
-        session.insert(model.getDisplayData());
 
         // Execute rules
         session.fireAllRules();

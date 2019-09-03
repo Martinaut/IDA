@@ -2,9 +2,8 @@ package at.jku.dke.ida.shared.session;
 
 import at.jku.dke.ida.shared.Event;
 import at.jku.dke.ida.shared.display.Display;
-import at.jku.dke.ida.shared.models.AnalysisSituation;
 import at.jku.dke.ida.shared.models.EngineAnalysisSituation;
-import at.jku.dke.ida.shared.models.NonComparativeAnalysisSituation;
+import at.jku.dke.ida.shared.operations.PatternPart;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.HashMap;
@@ -21,7 +20,7 @@ public class SessionModel {
     private final String sessionId;
     private final Locale locale;
 
-    private String comparativeActiveAS;
+    private PatternPart comparativeActiveAS;
     private EngineAnalysisSituation analysisSituation;
     private Display displayData;
     private String queryResult;
@@ -213,7 +212,7 @@ public class SessionModel {
      *
      * @return The active AS (returns {@code null} when using NonComparative AS).
      */
-    public String getComparativeActiveAS() {
+    public PatternPart getComparativeActiveAS() {
         return comparativeActiveAS;
     }
 
@@ -222,7 +221,7 @@ public class SessionModel {
      *
      * @param comparativeActiveAS The active AS.
      */
-    public void setComparativeActiveAS(String comparativeActiveAS) {
+    public void setComparativeActiveAS(PatternPart comparativeActiveAS) {
         this.comparativeActiveAS = comparativeActiveAS;
     }
 }

@@ -3,10 +3,11 @@ package at.jku.dke.ida.data.repositories;
 import at.jku.dke.ida.data.IRIValidator;
 import at.jku.dke.ida.data.QueryException;
 import at.jku.dke.ida.data.GraphDbConnection;
-import at.jku.dke.ida.data.models.CubeSimilarity;
+import at.jku.dke.ida.data.models.similarity.CubeSimilarity;
 import at.jku.dke.ida.data.repositories.base.BaseRepository;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.eclipse.rdf4j.query.BindingSet;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -89,9 +90,7 @@ public class SimilarityRepository extends BaseRepository {
         })
                 .stream()
                 .filter(x -> x.hasBinding("cube") && x.hasBinding("element") && x.hasBinding("score"))
-                .map(x -> x.hasBinding("dimension") ?
-                        RepositoryHelpers.convertToDimSimilarity(term, x) :
-                        RepositoryHelpers.convertToSimilarity(term, x))
+                .map(x -> convert(term, x))
                 .collect(Collectors.toList());
     }
     // endregion
@@ -154,9 +153,7 @@ public class SimilarityRepository extends BaseRepository {
         )
                 .stream()
                 .filter(x -> x.hasBinding("cube") && x.hasBinding("element") && x.hasBinding("score"))
-                .map(x -> x.hasBinding("dimension") ?
-                        RepositoryHelpers.convertToDimSimilarity(term, x) :
-                        RepositoryHelpers.convertToSimilarity(term, x))
+                .map(x -> convert(term, x))
                 .collect(Collectors.toList());
     }
 
@@ -200,4 +197,16 @@ public class SimilarityRepository extends BaseRepository {
         }
     }
     // endregion
+
+    private CubeSimilarity convert(String term, BindingSet set) {
+        if (set.hasBinding("part")) {
+            if (set.hasBinding("measure")) return RepositoryHelpers.convertToComparativeMeasureSimilarity(term, set);
+            return RepositoryHelpers.convertToComparativeSimilarity(term, set);
+        }
+        if (set.hasBinding("dimension")) {
+            if (set.hasBinding("level")) return RepositoryHelpers.convertToLevelSimilarity(term, set);
+            return RepositoryHelpers.convertToDimSimilarity(term, set);
+        }
+        return RepositoryHelpers.convertToSimilarity(term, set);
+    }
 }

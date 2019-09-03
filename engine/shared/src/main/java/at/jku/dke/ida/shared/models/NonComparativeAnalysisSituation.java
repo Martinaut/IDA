@@ -5,7 +5,7 @@ import at.jku.dke.ida.shared.models.generic.GenericNonComparativeAnalysisSituati
 /**
  * Non-comparative analysis situations represent multi-dimensional queries on cube instances.
  */
-public class NonComparativeAnalysisSituation extends GenericNonComparativeAnalysisSituation<String, DimensionQualification> implements EngineAnalysisSituation {
+public class NonComparativeAnalysisSituation extends GenericNonComparativeAnalysisSituation<String, String, DimensionQualification> implements EngineAnalysisSituation {
 
     /**
      * Instantiates a new Non comparative analysis situation.

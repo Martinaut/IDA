@@ -1,0 +1,35 @@
+package app_rules.operation_display
+
+// ------------------------------------ IMPORT --------------------------------------
+import at.jku.dke.ida.shared.Event
+import at.jku.dke.ida.shared.models.NonComparativeAnalysisSituation
+import at.jku.dke.ida.shared.operations.Operation
+import at.jku.dke.ida.rules.interfaces.OperationDisplayServiceModel
+
+// ------------------------------ FILTER OPERATIONS --------------------------------
+rule "'Add Filter' - if at least one filter is available"
+    agenda-group "operation-display-determination"
+when
+    $model : OperationDisplayServiceModel(isNotSelectedFilterConditionAvailable())
+then
+    insert(new Operation(Event.NAVIGATE_FILTER_NARROW, $model.getLocale(), 60));
+end
+
+rule "'Drop Filter' - if at least one filter is selected"
+    agenda-group "operation-display-determination"
+when
+    $as : NonComparativeAnalysisSituation(filterConditions.isEmpty() == false)
+    $model : OperationDisplayServiceModel(analysisSituation == $as)
+then
+    insert(new Operation(Event.NAVIGATE_FILTER_BROADEN, $model.getLocale(), 62));
+end
+
+rule "'Refocus Filter' - if at least one filter is selected and one available"
+    agenda-group "operation-display-determination"
+    enabled false
+when
+    $as : NonComparativeAnalysisSituation(filterConditions.isEmpty() == false)
+    $model : OperationDisplayServiceModel(isNotSelectedFilterConditionAvailable(), analysisSituation == $as)
+then
+    insert(new Operation(Event.NAVIGATE_FILTER_REFOCUS, $model.getLocale(), 61));
+end

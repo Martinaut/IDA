@@ -21,5 +21,3 @@ WHERE {
     FILTER (?element NOT IN (###NOTIN###)) .
 }
 ORDER BY ?label
-
-# TODO: produces duplicates

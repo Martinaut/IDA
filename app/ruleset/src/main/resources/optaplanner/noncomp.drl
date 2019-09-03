@@ -1,0 +1,70 @@
+package optaplanner
+
+// ------------------------------------ IMPORT --------------------------------------
+import at.jku.dke.ida.csp.domain.AnalysisSituationEntity
+import at.jku.dke.ida.app.ruleset.helpers.CSPRuleHelpers
+import org.optaplanner.core.api.score.buildin.hardsoftbigdecimal.HardSoftBigDecimalScoreHolder
+import java.math.BigDecimal
+import at.jku.dke.ida.app.ruleset.helpers.CSPRuleHelpers
+
+// ------------------------------------ GLOBAL --------------------------------------
+global HardSoftBigDecimalScoreHolder scoreHolder;
+
+// ------------------------------------ RULES ---------------------------------------
+// ### EMPTY VALUES ###
+rule "No cube set"
+when
+    AnalysisSituationEntity(cube == null || cube.isEmpty(), !isComparative)
+then
+    scoreHolder.addHardConstraintMatch(kcontext, CSPRuleHelpers.MINUS_ONE);
+end
+
+rule "No measure set"
+when
+    AnalysisSituationEntity(aggregateMeasures == null, !isComparative)
+then
+    scoreHolder.addSoftConstraintMatch(kcontext, CSPRuleHelpers.MINUS_ONE);
+end
+
+// ### SAME CUBE ###
+rule "All measures in same cube"
+when
+    AnalysisSituationEntity(!CSPRuleHelpers.allInCube(cube, aggregateMeasures), !isComparative)
+then
+    scoreHolder.addHardConstraintMatch(kcontext, CSPRuleHelpers.MINUS_ONE);
+end
+
+rule "All levels in same cube"
+when
+    AnalysisSituationEntity(!CSPRuleHelpers.allInCube(cube, levels), !isComparative)
+then
+    scoreHolder.addHardConstraintMatch(kcontext, CSPRuleHelpers.MINUS_ONE);
+end
+
+rule "All slice conditions in same cube"
+when
+    AnalysisSituationEntity(!CSPRuleHelpers.allInCube(cube, levelPredicates), !isComparative)
+then
+    scoreHolder.addHardConstraintMatch(kcontext, CSPRuleHelpers.MINUS_ONE);
+end
+
+rule "All bmcs in same cube"
+when
+    AnalysisSituationEntity(!CSPRuleHelpers.allInCube(cube, baseMeasurePredicates), !isComparative)
+then
+    scoreHolder.addHardConstraintMatch(kcontext, CSPRuleHelpers.MINUS_ONE);
+end
+
+rule "All filters in same cube"
+when
+    AnalysisSituationEntity(!CSPRuleHelpers.allInCube(cube, aggregateMeasurePredicates), !isComparative)
+then
+    scoreHolder.addHardConstraintMatch(kcontext, CSPRuleHelpers.MINUS_ONE);
+end
+
+rule "Maximum one granularity level per dimesion"
+when
+    AnalysisSituationEntity(!CSPRuleHelpers.maximumOneElementPerDimension(levels), !isComparative)
+then
+    scoreHolder.addHardConstraintMatch(kcontext, CSPRuleHelpers.MINUS_ONE);
+end

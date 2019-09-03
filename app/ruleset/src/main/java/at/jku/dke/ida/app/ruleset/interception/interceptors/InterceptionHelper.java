@@ -1,12 +1,12 @@
 package at.jku.dke.ida.app.ruleset.interception.interceptors;
 
-import at.jku.dke.ida.data.models.DimensionLabel;
-import at.jku.dke.ida.data.models.DimensionLevelLabel;
-import at.jku.dke.ida.data.models.Label;
-import at.jku.dke.ida.data.models.Similarity;
+import at.jku.dke.ida.app.ruleset.helpers.Keyword;
+import at.jku.dke.ida.data.models.labels.DimensionLabel;
+import at.jku.dke.ida.data.models.labels.DimensionLevelLabel;
+import at.jku.dke.ida.data.models.labels.Label;
+import at.jku.dke.ida.data.models.similarity.Similarity;
 import at.jku.dke.ida.nlp.drools.StringSimilarityService;
 import at.jku.dke.ida.nlp.models.StringSimilarityServiceModel;
-import at.jku.dke.ida.shared.ResourceBundleHelper;
 import at.jku.dke.ida.shared.display.Displayable;
 import at.jku.dke.ida.shared.display.SimpleDisplayable;
 import at.jku.dke.ida.shared.operations.Operation;
@@ -81,7 +81,7 @@ final class InterceptionHelper {
      * @return List with possible operations as numbered labels
      */
     private static Collection<Operation> createNumberedOperations(Locale locale, Collection<Operation> possibleOperations) {
-        final String optionText = ResourceBundleHelper.getResourceString("ruleset.Keywords", locale, "Option");
+        final String optionText = Keyword.OPTION.getKeywordText(locale);
         List<Operation> numbered = new ArrayList<>();
 
         int i = 1;
@@ -152,8 +152,8 @@ final class InterceptionHelper {
         possibleValues.addAll(rightValues);
 
         // Add numbered operations
-        possibleValues.addAll(createNumberedValues(locale, leftValues, "left"));
-        possibleValues.addAll(createNumberedValues(locale, rightValues, "right"));
+        possibleValues.addAll(createNumberedValues(locale, leftValues, Keyword.LEFT));
+        possibleValues.addAll(createNumberedValues(locale, rightValues, Keyword.RIGHT));
 
         // Build Model
         StringSimilarityServiceModel model = new StringSimilarityServiceModel(
@@ -193,11 +193,11 @@ final class InterceptionHelper {
      * @param possibleValues The list with possible values.
      * @return List with possible values as numbered labels
      */
-    private static Collection<Displayable> createNumberedValues(Locale locale, Collection<Displayable> possibleValues, String prefixResourceName) {
-        String optionText = ResourceBundleHelper.getResourceString("ruleset.Keywords", locale, "Option");
+    private static Collection<Displayable> createNumberedValues(Locale locale, Collection<Displayable> possibleValues, Keyword prefixResourceName) {
+        String optionText = Keyword.OPTION.getKeywordText(locale);
         String prefix = "";
         if (prefixResourceName != null) {
-            prefix = ResourceBundleHelper.getResourceString("ruleset.Keywords", locale, prefixResourceName);
+            prefix = prefixResourceName.getKeywordText(locale);
             optionText = prefix + ' ' + optionText;
             prefix = ' ' + prefix;
         }
