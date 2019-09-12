@@ -2,8 +2,8 @@ package at.jku.dke.ida.app.ruleset.helpers;
 
 import at.jku.dke.ida.csp.domain.AnalysisSituationElement;
 import at.jku.dke.ida.csp.domain.AnalysisSituationEntity;
-import at.jku.dke.ida.data.models.similarity.CubeSimilarity;
-import at.jku.dke.ida.data.models.similarity.DimensionSimilarity;
+import at.jku.dke.ida.data.models.similarity.*;
+import at.jku.dke.ida.shared.operations.PatternPart;
 
 import java.math.BigDecimal;
 import java.util.function.Function;
@@ -95,5 +95,53 @@ public final class CSPRuleHelpers {
                 .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()))
                 .values().stream()
                 .anyMatch(x -> x > 1);
+    }
+
+    /**
+     * Returns whether all elements are in the appropriate cube
+     * (all elements of same pattern part have to be in the same cube).
+     * <p>
+     * If {@code elem} is {@code null}, {@code true} will be returned.
+     * Only {@link ComparativeSimilarity} elements are considered.
+     *
+     * @param elem The entity to check.
+     * @return {@code true} if all elements are in the appropriate cube; {@code false} otherwise.
+     */
+    public static boolean allInAppropriateCube(AnalysisSituationEntity elem) {
+        if (elem == null) return true;
+
+        return elem.getAllSimilarities().stream()
+                .filter(x -> x instanceof ComparativeSimilarity)
+                .map(x -> (ComparativeSimilarity) x)
+                .collect(Collectors.groupingBy(ComparativeSimilarity::getPatternPart))
+                .values().stream()
+                .allMatch(x -> x.stream().map(CubeSimilarity::getCube).distinct().count() != 1);
+    }
+
+    /**
+     * Returns whether for each comparative measure an element for both parts exist.
+     * <p>
+     * If {@code scores} is {@code null}, {@code false} will be returned.
+     *
+     * @param scores The list of comparative measures.
+     * @return {@code true} if for each measure an element for both parts exist in the list; {@code false} otherwise.
+     */
+    public static boolean scoreInBothParts(AnalysisSituationElement scores) {
+        if (scores == null) return true;
+
+        var grouped = scores.getElements().stream()
+                .filter(x -> x instanceof ComparativeMeasureSimilarity)
+                .map(x -> (ComparativeMeasureSimilarity) x)
+                .collect(Collectors.groupingBy(Similarity::getElement))
+                .values();
+
+        boolean result = true;
+        for (var elem : grouped) {
+            result = result &&
+                    elem.stream().anyMatch(x -> x.getPatternPart() == PatternPart.SET_OF_INTEREST) &&
+                    elem.stream().anyMatch(x -> x.getPatternPart() == PatternPart.SET_OF_COMPARISON);
+            if (!result) break;
+        }
+        return true;
     }
 }

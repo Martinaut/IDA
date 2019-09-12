@@ -216,6 +216,10 @@ public class AnalysisSituationEntity {
         this.joinConditionPredicates = joinConditionPredicates;
     }
 
+    public boolean isComparative() {
+        return isComparative;
+    }
+
     /**
      * Calculates the overall score of the current analysis situation.
      * <p>
@@ -223,13 +227,10 @@ public class AnalysisSituationEntity {
      * <p>
      * Then the result will be converted to an {@link BigDecimal}, as this type is used in the OptaPlanner Score.
      * OptaPlanner does not recommend the usage of double scores.
-     * If the cube is null or empty, 0 will be returned.
      *
      * @return The calculated score.
      */
     public BigDecimal getScore() {
-        if (cube == null || cube.isBlank()) return BigDecimal.ZERO;
-
         double score = calcScore(0, () -> aggregateMeasures);
         score = calcScore(score, () -> aggregateMeasurePredicates);
         score = calcScore(score, () -> baseMeasurePredicates);

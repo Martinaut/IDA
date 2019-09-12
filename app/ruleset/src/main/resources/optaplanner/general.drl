@@ -16,7 +16,7 @@ when
     $as : AnalysisSituationEntity()
     eval(CSPRuleHelpers.multipleAssignmentsPerTerm($as))
 then
-    scoreHolder.addSoftConstraintMatch(kcontext, CSPRuleHelpers.MINUS_ONE);
+    scoreHolder.addHardConstraintMatch(kcontext, CSPRuleHelpers.MINUS_ONE);
 end
 
 rule "No duplicates"

@@ -4,6 +4,7 @@ import at.jku.dke.ida.csp.ConstraintSatisfactionSettings;
 import at.jku.dke.ida.csp.domain.AnalysisSituationSolution;
 import at.jku.dke.ida.csp.models.FillDeterminedValuesServiceModel;
 import at.jku.dke.ida.data.models.similarity.CubeSimilarity;
+import at.jku.dke.ida.data.models.similarity.Similarity;
 import at.jku.dke.ida.shared.IRIConstants;
 import at.jku.dke.ida.shared.models.ComparativeAnalysisSituation;
 import at.jku.dke.ida.shared.session.SessionModel;
@@ -13,9 +14,11 @@ import org.apache.logging.log4j.Logger;
 import org.optaplanner.core.api.solver.Solver;
 import org.optaplanner.core.api.solver.SolverFactory;
 
-import java.util.Collections;
-import java.util.Set;
+import java.math.BigDecimal;
+import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * This service performs a constraint satisfaction algorithm to determine the
@@ -54,6 +57,7 @@ public class ConstraintSatisfactionService {
         if (this.solver == null) initSolver();
 
         // Build model
+        logSimilarities(similarities);
         AnalysisSituationSolution problem = buildProblem(sessionModel.getAnalysisSituation() instanceof ComparativeAnalysisSituation, similarities);
 
         // Solve
@@ -61,9 +65,13 @@ public class ConstraintSatisfactionService {
         AnalysisSituationSolution solution = solver.solve(problem);
         logger.info("CSP solved");
         logger.info(solver.explainBestScore());
+        logSolution(solution);
 
         // Set values
-        new FillDeterminedValuesService().executeRules(new FillDeterminedValuesServiceModel("CSP", sessionModel, solution.getAnalysisSituation()));
+        if (solution.getScore().getHardScore().compareTo(BigDecimal.ZERO) >= 0)
+            new FillDeterminedValuesService().executeRules(new FillDeterminedValuesServiceModel("CSP", sessionModel, solution.getAnalysisSituation()));
+        else
+            logger.warn("No suitable solution found");
     }
 
     private AnalysisSituationSolution buildProblem(boolean isComparative, Set<CubeSimilarity> similarities) {
@@ -71,7 +79,7 @@ public class ConstraintSatisfactionService {
         ConstraintSatisfactionSettings settings = BeanUtil.getBean(ConstraintSatisfactionSettings.class);
         return new AnalysisSituationSolution(
                 isComparative,
-                similarities.stream().map(CubeSimilarity::getCube).collect(Collectors.toSet()),
+                isComparative ? Collections.singleton("") : similarities.stream().map(CubeSimilarity::getCube).collect(Collectors.toSet()),
                 settings.isUseAggregateMeasures() && !isComparative ? similarities.stream().filter(x -> x.getType().equals(IRIConstants.TYPE_AGGREGATE_MEASURE)).collect(Collectors.toSet()) : Collections.emptySet(),
                 settings.isUseAggregateMeasurePredicates() ? similarities.stream().filter(x -> x.getType().equals(IRIConstants.TYPE_AGGREGATE_MEASURE_PREDICATE)).collect(Collectors.toSet()) : Collections.emptySet(),
                 settings.isUseBaseMeasurePredicates() ? similarities.stream().filter(x -> x.getType().equals(IRIConstants.TYPE_BASE_MEASURE_PREDICATE)).collect(Collectors.toSet()) : Collections.emptySet(),
@@ -83,4 +91,25 @@ public class ConstraintSatisfactionService {
         );
     }
 
+    private void logSimilarities(Set<CubeSimilarity> similarities) {
+        var tmp = new ArrayList<>(similarities);
+        tmp.sort(Comparator
+                .comparing((Function<CubeSimilarity, String>) Similarity::getTerm)
+                .thenComparingDouble(Similarity::getScore));
+        tmp.forEach(logger::debug);
+    }
+
+    private void logSolution(AnalysisSituationSolution ass) {
+        var as = ass.getAnalysisSituation();
+        logger.debug(new StringJoiner("," + System.lineSeparator(), "BEST RESULT [", "]")
+                .add("cube='" + as.getCube() + "'")
+                .add("measures='" + ((as.getAggregateMeasures() == null) ? "[]" : as.getAggregateMeasures().getElements()) + "'")
+                .add("filters='" + ((as.getAggregateMeasurePredicates() == null) ? "[]" : as.getAggregateMeasurePredicates().getElements()) + "'")
+                .add("bmcs='" + ((as.getBaseMeasurePredicates() == null) ? "[]" : as.getBaseMeasurePredicates().getElements()) + "'")
+                .add("levels='" + ((as.getLevels() == null) ? "[]" : as.getLevels().getElements()) + "'")
+                .add("sliceConditions='" + ((as.getLevelPredicates() == null) ? "[]" : as.getLevelPredicates().getElements()) + "'")
+                .add("scores='" + ((as.getComparativeMeasures() == null) ? "[]" : as.getComparativeMeasures().getElements()) + "'")
+                .add("scoreFilters='" + ((as.getComparativeMeasurePredicates() == null) ? "[]" : as.getComparativeMeasurePredicates().getElements()) + "'")
+        );
+    }
 }

@@ -11,4 +11,36 @@ import at.jku.dke.ida.app.ruleset.helpers.CSPRuleHelpers
 global HardSoftBigDecimalScoreHolder scoreHolder;
 
 // ------------------------------------ RULES ---------------------------------------
-// TODO: Rules that make sure all CoI and CoC values are in the same cubes
+rule "No cube"
+when
+    AnalysisSituationEntity(isComparative(), cube != null && !getCube().isEmpty())
+then
+    scoreHolder.addHardConstraintMatch(kcontext, CSPRuleHelpers.MINUS_ONE);
+end
+
+rule "Nothing set"
+when
+    AnalysisSituationEntity(isComparative(), joinConditionPredicates == null || joinConditionPredicates.isEmpty(),
+                            comparativeMeasures == null || comparativeMeasures.isEmpty(),
+                            comparativeMeasurePredicates == null || comparativeMeasurePredicates.isEmpty())
+then
+    scoreHolder.addHardConstraintMatch(kcontext, CSPRuleHelpers.MINUS_ONE);
+end
+
+rule "All elements in appropriate cube"
+when
+    $ase : AnalysisSituationEntity(isComparative())
+    eval(!CSPRuleHelpers.allInAppropriateCube($ase))
+then
+    scoreHolder.addHardConstraintMatch(kcontext, CSPRuleHelpers.MINUS_ONE);
+end
+
+rule "Exact 1 CoI and 1 CoC-Element for scores"
+
+when
+    AnalysisSituationEntity(isComparative(), !CSPRuleHelpers.scoreInBothParts(comparativeMeasures))
+then
+    scoreHolder.addHardConstraintMatch(kcontext, CSPRuleHelpers.MINUS_ONE);
+end
+
+// score measures 1 comp and 1 inter

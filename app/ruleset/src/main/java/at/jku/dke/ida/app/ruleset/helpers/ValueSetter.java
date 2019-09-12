@@ -18,6 +18,8 @@ import org.apache.commons.lang3.tuple.Triple;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -56,6 +58,10 @@ public final class ValueSetter {
         }
     }
 
+    private static boolean hasPartElement(List<? extends ComparativeSimilarity> sims, PatternPart part) {
+        return sims.stream().anyMatch(x -> x.getPatternPart() == part);
+    }
+
     /**
      * Sets the aggregate measures associated with the selected scores.
      *
@@ -68,9 +74,9 @@ public final class ValueSetter {
 
         // Set cube
         var first = cm.values().iterator().next();
-        if (as.getContextOfInterest().getCube() == null)
+        if (as.getContextOfInterest().getCube() == null && !first.isEmpty() && hasPartElement(first, PatternPart.SET_OF_INTEREST))
             setCube(lang, as.getContextOfInterest(), first.stream().filter(x -> x.getPatternPart() == PatternPart.SET_OF_INTEREST).findFirst().orElseThrow().getCube());
-        if (as.getContextOfComparison().getCube() == null)
+        if (as.getContextOfComparison().getCube() == null && !first.isEmpty() && hasPartElement(first, PatternPart.SET_OF_COMPARISON))
             setCube(lang, as.getContextOfComparison(), first.stream().filter(x -> x.getPatternPart() == PatternPart.SET_OF_COMPARISON).findFirst().orElseThrow().getCube());
 
         // Set measures
@@ -92,9 +98,9 @@ public final class ValueSetter {
 
         // Set cube
         var first = cm.values().iterator().next();
-        if (as.getContextOfInterest().getCube() == null)
+        if (as.getContextOfInterest().getCube() == null && !first.isEmpty() && hasPartElement(first, PatternPart.SET_OF_INTEREST))
             setCube(lang, as.getContextOfInterest(), first.stream().filter(x -> x.getPatternPart() == PatternPart.SET_OF_INTEREST).findFirst().orElseThrow().getCube());
-        if (as.getContextOfComparison().getCube() == null)
+        if (as.getContextOfComparison().getCube() == null && !first.isEmpty() && hasPartElement(first, PatternPart.SET_OF_COMPARISON))
             setCube(lang, as.getContextOfComparison(), first.stream().filter(x -> x.getPatternPart() == PatternPart.SET_OF_COMPARISON).findFirst().orElseThrow().getCube());
 
         // Set Predicates
@@ -129,9 +135,9 @@ public final class ValueSetter {
 
         // Set cube
         var first = jc.values().iterator().next();
-        if (as.getContextOfInterest().getCube() == null)
+        if (as.getContextOfInterest().getCube() == null && !first.isEmpty() && hasPartElement(first, PatternPart.SET_OF_INTEREST))
             setCube(lang, as.getContextOfInterest(), first.stream().filter(x -> x.getPatternPart() == PatternPart.SET_OF_INTEREST).findFirst().orElseThrow().getCube());
-        if (as.getContextOfComparison().getCube() == null)
+        if (as.getContextOfComparison().getCube() == null && !first.isEmpty() && hasPartElement(first, PatternPart.SET_OF_COMPARISON))
             setCube(lang, as.getContextOfComparison(), first.stream().filter(x -> x.getPatternPart() == PatternPart.SET_OF_COMPARISON).findFirst().orElseThrow().getCube());
 
         // Set Granularity levels

@@ -34,5 +34,5 @@ WHERE {
     }
     BIND((?score1 * ?score2) AS ?score)
 }
-GROUP BY ?cube ?dimension ?element ?type
+GROUP BY ?cube ?dimension ?element ?type ?level ?part
 ORDER BY DESC(?score)
