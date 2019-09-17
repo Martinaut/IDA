@@ -16,7 +16,7 @@ rule "No cube determined"
     agenda-group "fill-csp"
     salience Integer.MAX_VALUE
 when
-    $vals: AnalysisSituationEntity(cube == null || cube.trim().length() == 0)
+    $vals: AnalysisSituationEntity(!isComparative(), cube == null || cube.trim().length() == 0)
 then
     drools.halt();
 end
@@ -26,7 +26,7 @@ rule "Set cube"
     salience Integer.MAX_VALUE - 1
 when
     $as: NonComparativeAnalysisSituation()
-    $vals: AnalysisSituationEntity()
+    $vals: AnalysisSituationEntity(!isComparative())
     $model: FillDeterminedValuesServiceModel()
 then
     ValueSetter.setCube($model.getLanguage(), $as, $vals.getCube());
@@ -36,7 +36,7 @@ rule "Set measures"
     agenda-group "fill-csp"
 when
     $as: NonComparativeAnalysisSituation()
-    $vals: AnalysisSituationEntity(aggregateMeasures != null, !aggregateMeasures.isEmpty())
+    $vals: AnalysisSituationEntity(!isComparative(), aggregateMeasures != null, !aggregateMeasures.isEmpty())
 then
     $as.setMeasures($vals.getAggregateMeasures().getElements().stream().map(CubeSimilarity::getElement).collect(Collectors.toSet()));
 end
@@ -45,7 +45,7 @@ rule "Set filter conditions"
     agenda-group "fill-csp"
 when
     $as: NonComparativeAnalysisSituation()
-    $vals: AnalysisSituationEntity(aggregateMeasurePredicates != null, !aggregateMeasurePredicates.isEmpty())
+    $vals: AnalysisSituationEntity(!isComparative(), aggregateMeasurePredicates != null, !aggregateMeasurePredicates.isEmpty())
 then
     $as.setFilterConditions($vals.getAggregateMeasurePredicates().getElements().stream().map(CubeSimilarity::getElement).collect(Collectors.toSet()));
 end
@@ -54,7 +54,7 @@ rule "Set base measure conditions"
     agenda-group "fill-csp"
 when
     $as: NonComparativeAnalysisSituation()
-    $vals: AnalysisSituationEntity(baseMeasurePredicates != null, !baseMeasurePredicates.isEmpty())
+    $vals: AnalysisSituationEntity(!isComparative(), baseMeasurePredicates != null, !baseMeasurePredicates.isEmpty())
 then
     $as.setBaseMeasureConditions($vals.getBaseMeasurePredicates().getElements().stream().map(CubeSimilarity::getElement).collect(Collectors.toSet()));
 end
@@ -63,7 +63,7 @@ rule "Set slice conditions"
     agenda-group "fill-csp"
 when
     $as: NonComparativeAnalysisSituation()
-    $vals: AnalysisSituationEntity(levelPredicates != null, !levelPredicates.isEmpty())
+    $vals: AnalysisSituationEntity(!isComparative(), levelPredicates != null, !levelPredicates.isEmpty())
 then
     $vals.getLevelPredicates().getElements().stream()
         .filter(x -> x instanceof DimensionSimilarity)
@@ -75,7 +75,7 @@ rule "Set granularity levels"
     agenda-group "fill-csp"
 when
     $as: NonComparativeAnalysisSituation()
-    $vals: AnalysisSituationEntity(levels != null, !levels.isEmpty())
+    $vals: AnalysisSituationEntity(!isComparative(), levels != null, !levels.isEmpty())
 then
     $vals.getLevels().getElements().stream()
         .filter(x -> x instanceof DimensionSimilarity)

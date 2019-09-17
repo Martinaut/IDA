@@ -3,7 +3,7 @@ package nlp_rules
 // ------------------------------------ IMPORT --------------------------------------
 import at.jku.dke.ida.nlp.models.GraphDBSimilarityServiceModel
 import at.jku.dke.ida.nlp.helpers.SimilarityHelper
-import at.jku.dke.ida.nlp.models.WordGroup
+import at.jku.dke.ida.data.models.WordGroup
 import at.jku.dke.ida.data.models.similarity.CubeSimilarity
 
 // ------------------------------------ RULES ---------------------------------------

@@ -16,6 +16,7 @@ import org.optaplanner.core.api.solver.SolverFactory;
 
 import java.math.BigDecimal;
 import java.util.*;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -92,24 +93,33 @@ public class ConstraintSatisfactionService {
     }
 
     private void logSimilarities(Set<CubeSimilarity> similarities) {
+        if (!logger.isTraceEnabled()) return;
         var tmp = new ArrayList<>(similarities);
         tmp.sort(Comparator
-                .comparing((Function<CubeSimilarity, String>) Similarity::getTerm)
+                .comparing((Function<CubeSimilarity, String>) x -> x.getTerm().getText())
                 .thenComparingDouble(Similarity::getScore));
-        tmp.forEach(logger::debug);
+        tmp.forEach(logger::trace);
     }
 
     private void logSolution(AnalysisSituationSolution ass) {
+        if (!logger.isDebugEnabled()) return;
+
         var as = ass.getAnalysisSituation();
-        logger.debug(new StringJoiner("," + System.lineSeparator(), "BEST RESULT [", "]")
-                .add("cube='" + as.getCube() + "'")
-                .add("measures='" + ((as.getAggregateMeasures() == null) ? "[]" : as.getAggregateMeasures().getElements()) + "'")
-                .add("filters='" + ((as.getAggregateMeasurePredicates() == null) ? "[]" : as.getAggregateMeasurePredicates().getElements()) + "'")
-                .add("bmcs='" + ((as.getBaseMeasurePredicates() == null) ? "[]" : as.getBaseMeasurePredicates().getElements()) + "'")
-                .add("levels='" + ((as.getLevels() == null) ? "[]" : as.getLevels().getElements()) + "'")
-                .add("sliceConditions='" + ((as.getLevelPredicates() == null) ? "[]" : as.getLevelPredicates().getElements()) + "'")
-                .add("scores='" + ((as.getComparativeMeasures() == null) ? "[]" : as.getComparativeMeasures().getElements()) + "'")
-                .add("scoreFilters='" + ((as.getComparativeMeasurePredicates() == null) ? "[]" : as.getComparativeMeasurePredicates().getElements()) + "'")
-        );
+        Function<Set<CubeSimilarity>, String> format = (x) -> x.stream()
+                .map(s -> System.lineSeparator() + "\t\t" + s)
+                .collect(Collectors.joining());
+
+        String logString = new StringJoiner("," + System.lineSeparator(), "BEST RESULT [" + System.lineSeparator(), System.lineSeparator() + "]")
+                .add("\tcube='" + as.getCube() + "'")
+                .add("\tmeasures='" + ((as.getAggregateMeasures() == null) ? "[]" : format.apply(as.getAggregateMeasures().getElements())) + "'")
+                .add("\tfilters='" + ((as.getAggregateMeasurePredicates() == null) ? "[]" : format.apply(as.getAggregateMeasurePredicates().getElements())) + "'")
+                .add("\tbmcs='" + ((as.getBaseMeasurePredicates() == null) ? "[]" : format.apply(as.getBaseMeasurePredicates().getElements())) + "'")
+                .add("\tlevels='" + ((as.getLevels() == null) ? "[]" : format.apply(as.getLevels().getElements())) + "'")
+                .add("\tsliceConditions='" + ((as.getLevelPredicates() == null) ? "[]" : format.apply(as.getLevelPredicates().getElements())) + "'")
+                .add("\tscores='" + ((as.getComparativeMeasures() == null) ? "[]" : format.apply(as.getComparativeMeasures().getElements())) + "'")
+                .add("\tscoreFilters='" + ((as.getComparativeMeasurePredicates() == null) ? "[]" : format.apply(as.getComparativeMeasurePredicates().getElements())) + "'")
+                .toString();
+
+        logger.debug(logString);
     }
 }

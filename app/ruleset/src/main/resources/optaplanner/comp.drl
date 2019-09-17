@@ -11,7 +11,7 @@ import at.jku.dke.ida.app.ruleset.helpers.CSPRuleHelpers
 global HardSoftBigDecimalScoreHolder scoreHolder;
 
 // ------------------------------------ RULES ---------------------------------------
-rule "No cube"
+rule "No cube must be set"
 when
     AnalysisSituationEntity(isComparative(), cube != null && !getCube().isEmpty())
 then
@@ -35,12 +35,16 @@ then
     scoreHolder.addHardConstraintMatch(kcontext, CSPRuleHelpers.MINUS_ONE);
 end
 
-rule "Exact 1 CoI and 1 CoC-Element for scores"
-
+rule "Exactly 1 CoI and 1 CoC-Element for scores"
 when
     AnalysisSituationEntity(isComparative(), !CSPRuleHelpers.scoreInBothParts(comparativeMeasures))
 then
     scoreHolder.addHardConstraintMatch(kcontext, CSPRuleHelpers.MINUS_ONE);
 end
 
-// score measures 1 comp and 1 inter
+rule "At least 1 CoI and 1 Coc-Element for join conditions"
+when
+    AnalysisSituationEntity(isComparative(), !CSPRuleHelpers.predicateInBothParts(comparativeMeasures))
+then
+    scoreHolder.addHardConstraintMatch(kcontext, CSPRuleHelpers.MINUS_ONE);
+end

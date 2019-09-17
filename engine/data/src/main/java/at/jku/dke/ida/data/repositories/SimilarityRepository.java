@@ -3,6 +3,7 @@ package at.jku.dke.ida.data.repositories;
 import at.jku.dke.ida.data.IRIValidator;
 import at.jku.dke.ida.data.QueryException;
 import at.jku.dke.ida.data.GraphDbConnection;
+import at.jku.dke.ida.data.models.WordGroup;
 import at.jku.dke.ida.data.models.similarity.CubeSimilarity;
 import at.jku.dke.ida.data.repositories.base.BaseRepository;
 import org.apache.commons.io.IOUtils;
@@ -43,7 +44,7 @@ public class SimilarityRepository extends BaseRepository {
      * @throws QueryException                If an exception occurred while executing the query.
      * @throws UnsupportedOperationException If the {@code lang} is not {@code en}.
      */
-    public List<CubeSimilarity> getTermSimilarity(String lang, String term) throws QueryException {
+    public List<CubeSimilarity> getTermSimilarity(String lang, WordGroup term) throws QueryException {
         if (!lang.equals("en"))
             throw new UnsupportedOperationException("This method currently only supports english language.");
 
@@ -64,7 +65,7 @@ public class SimilarityRepository extends BaseRepository {
      * @throws QueryException                If an exception occurred while executing the query.
      * @throws UnsupportedOperationException If the {@code lang} is not {@code en}.
      */
-    public List<CubeSimilarity> getTermSimilarity(String lang, String term, String cubeIri) throws QueryException {
+    public List<CubeSimilarity> getTermSimilarity(String lang, WordGroup term, String cubeIri) throws QueryException {
         if (StringUtils.isBlank(cubeIri)) throw new IllegalArgumentException("cubeIri must not be null nor empty");
         if (!lang.equals("en"))
             throw new UnsupportedOperationException("This method currently only supports english language.");
@@ -75,14 +76,15 @@ public class SimilarityRepository extends BaseRepository {
         return getTermSimilarity(queryFile, lang, term, cubeIri);
     }
 
-    private List<CubeSimilarity> getTermSimilarity(String queryFile, String lang, String term, String cubeIri) throws QueryException {
-        if (StringUtils.isBlank(term)) throw new IllegalArgumentException("term must not be null or empty");
+    private List<CubeSimilarity> getTermSimilarity(String queryFile, String lang, WordGroup term, String cubeIri) throws QueryException {
+        if (term == null || StringUtils.isBlank(term.getText()))
+            throw new IllegalArgumentException("term must not be null or empty");
         if (StringUtils.isBlank(lang)) throw new IllegalArgumentException("lang must not be null or empty");
         if (cubeIri != null && !IRIValidator.isValidAbsoluteIRI(cubeIri))
             throw new IllegalArgumentException("cubeIri must be an absolute IRI");
 
         return connection.getQueryResult(queryFile, s -> {
-            s = s.replaceAll("###TERM###", term);
+            s = s.replaceAll("###TERM###", term.getText());
             if (cubeIri != null) {
                 s = s.replaceAll("###CUBE###", cubeIri);
             }
@@ -107,7 +109,7 @@ public class SimilarityRepository extends BaseRepository {
      * @throws QueryException                If an exception occurred while executing the query.
      * @throws UnsupportedOperationException If the {@code lang} is not {@code en}.
      */
-    public List<CubeSimilarity> getWordSimilarity(String lang, String term) throws QueryException {
+    public List<CubeSimilarity> getWordSimilarity(String lang, WordGroup term) throws QueryException {
         logger.debug("Querying similarities for words '{}' in language {}.", term, lang);
         return getWordSimilarityInternal(lang, term, null);
     }
@@ -123,13 +125,14 @@ public class SimilarityRepository extends BaseRepository {
      * @throws QueryException                If an exception occurred while executing the query.
      * @throws UnsupportedOperationException If the {@code lang} is not {@code en}.
      */
-    public List<CubeSimilarity> getWordSimilarity(String lang, String term, String cubeIri) throws QueryException {
+    public List<CubeSimilarity> getWordSimilarity(String lang, WordGroup term, String cubeIri) throws QueryException {
         logger.debug("Querying similarities for words '{}' for cube {} in language {}.", term, cubeIri, lang);
         return getWordSimilarityInternal(lang, term, cubeIri);
     }
 
-    private List<CubeSimilarity> getWordSimilarityInternal(String lang, String term, String cubeIri) throws QueryException {
-        if (StringUtils.isBlank(term)) throw new IllegalArgumentException("term must not be null or empty");
+    private List<CubeSimilarity> getWordSimilarityInternal(String lang, WordGroup term, String cubeIri) throws QueryException {
+        if (term == null || StringUtils.isBlank(term.getText()))
+            throw new IllegalArgumentException("term must not be null or empty");
         if (StringUtils.isBlank(lang)) throw new IllegalArgumentException("lang must not be null or empty");
         if (cubeIri != null && !IRIValidator.isValidAbsoluteIRI(cubeIri))
             throw new IllegalArgumentException("cubeIri must be an absolute IRI");
@@ -137,7 +140,7 @@ public class SimilarityRepository extends BaseRepository {
         final String queryFile = "/repo_nlp/similarity_multiple_" + lang + ".sparql";
 
         // Prepare query parts
-        final String[] splitted = term.split(" ");
+        final String[] splitted = term.getText().split(" ");
         String simParts = String.join(" ", getSimilarityParts(lang, splitted));
         String mappingParts = String.join(" ", getMappingParts(splitted, cubeIri));
         String wordnetSelect = IntStream.range(0, splitted.length).mapToObj(x -> "?w" + x).collect(Collectors.joining(" "));
@@ -198,7 +201,7 @@ public class SimilarityRepository extends BaseRepository {
     }
     // endregion
 
-    private CubeSimilarity convert(String term, BindingSet set) {
+    private CubeSimilarity convert(WordGroup term, BindingSet set) {
         if (set.hasBinding("part")) {
             if (set.hasBinding("measure")) return RepositoryHelpers.convertToComparativeMeasureSimilarity(term, set);
             return RepositoryHelpers.convertToComparativeSimilarity(term, set);

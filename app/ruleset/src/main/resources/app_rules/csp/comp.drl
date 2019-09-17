@@ -16,7 +16,7 @@ rule "Set scores"
 when
     $model : FillDeterminedValuesServiceModel()
     $as : ComparativeAnalysisSituation()
-    $vals : AnalysisSituationEntity(comparativeMeasures != null, !comparativeMeasures.isEmpty())
+    $vals : AnalysisSituationEntity(isComparative(), comparativeMeasures != null, !comparativeMeasures.isEmpty())
 then
     $as.setScores($vals.getComparativeMeasures().getElements().stream().map(CubeSimilarity::getElement).collect(Collectors.toSet()));
     ValueSetter.setScoreMeasures($model.getLanguage(), $as, $vals.getComparativeMeasures().getElements());
@@ -27,7 +27,7 @@ rule "Set score filters"
 when
     $model : FillDeterminedValuesServiceModel()
     $as : ComparativeAnalysisSituation()
-    $vals : AnalysisSituationEntity(comparativeMeasurePredicates != null, !comparativeMeasurePredicates.isEmpty())
+    $vals : AnalysisSituationEntity(isComparative(), comparativeMeasurePredicates != null, !comparativeMeasurePredicates.isEmpty())
 then
     $as.setScoreFilters($vals.getComparativeMeasurePredicates().getElements().stream().map(CubeSimilarity::getElement).collect(Collectors.toSet()));
     ValueSetter.setScoreMeasurePredicates($model.getLanguage(), $as, $vals.getComparativeMeasurePredicates().getElements());
@@ -38,7 +38,7 @@ rule "Set join conditions"
 when
     $model : FillDeterminedValuesServiceModel()
     $as : ComparativeAnalysisSituation()
-    $vals : AnalysisSituationEntity(joinConditionPredicates != null, !joinConditionPredicates.isEmpty())
+    $vals : AnalysisSituationEntity(isComparative(), joinConditionPredicates != null, !joinConditionPredicates.isEmpty())
 then
     $as.setJoinConditions($vals.getJoinConditionPredicates().getElements().stream().map(CubeSimilarity::getElement).collect(Collectors.toSet()));
     ValueSetter.setJoinConditionPredicates($model.getLanguage(), $as, $vals.getJoinConditionPredicates().getElements());

@@ -13,9 +13,9 @@
     </scoreDirectorFactory>
 
     <!-- Optimization algorithms configuration -->
-    <termination>
-        <secondsSpentLimit>10</secondsSpentLimit>
-    </termination>
+<!--    <termination>-->
+<!--        <secondsSpentLimit>60</secondsSpentLimit>-->
+<!--    </termination>-->
     <constructionHeuristic>
         <constructionHeuristicType>ALLOCATE_ENTITY_FROM_QUEUE</constructionHeuristicType>
     </constructionHeuristic>

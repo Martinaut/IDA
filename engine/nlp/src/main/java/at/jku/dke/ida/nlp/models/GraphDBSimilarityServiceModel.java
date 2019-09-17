@@ -1,5 +1,6 @@
 package at.jku.dke.ida.nlp.models;
 
+import at.jku.dke.ida.data.models.WordGroup;
 import at.jku.dke.ida.rules.models.AbstractServiceModel;
 import at.jku.dke.ida.shared.Event;
 import at.jku.dke.ida.shared.models.EngineAnalysisSituation;

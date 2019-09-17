@@ -1,5 +1,6 @@
 package at.jku.dke.ida.data.repositories;
 
+import at.jku.dke.ida.data.models.WordGroup;
 import at.jku.dke.ida.data.models.labels.*;
 import at.jku.dke.ida.data.models.similarity.*;
 import org.eclipse.rdf4j.model.Literal;
@@ -107,7 +108,7 @@ public final class RepositoryHelpers {
      * @param bindingSet The binding set.
      * @return Converted Dimension Label
      */
-    public static ComparativeLabel convertToComparativeLabel(String lang, String type, BindingSet bindingSet) {
+    static ComparativeLabel convertToComparativeLabel(String lang, String type, BindingSet bindingSet) {
         return new ComparativeLabel(
                 lang,
                 bindingSet.hasBinding("cube") ? bindingSet.getValue("cube").stringValue() : null,
@@ -128,7 +129,7 @@ public final class RepositoryHelpers {
      * @param bindingSet The binding set.
      * @return Converted Dimension Label
      */
-    public static ComparativeMeasureLabel convertToComparativeMeasureLabel(String lang, String type, BindingSet bindingSet) {
+    static ComparativeMeasureLabel convertToComparativeMeasureLabel(String lang, String type, BindingSet bindingSet) {
         return new ComparativeMeasureLabel(
                 lang,
                 bindingSet.hasBinding("cube") ? bindingSet.getValue("cube").stringValue() : null,
@@ -149,7 +150,7 @@ public final class RepositoryHelpers {
      * @param bindingSet The binding set.
      * @return Converted Dimension Similarity
      */
-    static CubeSimilarity convertToSimilarity(String term, BindingSet bindingSet) {
+    static CubeSimilarity convertToSimilarity(WordGroup term, BindingSet bindingSet) {
         return new CubeSimilarity(
                 term,
                 bindingSet.getValue("cube").stringValue(),
@@ -167,7 +168,7 @@ public final class RepositoryHelpers {
      * @param bindingSet The binding set.
      * @return Converted Dimension Similarity
      */
-    static DimensionSimilarity convertToDimSimilarity(String term, BindingSet bindingSet) {
+    static DimensionSimilarity convertToDimSimilarity(WordGroup term, BindingSet bindingSet) {
         return new DimensionSimilarity(
                 term,
                 bindingSet.getValue("cube").stringValue(),
@@ -186,7 +187,7 @@ public final class RepositoryHelpers {
      * @param bindingSet The binding set.
      * @return Converted Level Similarity
      */
-    static LevelSimilarity convertToLevelSimilarity(String term, BindingSet bindingSet) {
+    static LevelSimilarity convertToLevelSimilarity(WordGroup term, BindingSet bindingSet) {
         return new LevelSimilarity(
                 term,
                 bindingSet.getValue("cube").stringValue(),
@@ -206,7 +207,7 @@ public final class RepositoryHelpers {
      * @param bindingSet The binding set.
      * @return Converted Comparative Similarity
      */
-    static ComparativeSimilarity convertToComparativeSimilarity(String term, BindingSet bindingSet) {
+    static ComparativeSimilarity convertToComparativeSimilarity(WordGroup term, BindingSet bindingSet) {
         return new ComparativeSimilarity(
                 term,
                 bindingSet.getValue("cube").stringValue(),
@@ -225,7 +226,7 @@ public final class RepositoryHelpers {
      * @param bindingSet The binding set.
      * @return Converted Comparative Measure Similarity
      */
-    static ComparativeMeasureSimilarity convertToComparativeMeasureSimilarity(String term, BindingSet bindingSet) {
+    static ComparativeMeasureSimilarity convertToComparativeMeasureSimilarity(WordGroup term, BindingSet bindingSet) {
         return new ComparativeMeasureSimilarity(
                 term,
                 bindingSet.getValue("cube").stringValue(),

@@ -1,14 +1,16 @@
 package at.jku.dke.ida.nlp;
 
+import at.jku.dke.ida.data.models.WordGroup;
+import edu.stanford.nlp.ling.CoreLabel;
 import edu.stanford.nlp.pipeline.CoreDocument;
 import edu.stanford.nlp.pipeline.CoreSentence;
 import edu.stanford.nlp.pipeline.StanfordCoreNLP;
 import edu.stanford.nlp.semgraph.semgrex.SemgrexMatcher;
 import edu.stanford.nlp.semgraph.semgrex.SemgrexPattern;
-import edu.stanford.nlp.trees.Tree;
 import edu.stanford.nlp.trees.tregex.TregexMatcher;
 import edu.stanford.nlp.trees.tregex.TregexPattern;
 import edu.stanford.nlp.util.StringUtils;
+import org.apache.commons.lang3.tuple.ImmutablePair;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -76,21 +78,26 @@ public final class NLPProcessor {
      * @param pattern The pattern.
      * @return Found results
      */
-    public static Set<String> executeTregex(CoreDocument doc, String pattern) {
+    public static Set<WordGroup> executeTregex(CoreDocument doc, String pattern) {
         if (doc == null) throw new IllegalArgumentException("doc must not be null");
         if (pattern == null) throw new IllegalArgumentException("pattern must not be null");
 
-        Set<String> results = new HashSet<>();
+        Set<WordGroup> results = new HashSet<>();
         TregexPattern tregex = TregexPattern.compile(pattern);
         for (CoreSentence sentence : doc.sentences()) {
             TregexMatcher matcher = tregex.matcher(sentence.constituencyParse());
             while (matcher.find()) {
-                results.add(matcher.getNodeNames()
-                        .stream()
+                var parts = matcher.getNodeNames().stream()
                         .sorted()
-                        .flatMap(x -> matcher.getNode(x).getLeaves().stream())
-                        .map(Tree::value)
-                        .collect(Collectors.joining(" ")));
+                        .map(matcher::getNode)
+                        .flatMap(tree -> tree.getLeaves().stream())
+                        .map(tree -> new ImmutablePair<>(tree.value(), ((CoreLabel) tree.label()).index()))
+                        .collect(Collectors.toList());
+                results.add(new WordGroup(
+                        parts.stream().map(ImmutablePair::getLeft).collect(Collectors.joining(" ")),
+                        pattern,
+                        parts.stream().map(ImmutablePair::getRight).collect(Collectors.toList())
+                ));
             }
         }
 
@@ -108,20 +115,25 @@ public final class NLPProcessor {
      * @param pattern The pattern.
      * @return Found results
      */
-    public static Set<String> executeSemgrex(CoreDocument doc, String pattern) {
+    public static Set<WordGroup> executeSemgrex(CoreDocument doc, String pattern) {
         if (doc == null) throw new IllegalArgumentException("doc must not be null");
         if (pattern == null) throw new IllegalArgumentException("pattern must not be null");
 
-        Set<String> results = new HashSet<>();
+        Set<WordGroup> results = new HashSet<>();
         SemgrexPattern semgrex = SemgrexPattern.compile(pattern);
         for (CoreSentence sentence : doc.sentences()) {
             SemgrexMatcher matcher = semgrex.matcher(sentence.dependencyParse());
             while (matcher.find()) {
-                results.add(matcher.getNodeNames()
-                        .stream()
+                var parts = matcher.getNodeNames().stream()
                         .sorted()
-                        .map(x -> matcher.getNode(x).value())
-                        .collect(Collectors.joining(" ")));
+                        .map(matcher::getNode)
+                        .map(iw -> new ImmutablePair<>(iw.value(), iw.index()))
+                        .collect(Collectors.toList());
+                results.add(new WordGroup(
+                        parts.stream().map(ImmutablePair::getLeft).collect(Collectors.joining(" ")),
+                        pattern,
+                        parts.stream().map(ImmutablePair::getRight).collect(Collectors.toList())
+                ));
             }
         }
 

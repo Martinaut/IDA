@@ -2,7 +2,7 @@ package at.jku.dke.ida.app.ruleset.interception.interceptors;
 
 import at.jku.dke.ida.app.ruleset.helpers.Constants;
 import at.jku.dke.ida.app.ruleset.helpers.UserInput;
-import at.jku.dke.ida.nlp.models.WordGroup;
+import at.jku.dke.ida.data.models.WordGroup;
 import at.jku.dke.ida.rules.interfaces.ValueDisplayServiceModel;
 import at.jku.dke.ida.rules.models.DefaultValueDisplayServiceModel;
 import at.jku.dke.ida.scxml.interceptors.DisplayValuesInterceptor;

@@ -7,7 +7,7 @@ import at.jku.dke.ida.data.models.similarity.Similarity;
 import at.jku.dke.ida.nlp.drools.StringSimilarityService;
 import at.jku.dke.ida.nlp.drools.WordGroupsService;
 import at.jku.dke.ida.nlp.models.StringSimilarityServiceModel;
-import at.jku.dke.ida.nlp.models.WordGroup;
+import at.jku.dke.ida.data.models.WordGroup;
 import at.jku.dke.ida.nlp.models.WordGroupsServiceModel;
 import at.jku.dke.ida.rules.interfaces.OperationServiceModel;
 import at.jku.dke.ida.rules.results.EventConfidenceResult;

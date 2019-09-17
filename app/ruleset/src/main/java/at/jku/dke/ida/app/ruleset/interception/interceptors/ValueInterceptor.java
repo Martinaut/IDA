@@ -9,7 +9,7 @@ import at.jku.dke.ida.nlp.drools.StringSimilarityService;
 import at.jku.dke.ida.nlp.drools.WordGroupsService;
 import at.jku.dke.ida.nlp.models.GraphDBSimilarityServiceModel;
 import at.jku.dke.ida.nlp.models.StringSimilarityServiceModel;
-import at.jku.dke.ida.nlp.models.WordGroup;
+import at.jku.dke.ida.data.models.WordGroup;
 import at.jku.dke.ida.nlp.models.WordGroupsServiceModel;
 import at.jku.dke.ida.rules.interfaces.ValueServiceModel;
 import at.jku.dke.ida.scxml.interceptors.DetermineValueInterceptor;

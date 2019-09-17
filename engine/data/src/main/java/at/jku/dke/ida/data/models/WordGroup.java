@@ -1,5 +1,7 @@
-package at.jku.dke.ida.nlp.models;
+package at.jku.dke.ida.data.models;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Objects;
 import java.util.StringJoiner;
 
@@ -10,6 +12,7 @@ public class WordGroup {
 
     private final String text;
     private final String expression;
+    private final Collection<Integer> indices;
 
     /**
      * Instantiates a new instance of class {@link WordGroup}.
@@ -19,6 +22,7 @@ public class WordGroup {
     public WordGroup(String text) {
         this.text = text;
         this.expression = null;
+        this.indices = Collections.emptyList();
     }
 
     /**
@@ -26,10 +30,12 @@ public class WordGroup {
      *
      * @param text       The text.
      * @param expression The expression used to find this word group.
+     * @param indices    The indices in the sentence for each word.
      */
-    public WordGroup(String text, String expression) {
+    public WordGroup(String text, String expression, Collection<Integer> indices) {
         this.text = text;
         this.expression = expression;
+        this.indices = Collections.unmodifiableCollection(indices);
     }
 
     /**
@@ -50,11 +56,21 @@ public class WordGroup {
         return expression;
     }
 
+    /**
+     * Gets the indices.
+     *
+     * @return The positions of the words in the senctence.
+     */
+    public Collection<Integer> getIndices() {
+        return indices;
+    }
+
     @Override
     public String toString() {
         return new StringJoiner(", ", WordGroup.class.getSimpleName() + "[", "]")
                 .add("text='" + text + "'")
                 .add("expression='" + expression + "'")
+                .add("indices='" + indices + "'")
                 .toString();
     }
 

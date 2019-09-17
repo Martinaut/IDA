@@ -1,14 +1,22 @@
 package at.jku.dke.ida.nlp;
 
+import edu.stanford.nlp.ling.IndexedWord;
 import edu.stanford.nlp.pipeline.CoreDocument;
+import edu.stanford.nlp.pipeline.CoreSentence;
 import edu.stanford.nlp.semgraph.SemanticGraph;
+import edu.stanford.nlp.semgraph.semgrex.SemgrexMatcher;
+import edu.stanford.nlp.semgraph.semgrex.SemgrexPattern;
 import edu.stanford.nlp.trees.Constituent;
 import edu.stanford.nlp.trees.LabeledScoredConstituentFactory;
 import edu.stanford.nlp.trees.Tree;
+import edu.stanford.nlp.trees.tregex.TregexMatcher;
+import edu.stanford.nlp.trees.tregex.TregexPattern;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
 import java.util.Set;
+import java.util.StringJoiner;
+import java.util.stream.Collectors;
 
 @SuppressWarnings("Duplicates")
 public class NLPProcessorTest {
@@ -41,12 +49,12 @@ public class NLPProcessorTest {
         //NLPProcessor.executeSemgrex(doc, "{tag:/NN.*/}=B >amod {tag:/JJ/}=A");
         //NLPProcessor.executeSemgrex(doc, "{tag:/NN.*/}=B >compound {tag:/NN.*/}=A");
 
-       // System.out.println(groups);
+        // System.out.println(groups);
     }
 
     @Test
     void testAnnotateEnglish() {
-         CoreDocument doc = NLPProcessor.annotate("en", "I am interested in the total costs per doctor district and insurant province.");
+        CoreDocument doc = NLPProcessor.annotate("en", "I am interested in the total costs per doctor district and insurant province.");
 //        CoreDocument doc = NLPProcessor.annotate("en", "Add the measure sum of costs.");
 
         // list of the part-of-speech tags for the second sentence
@@ -72,6 +80,77 @@ public class NLPProcessorTest {
                     (constituent.label().toString().equals("VP") || constituent.label().toString().equals("NP"))) {
                 System.err.println("found constituent: " + constituent.toString());
                 System.err.println(constituencyParse.getLeaves().subList(constituent.start(), constituent.end() + 1));
+            }
+        }
+    }
+
+    @Test
+    void testAnnotateEnglish2() {
+        CoreDocument doc = NLPProcessor.annotate("en", "compare the change of costs from this year with the previous year.");
+
+        // list of the part-of-speech tags for the second sentence
+        List<String> posTags = doc.sentences().get(0).posTags();
+        System.out.println("Example: pos tags");
+        System.out.println(posTags);
+        System.out.println();
+
+        // Tregex
+        SemgrexPattern semgrex = SemgrexPattern.compile("{tag:NN}=A");
+        for (CoreSentence sentence : doc.sentences()) {
+            SemgrexMatcher matcher = semgrex.matcher(sentence.dependencyParse());
+            while (matcher.find()) {
+                for (String nname : matcher.getNodeNames()) {
+                    IndexedWord word = matcher.getNode(nname);
+                    System.out.println(new StringJoiner(System.lineSeparator() + "\t")
+                            .add("word=" + word.value())
+                            .add("begin=" + word.beginPosition())
+                            .add("end=" + word.endPosition())
+                            .add("index=" + word.index())
+                            .add("copyCount=" + word.copyCount())
+                            .add("size=" + word.size())
+                            .add("after=" + word.after())
+                            .add("before=" + word.before())
+                            .add("originalText=" + word.originalText())
+                            .add("tag=" + word.tag())
+                            .add("backingLabel=" + word.backingLabel())
+                            .add("pseudoPosition=" + word.pseudoPosition()));
+                }
+            }
+        }
+
+        System.out.println("----------------------------------------");
+        semgrex = SemgrexPattern.compile("{tag:NN}=A >nmod {tag:NN}=B");
+        for (CoreSentence sentence : doc.sentences()) {
+            SemgrexMatcher matcher = semgrex.matcher(sentence.dependencyParse());
+            while (matcher.find()) {
+                for (String nname : matcher.getNodeNames()) {
+                    IndexedWord word = matcher.getNode(nname);
+                    System.out.println(new StringJoiner(System.lineSeparator() + "\t")
+                            .add("word=" + word.value())
+                            .add("begin=" + word.beginPosition())
+                            .add("end=" + word.endPosition())
+                            .add("index=" + word.index())
+                            .add("copyCount=" + word.copyCount())
+                            .add("size=" + word.size())
+                            .add("after=" + word.after())
+                            .add("before=" + word.before())
+                            .add("originalText=" + word.originalText())
+                            .add("tag=" + word.tag())
+                            .add("backingLabel=" + word.backingLabel())
+                            .add("pseudoPosition=" + word.pseudoPosition()));
+                }
+            }
+        }
+
+        System.out.println("----------------------------------------");
+        TregexPattern tregex = TregexPattern.compile("NP < /NN.?/=A");
+        for (CoreSentence sentence : doc.sentences()) {
+            TregexMatcher matcher = tregex.matcher(sentence.constituencyParse());
+            while (matcher.find()) {
+                for (String nname : matcher.getNodeNames()) {
+                    Tree word = matcher.getNode(nname);
+                    System.out.println(word);
+                }
             }
         }
     }

@@ -25,7 +25,7 @@ when
     $model : OperationModel(topSimilarity != null, topSimilarity.getScore() >= 0.4)
     eval($model.getTopSimilarity().getElement() instanceof Operation)
 then
-    insert(new EventConfidenceResult(((Operation) $model.getTopSimilarity().getElement()).getEvent(), $model.getTopSimilarity().getScore(), $model.getTopSimilarity().getTerm()));
+    insert(new EventConfidenceResult(((Operation) $model.getTopSimilarity().getElement()).getEvent(), $model.getTopSimilarity().getScore(), $model.getTopSimilarity().getTerm().getText()));
 end
 
 rule "Invalid Operation Similarity"

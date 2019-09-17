@@ -1,5 +1,7 @@
 package at.jku.dke.ida.data.models.similarity;
 
+import at.jku.dke.ida.data.models.WordGroup;
+
 import java.util.Objects;
 import java.util.StringJoiner;
 
@@ -9,7 +11,7 @@ import java.util.StringJoiner;
  */
 public class Similarity<TElement> implements Comparable<Similarity<?>> {
 
-    private String term;
+    private WordGroup term;
     private TElement element;
     private double score;
 
@@ -26,7 +28,7 @@ public class Similarity<TElement> implements Comparable<Similarity<?>> {
      * @param element The element.
      * @param score   The score.
      */
-    public Similarity(String term, TElement element, double score) {
+    public Similarity(WordGroup term, TElement element, double score) {
         this.term = term;
         this.element = element;
         this.score = score;
@@ -37,7 +39,7 @@ public class Similarity<TElement> implements Comparable<Similarity<?>> {
      *
      * @return the term
      */
-    public String getTerm() {
+    public WordGroup getTerm() {
         return term;
     }
 
@@ -46,7 +48,7 @@ public class Similarity<TElement> implements Comparable<Similarity<?>> {
      *
      * @param term the term
      */
-    public void setTerm(String term) {
+    public void setTerm(WordGroup term) {
         this.term = term;
     }
 

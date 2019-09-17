@@ -1,7 +1,7 @@
 package at.jku.dke.ida.nlp.drools;
 
 import at.jku.dke.ida.nlp.NLPProcessor;
-import at.jku.dke.ida.nlp.models.WordGroup;
+import at.jku.dke.ida.data.models.WordGroup;
 import at.jku.dke.ida.nlp.models.WordGroupsServiceModel;
 import at.jku.dke.ida.rules.services.DroolsService;
 import org.kie.api.runtime.KieSession;

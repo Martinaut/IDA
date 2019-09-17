@@ -1,5 +1,7 @@
 package at.jku.dke.ida.data.models.similarity;
 
+import at.jku.dke.ida.data.models.WordGroup;
+
 import java.util.Objects;
 import java.util.StringJoiner;
 
@@ -27,7 +29,7 @@ public class CubeSimilarity extends Similarity<String> {
      * @param type    The type URI.
      * @param score   The score.
      */
-    public CubeSimilarity(String term, String cube, String element, String type, double score) {
+    public CubeSimilarity(WordGroup term, String cube, String element, String type, double score) {
         super(term, element, score);
         this.cube = cube;
         this.type = type;

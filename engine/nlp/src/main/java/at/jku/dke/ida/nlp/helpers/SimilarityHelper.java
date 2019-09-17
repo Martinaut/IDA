@@ -4,7 +4,7 @@ import at.jku.dke.ida.data.QueryException;
 import at.jku.dke.ida.data.models.similarity.CubeSimilarity;
 import at.jku.dke.ida.data.models.similarity.Similarity;
 import at.jku.dke.ida.data.repositories.SimilarityRepository;
-import at.jku.dke.ida.nlp.models.WordGroup;
+import at.jku.dke.ida.data.models.WordGroup;
 import at.jku.dke.ida.shared.display.Displayable;
 import at.jku.dke.ida.shared.spring.BeanUtil;
 import info.debatty.java.stringsimilarity.*;
@@ -38,7 +38,7 @@ public final class SimilarityHelper {
      * @throws QueryException If an error occurred while executing the query.
      */
     public static List<CubeSimilarity> getGraphDbEnglishWordSimilarities(WordGroup wg) throws QueryException {
-        return BeanUtil.getBean(SimilarityRepository.class).getWordSimilarity("en", wg.getText());
+        return BeanUtil.getBean(SimilarityRepository.class).getWordSimilarity("en", wg);
     }
 
     /**
@@ -50,7 +50,7 @@ public final class SimilarityHelper {
      * @throws QueryException If an error occurred while executing the query.
      */
     public static List<CubeSimilarity> getGraphDbEnglishWordSimilarities(WordGroup wg, String cube) throws QueryException {
-        return BeanUtil.getBean(SimilarityRepository.class).getWordSimilarity("en", wg.getText(), cube);
+        return BeanUtil.getBean(SimilarityRepository.class).getWordSimilarity("en", wg, cube);
     }
 
     /**
@@ -131,6 +131,6 @@ public final class SimilarityHelper {
     }
 
     private static Similarity buildSimilarity(String input, Displayable option, BiFunction<String, String, Double> scoringFunction) {
-        return new Similarity<>(input, option, scoringFunction.apply(input.toLowerCase(), option.getTitle().toLowerCase()));
+        return new Similarity<>(new WordGroup(input), option, scoringFunction.apply(input.toLowerCase(), option.getTitle().toLowerCase()));
     }
 }

@@ -1,5 +1,6 @@
 package at.jku.dke.ida.data.models.similarity;
 
+import at.jku.dke.ida.data.models.WordGroup;
 import at.jku.dke.ida.shared.operations.PatternPart;
 
 import java.util.Objects;
@@ -30,7 +31,7 @@ public class ComparativeSimilarity extends CubeSimilarity {
      * @param score   The score.
      * @param part    The part.
      */
-    public ComparativeSimilarity(String term, String cube, String element, String type, double score, String part) {
+    public ComparativeSimilarity(WordGroup term, String cube, String element, String type, double score, String part) {
         super(term, cube, element, type, score);
         this.part = part;
     }

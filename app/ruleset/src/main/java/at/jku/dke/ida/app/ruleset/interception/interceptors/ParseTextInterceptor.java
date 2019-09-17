@@ -12,7 +12,7 @@ import at.jku.dke.ida.nlp.drools.GraphDBSimilarityService;
 import at.jku.dke.ida.nlp.drools.WordGroupsService;
 import at.jku.dke.ida.nlp.helpers.SimilarityHelper;
 import at.jku.dke.ida.nlp.models.GraphDBSimilarityServiceModel;
-import at.jku.dke.ida.nlp.models.WordGroup;
+import at.jku.dke.ida.data.models.WordGroup;
 import at.jku.dke.ida.nlp.models.WordGroupsServiceModel;
 import at.jku.dke.ida.scxml.interceptors.ParseFreeTextInterceptor;
 import at.jku.dke.ida.shared.models.NonComparativeAnalysisSituation;
@@ -105,19 +105,19 @@ public class ParseTextInterceptor implements ParseFreeTextInterceptor {
 
                 if (lbl instanceof ComparativeMeasureLabel) {
                     var cml = (ComparativeMeasureLabel) lbl;
-                    similarities.add(new ComparativeMeasureSimilarity(wg.getText(), cml.getCubeUri(), cml.getUri(), cml.getTypeUri(), similarity.getScore(), cml.getPart(), cml.getMeasure()));
+                    similarities.add(new ComparativeMeasureSimilarity(wg, cml.getCubeUri(), cml.getUri(), cml.getTypeUri(), similarity.getScore(), cml.getPart(), cml.getMeasure()));
                 } else if (lbl instanceof ComparativeLabel) {
                     var cl = (ComparativeLabel) lbl;
-                    similarities.add(new ComparativeSimilarity(wg.getText(), cl.getCubeUri(), cl.getUri(), cl.getTypeUri(), similarity.getScore(), cl.getPart()));
+                    similarities.add(new ComparativeSimilarity(wg, cl.getCubeUri(), cl.getUri(), cl.getTypeUri(), similarity.getScore(), cl.getPart()));
                 } else if (lbl instanceof DimensionLevelLabel) {
                     var dll = (DimensionLevelLabel) lbl;
-                    similarities.add(new DimensionSimilarity(wg.getText(), dll.getCubeUri(), dll.getUri(), dll.getTypeUri(), similarity.getScore(), dll.getDimensionUri()));
+                    similarities.add(new DimensionSimilarity(wg, dll.getCubeUri(), dll.getUri(), dll.getTypeUri(), similarity.getScore(), dll.getDimensionUri()));
                 } else if (lbl instanceof DimensionLabel) {
                     var dl = (DimensionLabel) lbl;
-                    similarities.add(new DimensionSimilarity(wg.getText(), dl.getCubeUri(), dl.getUri(), dl.getTypeUri(), similarity.getScore(), dl.getDimensionUri()));
+                    similarities.add(new DimensionSimilarity(wg, dl.getCubeUri(), dl.getUri(), dl.getTypeUri(), similarity.getScore(), dl.getDimensionUri()));
                 } else if (lbl instanceof CubeLabel) {
                     var cl = (CubeLabel) lbl;
-                    similarities.add(new CubeSimilarity(wg.getText(), cl.getCubeUri(), cl.getUri(), cl.getTypeUri(), similarity.getScore()));
+                    similarities.add(new CubeSimilarity(wg, cl.getCubeUri(), cl.getUri(), cl.getTypeUri(), similarity.getScore()));
                 }
             }
         }

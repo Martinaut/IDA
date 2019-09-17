@@ -1,5 +1,7 @@
 package at.jku.dke.ida.data.models.similarity;
 
+import at.jku.dke.ida.data.models.WordGroup;
+
 import java.util.Objects;
 import java.util.StringJoiner;
 
@@ -30,7 +32,7 @@ public class LevelSimilarity extends CubeSimilarity {
      * @param dimension The dimension IRI.
      * @param level     The level IRI.
      */
-    public LevelSimilarity(String term, String cube, String element, String type, double score, String dimension, String level) {
+    public LevelSimilarity(WordGroup term, String cube, String element, String type, double score, String dimension, String level) {
         super(term, cube, element, type, score);
         this.dimension = dimension;
     }
