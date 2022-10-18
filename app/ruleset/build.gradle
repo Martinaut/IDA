@@ -9,5 +9,5 @@ dependencies {
     implementation project(':engine:nlp')
     implementation project(':engine:csp')
 
-    implementation 'com.ibm.icu:icu4j:64.2'
+    implementation 'com.ibm.icu:icu4j:71.1'
 }

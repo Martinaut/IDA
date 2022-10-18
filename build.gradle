@@ -1,13 +1,8 @@
 /* Plugins */
 plugins {
-    id 'com.github.ben-manes.versions' version '0.22.0'
+    id 'com.github.ben-manes.versions' version '0.43.0'
     id 'idea'
 }
 
 group = 'at.jku.dke'
 version = '1.0.0-SNAPSHOT'
-
-// Special syntax for overriding spring-boot-dependencies
-// https://repo1.maven.org/maven2/org/springframework/boot/spring-boot-dependencies/2.1.3.RELEASE/spring-boot-dependencies-2.1.3.RELEASE.pom
-// https://docs.spring.io/spring-boot/docs/2.1.3.RELEASE/gradle-plugin/reference/html/#managing-dependencies-customizing
-ext['junit-jupiter.version'] = '5.5.1'

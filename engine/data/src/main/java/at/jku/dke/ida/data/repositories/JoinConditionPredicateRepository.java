@@ -4,7 +4,6 @@ import at.jku.dke.ida.data.GraphDbConnection;
 import at.jku.dke.ida.data.IRIValidator;
 import at.jku.dke.ida.data.QueryException;
 import at.jku.dke.ida.data.models.labels.ComparativeLabel;
-import at.jku.dke.ida.data.models.labels.CubeLabel;
 import at.jku.dke.ida.data.repositories.base.SimpleCubeElementRepository;
 import at.jku.dke.ida.shared.IRIConstants;
 import org.apache.commons.lang3.StringUtils;

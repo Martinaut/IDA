@@ -6,6 +6,6 @@ dependencies {
     implementation project(':engine:shared')
     implementation project(':engine:rules')
 
-    api 'org.optaplanner:optaplanner-core:7.25.0.Final'
+    api 'org.optaplanner:optaplanner-core:7.73.0.Final'
     implementation 'org.springframework.boot:spring-boot-configuration-processor'
 }

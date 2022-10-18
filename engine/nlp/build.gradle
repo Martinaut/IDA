@@ -6,10 +6,10 @@ dependencies {
     implementation project(':engine:shared')
     implementation project(':engine:rules')
 
-    implementation 'edu.stanford.nlp:stanford-corenlp:3.9.2'
-    implementation 'edu.stanford.nlp:stanford-corenlp:3.9.2:models'
-    implementation 'edu.stanford.nlp:stanford-corenlp:3.9.2:models-english'
-    // implementation 'edu.stanford.nlp:stanford-corenlp:3.9.2:models-german'
+    implementation 'edu.stanford.nlp:stanford-corenlp:4.5.1'
+    implementation 'edu.stanford.nlp:stanford-corenlp:4.5.1:models'
+    implementation 'edu.stanford.nlp:stanford-corenlp:4.5.1:models-english'
+    // implementation 'edu.stanford.nlp:stanford-corenlp:4.5.1:models-german'
 
-    implementation 'info.debatty:java-string-similarity:1.2.1'
+    implementation 'info.debatty:java-string-similarity:2.0.0'
 }
