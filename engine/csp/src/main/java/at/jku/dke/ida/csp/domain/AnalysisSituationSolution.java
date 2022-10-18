@@ -99,7 +99,9 @@ public class AnalysisSituationSolution {
         Set<Set<CubeSimilarity>> result = new HashSet<>();
 
         // Group by cube
-        Map<String, List<CubeSimilarity>> grouped = data.stream().collect(Collectors.groupingBy(CubeSimilarity::getCube));
+        Map<String, List<CubeSimilarity>> grouped = data.stream()
+                .filter(x -> x.getCube() != null)
+                .collect(Collectors.groupingBy(CubeSimilarity::getCube));
 
         // Create combinations
         for (List<CubeSimilarity> sims : grouped.values()) {

@@ -78,7 +78,7 @@ public class ConstraintSatisfactionService {
         ConstraintSatisfactionSettings settings = BeanUtil.getBean(ConstraintSatisfactionSettings.class);
         return new AnalysisSituationSolution(
                 isComparative,
-                isComparative ? Collections.singleton("") : similarities.stream().map(CubeSimilarity::getCube).collect(Collectors.toSet()),
+                isComparative ? Collections.singleton("") : similarities.stream().map(CubeSimilarity::getCube).filter(Objects::nonNull).collect(Collectors.toSet()),
                 settings.isUseAggregateMeasures() && !isComparative ? similarities.stream().filter(x -> x.getType().equals(IRIConstants.TYPE_AGGREGATE_MEASURE)).collect(Collectors.toSet()) : Collections.emptySet(),
                 settings.isUseAggregateMeasurePredicates() ? similarities.stream().filter(x -> x.getType().equals(IRIConstants.TYPE_AGGREGATE_MEASURE_PREDICATE)).collect(Collectors.toSet()) : Collections.emptySet(),
                 settings.isUseBaseMeasurePredicates() ? similarities.stream().filter(x -> x.getType().equals(IRIConstants.TYPE_BASE_MEASURE_PREDICATE)).collect(Collectors.toSet()) : Collections.emptySet(),
