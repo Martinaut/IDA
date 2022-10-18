@@ -34,7 +34,7 @@ export class ResultPanelComponent implements OnInit, OnDestroy {
         this.parsed = null;
       } else {
         const pr = Papa.parse(value, {skipEmptyLines: true});
-        this.parsed = pr.data;
+        this.parsed = pr.data as any[];
 
         setTimeout(() => {
           // Create
@@ -58,7 +58,7 @@ export class ResultPanelComponent implements OnInit, OnDestroy {
     }
   }
 
-  @ViewChild('pivotTable') set content(content: ElementRef) {
+  @ViewChild('pivotTable', { static: false }) set content(content: ElementRef) {
     this.resultTableElement = content;
   }
 

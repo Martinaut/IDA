@@ -4,7 +4,7 @@
     <annotationProcessing>
       <profile default="true" name="Default" enabled="true" />
     </annotationProcessing>
-    <bytecodeTargetLevel>
+    <bytecodeTargetLevel target="11">
       <module name="at.jku.dke.at.jku.dke.ida.nlp.main" target="11" />
       <module name="at.jku.dke.at.jku.dke.ida.nlp.test" target="11" />
       <module name="at.jku.dke.data.main" target="11" />

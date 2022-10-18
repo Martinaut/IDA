@@ -31,7 +31,7 @@ export class InputPanelComponent implements OnInit, OnDestroy {
   recording: boolean;
 
   userInput: string;
-  @ViewChild('input') inputField: ElementRef;
+  @ViewChild('input', { static: false }) inputField: ElementRef;
 
   /**
    * Initializes a new instance of class InputPanelComponent.

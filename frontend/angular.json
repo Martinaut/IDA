@@ -54,8 +54,7 @@
               "node_modules/jquery/dist/jquery.min.js",
               "node_modules/jquery-ui-dist/jquery-ui.min.js",
               "node_modules/pivottable/dist/pivot.min.js"
-            ],
-            "es5BrowserSupport": true
+            ]
           },
           "configurations": {
             "production": {
@@ -68,7 +67,6 @@
               "optimization": true,
               "outputHashing": "all",
               "sourceMap": false,
-              "extractCss": true,
               "namedChunks": false,
               "aot": true,
               "extractLicenses": true,
@@ -115,6 +113,5 @@
         }
       }
     }
-  },
-  "defaultProject": "ida-frontend"
+  }
 }

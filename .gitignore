@@ -277,4 +277,5 @@ gradle-app.setting
 
 ### CUSTOM
 .idea/dataSources.xml
+.idea/jpa-buddy.xml
 /graphdb/repository
