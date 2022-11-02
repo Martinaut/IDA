@@ -7,6 +7,7 @@ include 'engine:rules'
 include 'engine:web'
 include 'engine:nlp'
 include 'engine:csp'
+include 'engine:models'
 
 include 'app:server'
 include 'app:ruleset'
