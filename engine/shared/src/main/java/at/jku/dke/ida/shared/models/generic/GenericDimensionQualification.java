@@ -1,5 +1,7 @@
 package at.jku.dke.ida.shared.models.generic;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.util.*;
 
 /**
@@ -166,6 +168,7 @@ public class GenericDimensionQualification<TValue extends Comparable<? super TVa
      *
      * @return {@code true}, if all necessary fields of the dimension qualification are filled.
      */
+    @JsonIgnore
     public boolean isFilled() {
         return dimension != null &&
                 diceLevel != null &&

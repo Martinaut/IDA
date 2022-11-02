@@ -22,7 +22,7 @@ import java.io.OutputStream;
 import java.io.StringWriter;
 import java.nio.charset.Charset;
 import java.util.Date;
-import java.util.function.Supplier;
+import java.util.UUID;
 
 class AnalysisSituationConverter {
 
@@ -39,21 +39,19 @@ class AnalysisSituationConverter {
     }
 
     /**
-     * Converts the given analysis situation to a json-ld represntation.
+     * Converts the given analysis situation to a json-ld representation.
      *
-     * @param situationName The situation name.
      * @param as            The analysis situation to be converted.
-     * @param iriGenerator  The generator for creating analysis situation IRIs.
      * @return JSON-LD formatted analysis situation
      */
-    static String convertAnalysisSituationToJsonLD(String situationName, EngineAnalysisSituation as, Supplier<String> iriGenerator) {
-        LOG.debug("Creating analysis situation {} json-ld representation.", situationName);
+    static String convertAnalysisSituationToJsonLD(EngineAnalysisSituation as) {
+        LOG.debug("Creating analysis situation json-ld representation.");
 
         ModelBuilder rdf = new ModelBuilder();
         if (as instanceof NonComparativeAnalysisSituation)
-            convertNonComparativeAS(situationName, iriGenerator.get(), rdf, (NonComparativeAnalysisSituation) as);
+            convertNonComparativeAS("","urn:uuid:" + UUID.randomUUID(), rdf, (NonComparativeAnalysisSituation) as);
         else
-            convertComparativeAS(situationName, iriGenerator.get(), rdf, (ComparativeAnalysisSituation) as, iriGenerator);
+            convertComparativeAS("","urn:uuid:" + UUID.randomUUID(), rdf, (ComparativeAnalysisSituation) as);
         return convertModelToJsonLD(rdf.build());
     }
 
@@ -63,7 +61,7 @@ class AnalysisSituationConverter {
      * @param situationName The situation name.
      * @param iri           The IRI of the analysis situation.
      * @param rdf           The RDF model.
-     * @param as            The non comparative analysis situation.
+     * @param as            The non-comparative analysis situation.
      */
     private static void convertNonComparativeAS(String situationName, String iri, ModelBuilder rdf, NonComparativeAnalysisSituation as) {
         rdf.subject(iri)
@@ -118,9 +116,8 @@ class AnalysisSituationConverter {
      * @param iri           The IRI of the analysis situation.
      * @param rdf           The RDF model.
      * @param as            The comparative analysis situation.
-     * @param iriGenerator  The generator for creating analysis situation IRIs.
      */
-    private static void convertComparativeAS(String situationName, String iri, ModelBuilder rdf, ComparativeAnalysisSituation as, Supplier<String> iriGenerator) {
+    private static void convertComparativeAS(String situationName, String iri, ModelBuilder rdf, ComparativeAnalysisSituation as) {
         rdf.subject(iri)
                 .add(RDF.TYPE, VALUE_FACTORY.createIRI(NS_AG, "ComparisonAnalysisSituation"))
                 .add(VALUE_FACTORY.createIRI(NS_QBX, "time"), VALUE_FACTORY.createLiteral(new Date()))
@@ -142,13 +139,13 @@ class AnalysisSituationConverter {
                         VALUE_FACTORY.createIRI(jc)));
 
         // CoI
-        String nasIri = iriGenerator.get();
+        String nasIri = "urn:uuid:" + UUID.randomUUID();
         convertNonComparativeAS(situationName + " CoI", nasIri, rdf, as.getContextOfInterest());
         rdf.subject(iri)
                 .add(VALUE_FACTORY.createIRI(NS_QBX, "hasContextOfInterest"), VALUE_FACTORY.createIRI(nasIri));
 
         // CoC
-        nasIri = iriGenerator.get();
+        nasIri = "urn:uuid:" + UUID.randomUUID();
         convertNonComparativeAS(situationName + " CoC", nasIri, rdf, as.getContextOfComparison());
         rdf.subject(iri)
                 .add(VALUE_FACTORY.createIRI(NS_QBX, "hasContextOfComparison"), VALUE_FACTORY.createIRI(nasIri));

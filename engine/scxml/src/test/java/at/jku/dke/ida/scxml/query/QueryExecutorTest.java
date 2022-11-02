@@ -4,6 +4,7 @@ import at.jku.dke.ida.scxml.configuration.SCXMLConfig;
 import at.jku.dke.ida.shared.models.DimensionQualification;
 import at.jku.dke.ida.shared.models.NonComparativeAnalysisSituation;
 import at.jku.dke.ida.shared.session.SessionModel;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 
 class QueryExecutorTest {
@@ -29,7 +30,7 @@ class QueryExecutorTest {
 
         SCXMLConfig config = new SCXMLConfig();
         config.setQueryEndpoint("http://localhost:8080/inga-olap/");
-        QueryExecutor executor = new QueryExecutor(config);
+        QueryExecutor executor = new QueryExecutor(config, new ObjectMapper());
         System.out.println(executor.executeQuery(sessionModel));
     }
 }

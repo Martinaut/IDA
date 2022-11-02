@@ -1,5 +1,7 @@
 package at.jku.dke.ida.shared.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 /**
  * Interface for analysis situations used in the state-chart and drools rules.
  */
@@ -10,6 +12,7 @@ public interface EngineAnalysisSituation {
      *
      * @return {@code true} if the analysis situation is executable; {@code false} otherwise.
      */
+    @JsonIgnore
     boolean isExecutable();
 
     /**
@@ -17,6 +20,7 @@ public interface EngineAnalysisSituation {
      *
      * @return {@code true} if the cube(s) is/are defined; {@code false} otherwise.
      */
+    @JsonIgnore
     boolean isCubeDefined();
 
 }

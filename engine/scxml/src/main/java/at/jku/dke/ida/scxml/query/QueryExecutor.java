@@ -5,6 +5,7 @@ import at.jku.dke.ida.shared.display.ResultErrorDisplay;
 import at.jku.dke.ida.shared.display.WaitMessageDisplay;
 import at.jku.dke.ida.shared.session.SessionModel;
 import at.jku.dke.ida.shared.spring.BeanUtil;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import okhttp3.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -12,10 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.util.UUID;
 import java.util.concurrent.TimeUnit;
-
-import static at.jku.dke.ida.scxml.query.AnalysisSituationConverter.convertAnalysisSituationToJsonLD;
 
 /**
  * A service that sends requests to the query interface to retrieve the result for the current analysis situation.
@@ -29,15 +27,18 @@ public class QueryExecutor {
 
     private final SCXMLConfig config;
     private final OkHttpClient client;
+    private final ObjectMapper objectMapper;
 
     /**
      * Instantiates a new instance of class {@linkplain QueryExecutor}.
      *
-     * @param config The endpoint configuration.
+     * @param config       The endpoint configuration.
+     * @param objectMapper The object mapper.
      */
     @Autowired
-    public QueryExecutor(SCXMLConfig config) {
+    public QueryExecutor(SCXMLConfig config, ObjectMapper objectMapper) {
         this.config = config;
+        this.objectMapper = objectMapper;
         this.client = new OkHttpClient.Builder()
                 .connectTimeout(20, TimeUnit.SECONDS)
                 .writeTimeout(30, TimeUnit.SECONDS)
@@ -85,99 +86,37 @@ public class QueryExecutor {
      * @throws IOException If an error occurred while executing the query.
      */
     private String sendRequest(SessionModel model) throws IOException {
-        // Send Analysis Situation
-        String sitName = sendAnalysisSituation(model);
+        LOG.debug("Sending analysis situation");
 
-        // Request result
-        return requestResult(sitName);
-    }
+        String json = objectMapper.writeValueAsString(model.getAnalysisSituation());
+        String jsonLd = AnalysisSituationConverter.convertAnalysisSituationToJsonLD(model.getAnalysisSituation());
 
-    /**
-     * Sends the analysis situation to the query backend.
-     *
-     * @param model The session model.
-     * @return The situation name.
-     * @throws IOException If an error occurred while sending the analysis situation.
-     */
-    private String sendAnalysisSituation(SessionModel model) throws IOException {
-        final String sessionId = "urn:ida:" + model.getSessionId();
-        final String situationName = "IDA Analysis Situation: " + sessionId + '_' + UUID.randomUUID();
+        // Build request
+        String jsonBody = new StringBuilder()
+                .append("{\"json-ld\": {")
+                .append(jsonLd)
+                .append("}, \"json\": {")
+                .append(json)
+                .append("}}")
+                .toString();
 
-        LOG.debug("Sending analysis situation '{}' ", situationName);
-        post(config.getQueryEndpoint() + String.format("analysis/situations/%s/add", sessionId),
-                convertAnalysisSituationToJsonLD(situationName, model.getAnalysisSituation(), () -> {
-                    try {
-                        return requestAnalysisSituationIRI();
-                    } catch (IOException e) {
-                        return "urn:uuid:" + UUID.randomUUID();
-                    }
-                }));
-
-        return situationName;
-    }
-
-    /**
-     * Requests a new Analysis Situation IRI from the backend.
-     *
-     * @return new IRI
-     * @throws IOException If an error occurred while requesting the IRI.
-     */
-    private String requestAnalysisSituationIRI() throws IOException {
+        RequestBody requestBody = RequestBody.create(jsonBody, JSON);
         Request request = new Request.Builder()
-                .url(config.getQueryEndpoint() + "analysis/situations/new")
-                .get()
-                .build();
-
-        LOG.debug("Sending get IRI request to {}.", request.url());
-        try (Response response = client.newCall(request).execute()) {
-            if (!response.isSuccessful()) throw new IOException("Unexpected HTTP status code: " + response);
-
-            var body = response.body();
-            if (body == null) throw new IOException("Body is null");
-            return body.string();
-        }
-    }
-
-    /**
-     * Sends a post request to the query backend.
-     *
-     * @param url         The URL.
-     * @param bodyContent The content of the post-content (json-format)
-     * @throws IOException If an error occurred while executing the request.
-     */
-    private void post(String url, String bodyContent) throws IOException {
-        RequestBody body = RequestBody.create(bodyContent, JSON);
-        Request request = new Request.Builder()
-                .url(url)
-                .post(body)
-                .build();
-
-        LOG.debug("Sending post request to {}.", request.url());
-        try (Response response = client.newCall(request).execute()) {
-            if (!response.isSuccessful()) throw new IOException("Unexpected HTTP status code: " + response);
-        }
-    }
-
-    /**
-     * Requests the result of the created analysis situation.
-     *
-     * @param situationName The name of the situation.
-     * @return The CSV-result.
-     * @throws IOException If an error occurred while executing the query.
-     */
-    private String requestResult(String situationName) throws IOException {
-        Request request = new Request.Builder()
-                .url(config.getQueryEndpoint() + "analysis/situations/" + situationName + ".csv")
-                .get()
+                .url(this.config.getQueryEndpoint())
+                .post(requestBody)
                 .addHeader("Accept", CSV.toString())
                 .build();
 
-        LOG.debug("Sending result request to {}.", request.url());
+        // Send request
+        LOG.debug("Sending post request to {}.", request.url());
         try (Response response = client.newCall(request).execute()) {
-            if (!response.isSuccessful()) throw new IOException("Unexpected HTTP status code: " + response);
+            if (!response.isSuccessful())
+                throw new IOException("Unexpected HTTP status code: " + response);
 
             ResponseBody body = response.body();
-            if (body == null) throw new IOException("Body is null");
+            if (body == null)
+                throw new IOException("Body is null");
+
             return body.string();
         }
     }
