@@ -26,6 +26,9 @@ subprojects {
         maven {
             url "https://maven.onehippo.com/maven2/"
         }
+        maven {
+            url "https://maven.pkg.github.com/martinaut/IDA-Shared"
+        }
     }
 
     /* Dependencies */
